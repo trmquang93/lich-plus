@@ -55,4 +55,4 @@ Carthage/Build/
 # Misc
 *.log
 .env*.local
-!CLAUDE.md
+!CLAUDE.local.md
