@@ -46,18 +46,8 @@ struct MonthCalendarView: View {
                             guard Calendar.current.isDate(event.date, inSameDayAs: day) else {
                                 return false
                             }
-
-                            // Then filter by lunar event visibility settings
-                            if event.isRecurring {  // System event flag
-                                if event.title.contains("Rằm") && !showRamEvents {
-                                    return false
-                                }
-                                if event.title.contains("Mùng 1") && !showMung1Events {
-                                    return false
-                                }
-                            }
-
-                            return true
+                            // Then apply lunar event visibility settings
+                            return event.shouldDisplay(showRamEvents: showRamEvents, showMung1Events: showMung1Events)
                         }
                         let isToday = Calendar.current.isDateInToday(day)
                         let isSelected = selectedDate.map { Calendar.current.isDate(day, inSameDayAs: $0) } ?? false
