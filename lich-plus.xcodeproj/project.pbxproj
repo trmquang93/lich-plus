@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		168F911035114BE76C43B103 /* libPods-lich-plusTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FD822DC7115DD155392D6FDB /* libPods-lich-plusTests.a */; };
+		541809B495F07377E07114E4 /* libPods-lich-plus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A80523ECF7A5EEC3AAE646B /* libPods-lich-plus.a */; };
+		86DF3A60967A5AB141787A35 /* libPods-lich-plusUITests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 531373FC01B2281FDC1D8786 /* libPods-lich-plusUITests.a */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		4DA45EE62ED1090100C1F1F6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -24,24 +30,39 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		04D64E0DC387214CE603683A /* Pods-lich-plus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plus.debug.xcconfig"; path = "Target Support Files/Pods-lich-plus/Pods-lich-plus.debug.xcconfig"; sourceTree = "<group>"; };
+		0EF49C0B800F7BE920EB6091 /* Pods-lich-plusUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plusUITests.release.xcconfig"; path = "Target Support Files/Pods-lich-plusUITests/Pods-lich-plusUITests.release.xcconfig"; sourceTree = "<group>"; };
+		100DB59E0A23C1B0F9E436E8 /* Pods-lich-plus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plus.release.xcconfig"; path = "Target Support Files/Pods-lich-plus/Pods-lich-plus.release.xcconfig"; sourceTree = "<group>"; };
 		4DA45ED62ED108FE00C1F1F6 /* lich-plus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "lich-plus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DA45EE52ED1090100C1F1F6 /* lich-plusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "lich-plusTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DA45EEF2ED1090100C1F1F6 /* lich-plusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "lich-plusUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		531373FC01B2281FDC1D8786 /* libPods-lich-plusUITests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lich-plusUITests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		66A778187A54DD93A3340313 /* Pods-lich-plusTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plusTests.debug.xcconfig"; path = "Target Support Files/Pods-lich-plusTests/Pods-lich-plusTests.debug.xcconfig"; sourceTree = "<group>"; };
+		8A80523ECF7A5EEC3AAE646B /* libPods-lich-plus.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lich-plus.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E75C1C59587BD7DCB1028B88 /* Pods-lich-plusUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plusUITests.debug.xcconfig"; path = "Target Support Files/Pods-lich-plusUITests/Pods-lich-plusUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		E97533A279C22C0CC104BC6E /* Pods-lich-plusTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plusTests.release.xcconfig"; path = "Target Support Files/Pods-lich-plusTests/Pods-lich-plusTests.release.xcconfig"; sourceTree = "<group>"; };
+		FD822DC7115DD155392D6FDB /* libPods-lich-plusTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lich-plusTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4DA45ED82ED108FE00C1F1F6 /* lich-plus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "lich-plus";
 			sourceTree = "<group>";
 		};
 		4DA45EE82ED1090100C1F1F6 /* lich-plusTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "lich-plusTests";
 			sourceTree = "<group>";
 		};
 		4DA45EF22ED1090100C1F1F6 /* lich-plusUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+			);
 			path = "lich-plusUITests";
 			sourceTree = "<group>";
 		};
@@ -52,6 +73,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				541809B495F07377E07114E4 /* libPods-lich-plus.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,6 +81,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				168F911035114BE76C43B103 /* libPods-lich-plusTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -66,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				86DF3A60967A5AB141787A35 /* libPods-lich-plusUITests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -79,6 +103,8 @@
 				4DA45EE82ED1090100C1F1F6 /* lich-plusTests */,
 				4DA45EF22ED1090100C1F1F6 /* lich-plusUITests */,
 				4DA45ED72ED108FE00C1F1F6 /* Products */,
+				B61846DBCAB36AF202AC2C2A /* Pods */,
+				8E194925854EB74C7C7B1209 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -92,6 +118,30 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		8E194925854EB74C7C7B1209 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8A80523ECF7A5EEC3AAE646B /* libPods-lich-plus.a */,
+				FD822DC7115DD155392D6FDB /* libPods-lich-plusTests.a */,
+				531373FC01B2281FDC1D8786 /* libPods-lich-plusUITests.a */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B61846DBCAB36AF202AC2C2A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				04D64E0DC387214CE603683A /* Pods-lich-plus.debug.xcconfig */,
+				100DB59E0A23C1B0F9E436E8 /* Pods-lich-plus.release.xcconfig */,
+				66A778187A54DD93A3340313 /* Pods-lich-plusTests.debug.xcconfig */,
+				E97533A279C22C0CC104BC6E /* Pods-lich-plusTests.release.xcconfig */,
+				E75C1C59587BD7DCB1028B88 /* Pods-lich-plusUITests.debug.xcconfig */,
+				0EF49C0B800F7BE920EB6091 /* Pods-lich-plusUITests.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -99,6 +149,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4DA45EF92ED1090100C1F1F6 /* Build configuration list for PBXNativeTarget "lich-plus" */;
 			buildPhases = (
+				CC851A37C6357CC18A38CD4B /* [CP] Check Pods Manifest.lock */,
 				4DA45ED22ED108FE00C1F1F6 /* Sources */,
 				4DA45ED32ED108FE00C1F1F6 /* Frameworks */,
 				4DA45ED42ED108FE00C1F1F6 /* Resources */,
@@ -111,8 +162,6 @@
 				4DA45ED82ED108FE00C1F1F6 /* lich-plus */,
 			);
 			name = "lich-plus";
-			packageProductDependencies = (
-			);
 			productName = "lich-plus";
 			productReference = 4DA45ED62ED108FE00C1F1F6 /* lich-plus.app */;
 			productType = "com.apple.product-type.application";
@@ -121,6 +170,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4DA45EFC2ED1090100C1F1F6 /* Build configuration list for PBXNativeTarget "lich-plusTests" */;
 			buildPhases = (
+				C809ADD21A55D6AC91350544 /* [CP] Check Pods Manifest.lock */,
 				4DA45EE12ED1090100C1F1F6 /* Sources */,
 				4DA45EE22ED1090100C1F1F6 /* Frameworks */,
 				4DA45EE32ED1090100C1F1F6 /* Resources */,
@@ -134,8 +184,6 @@
 				4DA45EE82ED1090100C1F1F6 /* lich-plusTests */,
 			);
 			name = "lich-plusTests";
-			packageProductDependencies = (
-			);
 			productName = "lich-plusTests";
 			productReference = 4DA45EE52ED1090100C1F1F6 /* lich-plusTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -144,6 +192,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4DA45EFF2ED1090100C1F1F6 /* Build configuration list for PBXNativeTarget "lich-plusUITests" */;
 			buildPhases = (
+				F6C04651FD32DACEABE0E036 /* [CP] Check Pods Manifest.lock */,
 				4DA45EEB2ED1090100C1F1F6 /* Sources */,
 				4DA45EEC2ED1090100C1F1F6 /* Frameworks */,
 				4DA45EED2ED1090100C1F1F6 /* Resources */,
@@ -157,8 +206,6 @@
 				4DA45EF22ED1090100C1F1F6 /* lich-plusUITests */,
 			);
 			name = "lich-plusUITests";
-			packageProductDependencies = (
-			);
 			productName = "lich-plusUITests";
 			productReference = 4DA45EEF2ED1090100C1F1F6 /* lich-plusUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -230,6 +277,75 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		C809ADD21A55D6AC91350544 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-lich-plusTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CC851A37C6357CC18A38CD4B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-lich-plus-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F6C04651FD32DACEABE0E036 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-lich-plusUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		4DA45ED22ED108FE00C1F1F6 /* Sources */ = {
@@ -390,6 +506,7 @@
 		};
 		4DA45EFA2ED1090100C1F1F6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 04D64E0DC387214CE603683A /* Pods-lich-plus.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -421,6 +538,7 @@
 		};
 		4DA45EFB2ED1090100C1F1F6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 100DB59E0A23C1B0F9E436E8 /* Pods-lich-plus.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -452,6 +570,7 @@
 		};
 		4DA45EFD2ED1090100C1F1F6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 66A778187A54DD93A3340313 /* Pods-lich-plusTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -473,6 +592,7 @@
 		};
 		4DA45EFE2ED1090100C1F1F6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E97533A279C22C0CC104BC6E /* Pods-lich-plusTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -494,6 +614,7 @@
 		};
 		4DA45F002ED1090100C1F1F6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E75C1C59587BD7DCB1028B88 /* Pods-lich-plusUITests.debug.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -513,6 +634,7 @@
 		};
 		4DA45F012ED1090100C1F1F6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0EF49C0B800F7BE920EB6091 /* Pods-lich-plusUITests.release.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

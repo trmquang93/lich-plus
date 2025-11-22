@@ -2,59 +2,63 @@ import SwiftUI
 
 // MARK: - Calendar Cell View
 struct CalendarCellView: View {
-    let day: Int?
-    let lunarDay: String
-    let hasEvents: Bool
-    let isCurrentMonth: Bool
-    let isToday: Bool
-    let isSelected: Bool
+    let viewModel: CalendarCellViewModel
     let action: () -> Void
 
     var body: some View {
-        VStack(spacing: 2) {
-            // Solar Date (Large)
-            Text(day.map(String.init) ?? "")
-                .font(.system(size: 16, weight: .semibold))
-                .foregroundColor(isCurrentMonth ? .black : .gray.opacity(0.5))
-                .frame(height: 24)
-
-            // Lunar Date (Small)
-            Text(lunarDay)
-                .font(.system(size: 10, weight: .regular))
-                .foregroundColor(.gray)
-                .lineLimit(1)
-
-            // Event Indicator
-            if hasEvents {
-                HStack(spacing: 2) {
-                    Circle()
-                        .fill(Color(hex: "#5BC0A6") ?? .green)
-                        .frame(width: 4, height: 4)
-                    Circle()
-                        .fill(Color(hex: "#4A90E2") ?? .blue)
-                        .frame(width: 4, height: 4)
-                }
-                .frame(height: 4)
-            } else {
-                Spacer()
-                    .frame(height: 4)
-            }
-        }
-        .frame(maxWidth: .infinity)
-        .frame(height: 70)
-        .background(
+        ZStack(alignment: .topLeading) {
+            // MARK: - Background
             RoundedRectangle(cornerRadius: 8)
-                .fill(isSelected ? Color(hex: "#5BC0A6")?.opacity(0.1) ?? Color.blue.opacity(0.1) : Color.clear)
+                .fill(Color.clear)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .strokeBorder(
-                            isToday ? Color(hex: "#5BC0A6") ?? .green : Color.clear,
+                            viewModel.todayBorderColor,
                             lineWidth: 2
                         )
                 )
-        )
+
+            // MARK: - Content
+            VStack(alignment: .leading, spacing: 4) {
+                // MARK: - Top Row: Solar Date + Auspicious Dots
+                HStack {
+                    // Solar date (top-left)
+                    Text(viewModel.date.map { Calendar.current.component(.day, from: $0) }.map(String.init) ?? "")
+                        .font(.system(size: 16, weight: .semibold))
+                        .foregroundColor(viewModel.solarDayColor)
+
+                    Spacer()
+
+                    // Auspicious dots (top-right)
+                    HStack(spacing: 3) {
+                        if viewModel.shouldShowAuspiciousDot {
+                            Circle()
+                                .fill(Color(hex: "#D0021B") ?? .red)
+                                .frame(width: 6, height: 6)
+                        }
+
+                        if viewModel.shouldShowInauspiciousDot {
+                            Circle()
+                                .fill(Color(hex: "#9B59B6") ?? .purple)
+                                .frame(width: 6, height: 6)
+                        }
+                    }
+                }
+
+                // MARK: - Lunar Date with Can Chi
+                Text(viewModel.lunarDisplayText)
+                    .font(.system(size: 10, weight: .regular))
+                    .foregroundColor(viewModel.lunarTextColor)
+                    .lineLimit(1)
+
+                Spacer()
+            }
+            .padding(6)
+        }
+        .frame(maxWidth: .infinity)
+        .frame(height: 70)
         .onTapGesture {
-            if day != nil {
+            if viewModel.date != nil {
                 action()
             }
         }
@@ -63,12 +67,110 @@ struct CalendarCellView: View {
 
 // MARK: - Preview
 #Preview {
-    VStack {
+    VStack(spacing: 16) {
+        // MARK: - Row 1: Current Month Examples
         HStack(spacing: 0) {
-            CalendarCellView(day: 1, lunarDay: "15", hasEvents: false, isCurrentMonth: true, isToday: false, isSelected: false) {}
-            CalendarCellView(day: 2, lunarDay: "16", hasEvents: true, isCurrentMonth: true, isToday: true, isSelected: true) {}
-            CalendarCellView(day: nil, lunarDay: "", hasEvents: false, isCurrentMonth: false, isToday: false, isSelected: false) {}
+            // Regular weekday with Can Chi
+            CalendarCellView(
+                viewModel: CalendarCellViewModel(
+                    date: Calendar.current.date(from: DateComponents(year: 2025, month: 11, day: 15)),
+                    lunarInfo: LunarDateInfo(
+                        year: 2025,
+                        month: 10,
+                        day: 15,
+                        canChi: CanChiInfo(can: "Giáp", chi: "Tỵ")
+                    ),
+                    auspiciousInfo: AuspiciousDayInfo(type: .neutral),
+                    isCurrentMonth: true,
+                    isToday: false
+                )
+            ) {}
+
+            // Mùng 1 (red text) + Today border + Auspicious dot
+            CalendarCellView(
+                viewModel: CalendarCellViewModel(
+                    date: Date(),
+                    lunarInfo: LunarDateInfo(
+                        year: 2025,
+                        month: 11,
+                        day: 1,
+                        canChi: CanChiInfo(can: "Bính", chi: "Ngọ")
+                    ),
+                    auspiciousInfo: AuspiciousDayInfo(type: .auspicious, reason: "Ngày tốt"),
+                    isCurrentMonth: true,
+                    isToday: true
+                )
+            ) {}
+
+            // Saturday (cyan) with Inauspicious dot
+            CalendarCellView(
+                viewModel: CalendarCellViewModel(
+                    date: Calendar.current.date(from: DateComponents(year: 2025, month: 11, day: 22)),
+                    lunarInfo: LunarDateInfo(
+                        year: 2025,
+                        month: 10,
+                        day: 22,
+                        canChi: CanChiInfo(can: "Đinh", chi: "Mùi")
+                    ),
+                    auspiciousInfo: AuspiciousDayInfo(type: .inauspicious, reason: "Ngày xấu"),
+                    isCurrentMonth: true,
+                    isToday: false
+                )
+            ) {}
         }
-        .padding()
+
+        // MARK: - Row 2: More Examples
+        HStack(spacing: 0) {
+            // Sunday (orange)
+            CalendarCellView(
+                viewModel: CalendarCellViewModel(
+                    date: Calendar.current.date(from: DateComponents(year: 2025, month: 11, day: 23)),
+                    lunarInfo: LunarDateInfo(
+                        year: 2025,
+                        month: 10,
+                        day: 23,
+                        canChi: CanChiInfo(can: "Mậu", chi: "Thân")
+                    ),
+                    auspiciousInfo: AuspiciousDayInfo(type: .neutral),
+                    isCurrentMonth: true,
+                    isToday: false
+                )
+            ) {}
+
+            // Out of month (gray)
+            CalendarCellView(
+                viewModel: CalendarCellViewModel(
+                    date: Calendar.current.date(from: DateComponents(year: 2025, month: 10, day: 30)),
+                    lunarInfo: LunarDateInfo(
+                        year: 2025,
+                        month: 9,
+                        day: 28,
+                        canChi: CanChiInfo(can: "Kỷ", chi: "Dậu")
+                    ),
+                    auspiciousInfo: AuspiciousDayInfo(type: .neutral),
+                    isCurrentMonth: false,
+                    isToday: false
+                )
+            ) {}
+
+            // Both auspicious and inauspicious dots (edge case)
+            CalendarCellView(
+                viewModel: CalendarCellViewModel(
+                    date: Calendar.current.date(from: DateComponents(year: 2025, month: 11, day: 20)),
+                    lunarInfo: LunarDateInfo(
+                        year: 2025,
+                        month: 10,
+                        day: 20,
+                        canChi: CanChiInfo(can: "Canh", chi: "Tuất")
+                    ),
+                    auspiciousInfo: AuspiciousDayInfo(type: .neutral),
+                    isCurrentMonth: true,
+                    isToday: false
+                )
+            ) {}
+        }
+
+        Spacer()
     }
+    .padding()
 }
