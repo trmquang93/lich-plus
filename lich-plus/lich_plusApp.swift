@@ -45,15 +45,24 @@ struct lich_plusApp: App {
             let descriptor = FetchDescriptor<CalendarEvent>()
             let existingEvents = try context.fetch(descriptor)
 
+            // Generate sample events only on first launch (if no events exist at all)
             if existingEvents.isEmpty {
                 // First launch: populate with sample data
-
-                // Add 10 sample events for August 2024 (user-created event examples)
                 let sampleEvents = CalendarEvent.createSampleEvents(for: 2024, month: 8)
                 for event in sampleEvents {
                     context.insert(event)
                 }
+            }
 
+            // Check specifically for lunar events (system events marked with isRecurring=true)
+            var lunarDescriptor = FetchDescriptor<CalendarEvent>()
+            lunarDescriptor.predicate = #Predicate { $0.isRecurring == true }
+            let existingLunarEvents = try context.fetch(lunarDescriptor)
+
+            // Generate lunar events independently of sample events
+            // This ensures lunar events are created even if sample events already exist
+            let lunarEventsVersion = UserDefaults.standard.integer(forKey: "lunarEventsVersion")
+            if existingLunarEvents.isEmpty && lunarEventsVersion == 0 {
                 // Generate lunar calendar events for 5-year coverage
                 // Lunar events are system events (isRecurring=true) and protected from editing
                 let currentYear = Calendar.current.component(.year, from: Date())
@@ -62,7 +71,8 @@ struct lich_plusApp: App {
                     context.insert(event)
                 }
 
-                // Persist all data to device storage
+                // Mark lunar events as generated
+                UserDefaults.standard.set(1, forKey: "lunarEventsVersion")
                 try context.save()
             }
 
