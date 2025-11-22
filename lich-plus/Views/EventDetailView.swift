@@ -24,17 +24,30 @@ struct EventDetailView: View {
 
                 Spacer()
 
-                HStack(spacing: 12) {
-                    Button(action: { showEditForm = true }) {
-                        Image(systemName: "pencil")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(Color(hex: "#5BC0A6") ?? .green)
-                    }
+                if !event.isRecurring {  // Only show for user events
+                    HStack(spacing: 12) {
+                        Button(action: { showEditForm = true }) {
+                            Image(systemName: "pencil")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(Color(hex: "#5BC0A6") ?? .green)
+                        }
 
-                    Button(action: { showDeleteConfirmation = true }) {
-                        Image(systemName: "trash")
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(.red)
+                        Button(action: { showDeleteConfirmation = true }) {
+                            Image(systemName: "trash")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(.red)
+                        }
+                    }
+                } else {
+                    // System event indicator
+                    HStack(spacing: 8) {
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 14, weight: .semibold))
+                            .foregroundColor(.gray)
+
+                        Text("Sự kiện hệ thống")
+                            .font(.system(size: 13, weight: .regular))
+                            .foregroundColor(.gray)
                     }
                 }
             }

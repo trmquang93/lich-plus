@@ -10,6 +10,8 @@ struct MonthCalendarView: View {
     @State private var showYearView = false
 
     @Query private var events: [CalendarEvent]
+    @AppStorage("showRamEvents") private var showRamEvents = true
+    @AppStorage("showMung1Events") private var showMung1Events = true
 
     let columns = Array(repeating: GridItem(.flexible(), spacing: 8), count: 7)
     let dayHeaders = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"]
@@ -43,6 +45,14 @@ struct MonthCalendarView: View {
                     ForEach(Array(getDaysInMonth().enumerated()), id: \.offset) { (_, day) in
                         let isCurrentMonth = Calendar.current.component(.month, from: day) == Calendar.current.component(.month, from: currentDate)
                         let lunarDate = LunarCalendarConverter.getLunarDate(for: day)
+                        let dayEvents = events.filter { event in
+                            // First filter by date
+                            guard Calendar.current.isDate(event.date, inSameDayAs: day) else {
+                                return false
+                            }
+                            // Then apply lunar event visibility settings
+                            return event.shouldDisplay(showRamEvents: showRamEvents, showMung1Events: showMung1Events)
+                        }
                         let isToday = Calendar.current.isDateInToday(day)
 
                         let viewModel = CalendarCellViewModel(

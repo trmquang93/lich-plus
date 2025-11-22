@@ -6,12 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Lịch Việt** - A production-ready Vietnamese calendar application built with SwiftUI. The app features:
 - Monthly calendar view with Vietnamese lunar calendar support
-- Event management (create, edit, delete)
-- Day agenda with event timeline
+- 120+ lunar calendar events (Mùng 1 and Rằm) for 5 years (2024-2029)
+- Customizable lunar event display with toggle settings
+- Event management (create, edit, delete) with protection for system events
+- Day agenda with event timeline and lunar date information
 - Color-coded event categories
 - Full Vietnamese localization
-- SwiftData persistence
-- 30 comprehensive unit tests
+- SwiftData persistence for events
+- UserDefaults persistence for settings
+- 78+ comprehensive unit tests
 
 ## Project Structure
 
@@ -41,10 +44,13 @@ lich-plus/                       # Xcode project directory
     │   │
     │   └── lich_plusApp.swift           # App entry, SwiftData ModelContainer setup
     │
-    ├── lich-plusTests/                  # Unit tests
-    │   ├── CalendarEventTests.swift
-    │   ├── EventCategoryTests.swift
-    │   └── LunarCalendarConverterTests.swift
+    ├── lich-plusTests/                  # Unit tests (78+ tests)
+    │   ├── CalendarEventTests.swift           # 8 tests: event creation, properties, sample data
+    │   ├── EventCategoryTests.swift           # 8 tests: categories, color conversion
+    │   ├── LunarCalendarConverterTests.swift # 37 tests: lunar conversion, leap months, edge cases
+    │   ├── SettingsViewTests.swift            # 8 tests: UserDefaults persistence, toggle behavior
+    │   ├── EventFilteringTests.swift          # 17 tests: Rằm/Mùng 1 filtering, combined filters
+    │   └── EventProtectionTests.swift         # 16 tests: system event protection, UI behavior
     │
     ├── lich-plusUITests/                # UI tests
     │
@@ -132,9 +138,16 @@ MainView (TabView)
 - **Note**: Only `CalendarEvent` model persists; `EventCategory` is utility-only
 
 ### CalendarEvent.swift
-- **Purpose**: Main SwiftData model for event persistence
-- **Key Properties**: title, date, startTime, endTime, location, category, color, isAllDay
+- **Purpose**: Main SwiftData model for event persistence with lunar event generation
+- **Key Properties**:
+  - title, date, startTime, endTime, location, category, color, isAllDay
+  - `isRecurring` (repurposed as system event flag for lunar events)
+  - `recurringType` (reserved for future recurring event feature)
 - **Sample Data**: `createSampleEvents()` generates 10 events for August 2024
+- **Lunar Events**: `createLunarEvents()` generates ~120-130 Mùng 1 and Rằm events for 5 years
+  - Handles leap months correctly (e.g., "5 nhuận")
+  - Events marked with isRecurring=true (protected from editing/deletion)
+  - Covers 2024-2029 with accurate lunar-to-solar conversion
 - **Helpers**: Computed properties for date/time formatting in Vietnamese locale
 
 ### MonthCalendarView.swift
@@ -184,10 +197,17 @@ MainView (TabView)
 
 ## Testing Strategy
 
-- **Unit Tests**: 30 tests in `lich-plusTests/`
-- **Coverage**: Models (CalendarEvent, EventCategory), utilities (LunarCalendarConverter)
-- **Test File Organization**: One test file per model
-- **Run All Tests**: `xcodebuild test -scheme lich-plus`
+- **Unit Tests**: 78+ comprehensive tests in `lich-plusTests/`
+- **Test Coverage**:
+  - **CalendarEvent**: 8 tests (event creation, properties, sample data generation)
+  - **EventCategory**: 8 tests (color conversion, predefined categories, invalid hex handling)
+  - **LunarCalendarConverter**: 37 tests (lunar conversion, leap months, edge cases, date boundaries)
+  - **Settings**: 8 tests (UserDefaults persistence, toggle independence, app restart simulation)
+  - **Event Filtering**: 17 tests (Rằm/Mùng 1 filtering, combined filters, user event visibility)
+  - **Event Protection**: 16 tests (system event protection, UI button visibility, lock icons)
+- **Test Organization**: Separate test file for each feature with detailed docstring comments
+- **Run All Tests**: `xcodebuild test -scheme lich-plus -destination 'platform=iOS Simulator,name=iPhone 15'`
+- **Run Specific Test**: `xcodebuild test -scheme lich-plus -only-testing lich-plusTests/CalendarEventTests`
 
 ## SwiftUI/SwiftData Best Practices Used
 
@@ -202,9 +222,19 @@ MainView (TabView)
 
 1. **iOS Deployment Target**: 17.0 (must match for SwiftData support)
 2. **SwiftData Schema**: Only CalendarEvent in schema; EventCategory is non-persistent helper
-3. **Simulator Requirement**: Must use physical device or simulator for full testing
-4. **Sample Data**: Auto-loads on first launch; delete app to reset
-5. **Lunar Calendar**: Simplified for August 2024; requires library upgrade for full year
+3. **Lunar Events**:
+   - Generated on first app launch (~130 events for 5 years)
+   - Marked with isRecurring=true (system events, cannot be edited/deleted)
+   - Covers 2024-2029 using lookup table (replace with library by 2029)
+   - Handles leap months correctly (identified with "nhuận" suffix)
+4. **Settings Persistence**: Using UserDefaults for toggle states
+   - `showRamEvents` (default: true) - shows/hides Rằm events
+   - `showMung1Events` (default: true) - shows/hides Mùng 1 events
+   - Settings persist across app restarts
+5. **Event Protection**:
+   - System events (isRecurring=true): no edit/delete, lock icon shown
+   - User events (isRecurring=false): full edit/delete capabilities
+6. **Sample Data**: Auto-loads on first launch; delete app to reset
 
 ## Git & Commits
 
@@ -228,11 +258,59 @@ When committing changes:
 - Verify DateFormatter locale is set to "vi_VN"
 - Check CalendarEvent computed properties use correct locale
 
+## Phase 6: Lunar Monthly Events Feature (Complete)
+
+### Feature Summary
+The Lunar Monthly Events feature adds 120+ lunar calendar events to the application, providing users with important Vietnamese lunar calendar dates.
+
+### Key Implementations
+
+1. **Lunar Event Generation** (CalendarEvent.createLunarEvents)
+   - Generates Mùng 1 (New Moon) and Rằm (Full Moon) events
+   - Covers 5 years (2024-2029) with accurate lunar-to-solar conversion
+   - Properly handles leap months (nhuận months)
+   - System events marked with isRecurring=true
+
+2. **Settings Integration** (SettingsView + UserDefaults)
+   - Toggle to show/hide Rằm events
+   - Toggle to show/hide Mùng 1 events
+   - Independent toggles with immediate visual feedback
+   - Settings persist across app restarts
+
+3. **Event Filtering** (View layer)
+   - Filters events based on toggle settings
+   - User events always visible regardless of toggles
+   - Accurate substring matching for "Rằm" and "Mùng 1"
+   - Leap month events correctly identified
+
+4. **Event Protection** (UI + Logic)
+   - System events cannot be edited or deleted
+   - Lock icon displayed on system events
+   - Edit/delete buttons hidden for system events
+   - User events fully editable
+
+5. **Color Extension Fix**
+   - Fixed Color(hex:) initializer to properly validate hex string length
+   - Now correctly rejects invalid hex colors (e.g., "#12", "INVALID")
+
+### Test Coverage
+- 78+ unit tests covering all feature aspects
+- Integration scenarios: first launch, settings persistence, filtering, protection
+- Edge cases: leap months, date boundaries, similar titles
+- Performance: launch time, filtering responsiveness
+
+### Code Quality
+- Comprehensive documentation added to all major methods
+- Clear inline comments explaining complex logic
+- Proper error handling and validation
+- Follows project conventions and SwiftUI best practices
+
 ## Future Enhancements
 
-- Replace LunarCalendarConverter with dedicated library for full-year accuracy
-- Add recurring event UI (model infrastructure exists)
+- Replace LunarCalendarConverter with dedicated library (e.g., VietnameseLunar-ios) for full-year accuracy beyond 2029
+- Add recurring event UI and management
 - Implement Google Calendar sync
 - Add push notifications for event reminders
 - Support WidgetKit for home screen widgets
 - Dark mode theme support
+- Localization for English and other languages

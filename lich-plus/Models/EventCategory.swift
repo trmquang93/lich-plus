@@ -30,11 +30,17 @@ final class EventCategory: Identifiable {
 
 // MARK: - Color Extension for Hex Support
 extension Color {
+    /// Initializes a Color from a hex string (e.g., "#5BC0A6" or "5BC0A6")
+    /// Returns nil if the hex string is invalid (wrong length or non-hex characters)
     init?(hex: String) {
         let cleanHex = hex.trimmingCharacters(in: CharacterSet(charactersIn: "#"))
-        let trimmed = String(cleanHex.prefix(6))
 
-        guard let int = Int(trimmed, radix: 16) else {
+        // Hex color must be exactly 6 characters
+        guard cleanHex.count == 6 else {
+            return nil
+        }
+
+        guard let int = Int(cleanHex, radix: 16) else {
             return nil
         }
 
