@@ -144,6 +144,12 @@ struct EventFormView: View {
             }
             .onAppear {
                 if let eventToEdit = eventToEdit {
+                    // Prevent editing system events
+                    if eventToEdit.isRecurring {
+                        // This is a system event, close the form immediately
+                        isPresented = false
+                        return
+                    }
                     loadEvent(eventToEdit)
                 } else if let initialDate = initialDate {
                     date = initialDate

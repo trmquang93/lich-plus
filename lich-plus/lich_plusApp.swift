@@ -32,6 +32,14 @@ struct lich_plusApp: App {
                 for event in sampleEvents {
                     context.insert(event)
                 }
+
+                // Generate lunar events (5 years from current year)
+                let currentYear = Calendar.current.component(.year, from: Date())
+                let lunarEvents = CalendarEvent.createLunarEvents(startYear: currentYear, yearCount: 5)
+                for event in lunarEvents {
+                    context.insert(event)
+                }
+
                 try context.save()
             }
 

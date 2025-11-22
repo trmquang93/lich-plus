@@ -10,15 +10,34 @@ struct DayAgendaView: View {
     @State private var showEventDetail = false
 
     @Query private var allEvents: [CalendarEvent]
+    @AppStorage("showRamEvents") private var showRamEvents = true
+    @AppStorage("showMung1Events") private var showMung1Events = true
 
     var dayAgendaEvents: [CalendarEvent] {
-        allEvents.filter { Calendar.current.isDate($0.date, inSameDayAs: date) }
-            .sorted { (event1, event2) in
-                if let time1 = event1.startTime, let time2 = event2.startTime {
-                    return time1 < time2
-                }
-                return event1.isAllDay && !event2.isAllDay
+        allEvents.filter { event in
+            // First filter by date
+            guard Calendar.current.isDate(event.date, inSameDayAs: date) else {
+                return false
             }
+
+            // Then filter by lunar event visibility settings
+            if event.isRecurring {  // System event flag
+                if event.title.contains("Rằm") && !showRamEvents {
+                    return false
+                }
+                if event.title.contains("Mùng 1") && !showMung1Events {
+                    return false
+                }
+            }
+
+            return true
+        }
+        .sorted { (event1, event2) in
+            if let time1 = event1.startTime, let time2 = event2.startTime {
+                return time1 < time2
+            }
+            return event1.isAllDay && !event2.isAllDay
+        }
     }
 
     var lunarDate: LunarDateInfo {

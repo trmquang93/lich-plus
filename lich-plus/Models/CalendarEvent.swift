@@ -192,4 +192,73 @@ extension CalendarEvent {
 
         return events
     }
+
+    /// Generates lunar events (Mùng 1 and Rằm) for multiple years.
+    /// Creates all-day events for the 1st and 15th days of each lunar month.
+    /// Handles leap months correctly with "nhuận" indicator.
+    ///
+    /// - Parameters:
+    ///   - startYear: Starting year for event generation
+    ///   - yearCount: Number of years to generate events for
+    /// - Returns: Array of lunar calendar events (approximately 120-130 events)
+    static func createLunarEvents(startYear: Int, yearCount: Int) -> [CalendarEvent] {
+        var events: [CalendarEvent] = []
+
+        for yearOffset in 0..<yearCount {
+            let year = startYear + yearOffset
+
+            // Iterate through possible lunar months (1-13 to handle leap months)
+            for lunarMonth in 1...13 {
+                // Determine if this month is a leap month
+                let isLeapMonth = LunarCalendarConverter.isLeapMonth(year: year, month: lunarMonth)
+
+                // Skip month 13 if it's not a leap year
+                if lunarMonth == 13 && !isLeapMonth {
+                    continue
+                }
+
+                // Generate Mùng 1 event (1st day of lunar month)
+                if let solarDate = LunarCalendarConverter.lunarToSolar(
+                    year: year,
+                    month: lunarMonth,
+                    day: 1,
+                    isLeapMonth: isLeapMonth
+                ) {
+                    let monthLabel = isLeapMonth ? "\(lunarMonth) nhuận" : "\(lunarMonth)"
+                    let event = CalendarEvent(
+                        title: "Mùng 1 tháng \(monthLabel)",
+                        date: solarDate,
+                        category: "Sự kiện văn hóa",
+                        notes: "Mùng 1 âm lịch",
+                        color: "#F8E71C",
+                        isAllDay: true
+                    )
+                    event.isRecurring = true  // Repurposed as system event flag
+                    events.append(event)
+                }
+
+                // Generate Rằm event (15th day of lunar month)
+                if let solarDate = LunarCalendarConverter.lunarToSolar(
+                    year: year,
+                    month: lunarMonth,
+                    day: 15,
+                    isLeapMonth: isLeapMonth
+                ) {
+                    let monthLabel = isLeapMonth ? "\(lunarMonth) nhuận" : "\(lunarMonth)"
+                    let event = CalendarEvent(
+                        title: "Rằm tháng \(monthLabel)",
+                        date: solarDate,
+                        category: "Sự kiện văn hóa",
+                        notes: "Ngày rằm âm lịch",
+                        color: "#F8E71C",
+                        isAllDay: true
+                    )
+                    event.isRecurring = true  // Repurposed as system event flag
+                    events.append(event)
+                }
+            }
+        }
+
+        return events
+    }
 }
