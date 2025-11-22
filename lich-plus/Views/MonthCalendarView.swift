@@ -7,6 +7,7 @@ struct MonthCalendarView: View {
     @State private var selectedDate: Date?
     @State private var showDayAgenda = false
     @State private var showEventForm = false
+    @State private var showYearView = false
 
     @Query private var events: [CalendarEvent]
 
@@ -22,6 +23,9 @@ struct MonthCalendarView: View {
                     onPreviousMonth: { goToPreviousMonth() },
                     onNextMonth: { goToNextMonth() }
                 )
+                .onTapGesture {
+                    showYearView = true
+                }
 
                 // Day Headers
                 HStack {
@@ -76,6 +80,12 @@ struct MonthCalendarView: View {
                     isPresented: $showEventForm,
                     initialDate: selectedDate ?? currentDate,
                     eventToEdit: nil
+                )
+            }
+            .sheet(isPresented: $showYearView) {
+                YearGridView(
+                    currentDate: $currentDate,
+                    isPresented: $showYearView
                 )
             }
         }
