@@ -43,17 +43,18 @@ struct MonthCalendarView: View {
                     ForEach(Array(getDaysInMonth().enumerated()), id: \.offset) { (_, day) in
                         let isCurrentMonth = Calendar.current.component(.month, from: day) == Calendar.current.component(.month, from: currentDate)
                         let lunarDate = LunarCalendarConverter.getLunarDate(for: day)
-                        let dayEvents = events.filter { Calendar.current.isDate($0.date, inSameDayAs: day) }
                         let isToday = Calendar.current.isDateInToday(day)
-                        let isSelected = selectedDate.map { Calendar.current.isDate(day, inSameDayAs: $0) } ?? false
+
+                        let viewModel = CalendarCellViewModel(
+                            date: isCurrentMonth ? day : nil,
+                            lunarInfo: lunarDate,
+                            auspiciousInfo: AuspiciousDayServiceFactory.shared.getAuspiciousInfo(for: day),
+                            isCurrentMonth: isCurrentMonth,
+                            isToday: isToday
+                        )
 
                         CalendarCellView(
-                            day: isCurrentMonth ? Calendar.current.component(.day, from: day) : nil,
-                            lunarDay: lunarDate.displayString,
-                            hasEvents: !dayEvents.isEmpty,
-                            isCurrentMonth: isCurrentMonth,
-                            isToday: isToday,
-                            isSelected: isSelected,
+                            viewModel: viewModel,
                             action: {
                                 selectedDate = day
                                 showDayAgenda = true
