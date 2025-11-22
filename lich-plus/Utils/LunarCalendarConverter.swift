@@ -46,6 +46,24 @@ class LunarCalendarConverter {
         return jdn
     }
 
+    /// Convert a Date to Julian Day Number (JDN)
+    /// This method is public to allow Can Chi calculation in CanChiCalculator
+    /// - Parameter date: The date to convert
+    /// - Returns: Julian Day Number as Double
+    public static func dateToJDN(_ date: Date) -> Double {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+
+        guard let day = components.day,
+              let month = components.month,
+              let year = components.year else {
+            // Return epoch JDN if date components are invalid
+            return 2451545.0
+        }
+
+        return gregorianToJD(day: day, month: month, year: year)
+    }
+
     // MARK: - Julian Day Number to Lunar
     private static func jdToLunar(jd: Double) -> LunarDateInfo {
         // This is a simplified implementation
@@ -77,8 +95,13 @@ class LunarCalendarConverter {
         guard let day = components.day,
               let month = components.month,
               let year = components.year else {
-            return LunarDateInfo(year: 2024, month: 6, day: 15)
+            var defaultDate = LunarDateInfo(year: 2024, month: 6, day: 15)
+            defaultDate.canChi = CanChiCalculator.calculateCanChi(for: solarDate)
+            return defaultDate
         }
+
+        // Create lunar date based on mapping
+        var lunarDate: LunarDateInfo
 
         // Sample mapping for August 2024 (Lunar 6th month)
         // These are approximate conversions for the calendar view
@@ -86,13 +109,18 @@ class LunarCalendarConverter {
             // August 1 = Lunar 6/16
             let lunarDay = day + 15
             if lunarDay <= 30 {
-                return LunarDateInfo(year: 2024, month: 6, day: lunarDay)
+                lunarDate = LunarDateInfo(year: 2024, month: 6, day: lunarDay)
             } else {
-                return LunarDateInfo(year: 2024, month: 7, day: lunarDay - 30)
+                lunarDate = LunarDateInfo(year: 2024, month: 7, day: lunarDay - 30)
             }
+        } else {
+            lunarDate = solarToLunar(date: solarDate)
         }
 
-        return solarToLunar(date: solarDate)
+        // Attach Can Chi information to the lunar date
+        lunarDate.canChi = CanChiCalculator.calculateCanChi(for: solarDate)
+
+        return lunarDate
     }
 
     // MARK: - Lunar to Solar Conversion

@@ -6,6 +6,7 @@ struct LunarDateInfo: Codable, Hashable {
     var month: Int
     var day: Int
     var isLeapMonth: Bool = false
+    var canChi: CanChiInfo?
 
     // MARK: - Display Properties
     var displayString: String {
@@ -13,12 +14,23 @@ struct LunarDateInfo: Codable, Hashable {
         return "Âm \(monthStr)/\(day)"
     }
 
+    var calendarDisplayString: String {
+        if day == 1 {
+            return "Mùng 1"
+        } else if let canChi = canChi {
+            return "\(day) \(canChi.displayName)"
+        } else {
+            return "\(day)"
+        }
+    }
+
     // MARK: - Initializer
-    init(year: Int, month: Int, day: Int, isLeapMonth: Bool = false) {
+    init(year: Int, month: Int, day: Int, isLeapMonth: Bool = false, canChi: CanChiInfo? = nil) {
         self.year = year
         self.month = month
         self.day = day
         self.isLeapMonth = isLeapMonth
+        self.canChi = canChi
     }
 
     // MARK: - Hashable Implementation
@@ -27,12 +39,14 @@ struct LunarDateInfo: Codable, Hashable {
         hasher.combine(month)
         hasher.combine(day)
         hasher.combine(isLeapMonth)
+        hasher.combine(canChi)
     }
 
     static func == (lhs: LunarDateInfo, rhs: LunarDateInfo) -> Bool {
         lhs.year == rhs.year &&
         lhs.month == rhs.month &&
         lhs.day == rhs.day &&
-        lhs.isLeapMonth == rhs.isLeapMonth
+        lhs.isLeapMonth == rhs.isLeapMonth &&
+        lhs.canChi == rhs.canChi
     }
 }

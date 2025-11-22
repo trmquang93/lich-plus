@@ -7,6 +7,7 @@ struct MonthCalendarView: View {
     @State private var selectedDate: Date?
     @State private var showDayAgenda = false
     @State private var showEventForm = false
+    @State private var showYearView = false
 
     @Query private var events: [CalendarEvent]
     @AppStorage("showRamEvents") private var showRamEvents = true
@@ -24,6 +25,9 @@ struct MonthCalendarView: View {
                     onPreviousMonth: { goToPreviousMonth() },
                     onNextMonth: { goToNextMonth() }
                 )
+                .onTapGesture {
+                    showYearView = true
+                }
 
                 // Day Headers
                 HStack {
@@ -50,15 +54,17 @@ struct MonthCalendarView: View {
                             return event.shouldDisplay(showRamEvents: showRamEvents, showMung1Events: showMung1Events)
                         }
                         let isToday = Calendar.current.isDateInToday(day)
-                        let isSelected = selectedDate.map { Calendar.current.isDate(day, inSameDayAs: $0) } ?? false
+
+                        let viewModel = CalendarCellViewModel(
+                            date: isCurrentMonth ? day : nil,
+                            lunarInfo: lunarDate,
+                            auspiciousInfo: AuspiciousDayServiceFactory.shared.getAuspiciousInfo(for: day),
+                            isCurrentMonth: isCurrentMonth,
+                            isToday: isToday
+                        )
 
                         CalendarCellView(
-                            day: isCurrentMonth ? Calendar.current.component(.day, from: day) : nil,
-                            lunarDay: lunarDate.displayString,
-                            hasEvents: !dayEvents.isEmpty,
-                            isCurrentMonth: isCurrentMonth,
-                            isToday: isToday,
-                            isSelected: isSelected,
+                            viewModel: viewModel,
                             action: {
                                 selectedDate = day
                                 showDayAgenda = true
@@ -85,6 +91,12 @@ struct MonthCalendarView: View {
                     isPresented: $showEventForm,
                     initialDate: selectedDate ?? currentDate,
                     eventToEdit: nil
+                )
+            }
+            .sheet(isPresented: $showYearView) {
+                YearGridView(
+                    currentDate: $currentDate,
+                    isPresented: $showYearView
                 )
             }
         }
