@@ -6,27 +6,27 @@
 //
 
 import Foundation
+import VietnameseLunar
 
 // MARK: - Lunar Calendar Converter
 
 struct LunarCalendar {
-    // Based on the Vietnamese lunar calendar algorithm
-    // Reference: Traditional Vietnamese calendar calculations
+    // Real Vietnamese lunar calendar using the VietnameseLunar library
+    // Based on Hồ Ngọc Đức's algorithm - the gold standard for Vietnamese lunar calendar
 
     /// Convert solar date to lunar date
     /// - Parameter date: Solar date to convert
     /// - Returns: Tuple of (lunarDay, lunarMonth, lunarYear)
     static func solarToLunar(_ date: Date) -> (day: Int, month: Int, year: Int) {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day], from: date)
-
-        guard let solarDay = components.day,
-              let solarMonth = components.month,
-              let solarYear = components.year else {
+        let vietnameseCalendar = VietnameseCalendar(date: date)
+        guard let lunarDate = vietnameseCalendar.vietnameseDate else {
             return (1, 1, 2025)
         }
 
-        return convertSolarToLunar(solarDay: solarDay, solarMonth: solarMonth, solarYear: solarYear)
+        // Convert year from String to Int
+        let year = Int(lunarDate.year) ?? 2025
+
+        return (day: lunarDate.day, month: lunarDate.month, year: year)
     }
 
     /// Convert lunar date to solar date
@@ -47,57 +47,27 @@ struct LunarCalendar {
 
     // MARK: - Private Conversion Methods
 
-    private static func convertSolarToLunar(solarDay: Int, solarMonth: Int, solarYear: Int) -> (day: Int, month: Int, year: Int) {
-        // Algorithm based on traditional Vietnamese lunar calendar
-        // This is a simplified implementation for demonstration
-
-        // Days from epoch to solar date
-        let jd = jdnFromSolar(day: solarDay, month: solarMonth, year: solarYear)
-
-        // Calculate lunar date
-        let a = jd + 1
-        let b = Double(a - 1948440) + 10632.0 / 30.6001
-        let c = Int(b) % 10631
-
-        let d = c / 5957
-        let year = d + 11
-        let month = (c % 5957) / 29 + 1
-        let day = (c % 5957) % 29 + 1
-
-        return (day: day, month: month, year: year)
-    }
-
+    /// Convert lunar date to solar date using brute force search
+    /// Since VietnameseLunar doesn't directly support lunar-to-solar conversion,
+    /// we search through dates until we find the matching lunar date
     private static func convertLunarToSolar(lunarDay: Int, lunarMonth: Int, lunarYear: Int) -> (day: Int, month: Int, year: Int) {
-        // Simplified inverse calculation
-        let offset = (lunarYear - 11) * 354 + (lunarMonth - 1) * 29 + lunarDay
-        let jd = 1948440 - 10632 + Int(Double(offset) * 30.6001)
+        // Start from January 1st of the lunar year
+        var testDate = Calendar.current.date(from: DateComponents(year: lunarYear, month: 1, day: 1)) ?? Date()
 
-        return jdnToSolar(jdn: jd)
-    }
+        // Search forward through the year for a match
+        for _ in 0..<365 {
+            let lunar = solarToLunar(testDate)
+            if lunar.day == lunarDay && lunar.month == lunarMonth && lunar.year == lunarYear {
+                let components = Calendar.current.dateComponents([.year, .month, .day], from: testDate)
+                return (day: components.day ?? 1, month: components.month ?? 1, year: components.year ?? lunarYear)
+            }
 
-    // MARK: - Julian Day Number Conversion
+            // Move to next day
+            testDate = Calendar.current.date(byAdding: .day, value: 1, to: testDate) ?? testDate
+        }
 
-    private static func jdnFromSolar(day: Int, month: Int, year: Int) -> Int {
-        let a = (14 - month) / 12
-        let y = year + 4800 - a
-        let m = month + 12 * a - 3
-
-        let jdn = day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045
-
-        return jdn
-    }
-
-    private static func jdnToSolar(jdn: Int) -> (day: Int, month: Int, year: Int) {
-        let f = jdn + 1401 + (((4 * jdn + 274277) / 146097) * 3) / 4 - 38
-        let e = 4 * f + 3
-        let g = (e % 1461) / 4
-        let h = 5 * g + 2
-
-        let day = (h % 153) / 5 + 1
-        let month = ((h / 153 + 2) % 12) + 1
-        let year = (e / 1461) - 4716 + ((12 + 2 - month) / 12)
-
-        return (day: day, month: month, year: year)
+        // Fallback if not found
+        return (day: lunarDay, month: lunarMonth, year: lunarYear)
     }
 }
 

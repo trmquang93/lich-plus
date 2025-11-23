@@ -19,7 +19,8 @@ class CalendarDataManager: ObservableObject {
     init() {
         let today = Date()
         self.currentMonth = Self.generateCalendarMonth(for: today)
-        self.selectedDay = nil
+        // Default to today's date
+        self.selectedDay = self.currentMonth.days.first { $0.isToday }
     }
 
     // MARK: - Public Methods
@@ -59,7 +60,9 @@ class CalendarDataManager: ObservableObject {
         let numberOfDays = range.count
 
         let firstWeekday = calendar.component(.weekday, from: firstDay)
-        let paddingDays = firstWeekday - 1
+        // Adjust for Monday-first week: weekday 1=Sunday, 2=Monday, etc.
+        // Convert to 0=Monday, 1=Tuesday, ..., 6=Sunday
+        let paddingDays = (firstWeekday + 5) % 7
 
         // Create padding for previous month
         var days: [CalendarDay] = []

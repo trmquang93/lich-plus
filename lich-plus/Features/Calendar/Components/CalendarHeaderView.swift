@@ -60,9 +60,9 @@ struct CalendarHeaderView: View {
             }
             .frame(height: 44)
 
-            // Day labels (Sunday to Saturday in Vietnamese)
+            // Day labels (Monday to Sunday in Vietnamese)
             HStack(spacing: 0) {
-                ForEach(["CN", "T2", "T3", "T4", "T5", "T6", "T7"], id: \.self) { day in
+                ForEach(["T2", "T3", "T4", "T5", "T6", "T7", "CN"], id: \.self) { day in
                     Text(day)
                         .font(.system(size: AppTheme.fontCaption, weight: .semibold))
                         .foregroundStyle(AppColors.textSecondary)
