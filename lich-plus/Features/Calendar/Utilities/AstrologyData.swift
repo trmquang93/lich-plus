@@ -439,28 +439,46 @@ struct SpecialLunarDates {
 
 struct HourlyZodiacHelper {
     /// Calculate which hours are auspicious for a given day zodiac
-    /// In Vietnamese astrology, some hours of the day are more auspicious than others
+    /// In Vietnamese astrology, auspicious hours depend on the day's Trực (Zodiac Hour Type)
+    /// This follows the traditional "Hoàng Đạo Cát Thời" (Auspicious Hours) system
     static func getAuspiciousHours(for dayZodiacHour: ZodiacHourType, dayChi: ChiEnum) -> [Int] {
-        // The auspicious hours are calculated based on the day's Chi
-        // This follows the traditional "Hoàng Đạo Cát Thời" (Auspicious Hours) system
+        // The auspicious hours are determined by the day's Trực (ZodiacHourType)
+        // Each of the 12 Trực types has specific auspicious hours throughout the day
 
-        let baseHours: [Int]
-        switch dayChi {
-        case .ty, .ngo:     // Tý, Ngọ days
-            baseHours = [0, 2, 4, 8, 10] // Tý, Dần, Thìn, Thân, Tuất hours
-        case .suu, .mui:    // Sửu, Mùi days
-            baseHours = [1, 3, 5, 9, 11] // Sửu, Mão, Tỵ, Dậu, Hợi hours
-        case .dan, .than:   // Dần, Thân days
-            baseHours = [0, 1, 4, 6, 10] // Tý, Sửu, Thìn, Ngọ, Tuất hours
-        case .mao, .dau:    // Mão, Dậu days
-            baseHours = [1, 2, 5, 7, 11] // Sửu, Dần, Tỵ, Mùi, Hợi hours
-        case .thin, .tuat:  // Thìn, Tuất days
-            baseHours = [0, 3, 6, 8, 9]  // Tý, Mão, Ngọ, Thân, Dậu hours
-        case .ty2, .hoi:    // Tỵ, Hợi days
-            baseHours = [2, 4, 7, 9, 10] // Dần, Thìn, Mùi, Dậu, Tuất hours
+        let auspiciousHours: [Int]
+        switch dayZodiacHour {
+        // VERY AUSPICIOUS (Tứ Hộ Thần)
+        case .tru:  // Trừ - Very auspicious for spiritual/removal activities
+            auspiciousHours = [1, 4, 6, 7, 10, 11]  // Sửu, Thìn, Ngọ, Mùi, Tuất, Hợi
+        case .dinh:  // Định - Very auspicious for business/stabilization
+            auspiciousHours = [0, 2, 5, 6, 8, 11]  // Tý, Dần, Tỵ, Ngọ, Thân, Hợi
+        case .nguy:  // Nguy - Very auspicious for spiritual activities
+            auspiciousHours = [1, 3, 4, 7, 9, 10]  // Sửu, Mão, Thìn, Mùi, Dậu, Tuất
+        case .khai:  // Khai - Very auspicious for opening/major events
+            auspiciousHours = [0, 2, 3, 6, 7, 9]   // Tý, Dần, Mão, Ngọ, Mùi, Dậu
+
+        // NEUTRAL (Bán Cát Bán Hung)
+        case .kien:  // Kiên - Semi-auspicious, good for starting things
+            auspiciousHours = [1, 2, 4, 6, 10, 11] // Sửu, Dần, Thìn, Ngọ, Tuất, Hợi
+        case .chap:  // Chấp - Neutral, good for maintenance
+            auspiciousHours = [0, 3, 5, 7, 8, 9]   // Tý, Mão, Tỵ, Mùi, Thân, Dậu
+
+        // INAUSPICIOUS (Thần Hung) - Fewer auspicious hours
+        case .pha:  // Phá - Inauspicious, limited auspicious hours
+            auspiciousHours = [2, 5, 8, 11]        // Dần, Tỵ, Thân, Hợi
+        case .be:   // Bế - Inauspicious, limited auspicious hours
+            auspiciousHours = [1, 4, 7, 10]        // Sửu, Thìn, Mùi, Tuất
+        case .man:  // Mãn - Inauspicious, some auspicious hours
+            auspiciousHours = [0, 3, 6, 9]         // Tý, Mão, Ngọ, Dậu
+        case .binh: // Bình - Inauspicious, limited auspicious hours
+            auspiciousHours = [2, 4, 6, 8, 10]     // Dần, Thìn, Ngọ, Thân, Tuất
+        case .thanh: // Thành - Inauspicious, limited auspicious hours
+            auspiciousHours = [1, 3, 5, 7, 9, 11]  // Sửu, Mão, Tỵ, Mùi, Dậu, Hợi
+        case .thu:  // Thu - Inauspicious, some auspicious hours
+            auspiciousHours = [0, 4, 8, 11]        // Tý, Thìn, Thân, Hợi
         }
 
-        return baseHours
+        return auspiciousHours
     }
 
     /// Get the Chi for a specific hour (0-11)
