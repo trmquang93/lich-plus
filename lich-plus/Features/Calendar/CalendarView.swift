@@ -7,36 +7,67 @@
 
 import SwiftUI
 
+// MARK: - Calendar View
+
 struct CalendarView: View {
+    @StateObject private var dataManager = CalendarDataManager()
+
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("📅 Lịch")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding()
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Header with month/year selector
+                    CalendarHeaderView(
+                        selectedDate: .constant(dataManager.currentMonth.days.first?.date ?? Date()),
+                        onPreviousMonth: {
+                            dataManager.goToPreviousMonth()
+                        },
+                        onNextMonth: {
+                            dataManager.goToNextMonth()
+                        }
+                    )
 
-                Spacer()
+                    // Calendar grid
+                    CalendarGridView(
+                        month: dataManager.currentMonth,
+                        selectedDay: $dataManager.selectedDay,
+                        onDaySelected: { day in
+                            dataManager.selectDay(day)
+                        }
+                    )
 
-                VStack(spacing: 16) {
-                    Text("Calendar View")
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
+                    // Quick info banner for selected day or today
+                    if let selectedDay = dataManager.selectedDay {
+                        Divider()
+                            .foregroundStyle(AppColors.borderLight)
+                            .padding(.horizontal, AppTheme.spacing16)
 
-                    Text("Monthly calendar with Vietnamese lunar calendar support")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
+                        let luckyHours = DayTypeCalculator.getLuckyHours(for: selectedDay.date)
+                        QuickInfoBannerView(
+                            day: selectedDay,
+                            luckyHours: luckyHours
+                        )
+                    }
+
+                    // Events list for selected day
+                    if let selectedDay = dataManager.selectedDay {
+                        EventsListView(
+                            events: selectedDay.events,
+                            day: selectedDay
+                        )
+                    }
+
+                    Spacer(minLength: AppTheme.spacing16)
                 }
-                .padding()
-
-                Spacer()
+                .background(AppColors.background)
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .navigationTitle("Lịch")
+            .navigationTitle("Lịch Văn Minh")
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     CalendarView()

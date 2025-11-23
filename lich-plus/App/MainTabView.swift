@@ -20,13 +20,18 @@ struct MainTabView: View {
 
             TasksView()
                 .tabItem {
-                    Label("tab.tasks", systemImage: "checkmark.circle")
+                    Label("tab.tasks", systemImage: "list.bullet")
                 }
                 .tag(1)
 
             AIView()
                 .tabItem {
-                    Label("tab.ai", systemImage: "sparkles")
+                    Label {
+                        Text("tab.ai")
+                    } icon: {
+                        Image("ai.tab")
+                            .renderingMode(.template)
+                    }
                 }
                 .tag(2)
 
@@ -56,6 +61,8 @@ struct MainTabView: View {
             .foregroundColor: AppColors.primary.uiColor,
             .font: UIFont.systemFont(ofSize: AppTheme.fontCaption, weight: .semibold),
         ]
+        itemAppearance.normal.iconColor = AppColors.secondary.uiColor
+        itemAppearance.selected.iconColor = AppColors.primary.uiColor
 
         appearance.stackedLayoutAppearance = itemAppearance
         appearance.inlineLayoutAppearance = itemAppearance

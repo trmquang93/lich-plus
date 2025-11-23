@@ -128,7 +128,7 @@ The app follows a tab-based navigation pattern with SwiftUI's `TabView` as the m
 Each tab is implemented as a separate SwiftUI `View` file in its own feature folder:
 
 - **Features/Calendar/CalendarView.swift** - Month view with Vietnamese lunar calendar support (planned: event display, day selection)
-- **Features/Tasks/TasksView.swift** - Task/todo management interface (placeholder with feature description)
+- **Features/Tasks/TasksView.swift** - Full-featured task and event management with date grouping, filtering, search, and inline editing
 - **Features/AI/AIView.swift** - AI assistant chat/features (placeholder with feature description)
 - **Features/Settings/SettingsView.swift** - Application settings and preferences
 
@@ -152,7 +152,15 @@ lich-plus/
 │   │   ├── Calendar/               # Calendar feature
 │   │   │   └── CalendarView.swift
 │   │   ├── Tasks/                  # Tasks feature
-│   │   │   └── TasksView.swift
+│   │   │   ├── Models/
+│   │   │   │   └── TaskModels.swift    # Task, TaskCategory, RecurrenceType models
+│   │   │   ├── Components/
+│   │   │   │   ├── TaskListHeader.swift    # Header with search and add button
+│   │   │   │   ├── TaskCard.swift          # Individual task display
+│   │   │   │   ├── TaskSection.swift       # Date-grouped task section
+│   │   │   │   ├── FilterBar.swift         # Date filter options
+│   │   │   │   └── AddEditTaskSheet.swift  # Modal form for task creation/editing
+│   │   │   └── TasksView.swift        # Main tasks view with search, filtering, and management
 │   │   ├── AI/                     # AI assistant feature
 │   │   │   └── AIView.swift
 │   │   └── Settings/               # Settings feature
@@ -239,6 +247,41 @@ The app uses Xcode's **String Catalog** format (`Localizable.xcstrings`) for man
 ### Working with SwiftUI Previews
 
 All views include `#Preview` blocks for Xcode canvas preview support. Use the Xcode canvas to iterate on UI without building.
+
+### Working with the Tasks Feature
+
+The Tasks feature implements a complete task and event management system with the following capabilities:
+
+**Task Model (`TaskModels.swift`):**
+- Core `Task` struct with UUID identification
+- Properties: title, date, optional start/end times, category, notes, completion status, reminder settings, recurrence
+- `TaskCategory` enum: work, personal, birthday, holiday, meeting, other
+- `RecurrenceType` enum: none, daily, weekly, monthly, yearly
+
+**Key Features:**
+- **Task Grouping**: Automatically groups tasks by date (Today, Tomorrow, Upcoming)
+- **Search**: Full-text search across task titles and notes
+- **Filtering**: Filter by time period (All, This Week, This Month)
+- **Quick Actions**: One-click task completion toggle without opening edit form
+- **Category Indicators**: Color-coded visual indicators for task categories
+- **Form Validation**: Title is required for new tasks
+- **Responsive Design**: Adapts to different screen sizes using Theme.swift spacing
+
+**Components Architecture:**
+- `TaskListHeader`: Search bar and add button
+- `TaskCard`: Displays individual task with checkbox and metadata
+- `TaskSection`: Groups tasks by date range
+- `FilterBar`: Horizontal scrollable filter options
+- `AddEditTaskSheet`: Modal form with full task editing capabilities
+- `TasksView`: Main container managing state and interactions
+
+**Localization Keys** (all keys use `task.` prefix):
+- UI labels: `myTasks`, `search`, `add`, `addNew`, `edit`, `delete`, `done`, `cancel`
+- Date labels: `today`, `tomorrow`, `upcoming`
+- Field labels: `title`, `date`, `time`, `startTime`, `endTime`, `reminder`, `recurrence`, `category`, `notes`
+- Status: `completed`, `notCompleted`
+- Filters: `all`, `thisWeek`, `thisMonth`
+- Categories and reminders have their own key prefixes: `category.` and `reminder.`
 
 ## Testing
 
