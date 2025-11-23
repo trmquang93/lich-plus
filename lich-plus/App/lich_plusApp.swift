@@ -11,7 +11,7 @@ import SwiftUI
 struct lich_plusApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainTabView()
         }
     }
 }

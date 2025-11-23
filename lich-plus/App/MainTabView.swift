@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct MainTabView: View {
     @State private var selectedTab: Int = 0
 
     var body: some View {
@@ -69,5 +69,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    MainTabView()
 }
