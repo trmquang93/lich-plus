@@ -62,7 +62,9 @@ struct CanChiCalculator {
         // The reference point: JDN 11 = Giáp Tý (0, 0)
         // Can cycles every 10 days, Chi cycles every 12 days
 
-        let canIndex = (jdn + 9) % 10
+        // Traditional formula: (jdn + 9) % 10 for Can where Giáp = 0
+        // CanEnum offset: +4 because enum starts with Canh instead of Giáp
+        let canIndex = (jdn + 13) % 10  // +9 traditional formula + 4 enum offset
         let chiIndex = (jdn + 1) % 12
 
         let can = CanEnum(rawValue: canIndex) ?? .giap
