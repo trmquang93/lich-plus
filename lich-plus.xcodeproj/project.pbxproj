@@ -39,22 +39,16 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4DA45ED82ED108FE00C1F1F6 /* lich-plus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "lich-plus";
 			sourceTree = "<group>";
 		};
 		4DA45EE82ED1090100C1F1F6 /* lich-plusTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "lich-plusTests";
 			sourceTree = "<group>";
 		};
 		4DA45EF22ED1090100C1F1F6 /* lich-plusUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "lich-plusUITests";
 			sourceTree = "<group>";
 		};
@@ -122,7 +116,6 @@
 				04D64E0DC387214CE603683A /* Pods-lich-plus.debug.xcconfig */,
 				100DB59E0A23C1B0F9E436E8 /* Pods-lich-plus.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
