@@ -74,55 +74,61 @@ struct LunarCalendar {
 // MARK: - Day Type Determiner
 
 struct DayTypeCalculator {
-    /// Determine if a date is a good or bad day (simplified version)
-    /// In production, this would load from a database or external source
+    /// Determine if a date is a good or bad day using Vietnamese astrology
+    /// Uses the 12 Zodiac Hours (12 Kiến Trừ) system based on lunar calendar
+    /// - Parameter date: Solar date to evaluate
+    /// - Returns: DayType (good/bad/neutral) based on the zodiac hour
     static func determineDayType(for date: Date) -> DayType {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.day, .month], from: date)
-
-        guard let day = components.day, let month = components.month else {
-            return .neutral
-        }
-
-        // Simplified algorithm - in production, use a comprehensive database
-        // This is just a demo calculation based on lunar calendar patterns
-
-        let dayTypeIndex = (day + month) % 3
-
-        switch dayTypeIndex {
-        case 0:
-            return .good
-        case 1:
-            return .bad
-        default:
-            return .neutral
-        }
+        // Use the HoangDaoCalculator to determine day type based on lunar calendar
+        return HoangDaoCalculator.determineDayType(for: date)
     }
 
     /// Get lucky hours for a specific date
+    /// Returns the auspicious hours (Giờ Hoàng Đạo) for the day
+    /// Each hour represents a 2-hour period in traditional Vietnamese timekeeping
+    /// - Parameter date: Solar date
+    /// - Returns: Array of LuckyHour with auspicious times and activities
     static func getLuckyHours(for date: Date) -> [LuckyHour] {
-        // Mock data - in production, load from database based on lunar calendar
-        return [
+        // Get the auspicious hours from the HoangDaoCalculator
+        let auspiciousHours = HoangDaoCalculator.getAuspiciousHoursOnly(for: date)
+
+        // Convert HourlyZodiac to LuckyHour format
+        return auspiciousHours.map { hourlyZodiac in
             LuckyHour(
-                startTime: "05:00",
-                endTime: "07:00",
-                luckyActivities: ["Bắt đầu công việc", "Khởi động dự án"]
-            ),
-            LuckyHour(
-                startTime: "09:00",
-                endTime: "11:00",
-                luckyActivities: ["Làm việc quan trọng", "Gặp khách hàng"]
-            ),
-            LuckyHour(
-                startTime: "13:00",
-                endTime: "15:00",
-                luckyActivities: ["Quyết định lớn", "Ký hợp đồng"]
-            ),
-            LuckyHour(
-                startTime: "19:00",
-                endTime: "21:00",
-                luckyActivities: ["Gặp gỡ xã hội", "Ăn uống"]
-            ),
-        ]
+                startTime: formatHourStart(hourlyZodiac.hour),
+                endTime: formatHourEnd(hourlyZodiac.hour),
+                luckyActivities: hourlyZodiac.suitableActivities
+            )
+        }
+    }
+
+    // MARK: - Helper Functions
+
+    /// Format the start time of a 2-hour period
+    /// - Parameter hour: Hour index (0-11)
+    /// - Returns: Formatted time string (e.g., "23:00", "01:00")
+    private static func formatHourStart(_ hour: Int) -> String {
+        let chi = ChiEnum(rawValue: hour) ?? .ty
+        let range = chi.hourRange
+
+        if chi == .ty {
+            return "23:00"
+        }
+
+        return String(format: "%02d:00", range.start)
+    }
+
+    /// Format the end time of a 2-hour period
+    /// - Parameter hour: Hour index (0-11)
+    /// - Returns: Formatted time string (e.g., "01:00", "03:00")
+    private static func formatHourEnd(_ hour: Int) -> String {
+        let chi = ChiEnum(rawValue: hour) ?? .ty
+        let range = chi.hourRange
+
+        if chi == .ty {
+            return "01:00"
+        }
+
+        return String(format: "%02d:00", range.end)
     }
 }
