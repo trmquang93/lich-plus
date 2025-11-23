@@ -106,6 +106,7 @@ lich-plus/
 │   ├── AIView.swift                # AI assistant feature
 │   ├── SettingsView.swift          # Settings feature
 │   ├── Theme.swift                 # Design system (colors, spacing, typography)
+│   ├── Localizable.xcstrings       # String catalog for localization (EN & VI)
 │   └── Assets.xcassets             # Images and app icons
 ├── lich-plusTests/                 # Unit test target
 ├── lich-plusUITests/               # UI test target
@@ -123,6 +124,58 @@ lich-plus/
 3. Use colors from `AppColors` and spacing from `AppTheme`
 4. Add a `#Preview` block at the end for live preview support
 5. If adding to tab navigation, add a `.tabItem` entry in `ContentView.swift`
+
+### Managing Localizable Strings
+
+The app uses Xcode's **String Catalog** format (`Localizable.xcstrings`) for managing localized strings. Currently supported languages: English (en) and Vietnamese (vi).
+
+**Workflow for adding new strings:**
+
+1. **In Swift code**, use the `String(localized:)` initializer or reference localization keys directly:
+   ```swift
+   Label("tab.calendar", systemImage: "calendar")  // Uses key from string catalog
+   Text(String(localized: "tab.calendar"))         // Alternative syntax
+   ```
+
+2. **Add string key to Localizable.xcstrings:**
+   - Open `Localizable.xcstrings` in Xcode
+   - Add a new key using dot-notation format: `feature.action` (e.g., `calendar.createEvent`, `tasks.addTask`)
+   - Provide English translation in the "en" localization
+   - Provide Vietnamese translation in the "vi" localization
+
+3. **String catalog structure:**
+   ```json
+   {
+     "your.key" : {
+       "extractionState" : "manual",
+       "localizations" : {
+         "en" : {
+           "stringUnit" : {
+             "state" : "translated",
+             "value" : "English translation"
+           }
+         },
+         "vi" : {
+           "stringUnit" : {
+             "state" : "translated",
+             "value" : "Vietnamese translation"
+           }
+         }
+       }
+     }
+   }
+   ```
+
+4. **Key naming conventions:**
+   - Use dot-notation for organization: `screen.component.text`
+   - Tab items: `tab.featureName` (e.g., `tab.calendar`, `tab.tasks`)
+   - Button/action labels: `feature.action` (e.g., `calendar.save`, `task.delete`)
+   - Section titles: `feature.section` (e.g., `settings.general`)
+
+**Syncing with code changes:**
+- String catalog entries are manually managed (not auto-extracted from code)
+- Always add translations for both EN and VI when adding new keys
+- Xcode will show warnings for missing localizations if a key is referenced in code
 
 ### Modifying the Design System
 

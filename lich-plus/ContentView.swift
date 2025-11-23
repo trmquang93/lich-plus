@@ -14,25 +14,25 @@ struct ContentView: View {
         TabView(selection: $selectedTab) {
             CalendarView()
                 .tabItem {
-                    Label("Lịch", systemImage: "calendar")
+                    Label("tab.calendar", systemImage: "calendar")
                 }
                 .tag(0)
 
             TasksView()
                 .tabItem {
-                    Label("Việc", systemImage: "checkmark.circle")
+                    Label("tab.tasks", systemImage: "checkmark.circle")
                 }
                 .tag(1)
 
             AIView()
                 .tabItem {
-                    Label("AI", systemImage: "sparkles")
+                    Label("tab.ai", systemImage: "sparkles")
                 }
                 .tag(2)
 
             SettingsView()
                 .tabItem {
-                    Label("Cài đặt", systemImage: "gear")
+                    Label("tab.settings", systemImage: "gear")
                 }
                 .tag(3)
         }
@@ -50,11 +50,11 @@ struct ContentView: View {
         let itemAppearance = UITabBarItemAppearance()
         itemAppearance.normal.titleTextAttributes = [
             .foregroundColor: AppColors.secondary.uiColor,
-            .font: UIFont.systemFont(ofSize: AppTheme.fontCaption)
+            .font: UIFont.systemFont(ofSize: AppTheme.fontCaption),
         ]
         itemAppearance.selected.titleTextAttributes = [
             .foregroundColor: AppColors.primary.uiColor,
-            .font: UIFont.systemFont(ofSize: AppTheme.fontCaption, weight: .semibold)
+            .font: UIFont.systemFont(ofSize: AppTheme.fontCaption, weight: .semibold),
         ]
 
         appearance.stackedLayoutAppearance = itemAppearance
