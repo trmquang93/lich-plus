@@ -2,6 +2,44 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Maintaining This Documentation
+
+**IMPORTANT:** Keep this CLAUDE.md file in sync with actual project changes. This documentation is critical for future development and team collaboration.
+
+### When to Update CLAUDE.md
+
+Update this file in the **same commit** that introduces the change:
+
+1. **Adding/Removing Feature Views** - Update `File Structure` and `Feature Views` sections
+2. **Changing Tab Navigation** - Update `High-Level Architecture` and `Feature Views` sections
+3. **Modifying Design System** - Update the `Design System (Theme.swift)` bullet point and `Modifying the Design System` section
+4. **Adding Dependencies** - Update `Key Tech Stack` and `Dependencies` section in Development Workflow
+5. **Changing Directory Structure** - Update `File Structure` section
+6. **Updating Development Commands** - Update `Development Workflow` section with new commands or changes to existing ones
+7. **Adding/Removing Test Targets** - Update `File Structure` and `Testing` sections
+8. **New Features or Architecture Changes** - Update relevant sections in `Architecture & Code Organization` and `Common Development Tasks`
+
+### Documentation Guidelines
+
+- Keep the documentation high-level and focused on architecture, not implementation details
+- Use file paths relative to the `lich-plus/` directory
+- Include comments in code blocks explaining non-obvious commands
+- Document design decisions and architectural patterns, not just what exists
+- Maintain naming conventions in the documentation (use backticks for file names, code references)
+- When describing views, include their purpose and planned features (if applicable)
+
+### Validation Checklist
+
+Before committing changes that modify the project:
+
+- [ ] File structure section matches actual source files
+- [ ] Feature view descriptions are accurate and current
+- [ ] Architecture diagrams/descriptions reflect actual code organization
+- [ ] Commands in Development Workflow are tested and correct
+- [ ] Key Tech Stack version numbers match project configuration
+- [ ] All referenced files and directories actually exist
+- [ ] Localization guidelines match current string management approach
+
 ## Project Overview
 
 **Lich+** - A Vietnamese calendar iOS application built with SwiftUI. The app provides a calendar interface with support for Vietnamese lunar calendar, event management, task tracking, and AI assistant features. The project uses a tab-based navigation architecture and implements a comprehensive design system.
