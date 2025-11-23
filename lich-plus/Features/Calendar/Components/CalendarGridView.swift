@@ -69,7 +69,7 @@ struct CalendarDayCell: View {
             return AppColors.primary
         }
         if isSelected {
-            return AppColors.primary
+            return AppColors.accent
         }
         return AppColors.borderLight
     }
@@ -78,7 +78,7 @@ struct CalendarDayCell: View {
         if day.isToday || isSelected {
             return 2
         }
-        return 1
+        return 0
     }
 
     var textColor: Color {
@@ -90,26 +90,13 @@ struct CalendarDayCell: View {
 
     var body: some View {
         VStack(spacing: AppTheme.spacing4) {
-            HStack(spacing: AppTheme.spacing2) {
-                // Solar date (large)
-                Text(day.displaySolar)
-                    .font(.system(size: AppTheme.fontSubheading, weight: .bold))
-                    .foregroundStyle(day.isWeekend && day.isCurrentMonth ? AppColors.primary : textColor)
+            Spacer().frame(height: 4)
 
-                Spacer(minLength: 0)
-
-                // Event indicator dots
-                if day.hasEvents {
-                    HStack(spacing: 2) {
-                        ForEach(0..<min(day.events.count, 3), id: \.self) { _ in
-                            Circle()
-                                .fill(AppColors.eventOrange)
-                                .frame(width: 4, height: 4)
-                        }
-                    }
-                }
-            }
-            .frame(height: 20)
+            // Solar date (large)
+            Text(day.displaySolar)
+                .font(.system(size: AppTheme.fontSubheading, weight: .bold))
+                .foregroundStyle(
+                    day.isWeekend && day.isCurrentMonth ? AppColors.primary : textColor)
 
             // Lunar date (small, faint)
             Text(day.displayLunar)
@@ -117,16 +104,21 @@ struct CalendarDayCell: View {
                 .foregroundStyle(AppColors.textSecondary.opacity(0.6))
                 .lineLimit(1)
 
-            Spacer()
-
-            // Day type indicator
-            if day.isCurrentMonth {
-                Circle()
-                    .fill(dayTypeColor)
-                    .frame(width: 6, height: 6)
+            // Event indicator dots
+            if day.hasEvents {
+                HStack(spacing: 2) {
+                    ForEach(0..<min(day.events.count, 3), id: \.self) { _ in
+                        Circle()
+                            .fill(AppColors.eventOrange)
+                            .frame(width: 4, height: 4)
+                    }
+                }
+            } else {
+                Spacer()
             }
+            Spacer().frame(height: 4)
         }
-        .frame(height: 80)
+        .frame(height: 45)
         .frame(maxWidth: .infinity)
         .padding(AppTheme.spacing8)
         .background(backgroundColor)
@@ -137,17 +129,6 @@ struct CalendarDayCell: View {
             if day.isCurrentMonth {
                 onTap()
             }
-        }
-    }
-
-    private var dayTypeColor: Color {
-        switch day.dayType {
-        case .good:
-            return AppColors.accent
-        case .bad:
-            return Color(red: 1, green: 0.4, blue: 0.4)
-        case .neutral:
-            return AppColors.textDisabled
         }
     }
 }
@@ -171,7 +152,9 @@ struct CalendarDayCell: View {
             dayType: dayType,
             isCurrentMonth: true,
             isToday: dayNum == 23,
-            events: hasEvents ? [Event(title: "Sample Event", time: "10:00", category: .work, description: nil)] : [],
+            events: hasEvents
+                ? [Event(title: "Sample Event", time: "10:00", category: .work, description: nil)]
+                : [],
             isWeekend: isWeekend
         )
     }
