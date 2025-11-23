@@ -1,0 +1,58 @@
+# Xcode
+build/
+DerivedData/
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+*.xcworkspace
+!default.xcworkspace/workspace.xml
+xcuserdata/
+*.xccheckout
+*.moved-aside
+*.xcconfig
+*.xcscmblueprint
+
+# Xcode build
+*.o
+*.LinkFileList
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+*.swiftmodule
+*.swiftsourceinfo
+
+# Swift Package Manager
+.swiftpm/
+Package.resolved
+
+# CocoaPods
+Pods/
+Podfile.lock
+*.podspec
+
+# Carthage
+Carthage/Build/
+.carthage/
+
+# IDE
+.vscode/
+.idea/
+*.swiftpm
+*.playground
+*.xcworkspace
+
+# OS
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*~
+.env
+.env.local
+
+# Misc
+*.log
+.env*.local
+!CLAUDE.md
