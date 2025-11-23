@@ -233,19 +233,46 @@ enum ZodiacHourType: Int, CaseIterable, Equatable {
 // MARK: - Day Quality
 
 /// Represents the astrological quality of a specific day
+/// Combines multiple Vietnamese astrology systems (12 Trực, Lục Hắc Đạo, etc.)
 struct DayQuality: Equatable {
     let zodiacHour: ZodiacHourType
     let dayCanChi: String
+    let unluckyDayType: LucHacDaoCalculator.UnluckyDayType?
     let suitableActivities: [String]
     let tabooActivities: [String]
     let luckyDirection: String?
     let luckyColor: String?
 
     var isGoodDay: Bool {
+        // If an unlucky day, it's not a good day
+        if unluckyDayType != nil {
+            return false
+        }
         return zodiacHour.isAuspicious
     }
 
+    /// Final composite day quality considering all systems
+    var finalQuality: DayType {
+        // Lục Hắc Đạo (unlucky days) override positive base quality
+        if unluckyDayType != nil {
+            return .bad
+        }
+
+        // Otherwise use zodiac hour quality
+        switch zodiacHour.quality {
+        case .veryAuspicious:
+            return .good
+        case .neutral:
+            return .neutral
+        case .inauspicious:
+            return .bad
+        }
+    }
+
     var dayTypeDescription: String {
+        if let unluckyDay = unluckyDayType {
+            return unluckyDay.description
+        }
         return zodiacHour.fullDescription
     }
 }
