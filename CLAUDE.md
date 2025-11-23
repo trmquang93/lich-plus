@@ -103,28 +103,34 @@ Note: All git operations must be run from this directory (`lich-plus/`) or paren
 
 ### High-Level Architecture
 
-The app follows a tab-based navigation pattern with SwiftUI's `TabView` as the main navigation container. Each tab corresponds to a major feature area:
+The app follows a tab-based navigation pattern with SwiftUI's `TabView` as the main navigation container. Code is organized into functional layers:
 
-1. **Tab Navigation (ContentView.swift)** - Manages the four main tabs:
-   - Calendar (Lịch) - Calendar view with Vietnamese lunar calendar support
-   - Tasks (Việc) - Task/todo management
-   - AI (AI) - AI assistant features
-   - Settings (Cài đặt) - Application settings
+1. **App Layer (`App/`)** - Entry point and main navigation:
+   - `lich_plusApp.swift` - Main `@main` entry point that renders `ContentView` in a `WindowGroup`
+   - `ContentView.swift` - Tab navigation container managing the four main tabs:
+     - Calendar (Lịch) - Calendar view with Vietnamese lunar calendar support
+     - Tasks (Việc) - Task/todo management
+     - AI (AI) - AI assistant features
+     - Settings (Cài đặt) - Application settings
 
-2. **Design System (Theme.swift)** - Centralized color palette and spacing constants:
-   - `AppColors` struct: Primary colors (red #C7251D), secondary colors (gray), event colors (orange, blue, yellow, pink), text colors, backgrounds
-   - `AppTheme` struct: Spacing scale (2px to 24px), corner radius options, font sizes, opacity values
+2. **Core Layer (`Core/`)** - Shared design system:
+   - `Theme.swift` - Centralized color palette and spacing constants:
+     - `AppColors` struct: Primary colors (red #C7251D), secondary colors (gray), event colors (orange, blue, yellow, pink), text colors, backgrounds
+     - `AppTheme` struct: Spacing scale (2px to 24px), corner radius options, font sizes, opacity values
 
-3. **App Entry Point (lich_plusApp.swift)** - Simple `@main` entry point that renders `ContentView` in a `WindowGroup`
+3. **Features Layer (`Features/`)** - Feature-specific implementations:
+   - Each feature has its own folder (e.g., `Calendar/`, `Tasks/`, `AI/`, `Settings/`)
+   - Features are self-contained and can be developed independently
+   - Each feature folder contains all view and utility code specific to that feature
 
 ### Feature Views
 
-Each tab is implemented as a separate SwiftUI `View` file:
+Each tab is implemented as a separate SwiftUI `View` file in its own feature folder:
 
-- **CalendarView.swift** - Month view with Vietnamese lunar calendar support (planned: event display, day selection)
-- **TasksView.swift** - Task/todo management interface (placeholder with feature description)
-- **AIView.swift** - AI assistant chat/features (placeholder with feature description)
-- **SettingsView.swift** - Application settings and preferences
+- **Features/Calendar/CalendarView.swift** - Month view with Vietnamese lunar calendar support (planned: event display, day selection)
+- **Features/Tasks/TasksView.swift** - Task/todo management interface (placeholder with feature description)
+- **Features/AI/AIView.swift** - AI assistant chat/features (placeholder with feature description)
+- **Features/Settings/SettingsView.swift** - Application settings and preferences
 
 ### Key Design Decisions
 
@@ -137,13 +143,20 @@ Each tab is implemented as a separate SwiftUI `View` file:
 ```
 lich-plus/
 ├── lich-plus/                      # Source code directory
-│   ├── lich_plusApp.swift          # App entry point
-│   ├── ContentView.swift           # Tab navigation container
-│   ├── CalendarView.swift          # Calendar feature
-│   ├── TasksView.swift             # Tasks feature
-│   ├── AIView.swift                # AI assistant feature
-│   ├── SettingsView.swift          # Settings feature
-│   ├── Theme.swift                 # Design system (colors, spacing, typography)
+│   ├── App/                        # App entry point and main navigation
+│   │   ├── lich_plusApp.swift      # App entry point
+│   │   └── ContentView.swift       # Tab navigation container
+│   ├── Core/                       # Shared design system and utilities
+│   │   └── Theme.swift             # Design system (colors, spacing, typography)
+│   ├── Features/                   # Feature-specific code organized by domain
+│   │   ├── Calendar/               # Calendar feature
+│   │   │   └── CalendarView.swift
+│   │   ├── Tasks/                  # Tasks feature
+│   │   │   └── TasksView.swift
+│   │   ├── AI/                     # AI assistant feature
+│   │   │   └── AIView.swift
+│   │   └── Settings/               # Settings feature
+│   │       └── SettingsView.swift
 │   ├── Localizable.xcstrings       # String catalog for localization (EN & VI)
 │   └── Assets.xcassets             # Images and app icons
 ├── lich-plusTests/                 # Unit test target
@@ -157,11 +170,13 @@ lich-plus/
 
 ### Adding a New Feature View
 
-1. Create a new file following the naming pattern: `[FeatureName]View.swift`
-2. Implement as a `struct [FeatureName]View: View`
-3. Use colors from `AppColors` and spacing from `AppTheme`
-4. Add a `#Preview` block at the end for live preview support
-5. If adding to tab navigation, add a `.tabItem` entry in `ContentView.swift`
+1. Create a new folder under `Features/[FeatureName]/` (e.g., `Features/MyNewFeature/`)
+2. Create the main view file: `[FeatureName]View.swift` inside the feature folder
+3. Implement as a `struct [FeatureName]View: View`
+4. Use colors from `AppColors` (via `Theme.swift`) and spacing from `AppTheme`
+5. Add a `#Preview` block at the end for live preview support
+6. If adding to tab navigation, add a `.tabItem` entry in `App/ContentView.swift`
+7. For shared utilities specific to the feature, create additional files in the same feature folder
 
 ### Managing Localizable Strings
 
