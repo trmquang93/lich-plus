@@ -36,6 +36,35 @@ struct ContentView: View {
                 }
                 .tag(3)
         }
+        .tint(AppColors.primary)
+        .task {
+            configureTabBarAppearance()
+        }
+    }
+
+    private func configureTabBarAppearance() {
+        let appearance = UITabBarAppearance()
+        appearance.configureWithDefaultBackground()
+        appearance.backgroundColor = AppColors.background.uiColor
+
+        let itemAppearance = UITabBarItemAppearance()
+        itemAppearance.normal.titleTextAttributes = [
+            .foregroundColor: AppColors.secondary.uiColor,
+            .font: UIFont.systemFont(ofSize: AppTheme.fontCaption)
+        ]
+        itemAppearance.selected.titleTextAttributes = [
+            .foregroundColor: AppColors.primary.uiColor,
+            .font: UIFont.systemFont(ofSize: AppTheme.fontCaption, weight: .semibold)
+        ]
+
+        appearance.stackedLayoutAppearance = itemAppearance
+        appearance.inlineLayoutAppearance = itemAppearance
+        appearance.compactInlineLayoutAppearance = itemAppearance
+
+        UITabBar.appearance().standardAppearance = appearance
+        if #available(iOS 15.0, *) {
+            UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
     }
 }
 
