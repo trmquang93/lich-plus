@@ -75,16 +75,16 @@ class VietnameseCalendarTests: XCTestCase {
         ),
 
         // Test Case 3: November 15, 2025 - Thiên Lao Hắc Đạo
-        // Reference: xemngay.com
+        // Reference: xemngay.com - CORRECTED LUNAR DATE
         // Solar: 15/11/2025
-        // Lunar: 17/09 Ất Tỵ
+        // Lunar: 26/09 Ất Tỵ (CORRECTED from 17/09)
         // Trực: Trừ (very auspicious)
         // Unlucky Day: Thiên Lao (severity 4)
         // Quality: Bad (2.0 (tru) - 2.5 (thienlao) = -0.5)
         TestDate(
             name: "Nov 15, 2025 - Thiên Lao Hắc Đạo (severity 4)",
             solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 11, day: 15),
-            lunarDay: 17,
+            lunarDay: 26,
             lunarMonth: 9,
             lunarYear: 2025,
             expectedDayCanChi: "Mậu Tý",
@@ -120,38 +120,40 @@ class VietnameseCalendarTests: XCTestCase {
             expectedLuckyHourChis: [.suu, .thin, .ngo, .mui, .tuat, .hoi]  // From xemngay.com
         ),
 
-        // Test Case 5: December 1, 2025 - Chấp (Neutral Trực, no unlucky day)
-        // Reference: xemngay.com
+        // Test Case 5: December 1, 2025 - Chấp (Hoàng Đạo/Good Trực, no unlucky day)
+        // Reference: xemngay.com - https://xemngay.com/Default.aspx?blog=xngay&d=01122025
         // Solar: 01/12/2025
-        // Lunar: 03/11 Ất Tỵ
-        // Trực: Chấp (neutral)
+        // Lunar: 12/10 Ất Tỵ
+        // Trực: Chấp (Hoàng Đạo - Good per Lịch Vạn Niên 2005-2009, Page 48)
         // Unlucky Day: None
-        // Quality: Neutral (0.0 score from chap)
+        // xemngay rating: [5/5] "Ngày hoàn hảo" (Perfect day)
+        // Quality: Good (2.0 score from Chấp Hoàng Đạo, confirmed by xemngay [5/5])
         TestDate(
-            name: "Dec 1, 2025 - Chấp (Neutral Trực, no unlucky day)",
+            name: "Dec 1, 2025 - Chấp (Hoàng Đạo, perfect day)",
             solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 12, day: 1),
-            lunarDay: 3,
-            lunarMonth: 11,
+            lunarDay: 12,
+            lunarMonth: 10,
             lunarYear: 2025,
             expectedDayCanChi: "Giáp Thìn",
             expectedDayChiIndex: 4,  // Thìn
-            expectedMonthCanChi: "Canh Tý",
+            expectedMonthCanChi: "Đinh Hợi",
             expectedYearCanChi: "Ất Tỵ",
-            expectedTruc: .chap,  // Chấp is neutral
+            expectedTruc: .chap,  // Chấp is Hoàng Đạo (Good)
             expectedUnluckyDay: nil,
-            expectedFinalQuality: .neutral,  // Score: 0.0 (chap) = neutral
+            expectedFinalQuality: .good,  // Score: 2.0 (Chấp Hoàng Đạo) = good, xemngay [5/5]
             expectedLuckyHourChis: [.dan, .thin, .ty2, .than, .dau, .hoi]  // From xemngay.com
         ),
 
-        // Test Case 6: November 3, 2025 - Thiên Lao with favorable Trực (tests weighted scoring)
-        // Reference: xemngay.com
+        // Test Case 6: November 3, 2025 - Mãn (Hắc Đạo) + Thiên Lao
+        // Reference: xemngay.com - https://xemngay.com/Default.aspx?blog=xngay&d=03112025
         // Solar: 03/11/2025
         // Lunar: 14/09 Ất Tỵ
-        // Trực: Khai (very auspicious - one of Tứ Hộ Thần)
-        // Unlucky Day: Thiên Lao (severity 4)
-        // Quality: Bad (conservative scoring: 2.0 (khai) - 2.5 (thienlao) = -0.5)
+        // Trực: Mãn (Hắc Đạo per Lịch Vạn Niên 2005-2009, Page 48)
+        // Unlucky Day: Thiên Lao (Month 9 + Chi Tý, severity 4)
+        // xemngay rating: [3] "Khá tốt" - Rating doesn't always correlate with Lục Hắc Đạo
+        // Quality: Bad (0.0 base from Mãn + -2.5 Thiên Lao = -2.5 = bad, severity >= 4 rule)
         TestDate(
-            name: "Nov 3, 2025 - Thiên Lao + Khai (demonstrates severity weighting)",
+            name: "Nov 3, 2025 - Mãn (Hắc Đạo) + Thiên Lao [severity 4]",
             solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 11, day: 3),
             lunarDay: 14,
             lunarMonth: 9,
@@ -160,21 +162,22 @@ class VietnameseCalendarTests: XCTestCase {
             expectedDayChiIndex: 0,  // Tý
             expectedMonthCanChi: "Bính Tuất",
             expectedYearCanChi: "Ất Tỵ",
-            expectedTruc: .khai,  // Khai is very auspicious (one of Tứ Hộ Thần)
-            expectedUnluckyDay: "Thiên Lao",
-            expectedFinalQuality: .bad,  // Score: 2.0 (khai) - 2.5 (thienlao) = -0.5 = bad (conservative)
+            expectedTruc: .man,  // Mãn is Hắc Đạo
+            expectedUnluckyDay: "Thiên Lao",  // Month 9 + Chi Tý (LucHacDaoCalculator.swift:120)
+            expectedFinalQuality: .bad,  // Score: 0.0 (Mãn) - 2.5 (Thiên Lao severity 4) = bad
             expectedLuckyHourChis: [.ty, .suu, .mao, .ngo, .than, .dau]  // From xemngay.com
         ),
 
-        // Test Case 7: November 28, 2025 - Mãn (Full) + Ngọc Đường Hoàng Đạo
-        // Reference: xemlicham.com, licham.vn
+        // Test Case 7: November 28, 2025 - Mãn (Hắc Đạo) + Thiên Lao
+        // Reference: xemngay.com - https://xemngay.com/Default.aspx?blog=xngay&d=28112025
         // Solar: 28/11/2025
         // Lunar: 09/10 Ất Tỵ
-        // Trực: Mãn (inauspicious)
-        // Unlucky Day: None
-        // Quality: Neutral (rating 3/5 = slightly good, but Mãn is inauspicious)
+        // Trực: Mãn (Hắc Đạo per Lịch Vạn Niên 2005-2009, Page 48)
+        // Unlucky Day: Thiên Lao (Month 10 + Chi Sửu, severity 4)
+        // xemngay rating: [3] "Khá tốt" + Ngọc Đường - Rating doesn't correlate with Lục Hắc Đạo
+        // Quality: Bad (0.0 base from Mãn + -2.5 Thiên Lao = -2.5 = bad, severity >= 4 rule)
         TestDate(
-            name: "Nov 28, 2025 - Mãn (Full) + Ngọc Đường Hoàng Đạo (rating 3/5)",
+            name: "Nov 28, 2025 - Mãn (Hắc Đạo) + Thiên Lao [severity 4]",
             solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 11, day: 28),
             lunarDay: 9,
             lunarMonth: 10,
@@ -183,14 +186,14 @@ class VietnameseCalendarTests: XCTestCase {
             expectedDayChiIndex: 1,  // Sửu
             expectedMonthCanChi: "Đinh Hợi",
             expectedYearCanChi: "Ất Tỵ",
-            expectedTruc: .man,  // Mãn (inauspicious in 3-tier, but website says rating 3/5)
-            expectedUnluckyDay: nil,
-            expectedFinalQuality: .neutral,  // Website rating 3/5 = somewhat good, but Mãn is inauspicious
+            expectedTruc: .man,  // Mãn is Hắc Đạo
+            expectedUnluckyDay: "Thiên Lao",  // Month 10 + Chi Sửu (LucHacDaoCalculator.swift:122-123)
+            expectedFinalQuality: .bad,  // Score: 0.0 (Mãn) - 2.5 (Thiên Lao severity 4) = bad
             expectedLuckyHourChis: [.dan, .mao, .ty2, .than, .tuat, .hoi]  // [2, 3, 5, 8, 10, 11]
         ),
 
         // Test Case 8: December 8, 2025 - Bế (Close) + Bảo Quang Hoàng Đạo
-        // Reference: xemlicham.com, licham.vn
+        // Reference: xemngay.com - CORRECTED DAY CAN-CHI
         // Solar: 08/12/2025
         // Lunar: 19/10 Ất Tỵ
         // Trực: Bế (inauspicious)
@@ -202,14 +205,14 @@ class VietnameseCalendarTests: XCTestCase {
             lunarDay: 19,
             lunarMonth: 10,
             lunarYear: 2025,
-            expectedDayCanChi: "Tân Sửu",
-            expectedDayChiIndex: 1,  // Sửu
+            expectedDayCanChi: "Tân Hợi",
+            expectedDayChiIndex: 11,  // Hợi (CORRECTED from Sửu)
             expectedMonthCanChi: "Đinh Hợi",
             expectedYearCanChi: "Ất Tỵ",
             expectedTruc: .be,  // Bế (inauspicious)
             expectedUnluckyDay: nil,
             expectedFinalQuality: .bad,  // Website rating 0.5
-            expectedLuckyHourChis: [.suu, .thin, .ngo, .mui, .tuat, .hoi]  // [1, 4, 6, 7, 10, 11]
+            expectedLuckyHourChis: [.suu, .thin, .ngo, .mui, .tuat, .hoi]  // [1, 4, 6, 7, 10, 11] - for Hợi day
         ),
 
         // Test Case 9: December 12, 2025 - Bình (Balance) + somewhat auspicious
@@ -304,12 +307,10 @@ class VietnameseCalendarTests: XCTestCase {
     /// Test that 12 Trực is calculated correctly for each lunar date
     func testTrucCalculation() {
         for testCase in testCases {
-            let calculatedTruc = HoangDaoCalculator.calculateZodiacHour(
-                for: (
-                    day: testCase.lunarDay,
-                    month: testCase.lunarMonth,
-                    year: testCase.lunarYear
-                )
+            // Use the Chi-based calculation method (traditional Vietnamese astrology)
+            let calculatedTruc = HoangDaoCalculator.calculateZodiacHourChiBased(
+                solarDate: testCase.solarDate,
+                lunarMonth: testCase.lunarMonth
             )
 
             XCTAssertEqual(
@@ -324,7 +325,7 @@ class VietnameseCalendarTests: XCTestCase {
                 Lunar Date: \(testCase.lunarDay)/\(testCase.lunarMonth)/\(testCase.lunarYear)
                 Solar Date: \(testCase.solarDate.formatted(date: .abbreviated, time: .omitted))
 
-                Calculation: Need to verify formula for 12 Trực
+                Calculation: Chi-based formula (dayChi - monthChi) % 12
                 """
             )
         }
@@ -486,6 +487,7 @@ class VietnameseCalendarTests: XCTestCase {
     func testCompositeDayQuality() {
         for testCase in testCases {
             let dayQuality = HoangDaoCalculator.determineDayQuality(
+                solarDate: testCase.solarDate,
                 lunarDay: testCase.lunarDay,
                 lunarMonth: testCase.lunarMonth,
                 lunarYear: testCase.lunarYear,

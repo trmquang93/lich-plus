@@ -446,6 +446,11 @@ struct HourlyZodiacHelper {
     static func getAuspiciousHours(for dayZodiacHour: ZodiacHourType, dayChi: ChiEnum) -> [Int] {
         // Lucky hours are determined by the day's Chi (Earthly Branch), NOT the day's Trực
         // This is the correct traditional Vietnamese astrology calculation method
+        //
+        // NOTE: The current mapping needs verification against Lịch Vạn Niên 2005-2009, Pages 51-52
+        // The book's table shows different hour mappings than currently implemented
+        // Reference: Page 52 mnemonic table shows Dần/Thân days should have hours [0,1,4,6,7,10]
+        // but current implementation uses [2,4,5,8,9,11]. Requires detailed table analysis.
 
         switch dayChi {
         case .ty, .ngo:          // Tý (0), Ngọ (6) days

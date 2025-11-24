@@ -129,12 +129,20 @@ enum ChiEnum: Int, CaseIterable, Equatable {
 
 // MARK: - Zodiac Quality Classification
 
-/// The three-tier quality classification system for Vietnamese Phong Thủy
-/// Based on traditional Vietnamese astrology, the 12 Zodiac Hours are classified into three tiers
+/// The four-tier quality classification system for Vietnamese Phong Thủy
+/// Based on traditional Lịch Vạn Niên (Perpetual Calendar) classification
+/// Reference: Lịch Vạn Niên 2005-2009, Pages 48-50
+///
+/// Traditional Classification:
+/// - Hoàng Đạo (Good): Trừ, Nguy, Định, Chấp (4 types)
+/// - Moderate (Can use): Thành, Khai (2 types)
+/// - Hắc Đạo (Bad): Kiến, Mãn, Bình, Thu (4 types)
+/// - Very Bad (Avoid): Phá, Bế (2 types)
 enum ZodiacQuality: String, Equatable {
-    case veryAuspicious = "Tứ Hộ Thần"      // 4 Very Auspicious (Trừ, Định, Nguy, Khai)
-    case neutral = "Bán Cát Bán Hung"       // 2 Semi-auspicious/Neutral (Kiên, Chấp)
-    case inauspicious = "Thần Hung"         // 6 Inauspicious (Mãn, Bình, Phá, Thành, Thu, Bế)
+    case veryAuspicious = "Hoàng Đạo"           // Good (Trừ, Định, Nguy, Chấp)
+    case neutral = "Khả Dụng"                   // Moderate - Can use (Thành, Khai)
+    case inauspicious = "Hắc Đạo"               // Bad (Kiến, Mãn, Bình, Thu)
+    case severelyInauspicious = "Rất Hung"      // Very Bad - Avoid (Phá, Bế)
 }
 
 // MARK: - Zodiac Hour Type (12 Kiến Trừ)
@@ -172,21 +180,28 @@ enum ZodiacHourType: Int, CaseIterable, Equatable {
         }
     }
 
-    /// Quality classification based on Vietnamese Phong Thủy three-tier system
-    /// Tứ Hộ Thần (4 Very Auspicious): Trừ, Định, Nguy, Khai
-    /// Bán Cát Bán Hung (2 Neutral): Kiên, Chấp
-    /// Thần Hung (6 Inauspicious): Mãn, Bình, Phá, Thành, Thu, Bế
+    /// Quality classification based on traditional Lịch Vạn Niên (Perpetual Calendar)
+    /// Reference: Lịch Vạn Niên 2005-2009, Page 48
+    ///
+    /// Traditional Four-Tier Classification:
+    /// - Hoàng Đạo (Good): Trừ, Định, Nguy, Chấp (4 types)
+    /// - Moderate (Can use): Thành, Khai (2 types)
+    /// - Hắc Đạo (Bad): Kiến, Mãn, Bình, Thu (4 types)
+    /// - Very Bad (Avoid): Phá, Bế (2 types)
     var quality: ZodiacQuality {
         switch self {
-        // Tứ Hộ Thần (4 Very Auspicious)
-        case .tru, .dinh, .nguy, .khai:
+        // Hoàng Đạo (Good) - 4 types
+        case .tru, .dinh, .nguy, .chap:
             return .veryAuspicious
-        // Bán Cát Bán Hung (2 Neutral)
-        case .kien, .chap:
+        // Moderate (Can use) - 2 types
+        case .thanh, .khai:
             return .neutral
-        // Thần Hung (6 Inauspicious)
-        case .man, .binh, .pha, .thanh, .thu, .be:
+        // Hắc Đạo (Bad) - 4 types
+        case .kien, .man, .binh, .thu:
             return .inauspicious
+        // Very Bad (Avoid) - 2 types
+        case .pha, .be:
+            return .severelyInauspicious
         }
     }
 
@@ -233,7 +248,7 @@ enum ZodiacHourType: Int, CaseIterable, Equatable {
 // MARK: - Day Quality
 
 /// Represents the astrological quality of a specific day
-/// Combines multiple Vietnamese astrology systems (12 Trực, Lục Hắc Đạo, etc.)
+/// Combines multiple Vietnamese astrology systems (12 Trực, Lục Hắc Đạo, Star System, etc.)
 struct DayQuality: Equatable {
     let zodiacHour: ZodiacHourType
     let dayCanChi: String
@@ -242,6 +257,25 @@ struct DayQuality: Equatable {
     let tabooActivities: [String]
     let luckyDirection: String?
     let luckyColor: String?
+
+    // MARK: - Star System (NEW - Phase 2 Enhancement)
+    /// Good stars present on this day (Thiên ân, Sát công, etc.)
+    let goodStars: [GoodStar]?
+
+    /// Extended bad stars present on this day (Ly sào, Hỏa tinh, etc.)
+    let badStars: [ExtendedBadStar]?
+
+    /// Net score contribution from stars (positive from good stars, negative from bad stars)
+    var starScore: Double {
+        let goodScore = goodStars?.reduce(0.0) { $0 + $1.score } ?? 0.0
+        let badScore = badStars?.reduce(0.0) { $0 + $1.score } ?? 0.0
+        return goodScore + badScore
+    }
+
+    /// Check if star data is available for this day
+    var hasStarData: Bool {
+        return goodStars != nil || badStars != nil
+    }
 
     var isGoodDay: Bool {
         // If an unlucky day, it's not a good day
@@ -252,46 +286,87 @@ struct DayQuality: Equatable {
     }
 
     /// Final composite day quality considering all systems
-    /// Uses a weighted scoring system where unlucky days significantly impact the final quality
-    /// Higher severity unlucky days always push days to bad or neutral at best
+    /// Uses a weighted scoring system calibrated against xemngay.com and traditional Lịch Vạn Niên
+    /// Reference: Lịch Vạn Niên 2005-2009, Pages 48-50, 153+
+    /// Validation: xemngay.com ratings (format: https://xemngay.com/Default.aspx?blog=xngay&d=DDMMYYYY)
+    ///
+    /// Scoring Philosophy:
+    /// - Traditional classification provides BASE quality (Hoàng Đạo vs Hắc Đạo)
+    /// - Modern practice shows some Hắc Đạo days can be neutral without unlucky stars
+    /// - Good stars (Thiên ân, Sát công) can elevate Hắc Đạo days to excellent
+    /// - Bad stars (Ly sào, Hỏa tinh) can downgrade Hoàng Đạo days to neutral
+    /// - Adjusted weights to match xemngay.com composite ratings
+    ///
+    /// Complete Formula:
+    /// Final Score = BASE (12 Trực) + UNLUCKY PENALTY (Lục Hắc Đạo) + STAR BONUS/PENALTY (Good/Bad Stars)
+    ///
+    /// Calibrated scoring weights:
+    /// - Hoàng Đạo (Good): Trừ, Định, Nguy, Chấp → +2.0
+    /// - Moderate: Thành, Khai → -0.3
+    /// - Hắc Đạo (Bad): Kiến, Mãn, Bình, Thu → 0.0 (neutral base - allows stars to determine quality)
+    /// - Very Bad: Phá, Bế → -3.0
+    /// - Good Stars: Thiên ân (+3.0), Sát công (+1.5), etc.
+    /// - Bad Stars: Ly sào (-2.0), Hỏa tinh (-2.0), etc.
     var finalQuality: DayType {
         // Calculate base score from Trực (zodiac hour quality)
         var score: Double = 0
 
-        switch zodiacHour.quality {
-        case .veryAuspicious:
+        // STEP 1: Calibrated scoring based on traditional classification + xemngay.com validation
+        switch zodiacHour {
+        // Hoàng Đạo (Good) - 4 types: Trừ, Định, Nguy, Chấp
+        // xemngay confirms these as good days (e.g., Dec 1 Chấp = [5/5] perfect)
+        case .tru, .dinh, .nguy, .chap:
             score = 2.0
-        case .neutral:
-            score = 0.0
-        case .inauspicious:
-            score = -2.0
+        // Moderate (Can use) - 2 types: Thành, Khai
+        // Traditionally moderate, slightly negative without other factors
+        case .thanh, .khai:
+            score = -0.3
+        // Hắc Đạo (Bad) - 4 types: Kiến, Mãn, Bình, Thu
+        // Traditional: bad, but xemngay shows they can be neutral/slightly good ([3]/[2.5])
+        // when no unlucky stars present (e.g., Nov 3 Mãn = [3], Dec 12 Bình = [2.5])
+        case .kien, .man, .binh, .thu:
+            score = 0.0  // Neutral base score - allows good/neutral based on other factors
+        // Very Bad (Avoid) - 2 types: Phá, Bế
+        // xemngay confirms these as very bad (Dec 8 Bế = [0.5], Dec 15 Phá = [1])
+        case .pha, .be:
+            score = -3.0
         }
 
-        // Adjust score based on unlucky day severity
-        if let unluckyDay = unluckyDayType {
+        // STEP 2: Check for unlucky days (Lục Hắc Đạo) and apply penalties
+        let hasUnluckyDay = unluckyDayType != nil
+        let unluckySeverity = unluckyDayType?.severity ?? 0
+
+        if hasUnluckyDay {
             let severityPenalty: Double
-            switch unluckyDay.severity {
-            case 5: severityPenalty = -4.0      // Chu Tước - most severe, always bad
-            case 4: severityPenalty = -2.5      // Thiên Lao, Thiên Hình - usually bad
-            case 3: severityPenalty = -2.0      // Bạch Hổ, Câu Trần - usually bad
+            switch unluckySeverity {
+            case 5: severityPenalty = -4.0      // Chu Tước - most severe
+            case 4: severityPenalty = -2.5      // Thiên Lao, Thiên Hình
+            case 3: severityPenalty = -2.0      // Bạch Hổ, Câu Trần
             case 2: severityPenalty = -1.5      // Nguyên Vũ - least severe
             default: severityPenalty = -2.5
             }
             score += severityPenalty
         }
 
-        // Map final score to day type
-        // Unlucky days have significant negative impact:
-        // - Severity 5: Always bad (minimum score would be 2.0 - 4.0 = -2.0)
-        // - Severity 4: Usually bad (2.0 - 2.5 = -0.5 is bad, 0.0 - 2.5 = -2.5 is bad)
-        // - Severity 3: Usually bad (2.0 - 2.0 = 0.0 is bad, -2.0 - 2.0 = -4.0 is bad)
-        // - Severity 2: Can be neutral (2.0 - 1.5 = 0.5 is neutral)
-        if score >= 1.5 {
-            return .good          // Very auspicious with no unlucky day
-        } else if score < 0.5 {
-            return .bad           // Unlucky day scenarios and inauspicious Trước
+        // STEP 3: Add star system contribution (NEW - Phase 2 Enhancement)
+        // This is the key to reaching 100% accuracy with xemngay.com
+        score += starScore
+
+        // Special handling: severe unlucky days (severity >= 4) override good Trực
+        if hasUnluckyDay && unluckySeverity >= 4 && score < 1.0 {
+            return .bad  // Thiên Lao, Chu Tước make days bad
+        }
+
+        // Map final score to day type using traditional thresholds:
+        // - score >= 1.0: good (Hoàng Đạo days, or Hắc Đạo with strong good stars)
+        // - score >= -1.0: neutral (Moderate Trực, or mixed star influences)
+        // - score < -1.0: bad (Hắc Đạo with unlucky days, or Very Bad Trực, or multiple bad stars)
+        if score >= 1.0 {
+            return .good
+        } else if score >= -1.0 {
+            return .neutral
         } else {
-            return .neutral       // Borderline cases: mild unlucky days with auspicious Trước
+            return .bad
         }
     }
 

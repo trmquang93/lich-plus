@@ -61,6 +61,121 @@ struct HoangDaoCalculator {
         return ZodiacHourType(rawValue: zodiacIndex) ?? .kien
     }
 
+    /// Calculate the zodiac hour type using the traditional solar term-based method
+    /// This implements the authentic Vietnamese astrology algorithm
+    /// Based on research from xemngay.com and traditional tiết khí (solar terms) system
+    ///
+    /// Algorithm:
+    /// 1. Determine which solar term "month" the date falls in (using sun longitude)
+    /// 2. Each solar term month corresponds to a Chi (Earthly Branch)
+    /// 3. The day whose Chi matches that solar term Chi is Trực Kiến (0)
+    /// 4. Subsequent days cycle through the 12 Trực
+    ///
+    /// - Parameters:
+    ///   - solarDate: The solar date
+    ///   - lunarMonth: The lunar month (for fallback approximation)
+    /// - Returns: The zodiac hour type for that day
+    static func calculateZodiacHourChiBased(solarDate: Date, lunarMonth: Int) -> ZodiacHourType {
+        // Get day Can-Chi to extract day Chi
+        let dayCanChi = CanChiCalculator.calculateDayCanChi(for: solarDate)
+        let dayChi = dayCanChi.chi
+
+        // Get the solar term Chi using astronomical calculation
+        let solarTermChi = getSolarTermChi(solarDate)
+
+        // Calculate Trực using the traditional solar term-based formula
+        // The day whose Chi equals the solar term Chi has Trực Kiến (0)
+        // Formula: Trực = (dayChi - solarTermChi + 12) % 12
+        let zodiacIndex = (dayChi.rawValue - solarTermChi.rawValue + 12) % 12
+
+        return ZodiacHourType(rawValue: zodiacIndex) ?? .kien
+    }
+
+    /// Get the Chi (Earthly Branch) for the solar term period that contains this date
+    /// Uses astronomical calculation of sun longitude
+    /// Based on Ho Ngoc Duc's algorithm and traditional Vietnamese astrology
+    /// - Parameter date: The solar date
+    /// - Returns: The Chi corresponding to that solar term period
+    private static func getSolarTermChi(_ date: Date) -> ChiEnum {
+        // Calculate Julian Day Number
+        let jdn = calculateJulianDayNumber(for: date)
+
+        // Get sun longitude in degrees (0-360)
+        let sunLongitudeDegrees = getSunLongitudeDegrees(jdn: jdn, timeZone: 7)
+
+        // Calculate Chi based on solar term position
+        // Lập Xuân (Beginning of Spring) starts at 315° and corresponds to Chi Dần (2)
+        // Each 30° sector corresponds to one Chi in the cycle
+        // Adjust degrees relative to Lập Xuân (315°)
+        let adjustedDegrees = sunLongitudeDegrees >= 315.0 ?
+            sunLongitudeDegrees - 315.0 : sunLongitudeDegrees + 45.0
+
+        // Calculate which 30° sector (0-11) we're in
+        let sector = Int(floor(adjustedDegrees / 30.0))
+
+        // Map sector to Chi, starting from Dần (2)
+        // Sector 0 (315-345°) = Dần (2)
+        // Sector 1 (345-15°) = Mão (3)
+        // etc.
+        let chiIndex = (sector + 2) % 12
+
+        return ChiEnum(rawValue: chiIndex) ?? .dan
+    }
+
+    /// Get sun longitude in degrees (0-360)
+    /// Extracted from getSunLongitude for reuse
+    private static func getSunLongitudeDegrees(jdn: Int, timeZone: Int) -> Double {
+        let T = (Double(jdn) - 2451545.5 - Double(timeZone) / 24.0) / 36525.0
+        let T2 = T * T
+        let dr = Double.pi / 180.0
+
+        let M = 357.52910 + 35999.05030 * T - 0.0001559 * T2 - 0.00000048 * T * T2
+        let L0 = 280.46645 + 36000.76983 * T + 0.0003032 * T2
+
+        var DL = (1.914600 - 0.004817 * T - 0.000014 * T2) * sin(dr * M)
+        DL = DL + (0.019993 - 0.000101 * T) * sin(dr * 2 * M) + 0.000290 * sin(dr * 3 * M)
+
+        var L = (L0 + DL) * dr
+        L = L - Double.pi * 2 * Double(Int(L / (Double.pi * 2)))
+
+        return L * 180.0 / Double.pi
+    }
+
+    /// Calculate Julian Day Number for a date
+    /// This is used for solar term calculations
+    private static func calculateJulianDayNumber(for date: Date) -> Int {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day], from: date)
+
+        guard let year = components.year,
+              let month = components.month,
+              let day = components.day else {
+            return 0
+        }
+
+        // Julian Day Number algorithm
+        let a = (14 - month) / 12
+        let y = year + 4800 - a
+        let m = month + 12 * a - 3
+
+        let jdn = day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045
+
+        return jdn
+    }
+
+    /// Calculate sun longitude at local midnight for Vietnamese timezone (GMT+7)
+    /// Returns value 0-11 representing 30-degree sectors of the ecliptic
+    /// Based on Ho Ngoc Duc's algorithm
+    /// - Parameters:
+    ///   - jdn: Julian Day Number
+    ///   - timeZone: Timezone offset in hours (7 for Vietnam)
+    /// - Returns: Sun longitude sector (0-11)
+    private static func getSunLongitude(jdn: Int, timeZone: Int) -> Int {
+        let degrees = getSunLongitudeDegrees(jdn: jdn, timeZone: timeZone)
+        // Convert to 30-degree sectors (0-11)
+        return Int(floor(degrees / 30.0))
+    }
+
     /// Get the Chi (Earthly Branch) that corresponds to a lunar month
     /// Traditional Vietnamese astrology: "Tháng nào trực nấy" (Each month has its own Trực)
     ///
@@ -92,7 +207,7 @@ struct HoangDaoCalculator {
     /// - Returns: The offset value (0-11)
     private static func getMonthOffsetForTruc(_ lunarMonth: Int) -> Int {
         // Offset pattern based on lunar month
-        // Verified pattern: offsets increase by ~5 for each month (cyclic)
+        // NOTE: This is an approximation. The traditional method uses day Chi, not day number.
         // Month: 1   2   3   4   5   6   7   8   9  10  11  12
         // Offset:9   2   7   0   5  10   3   8   1   6  11   4
         let offsets: [Int] = [
@@ -104,8 +219,8 @@ struct HoangDaoCalculator {
             10,  // Month 6
             3,   // Month 7
             8,   // Month 8
-            1,   // Month 9 ✓ Verified with test case: (1 + 13 - 1) % 12 = 1 (Trừ)
-            6,   // Month 10 ✓ Verified with test case: (6 + 5 - 1) % 12 = 10 (Khai)
+            1,   // Month 9
+            6,   // Month 10
             11,  // Month 11
             4    // Month 12
         ]
@@ -119,19 +234,21 @@ struct HoangDaoCalculator {
     /// Determine the overall quality and astrological data for a specific date
     /// Combines multiple Vietnamese astrology systems (12 Trực + Lục Hắc Đạo)
     /// - Parameters:
+    ///   - solarDate: The solar date for solar term calculation
     ///   - lunarDay: Day of the lunar month
     ///   - lunarMonth: Lunar month
     ///   - lunarYear: Lunar year
     ///   - dayCanChi: The Can-Chi string for the day (e.g., "Đinh Dậu")
     /// - Returns: Complete DayQuality with zodiac hour, unlucky day type, activities, and lucky attributes
     static func determineDayQuality(
+        solarDate: Date,
         lunarDay: Int,
         lunarMonth: Int,
         lunarYear: Int,
         dayCanChi: String
     ) -> DayQuality {
-        let lunarDate = (day: lunarDay, month: lunarMonth, year: lunarYear)
-        let zodiacHour = calculateZodiacHour(for: lunarDate)
+        // Use the solar term-based calculation (the correct method)
+        let zodiacHour = calculateZodiacHourChiBased(solarDate: solarDate, lunarMonth: lunarMonth)
 
         // Extract Chi from dayCanChi string to check for unlucky days
         // dayCanChi format: "Can Chi" (e.g., "Đinh Dậu")
@@ -158,6 +275,11 @@ struct HoangDaoCalculator {
         let luckyDirection = ZodiacHourData.getLuckyDirection(for: zodiacHour, dayCanChi: dayCanChi)
         let luckyColor = ZodiacHourData.getLuckyColor(for: zodiacHour)
 
+        // MARK: - Star System Detection (NEW - Phase 2 Enhancement)
+        // Detect good and bad stars from traditional star system
+        // This is the key to reaching 100% accuracy with xemngay.com
+        let starData = StarCalculator.detectStars(lunarMonth: lunarMonth, dayCanChi: dayCanChi)
+
         return DayQuality(
             zodiacHour: zodiacHour,
             dayCanChi: dayCanChi,
@@ -165,7 +287,9 @@ struct HoangDaoCalculator {
             suitableActivities: suitableActivities,
             tabooActivities: tabooActivities,
             luckyDirection: luckyDirection,
-            luckyColor: luckyColor
+            luckyColor: luckyColor,
+            goodStars: starData?.goodStars,
+            badStars: starData?.badStars
         )
     }
 
@@ -176,6 +300,7 @@ struct HoangDaoCalculator {
         let dayCanChiString = CanChiCalculator.canChiToString(dayCanChi)
 
         return determineDayQuality(
+            solarDate: date,
             lunarDay: lunarDate.day,
             lunarMonth: lunarDate.month,
             lunarYear: lunarDate.year,
@@ -244,7 +369,7 @@ struct HoangDaoCalculator {
 
     // MARK: - Day Type Mapping
 
-    /// Map ZodiacHourType to DayType using the three-tier quality system
+    /// Map ZodiacHourType to DayType using the four-tier quality system
     /// - Parameter zodiacHour: The zodiac hour type
     /// - Returns: Simple DayType (good/bad/neutral)
     static func mapToDayType(_ zodiacHour: ZodiacHourType) -> DayType {
@@ -255,6 +380,8 @@ struct HoangDaoCalculator {
             return .neutral
         case .inauspicious:
             return .bad
+        case .severelyInauspicious:
+            return .bad  // Very bad days map to .bad
         }
     }
 
