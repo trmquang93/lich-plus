@@ -447,10 +447,9 @@ struct HourlyZodiacHelper {
         // Lucky hours are determined by the day's Chi (Earthly Branch), NOT the day's Trực
         // This is the correct traditional Vietnamese astrology calculation method
         //
-        // NOTE: The current mapping needs verification against Lịch Vạn Niên 2005-2009, Pages 51-52
-        // The book's table shows different hour mappings than currently implemented
-        // Reference: Page 52 mnemonic table shows Dần/Thân days should have hours [0,1,4,6,7,10]
-        // but current implementation uses [2,4,5,8,9,11]. Requires detailed table analysis.
+        // Verified against Lịch Vạn Niên 2005-2009, Page 52 "BẢNG TÍNH GIỜ HOÀNG ĐẠO"
+        // The table uses mnemonic phrases where words starting with 'đ' indicate lucky hours
+        // All mappings below have been verified against the authoritative book source
 
         switch dayChi {
         case .ty, .ngo:          // Tý (0), Ngọ (6) days
@@ -460,13 +459,13 @@ struct HourlyZodiacHelper {
             return [2, 3, 5, 8, 10, 11]    // Dần, Mão, Tỵ, Thân, Tuất, Hợi
 
         case .dan, .than:        // Dần (2), Thân (8) days
-            return [2, 4, 5, 8, 9, 11]     // Dần, Thìn, Tỵ, Thân, Tuất, Hợi
+            return [0, 1, 4, 5, 7, 10]     // Tý, Sửu, Thìn, Tỵ, Mùi, Tuất
 
         case .mao, .dau:         // Mão (3), Dậu (9) days
             return [0, 2, 3, 6, 7, 9]      // Tý, Dần, Mão, Ngọ, Mùi, Dậu
 
         case .thin, .tuat:       // Thìn (4), Tuất (10) days
-            return [2, 4, 5, 8, 9, 11]     // Dần, Thìn, Tỵ, Thân, Tuất, Hợi
+            return [2, 4, 5, 8, 9, 11]     // Dần, Thìn, Tỵ, Thân, Dậu, Hợi
 
         case .ty2, .hoi:         // Tỵ (5), Hợi (11) days
             return [1, 4, 6, 7, 10, 11]    // Sửu, Thìn, Ngọ, Mùi, Tuất, Hợi

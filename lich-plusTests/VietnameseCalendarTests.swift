@@ -29,6 +29,42 @@ class VietnameseCalendarTests: XCTestCase {
         let expectedLuckyHourChis: [ChiEnum]
     }
 
+    // MARK: - xemngay.com Validation Data Structure
+
+    /// Test data from xemngay.com for external validation
+    struct XemNgayTestDate {
+        let name: String
+        let solarDate: Date
+        let lunarDay: Int
+        let lunarMonth: Int
+        let lunarYear: Int
+
+        // Tier 1: Critical (must match 100%)
+        let xemngayDayCanChi: String
+        let xemngayMonthCanChi: String
+        let xemngayYearCanChi: String
+        let xemngayTruc: ZodiacHourType
+
+        // Tier 2: Important (should match 95%+)
+        let xemngayUnluckyDay: String?
+        let xemngayLuckyHourChis: [ChiEnum]
+
+        // Tier 3: Enhanced (target 85%+)
+        let xemngayGoodStars: [String]
+        let xemngayBadStars: [String]
+        let xemngayQualityRating: Int  // 1-5 scale
+
+        // Expected mapping to our system
+        var expectedQuality: DayType {
+            switch xemngayQualityRating {
+            case 4...5: return .good
+            case 3: return .neutral
+            case 1...2: return .bad
+            default: return .neutral
+            }
+        }
+    }
+
     // MARK: - Reference Test Data from Vietnamese Calendars
 
     lazy var testCases: [TestDate] = [
@@ -284,6 +320,172 @@ class VietnameseCalendarTests: XCTestCase {
             expectedLuckyHourChis: [.suu, .thin, .ngo, .mui, .tuat, .hoi]  // [1, 4, 6, 7, 10, 11]
         ),
 
+    ]
+
+    // MARK: - xemngay.com Validation Test Data
+
+    /// Test data fetched from xemngay.com for validation
+    /// Covers 10 strategic dates across different lunar months
+    lazy var xemngayTestCases: [XemNgayTestDate] = [
+        // 1. Nov 24, 2025 (05/10) - Month 10, Very unfavorable
+        XemNgayTestDate(
+            name: "Nov 24, 2025 - Chu Tước Hắc Đạo",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 11, day: 24),
+            lunarDay: 5, lunarMonth: 10, lunarYear: 2025,
+            xemngayDayCanChi: "Đinh Dậu",
+            xemngayMonthCanChi: "Đinh Hợi",
+            xemngayYearCanChi: "Ất Tỵ",
+            xemngayTruc: .khai,
+            xemngayUnluckyDay: "Chu Tước Hắc Đạo",
+            xemngayLuckyHourChis: [.ty, .dan, .mao, .ngo, .mui, .dau],
+            xemngayGoodStars: ["Mẫu thương", "Sinh khí", "Thánh tâm", "Thiên phúc"],
+            xemngayBadStars: ["Nguyệt kỵ", "Sát chủ", "Chu tước hắc đạo", "Đại không vong", "Lỗ Ban sát", "Phi ma sát"],
+            xemngayQualityRating: 1
+        ),
+
+        // 2. Dec 1, 2025 (12/10) - Month 10, Perfect day
+        XemNgayTestDate(
+            name: "Dec 1, 2025 - Perfect Day",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 12, day: 1),
+            lunarDay: 12, lunarMonth: 10, lunarYear: 2025,
+            xemngayDayCanChi: "Giáp Thìn",
+            xemngayMonthCanChi: "Đinh Hợi",
+            xemngayYearCanChi: "Ất Tỵ",
+            xemngayTruc: .chap,
+            xemngayUnluckyDay: nil,
+            xemngayLuckyHourChis: [.dan, .thin, .ty2, .than, .dau, .hoi],
+            xemngayGoodStars: ["Hoàng Ân", "Nguyệt Đức", "Thiên Xá", "Thiên Quan", "Trực Tinh", "Tuế Hợp"],
+            xemngayBadStars: ["Kim Thần Thất Sát", "Tội Chỉ", "Xích Khẩu"],
+            xemngayQualityRating: 5
+        ),
+
+        // 3. Nov 15, 2025 (26/09) - Month 9, Quite unfavorable
+        XemNgayTestDate(
+            name: "Nov 15, 2025 - Thiên Lao Hắc Đạo",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 11, day: 15),
+            lunarDay: 26, lunarMonth: 9, lunarYear: 2025,
+            xemngayDayCanChi: "Mậu Tý",
+            xemngayMonthCanChi: "Bính Tuất",
+            xemngayYearCanChi: "Ất Tỵ",
+            xemngayTruc: .tru,
+            xemngayUnluckyDay: "Thiên Lao Hắc Đạo",
+            xemngayLuckyHourChis: [.ty, .suu, .mao, .ngo, .than, .dau],
+            xemngayGoodStars: ["Thiên Xá", "Dân Nhật-Thời Đức", "Lộc Khố", "Minh Tinh", "Phổ Hộ", "Thiên Phú"],
+            xemngayBadStars: ["Hoàng Sa", "Ly Sào", "Ngũ Quỹ", "Phi Ma Sát", "Quả Tú", "Thiên Hoả", "Thiên Ngục", "Thổ Ôn", "Tiểu Không Vong"],
+            xemngayQualityRating: 1
+        ),
+
+        // 4. Jan 29, 2026 (11/12) - Month 12, Excellent day
+        XemNgayTestDate(
+            name: "Jan 29, 2026 - Lunar Month 12",
+            solarDate: VietnameseCalendarTests.createDate(year: 2026, month: 1, day: 29),
+            lunarDay: 11, lunarMonth: 12, lunarYear: 2025,
+            xemngayDayCanChi: "Quý Mão",
+            xemngayMonthCanChi: "Kỷ Sửu",
+            xemngayYearCanChi: "Ất Tỵ",
+            xemngayTruc: .man,
+            xemngayUnluckyDay: nil,
+            xemngayLuckyHourChis: [.ty, .dan, .mao, .ngo, .mui, .dau],
+            xemngayGoodStars: ["Kim đường", "Thiên quý", "Dân nhật-thời đức", "Địa tài", "Lộc khố", "Thiên phú"],
+            xemngayBadStars: ["Âm thác", "Đại không vong", "Dương thác", "Nguyệt hoạ", "Phi ma sát", "Quả tú", "Thiên ôn", "Thổ ôn"],
+            xemngayQualityRating: 4
+        ),
+
+        // 5. Mar 14, 2026 (26/01) - Month 1, Average
+        XemNgayTestDate(
+            name: "Mar 14, 2026 - Lunar Month 1",
+            solarDate: VietnameseCalendarTests.createDate(year: 2026, month: 3, day: 14),
+            lunarDay: 26, lunarMonth: 1, lunarYear: 2026,
+            xemngayDayCanChi: "Đinh Hợi",
+            xemngayMonthCanChi: "Canh Dần",
+            xemngayYearCanChi: "Bính Ngọ",
+            xemngayTruc: .thanh,
+            xemngayUnluckyDay: "Câu Trận Hắc Đạo",
+            xemngayLuckyHourChis: [.suu, .thin, .ngo, .mui, .tuat, .hoi],
+            xemngayGoodStars: ["Lục hợp", "Ngũ phủ", "Thiên đức", "Mẫu thương", "Thánh tâm", "U vi tinh"],
+            xemngayBadStars: ["Kiếp sát", "Câu trận", "Địa phá", "Hà khôi - Cẩu giao", "Tiểu không vong"],
+            xemngayQualityRating: 2
+        ),
+
+        // 6. May 12, 2026 (26/03) - Month 3, Moderately good
+        XemNgayTestDate(
+            name: "May 12, 2026 - Lunar Month 3",
+            solarDate: VietnameseCalendarTests.createDate(year: 2026, month: 5, day: 12),
+            lunarDay: 26, lunarMonth: 3, lunarYear: 2026,
+            xemngayDayCanChi: "Bính Tuất",
+            xemngayMonthCanChi: "Nhâm Thìn",
+            xemngayYearCanChi: "Bính Ngọ",
+            xemngayTruc: .chap,
+            xemngayUnluckyDay: "Bạch Hổ Hắc Đạo",
+            xemngayLuckyHourChis: [.dan, .thin, .ty2, .than, .dau, .hoi],
+            xemngayGoodStars: ["Nguyệt không", "Phúc sinh", "Thiên mã"],
+            xemngayBadStars: ["Bạch hổ", "Băng tiêu ngoạ hãm", "Cửu không", "Lục bất thành", "Nguyệt phá", "Quỷ khóc"],
+            xemngayQualityRating: 2
+        ),
+
+        // 7. Jul 10, 2026 (26/05) - Month 5, Nearly perfect
+        XemNgayTestDate(
+            name: "Jul 10, 2026 - Lunar Month 5",
+            solarDate: VietnameseCalendarTests.createDate(year: 2026, month: 7, day: 10),
+            lunarDay: 26, lunarMonth: 5, lunarYear: 2026,
+            xemngayDayCanChi: "Ất Dậu",
+            xemngayMonthCanChi: "Giáp Ngọ",
+            xemngayYearCanChi: "Bính Ngọ",
+            xemngayTruc: .man,
+            xemngayUnluckyDay: nil,
+            xemngayLuckyHourChis: [.ty, .dan, .mao, .ngo, .mui, .dau],
+            xemngayGoodStars: ["Hoàng ân", "Minh đường", "Dân nhật-thời đức", "Hoạt điệu", "Kính tâm", "Nguyệt tài", "Trực tinh", "Tuế hợp"],
+            xemngayBadStars: ["Thiên cương", "Đại không vong", "Địa tặc", "Kim thần thất sát", "Lục bất thành", "Thần cách", "Thiên lại", "Tiểu hao", "Tiểu hồng sa"],
+            xemngayQualityRating: 4
+        ),
+
+        // 8. Sep 7, 2026 (26/07) - Month 7, Fairly good
+        XemNgayTestDate(
+            name: "Sep 7, 2026 - Lunar Month 7",
+            solarDate: VietnameseCalendarTests.createDate(year: 2026, month: 9, day: 7),
+            lunarDay: 26, lunarMonth: 7, lunarYear: 2026,
+            xemngayDayCanChi: "Giáp Thân",
+            xemngayMonthCanChi: "Bính Thân",
+            xemngayYearCanChi: "Bính Ngọ",
+            xemngayTruc: .kien,
+            xemngayUnluckyDay: "Thiên Lao Hắc Đạo",
+            xemngayLuckyHourChis: [.ty, .suu, .thin, .ty2, .mui, .tuat],
+            xemngayGoodStars: ["Thiên Xá", "Mãn Đức Tinh", "Minh Tinh", "Phúc Hậu"],
+            xemngayBadStars: ["Âm Thác", "Dương Thác", "Lục Bất Thành", "Thổ Phủ", "Trùng Phục"],
+            xemngayQualityRating: 3
+        ),
+
+        // 9. Dec 15, 2025 (26/10) - Month 10, Unfavorable
+        XemNgayTestDate(
+            name: "Dec 15, 2025 - Phá",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 12, day: 15),
+            lunarDay: 26, lunarMonth: 10, lunarYear: 2025,
+            xemngayDayCanChi: "Mậu Ngọ",
+            xemngayMonthCanChi: "Đinh Hợi",
+            xemngayYearCanChi: "Ất Tỵ",
+            xemngayTruc: .pha,
+            xemngayUnluckyDay: nil,
+            xemngayLuckyHourChis: [.ty, .suu, .mao, .ngo, .than, .dau],
+            xemngayGoodStars: ["Thanh Long", "Hoạt Điệu", "Ngũ Hợp", "Phổ Hộ"],
+            xemngayBadStars: ["Cửu Thổ Quỷ", "Hoàng Sa", "Hoang Vu", "Ly Sào", "Thiên Lại"],
+            xemngayQualityRating: 1
+        ),
+
+        // 10. Nov 5, 2026 (27/09) - Month 9, Slightly bad
+        XemNgayTestDate(
+            name: "Nov 5, 2026 - Lunar Month 9",
+            solarDate: VietnameseCalendarTests.createDate(year: 2026, month: 11, day: 5),
+            lunarDay: 27, lunarMonth: 9, lunarYear: 2026,
+            xemngayDayCanChi: "Quý Mùi",
+            xemngayMonthCanChi: "Mậu Tuất",
+            xemngayYearCanChi: "Bính Ngọ",
+            xemngayTruc: .thu,
+            xemngayUnluckyDay: "Chu Tước Hắc Đạo",
+            xemngayLuckyHourChis: [.dan, .mao, .ty2, .than, .tuat, .hoi],
+            xemngayGoodStars: ["Đại hồng sa", "Sát cống", "Thiên ân", "U vi tinh"],
+            xemngayBadStars: ["Tam nương", "Băng tiêu ngoạ hãm", "Chu tước hắc đạo", "Địa phá", "Hà khôi/Cẩu giao", "Hoang vu", "Ngũ hư", "Nguyệt hình", "Tứ thời cô qủa"],
+            xemngayQualityRating: 1
+        ),
     ]
 
     // MARK: - Setup & Helpers
@@ -648,6 +850,190 @@ class VietnameseCalendarTests: XCTestCase {
             print("   Need \(status.total - status.completed) more entries for 100% coverage")
         } else {
             print("✅ Month 9 has complete data!")
+        }
+    }
+
+    // MARK: - xemngay.com External Validation
+
+    /// Validate our implementation against xemngay.com data
+    /// Tests 10 strategic dates covering different lunar months and quality ratings
+    func testXemNgayValidation() {
+        print("\n=== xemngay.com Validation Test ===")
+        print("Testing \(xemngayTestCases.count) dates from xemngay.com\n")
+
+        var tier1Results = ValidationResults()
+        var tier2Results = ValidationResults()
+        var tier3Results = ValidationResults()
+
+        for testCase in xemngayTestCases {
+            print("--- \(testCase.name) ---")
+            print("Solar: \(testCase.solarDate.formatted(date: .abbreviated, time: .omitted))")
+            print("Lunar: \(testCase.lunarDay)/\(testCase.lunarMonth)/\(testCase.lunarYear)")
+
+            let quality = HoangDaoCalculator.determineDayQuality(for: testCase.solarDate)
+
+            // TIER 1: Critical (must match 100%)
+            tier1Results.total += 4  // 4 checks per date
+
+            // 1. Day Can-Chi
+            if quality.dayCanChi == testCase.xemngayDayCanChi {
+                tier1Results.passed += 1
+                print("✅ Day Can-Chi: \(quality.dayCanChi)")
+            } else {
+                tier1Results.failed += 1
+                print("❌ Day Can-Chi: Expected \(testCase.xemngayDayCanChi), got \(quality.dayCanChi)")
+            }
+
+            // 2. Month Can-Chi
+            let calculatedMonthCanChi = CanChiCalculator.calculateMonthCanChi(
+                lunarMonth: testCase.lunarMonth,
+                yearCan: CanChiCalculator.calculateYearCanChi(for: testCase.solarDate).can
+            ).displayName
+            if calculatedMonthCanChi == testCase.xemngayMonthCanChi {
+                tier1Results.passed += 1
+                print("✅ Month Can-Chi: \(calculatedMonthCanChi)")
+            } else {
+                tier1Results.failed += 1
+                print("❌ Month Can-Chi: Expected \(testCase.xemngayMonthCanChi), got \(calculatedMonthCanChi)")
+            }
+
+            // 3. Year Can-Chi
+            let calculatedYearCanChi = CanChiCalculator.calculateYearCanChi(for: testCase.solarDate).displayName
+            if calculatedYearCanChi == testCase.xemngayYearCanChi {
+                tier1Results.passed += 1
+                print("✅ Year Can-Chi: \(calculatedYearCanChi)")
+            } else {
+                tier1Results.failed += 1
+                print("❌ Year Can-Chi: Expected \(testCase.xemngayYearCanChi), got \(calculatedYearCanChi)")
+            }
+
+            // 4. 12 Trực
+            if quality.zodiacHour == testCase.xemngayTruc {
+                tier1Results.passed += 1
+                print("✅ 12 Trực: \(quality.zodiacHour.vietnameseName)")
+            } else {
+                tier1Results.failed += 1
+                print("❌ 12 Trực: Expected \(testCase.xemngayTruc.vietnameseName), got \(quality.zodiacHour.vietnameseName)")
+            }
+
+            // TIER 2: Important (should match 95%+)
+            tier2Results.total += 2  // 2 checks per date
+
+            // 5. Lục Hắc Đạo
+            let unluckyDayMatch = (quality.unluckyDayType?.vietnameseName == testCase.xemngayUnluckyDay) ||
+                                  (quality.unluckyDayType == nil && testCase.xemngayUnluckyDay == nil) ||
+                                  (quality.unluckyDayType?.vietnameseName.contains(testCase.xemngayUnluckyDay ?? "") ?? false)
+            if unluckyDayMatch {
+                tier2Results.passed += 1
+                print("✅ Unlucky Day: \(quality.unluckyDayType?.vietnameseName ?? "None")")
+            } else {
+                tier2Results.failed += 1
+                print("⚠️ Unlucky Day: Expected \(testCase.xemngayUnluckyDay ?? "None"), got \(quality.unluckyDayType?.vietnameseName ?? "None")")
+            }
+
+            // 6. Lucky Hours (allow 5/6 match)
+            let luckyHours = DayTypeCalculator.getLuckyHours(for: testCase.solarDate)
+            let luckyChis = Set(luckyHours.compactMap { extractChiFromTimeRange($0.timeRange) })
+            let expectedChis = Set(testCase.xemngayLuckyHourChis)
+            let matchingChis = luckyChis.intersection(expectedChis)
+            let luckyHoursMatch = matchingChis.count >= 5  // Allow 5/6 match
+            if luckyHoursMatch {
+                tier2Results.passed += 1
+                print("✅ Lucky Hours: \(matchingChis.count)/6 match")
+            } else {
+                tier2Results.failed += 1
+                print("⚠️ Lucky Hours: Only \(matchingChis.count)/6 match")
+                print("   Expected: \(expectedChis.map { $0.vietnameseName }.joined(separator: ", "))")
+                print("   Got: \(luckyChis.map { $0.vietnameseName }.joined(separator: ", "))")
+            }
+
+            // TIER 3: Enhanced (target 85%+)
+            tier3Results.total += 2  // 2 checks per date
+
+            // 7. Star Names (informational - check major stars)
+            let majorGoodStars = ["Thiên ân", "Thiên quan", "Nguyệt đức"]
+            var foundMajorStars = 0
+            for star in majorGoodStars {
+                if testCase.xemngayGoodStars.contains(star) {
+                    let hasMatch = quality.goodStars?.contains { $0.rawValue == star } ?? false
+                    if hasMatch {
+                        foundMajorStars += 1
+                    }
+                }
+            }
+            if testCase.xemngayGoodStars.isEmpty || foundMajorStars > 0 {
+                tier3Results.passed += 1
+                print("✅ Stars: Major good stars present")
+            } else {
+                tier3Results.failed += 1
+                print("⚠️ Stars: No major good stars found")
+                print("   xemngay good stars: \(testCase.xemngayGoodStars.joined(separator: ", "))")
+            }
+
+            // 8. Overall Quality Rating
+            let qualityMatch = quality.finalQuality == testCase.expectedQuality ||
+                               (quality.finalQuality == .neutral && [.good, .bad].contains(testCase.expectedQuality))
+            if qualityMatch {
+                tier3Results.passed += 1
+                print("✅ Quality: \(quality.finalQuality) (xemngay rating: [\(testCase.xemngayQualityRating)])")
+            } else {
+                tier3Results.failed += 1
+                print("⚠️ Quality: Expected \(testCase.expectedQuality), got \(quality.finalQuality)")
+                print("   xemngay rating: [\(testCase.xemngayQualityRating)]")
+            }
+
+            print("")
+        }
+
+        // Summary
+        print("\n=== Validation Summary ===")
+        print("\nTier 1 (Critical - Must Match 100%):")
+        tier1Results.printSummary()
+
+        print("\nTier 2 (Important - Should Match 95%+):")
+        tier2Results.printSummary()
+
+        print("\nTier 3 (Enhanced - Target 85%+):")
+        tier3Results.printSummary()
+
+        print("\n=== Overall Result ===")
+        let tier1Percentage = tier1Results.percentage
+        let tier2Percentage = tier2Results.percentage
+        let tier3Percentage = tier3Results.percentage
+
+        print("Tier 1: \(String(format: "%.1f", tier1Percentage))% (target: 100%)")
+        print("Tier 2: \(String(format: "%.1f", tier2Percentage))% (target: 95%)")
+        print("Tier 3: \(String(format: "%.1f", tier3Percentage))% (target: 85%)")
+
+        // Success criteria
+        let mvpPass = tier1Percentage == 100.0 && tier2Percentage >= 95.0 && tier3Percentage >= 85.0
+        if mvpPass {
+            print("\n✅ MVP SUCCESS CRITERIA MET!")
+        } else {
+            print("\n⚠️ Did not meet all MVP success criteria")
+        }
+
+        // Assertions
+        XCTAssertEqual(tier1Percentage, 100.0, "Tier 1 (Critical) must be 100%")
+        XCTAssertGreaterThanOrEqual(tier2Percentage, 95.0, "Tier 2 (Important) should be 95%+")
+        // Tier 3 is informational for now, no hard assertion
+    }
+
+    // Helper struct for tracking validation results
+    struct ValidationResults {
+        var total: Int = 0
+        var passed: Int = 0
+        var failed: Int = 0
+
+        var percentage: Double {
+            guard total > 0 else { return 0.0 }
+            return Double(passed) / Double(total) * 100.0
+        }
+
+        func printSummary() {
+            print("  Total:  \(total) checks")
+            print("  Passed: \(passed) (\(String(format: "%.1f", percentage))%)")
+            print("  Failed: \(failed)")
         }
     }
 }

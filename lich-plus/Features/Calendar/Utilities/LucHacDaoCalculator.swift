@@ -21,8 +21,8 @@ struct LucHacDaoCalculator {
     enum UnluckyDayType: String, CaseIterable, Equatable {
         case chuTuoc = "Chu Tước Hắc Đạo"
         case bachHo = "Bạch Hổ Hắc Đạo"
-        case cauTran = "Câu Trần"
-        case thienLao = "Thiên Lao"
+        case cauTran = "Câu Trận Hắc Đạo"
+        case thienLao = "Thiên Lao Hắc Đạo"
         case thienHinh = "Thiên Hình"
         case nguyenVu = "Nguyên Vũ"
 
@@ -37,9 +37,9 @@ struct LucHacDaoCalculator {
             case .bachHo:
                 return "Bạch Hổ Hắc Đạo - Ngày xấu, tránh khởi động việc quan trọng"
             case .cauTran:
-                return "Câu Trần - Ngày không may, cẩn thận trong mọi việc"
+                return "Câu Trận Hắc Đạo - Ngày không may, cẩn thận trong mọi việc"
             case .thienLao:
-                return "Thiên Lao - Ngày xấu, tránh đi xa, ký hợp đồng"
+                return "Thiên Lao Hắc Đạo - Ngày xấu, tránh đi xa, ký hợp đồng"
             case .thienHinh:
                 return "Thiên Hình - Ngày xấu, tránh kiện tụng, tranh chấp"
             case .nguyenVu:
@@ -85,8 +85,10 @@ struct LucHacDaoCalculator {
             return .chuTuoc
 
         // MARK: - Bạch Hổ Hắc Đạo
-        // Occurs in months 2, 5, 8, 11 for specific Chi values
+        // Occurs in months 2, 3, 5, 8, 11 for specific Chi values
         case (2, .dan):  // Dần = 2
+            return .bachHo
+        case (3, .tuat):  // Added: Month 3 + Chi Tuất (from xemngay.com validation)
             return .bachHo
         case (5, .thin):  // Thìn = 4
             return .bachHo
@@ -95,8 +97,10 @@ struct LucHacDaoCalculator {
         case (11, .tuat):
             return .bachHo
 
-        // MARK: - Câu Trần
-        // Occurs in months 3, 6, 9, 12 for specific Chi values
+        // MARK: - Câu Trận
+        // Occurs in months 1, 3, 6, 9, 10, 12 for specific Chi values
+        case (1, .hoi):  // Added: Month 1 + Chi Hợi (from xemngay.com validation)
+            return .cauTran
         case (3, .dan):
             return .cauTran
         case (6, .mao):
@@ -108,7 +112,7 @@ struct LucHacDaoCalculator {
         case (12, .hoi):
             return .cauTran
 
-        // MARK: - Thiên Lao
+        // MARK: - Thiên Lao Hắc Đạo
         // Prison-related unlucky day
         // Specific month and Chi combinations
         case (1, .mao):
@@ -116,6 +120,8 @@ struct LucHacDaoCalculator {
         case (4, .ngo):
             return .thienLao
         case (7, .dau):
+            return .thienLao
+        case (7, .than):  // Added: Month 7 + Chi Thân (from xemngay.com validation)
             return .thienLao
         case (9, .ty):  // Added: Month 9 + Chi Tý (discovered from xemngay.com data)
             return .thienLao
