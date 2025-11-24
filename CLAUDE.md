@@ -298,6 +298,45 @@ The Tasks feature implements a complete task and event management system with th
 - Filters: `all`, `thisWeek`, `thisMonth`
 - Categories and reminders have their own key prefixes: `category.` and `reminder.`
 
+### Working with Vietnamese Astrology (Hoàng Đạo & 12 Trực)
+
+The Calendar feature includes traditional Vietnamese astrology calculations for determining auspicious and inauspicious days:
+
+**Core Calculation Components:**
+
+1. **12 Trực (Zodiac Hours)** - `HoangDaoCalculator.swift`
+   - Calculates one of 12 zodiac hours (Kiến, Trừ, Mãn, Bình, Định, Chấp, Phá, Nguy, Thành, Thu, Khai, Bế) for each lunar day
+   - Uses the "Tháng nào trực nấy" principle: Each lunar month has a base offset determining how the 12 Trực cycle through days
+   - Formula: `Trực = (monthOffset + dayOfMonth - 1) % 12`
+   - Month offsets follow a cyclic pattern: [9, 2, 7, 0, 5, 10, 3, 8, 1, 6, 11, 4] for months 1-12
+   - Includes helper function `getMonthChi()` mapping each month to its corresponding Chi (Earthly Branch)
+
+2. **Lục Hắc Đạo (6 Unlucky Days)** - `LucHacDaoCalculator.swift`
+   - Detects specific inauspicious day types based on lunar month and day Chi
+   - Examples: Thiên Lao (Heavenly Prison), Câu Trần (Hook of Dust), Chu Tước (Pearl Pelican)
+   - Each unlucky day type has associated severity and activity restrictions
+
+3. **Special Festival Dates** - `AstrologyData.swift`
+   - Only specific festival dates (Tết, Mid-Autumn, etc.) override normal 12 Trực calculation
+   - Generic first/15th days of month use the standard 12 Trực formula
+   - Festival dates defined: (1,1), (1,15), (3,3), (5,5), (7,15), (8,15), (10,10)
+
+**Day Quality Calculation** - `HoangDaoCalculator.determineDayQuality()`
+- Combines 12 Trực and Lục Hắc Đạo to produce overall day rating
+- Weighted scoring system: Auspicious hours (2.0 points), Unlucky days (-2.0 to -2.5 points)
+- Result categories: Good (score > 0), Bad (score < 0), Neutral (score ≈ 0)
+- Includes lucky directions, colors, and suitable/taboo activities
+
+**Key Data Structures:**
+- `ZodiacHourType`: Enum for 12 Trực with quality classification (veryAuspicious, neutral, inauspicious)
+- `DayQuality`: Complete astrological data including Trực, unlucky day type, activities
+- `HourlyZodiac`: Auspicious hours within a day with time ranges and activities
+
+**References:**
+- Based on Vietnamese astrology sources: vansu.net, phongthuytuongminh.com, xemngay.com
+- Uses lunar-solar calendar conversion via `LunarCalendar` utility (VietnameseLunar library)
+- Can-Chi calculation via `CanChiCalculator` for day/month/hour Can-Chi pairs
+
 ## Testing
 
 The project includes test targets for unit tests (`lich-plusTests`) and UI tests (`lich-plusUITests`). Tests can be run via Xcode or using the `run-tests.sh` command-line script.
