@@ -389,6 +389,32 @@ Result: GOOD | NEUTRAL | BAD
 - **Months 7-8**: Partial star data with key stars identified (17% coverage)
 - **Months 1-6**: Complete structure, ready for enhancement (50% coverage)
 
+### Validation & Accuracy Metrics
+
+**Current System Accuracy**: Validated against xemngay.com
+
+**Component-Level Accuracy**:
+- **Tier 1 (Critical): 100%** (40/40 checks)
+  - Day/Month/Year Can-Chi calculation
+  - 12 Trực (zodiac hour) determination
+- **Tier 2 (Important): 100%** (20/20 checks)
+  - Lucky hours (Giờ Hoàng Đạo): Fixed via book pages 51-52
+  - Lục Hắc Đạo (unlucky days): Complete detection rules
+- **Tier 3 (Enhanced): 45%** (Informational only)
+  - Star names: Limited by incomplete data for months 1-6
+  - Quality ratings: Subject to source variations
+
+**xemngay.com Validation**:
+- URL format: `https://xemngay.com/Default.aspx?blog=xngay&d=DDMMYYYY`
+- Example: `https://xemngay.com/Default.aspx?blog=xngay&d=24112025`
+- Test suite: 10 strategic dates across 7 lunar months
+- Test location: `lich-plusTests/VietnameseCalendarTests.swift` lines 856-1039
+
+**Latest Fixes** (achieving 100% Tier 2):
+- Lucky hours: Corrected Dần/Thân Chi mapping [0,1,4,5,7,10]
+- Unlucky days: Added Bạch Hổ (M3+Tuất), Câu Trận (M1+Hợi), Thiên Lao (M7+Thân)
+- Naming: Standardized with "Hắc Đạo" suffix for consistency
+
 ### Reference Book & Verification Tools
 
 **IMPORTANT:** When working on calendar logic or verifying accuracy, use the reference book and extraction tools.

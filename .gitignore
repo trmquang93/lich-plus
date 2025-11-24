@@ -56,3 +56,4 @@ Carthage/Build/
 *.log
 .env*.local
 !CLAUDE.md
+book_*
