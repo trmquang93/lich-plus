@@ -34,10 +34,10 @@ struct StarCalculator {
     /// - Returns: Star data if available
     static func detectStars(for date: Date) -> DayStarData? {
         // Convert to lunar calendar
-        let lunarDate = LunarCalendar.convertSolarToLunar(date)
+        let lunarDate = LunarCalendar.solarToLunar(date)
 
         // Get day Can-Chi
-        let dayCanChi = CanChiCalculator.getDayCanChi(for: date)
+        let dayCanChi = CanChiCalculator.calculateDayCanChi(for: date)
         let canChiString = "\(dayCanChi.can.vietnameseName) \(dayCanChi.chi.vietnameseName)"
 
         return detectStars(lunarMonth: lunarDate.month, dayCanChi: canChiString)
@@ -114,7 +114,7 @@ extension StarCalculator {
     static func calculateEnhancedQuality(
         for date: Date,
         zodiacHour: ZodiacHourType,
-        unluckyDay: UnluckyDayType?,
+        unluckyDay: LucHacDaoCalculator.UnluckyDayType?,
         starData: DayStarData?
     ) -> DayType {
         // Base score from 12 Trực

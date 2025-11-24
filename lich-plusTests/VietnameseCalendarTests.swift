@@ -580,4 +580,63 @@ class VietnameseCalendarTests: XCTestCase {
         guard let chi = ChiEnum(rawValue: index) else { return "Unknown" }
         return chi.vietnameseName
     }
+
+    // MARK: - Star System Integration Tests
+
+    /// Test that star system integration is working
+    func testStarSystemIntegration() {
+        // Test with Nov 3, 2025 - this is lunar 14/09, day is Bính Tý
+        let date = VietnameseCalendarTests.createDate(year: 2025, month: 11, day: 3)
+        let quality = HoangDaoCalculator.determineDayQuality(for: date)
+
+        // Currently we only have data for "Giáp Tý" in Month 9
+        // Nov 3, 2025 is "Bính Tý", so it won't have data yet
+        // This test verifies the system works correctly when data is NOT available
+
+        print("Nov 3, 2025 info:")
+        print("   Day Can-Chi: \(quality.dayCanChi)")
+        print("   Has star data: \(quality.hasStarData)")
+        print("   Star score: \(quality.starScore)")
+
+        // Verify the system doesn't crash and handles missing data gracefully
+        // When "Bính Tý" data is added to Month 9, hasStarData will be true
+        XCTAssertNotNil(quality, "Quality object should be created even without star data")
+        XCTAssertEqual(quality.dayCanChi, "Bính Tý", "Nov 3, 2025 should be Bính Tý")
+
+        print("✅ Star system integration test complete!")
+    }
+
+    /// Test star system returns nil for dates without data
+    func testStarSystemNoData() {
+        // Test with a Month 1 date (not implemented yet)
+        let date = VietnameseCalendarTests.createDate(year: 2025, month: 1, day: 15)
+        let quality = HoangDaoCalculator.determineDayQuality(for: date)
+
+        // Should not have star data for Month 1 yet
+        XCTAssertFalse(quality.hasStarData, "Month 1 should not have star data yet (not implemented)")
+        XCTAssertNil(quality.goodStars, "Good stars should be nil for Month 1")
+        XCTAssertNil(quality.badStars, "Bad stars should be nil for Month 1")
+        XCTAssertEqual(quality.starScore, 0.0, "Star score should be 0.0 when no data available")
+
+        print("✅ Verified no star data for unimplemented months")
+    }
+
+    /// Test Month 9 data completeness
+    func testMonth9DataCompleteness() {
+        let status = Month9StarData.dataCompleteness
+
+        print("Month 9 Star Data: \(status.completed)/\(status.total) entries")
+
+        // Currently only 1 entry (Giáp Tý)
+        XCTAssertEqual(status.total, 60, "Month 9 should have 60 total Can-Chi combinations")
+        XCTAssertGreaterThan(status.completed, 0, "Should have at least one entry")
+
+        if status.completed < status.total {
+            let percentage = Double(status.completed) / Double(status.total) * 100.0
+            print("⚠️ Month 9 is \(String(format: "%.1f", percentage))% complete")
+            print("   Need \(status.total - status.completed) more entries for 100% coverage")
+        } else {
+            print("✅ Month 9 has complete data!")
+        }
+    }
 }

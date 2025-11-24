@@ -80,7 +80,7 @@ enum ExtendedBadStar: String, CaseIterable {
             return -3.0  // Very severe
         case .lySao, .hoaTinh, .kiepSat, .diaPha:
             return -2.0  // Severe
-        case .daiHao, .kimThanThatSat, .thienCuang:
+        case .daiHao, .kimThanThatSat, .thienCuong:
             return -1.5  // Significant negative
         case .hoaTai, .thienHoa, .nguyetHoa:
             return -1.0  // Fire-related dangers
