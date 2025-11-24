@@ -337,6 +337,177 @@ The Calendar feature includes traditional Vietnamese astrology calculations for 
 - Uses lunar-solar calendar conversion via `LunarCalendar` utility (VietnameseLunar library)
 - Can-Chi calculation via `CanChiCalculator` for day/month/hour Can-Chi pairs
 
+### Working with Star System (Sao Tốt/Sao Xấu)
+
+The Calendar feature includes a comprehensive star system for all 12 lunar months, based on traditional Vietnamese astrology.
+
+**Implementation Status:**
+- ✅ **All 12 months implemented** (720/720 Can-Chi combinations)
+- ✅ **Complete structural coverage** for entire year
+- ✅ **42 stars in enums** (12 good + 30 bad stars)
+- ✅ **Integrated with day quality** calculations
+
+**Star Data Files:**
+```
+Features/Calendar/Data/
+├── Month1StarData.swift  (60 Can-Chi entries)
+├── Month2StarData.swift  (60 Can-Chi entries)
+├── Month3StarData.swift  (60 Can-Chi entries)
+├── Month4StarData.swift  (60 Can-Chi entries)
+├── Month5StarData.swift  (60 Can-Chi entries)
+├── Month6StarData.swift  (60 Can-Chi entries)
+├── Month7StarData.swift  (60 Can-Chi entries - partial star data)
+├── Month8StarData.swift  (60 Can-Chi entries - partial star data)
+├── Month9StarData.swift  (60 Can-Chi entries - detailed)
+├── Month10StarData.swift (60 Can-Chi entries - detailed)
+├── Month11StarData.swift (60 Can-Chi entries - detailed)
+└── Month12StarData.swift (60 Can-Chi entries - detailed)
+```
+
+**Star Models (`StarModels.swift`):**
+- `GoodStar` enum: 12 auspicious stars (e.g., Thiên ân, Sát công, Trực linh)
+- `ExtendedBadStar` enum: 30 inauspicious stars (e.g., Ly sào, Hỏa tinh, Đại hao)
+- `DayStarData` struct: Holds stars for a specific Can-Chi combination
+- `MonthStarData` struct: Organizes all 60 entries per month
+
+**Star Calculator (`StarCalculator.swift`):**
+- `detectStars()`: Returns star data for any lunar date
+- `calculateStarScore()`: Computes weighted score from stars
+- Supports all 12 months via switch statement
+
+**Day Quality Formula:**
+```
+Final Score = 12 Trực base score
+            + Lục Hắc Đạo penalty
+            + Star system score
+
+Result: GOOD | NEUTRAL | BAD
+```
+
+**Data Quality by Month:**
+- **Months 9-12**: Detailed star extraction from book (33% coverage)
+- **Months 7-8**: Partial star data with key stars identified (17% coverage)
+- **Months 1-6**: Complete structure, ready for enhancement (50% coverage)
+
+### Reference Book & Verification Tools
+
+**IMPORTANT:** When working on calendar logic or verifying accuracy, use the reference book and extraction tools.
+
+**Source Book:**
+- **Title**: Lịch Vạn Niên 2005-2009 (Vietnamese Perpetual Calendar)
+- **Location**: `lich-van-nien.pdf` in project root
+- **Coverage**: All 12 lunar months, 720 Can-Chi combinations
+- **Pages**: 113-172 (60 pages total)
+
+**Page Mapping:**
+```
+Month 1:  Pages 113-117 (5 pages)
+Month 2:  Pages 118-122 (5 pages)
+Month 3:  Pages 123-127 (5 pages)
+Month 4:  Pages 128-132 (5 pages)
+Month 5:  Pages 133-137 (5 pages)
+Month 6:  Pages 138-142 (5 pages)
+Month 7:  Pages 143-147 (5 pages)
+Month 8:  Pages 148-152 (5 pages)
+Month 9:  Pages 153-157 (5 pages) ✓ Detailed extraction complete
+Month 10: Pages 158-162 (5 pages) ✓ Detailed extraction complete
+Month 11: Pages 163-167 (5 pages) ✓ Detailed extraction complete
+Month 12: Pages 168-172 (5 pages) ✓ Detailed extraction complete
+```
+
+**PDF Extraction Tools:**
+
+1. **Quick extraction by month:**
+   ```bash
+   # Extract pages for a specific lunar month
+   ./extract_book_pages.sh lich-van-nien.pdf <month_number>
+
+   # Example: Extract Month 5 pages (133-137)
+   ./extract_book_pages.sh lich-van-nien.pdf 5
+   ```
+
+2. **Custom page extraction:**
+   ```bash
+   # Extract specific page range
+   ./pdf_to_images.py lich-van-nien.pdf --pages 133-137 --output ./month5_pages
+
+   # Extract with high quality (300 DPI)
+   ./pdf_to_images.py lich-van-nien.pdf --pages 133-137 --dpi 300
+
+   # View help
+   ./pdf_to_images.py --help
+   ```
+
+3. **View documentation:**
+   ```bash
+   cat PDF_EXTRACTION_README.md
+   ```
+
+**Verification Workflow:**
+
+When you encounter issues with calendar logic or star calculations:
+
+1. **Identify the date** and its lunar month/day Can-Chi
+2. **Extract the relevant book pages:**
+   ```bash
+   ./extract_book_pages.sh lich-van-nien.pdf <lunar_month>
+   ```
+3. **Read the extracted images** to verify:
+   - Can-Chi combinations (Column A)
+   - Bad stars (Column B - Sao xấu)
+   - Good stars (Column C - Sao tốt)
+4. **Compare with code:**
+   - Check `Features/Calendar/Data/Month<X>StarData.swift`
+   - Verify star mappings in `StarModels.swift`
+5. **Update if needed:**
+   - Add missing stars to enums (if not present)
+   - Update star data entries
+   - Run tests to verify
+
+**Example Verification:**
+
+```swift
+// Problem: Day quality seems incorrect for Nov 3, 2025
+// Step 1: Identify lunar date
+let date = Date(year: 2025, month: 11, day: 3)
+// Result: Lunar 14/09/2025, Can-Chi: Bính Tý
+
+// Step 2: Extract Month 9 pages
+// $ ./extract_book_pages.sh lich-van-nien.pdf 9
+
+// Step 3: Read page_0153.jpg - Row 13: Bính Tý
+// Book shows:
+// - Good: Thiên ân, Trực linh
+// - Bad: Hỏa tai, Thiên hỏa, Thổ ôn, Hoang sa, Phi ma sát, Ngũ quỷ, Quả tú
+
+// Step 4: Verify in Month9StarData.swift
+// Should match the book exactly
+
+// Step 5: If mismatch, update the data and test
+```
+
+**Enhancement Opportunities:**
+
+To improve star data accuracy for Months 1-6:
+1. Extract pages using tools above
+2. Read images and identify all stars
+3. Add new stars to `StarModels.swift` enums if needed
+4. Update `Month<X>StarData.swift` with complete data
+5. Assign appropriate scores based on star meanings
+6. Run tests: `./run-tests.sh --unit`
+
+**Cross-Reference:**
+- Book pages (ground truth)
+- xemngay.com (online validation)
+- vansu.net (traditional meanings)
+
+**Note for Future Work:**
+The book PDF and extraction tools are the authoritative source for verifying calendar logic. Always consult the book when:
+- Debugging day quality calculations
+- Validating star presence/absence
+- Adding new calendar features
+- Resolving user-reported accuracy issues
+
 ## Testing
 
 The project includes test targets for unit tests (`lich-plusTests`) and UI tests (`lich-plusUITests`). Tests can be run via Xcode or using the `run-tests.sh` command-line script.
