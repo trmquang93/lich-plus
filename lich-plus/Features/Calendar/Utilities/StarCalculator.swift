@@ -20,13 +20,20 @@ struct StarCalculator {
     ///   - dayCanChi: Day Can-Chi string (e.g., "Giáp Tý")
     /// - Returns: Star data if available for this month and Can-Chi
     static func detectStars(lunarMonth: Int, dayCanChi: String) -> DayStarData? {
-        // Currently only Month 9 data is implemented as proof-of-concept
-        // TODO: Add data for months 1-8, 10-12
-        guard lunarMonth == 9 else {
-            return nil  // No data for other months yet
+        // Currently Months 9-12 are implemented
+        // TODO: Add data for months 1-8
+        switch lunarMonth {
+        case 9:
+            return Month9StarData.data.starsForDay(canChi: dayCanChi)
+        case 10:
+            return Month10StarData.data.starsForDay(canChi: dayCanChi)
+        case 11:
+            return Month11StarData.data.starsForDay(canChi: dayCanChi)
+        case 12:
+            return Month12StarData.data.starsForDay(canChi: dayCanChi)
+        default:
+            return nil  // No data for months 1-8 yet
         }
-
-        return Month9StarData.data.starsForDay(canChi: dayCanChi)
     }
 
     /// Detect stars for a Gregorian date
@@ -160,7 +167,7 @@ extension StarCalculator {
         print("")
 
         // Check which months have data
-        let monthsWithData = [9]  // Currently only Month 9
+        let monthsWithData = [9, 10, 11, 12]  // Months 9-12 complete
         let monthsNeeded = Array(1...12)
         let missingMonths = monthsNeeded.filter { !monthsWithData.contains($0) }
 
@@ -173,17 +180,23 @@ extension StarCalculator {
 
         print("")
         Month9StarData.printDataStatus()
+        Month10StarData.printDataStatus()
+        Month11StarData.printDataStatus()
+        Month12StarData.printDataStatus()
 
         print("")
         let totalEntries = 12 * 60  // 12 months × 60 Can-Chi = 720 entries
-        let completedEntries = Month9StarData.dataCompleteness.completed
+        let completedEntries = Month9StarData.dataCompleteness.completed +
+                               Month10StarData.dataCompleteness.completed +
+                               Month11StarData.dataCompleteness.completed +
+                               Month12StarData.dataCompleteness.completed
         let percentage = Double(completedEntries) / Double(totalEntries) * 100.0
         print("Overall progress: \(completedEntries)/\(totalEntries) entries (\(String(format: "%.1f", percentage))%)")
 
         if percentage < 100.0 {
             let remaining = totalEntries - completedEntries
             print("⚠️ Need \(remaining) more entries to reach 100% accuracy")
-            print("📖 Requires extraction from Lịch Vạn Niên book pages for remaining months")
+            print("📖 Requires extraction from Lịch Vạn Niên book pages for remaining months 1-8")
         } else {
             print("✅ Complete star data for all months - 100% accuracy possible!")
         }
