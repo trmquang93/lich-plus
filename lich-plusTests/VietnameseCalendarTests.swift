@@ -589,21 +589,29 @@ class VietnameseCalendarTests: XCTestCase {
         let date = VietnameseCalendarTests.createDate(year: 2025, month: 11, day: 3)
         let quality = HoangDaoCalculator.determineDayQuality(for: date)
 
-        // Currently we only have data for "Giáp Tý" in Month 9
-        // Nov 3, 2025 is "Bính Tý", so it won't have data yet
-        // This test verifies the system works correctly when data is NOT available
-
         print("Nov 3, 2025 info:")
         print("   Day Can-Chi: \(quality.dayCanChi)")
         print("   Has star data: \(quality.hasStarData)")
+        print("   Good stars: \(quality.goodStars?.map { $0.rawValue }.joined(separator: ", ") ?? "none")")
+        print("   Bad stars: \(quality.badStars?.map { $0.rawValue }.joined(separator: ", ") ?? "none")")
         print("   Star score: \(quality.starScore)")
 
-        // Verify the system doesn't crash and handles missing data gracefully
-        // When "Bính Tý" data is added to Month 9, hasStarData will be true
-        XCTAssertNotNil(quality, "Quality object should be created even without star data")
+        // Verify Month 9 star data is now present
+        XCTAssertNotNil(quality, "Quality object should be created")
         XCTAssertEqual(quality.dayCanChi, "Bính Tý", "Nov 3, 2025 should be Bính Tý")
 
-        print("✅ Star system integration test complete!")
+        // NOW with complete Month 9 data, this day SHOULD have star data!
+        XCTAssertTrue(quality.hasStarData, "Bính Tý in Month 9 should have star data now")
+        XCTAssertNotNil(quality.goodStars, "Should have good stars")
+        XCTAssertNotNil(quality.badStars, "Should have bad stars")
+
+        // Bính Tý from the book: Good = Thiên ân, Trực linh, Bad = 7 stars
+        XCTAssertEqual(quality.goodStars?.count, 2, "Bính Tý should have 2 good stars")
+        XCTAssertTrue(quality.goodStars?.contains(.thienAn) ?? false, "Should have Thiên ân")
+        XCTAssertTrue(quality.goodStars?.contains(.trucLinh) ?? false, "Should have Trực linh")
+        XCTAssertEqual(quality.badStars?.count, 7, "Bính Tý should have 7 bad stars")
+
+        print("✅ Star system integration with complete Month 9 data verified!")
     }
 
     /// Test star system returns nil for dates without data
