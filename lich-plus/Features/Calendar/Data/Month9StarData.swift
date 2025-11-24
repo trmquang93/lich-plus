@@ -58,7 +58,7 @@ struct Month9StarData {
         data["Đinh Mão"] = DayStarData(
             canChi: "Đinh Mão",
             goodStars: [.thienAn],
-            badStars: [.hoangVu, .khongPhong]  // Câu trần, Ngũ hư not in enum
+            badStars: [.hoangVu, .cauTran, .nguHu, .khongPhong]
         )
 
         // Row 5: Mậu Thìn
@@ -94,11 +94,11 @@ struct Month9StarData {
         )
 
         // Row 9: Nhâm Thân
-        // Page 153, Column C: Thiên ân, Hỏa tinh (actually Hỏa linh but using Hỏa tinh as closest match)
+        // Page 153, Column C: Thiên ân, Column B: Hỏa linh
         data["Nhâm Thân"] = DayStarData(
             canChi: "Nhâm Thân",
             goodStars: [.thienAn],
-            badStars: [.hoaTinh]  // Hỏa linh → using hoaTinh as closest
+            badStars: [.hoaLinh]
         )
 
         // Row 10: Quý Dậu
@@ -238,11 +238,11 @@ struct Month9StarData {
         )
 
         // Row 27: Canh Dần
-        // Page 154, Column C: Thiên thụy, Hỏa linh (using hoaTinh as proxy)
+        // Page 154, Column C: Thiên thụy, Column B: Hỏa linh, Đại hao, Thụ tử
         data["Canh Dần"] = DayStarData(
             canChi: "Canh Dần",
             goodStars: [.thienThuy],
-            badStars: [.hoaTinh, .daiHao, .thuTu]
+            badStars: [.hoaLinh, .daiHao, .thuTu]
         )
 
         // Row 28: Tân Mão
@@ -310,11 +310,11 @@ struct Month9StarData {
         )
 
         // Row 36: Kỷ Hợi
-        // Page 154, Column C: Hỏa linh (using hoaTinh)
+        // Page 154, Column C: (none), Column B: Hỏa linh
         data["Kỷ Hợi"] = DayStarData(
             canChi: "Kỷ Hợi",
             goodStars: [],
-            badStars: [.hoaTinh]
+            badStars: [.hoaLinh]
         )
 
         // Row 37: Canh Tý
@@ -374,11 +374,11 @@ struct Month9StarData {
         )
 
         // Row 44: Đinh Mùi
-        // Page 156, Column C: Hỏa linh, Ly sào
+        // Page 156, Column C: (none), Column B: Hỏa linh, Ly sào, Địa phá, Hoang vu, Băng tiêu
         data["Đinh Mùi"] = DayStarData(
             canChi: "Đinh Mùi",
             goodStars: [],
-            badStars: [.lySao, .hoaTinh, .diaPha, .hoangVu, .bangTieu]
+            badStars: [.hoaLinh, .lySao, .diaPha, .hoangVu, .bangTieu]
         )
 
         // Row 45: Mậu Thân
@@ -465,7 +465,7 @@ struct Month9StarData {
         // Page 157, Column C: Ngọ hợp
         data["Mậu Ngọ"] = DayStarData(
             canChi: "Mậu Ngọ",
-            goodStars: [],  // Ngọ hợp not in current enum
+            goodStars: [.ngoHop],
             badStars: [.khongPhong]
         )
 
@@ -473,7 +473,7 @@ struct Month9StarData {
         // Page 157, Column C: Ngọ hợp, Sát công
         data["Kỷ Mùi"] = DayStarData(
             canChi: "Kỷ Mùi",
-            goodStars: [.satCong],
+            goodStars: [.ngoHop, .satCong],
             badStars: [.diaPha, .hoangVu, .bangTieu]
         )
 
@@ -489,7 +489,7 @@ struct Month9StarData {
         // Page 157, Column C: Ngọ hợp
         data["Tân Dậu"] = DayStarData(
             canChi: "Tân Dậu",
-            goodStars: [],
+            goodStars: [.ngoHop],
             badStars: []
         )
 
@@ -502,11 +502,11 @@ struct Month9StarData {
         )
 
         // Row 60: Quý Hợi
-        // Page 157, Column C: Ngọ hợp, Nhân chuyển, Hỏa linh
+        // Page 157, Column C: Ngọ hợp, Nhân chuyển, Column B: Hỏa linh
         data["Quý Hợi"] = DayStarData(
             canChi: "Quý Hợi",
-            goodStars: [.nhanChuyen],
-            badStars: [.hoaTinh]
+            goodStars: [.ngoHop, .nhanChuyen],
+            badStars: [.hoaLinh]
         )
 
         return data

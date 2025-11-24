@@ -12,7 +12,8 @@ import Foundation
 // MARK: - Good Stars (Sao Tốt)
 
 /// Good stars that make days auspicious
-/// Source: Book page 153, Column C "Sao Tốt"
+/// Source: Book pages 153-157, Column C "Sao Tốt"
+/// Expanded: Added common stars from Month 9 analysis
 enum GoodStar: String, CaseIterable {
     case thienAn = "Thiên ân"           // Heavenly Grace - Makes activities auspicious
     case satCong = "Sát công"           // Kill Work/Success - Good for completing tasks
@@ -25,6 +26,9 @@ enum GoodStar: String, CaseIterable {
     case thienDuc = "Thiên đức"         // Heavenly Virtue - All good activities
     case nguyetDuc = "Nguyệt đức"       // Moon Virtue - Good timing
     case mannDucTinh = "Mần đức tinh"   // Virtue Star - Charitable work
+
+    // MARK: - Newly Added Stars (Phase 2A)
+    case ngoHop = "Ngọ hợp"             // Horse Harmony - Good for cooperation, partnerships
 
     /// Scoring weight for this good star
     var score: Double {
@@ -39,7 +43,7 @@ enum GoodStar: String, CaseIterable {
             return 1.5  // Good for work completion
         case .thienDuc, .nguyetDuc:
             return 1.5  // Virtue blessings
-        case .trucLinh, .thienThuy, .nhanChuyen:
+        case .trucLinh, .thienThuy, .nhanChuyen, .ngoHop:
             return 1.0  // Moderate positive influence
         case .mannDucTinh, .nguyetKhong:
             return 0.5  // Minor positive influence
@@ -50,7 +54,8 @@ enum GoodStar: String, CaseIterable {
 // MARK: - Extended Bad Stars (Sao Xấu - Beyond Lục Hắc Đạo)
 
 /// Extended bad stars beyond the 6 Lục Hắc Đạo
-/// Source: Book page 153, Column B "Sao Xấu"
+/// Source: Book pages 153-157, Column B "Sao Xấu"
+/// Expanded: Added common stars from Month 9 analysis (Phase 2A)
 enum ExtendedBadStar: String, CaseIterable {
     case lySao = "Ly sào"               // Separation - Bad for relationships, travel
     case hoaTinh = "Hỏa tinh"           // Fire Star - Dangerous
@@ -73,21 +78,35 @@ enum ExtendedBadStar: String, CaseIterable {
     case kimThanThatSat = "Kim thần thất sát"  // Metal God Seven Kills
     case nguyetHoa = "Nguyệt hoạ"       // Moon Fire
 
+    // MARK: - Newly Added Stars (Phase 2A - from Month 9 analysis)
+    case cauTran = "Câu trần"           // Hook of Dust - Bad for relationships
+    case nguHu = "Ngũ hư"               // Five Empty - Loss, emptiness
+    case tieuHongSa = "Tiểu hồng sa"    // Small Red Sand - Minor obstacles
+    case tieuHao = "Tiểu hao"           // Small Consumption - Minor loss
+    case huyenVu = "Huyền vũ"           // Dark Warrior - Danger, darkness
+    case nguyetHu = "Nguyệt hư"         // Moon Empty - Emptiness
+    case hoaLinh = "Hỏa linh"           // Fire Spirit - Different from Fire Star
+    case cuuKhong = "Cửu không"         // Nine Empty - Major emptiness
+    case nguyetYem = "Nguyệt yếm"       // Moon Sickness - Illness
+    case loiCong = "Lôi công"           // Thunder Attack - Sudden danger
+
     /// Scoring weight for this bad star (negative values)
     var score: Double {
         switch self {
         case .thuTu, .cuuThoQuy:
-            return -3.0  // Very severe
-        case .lySao, .hoaTinh, .kiepSat, .diaPha:
-            return -2.0  // Severe
-        case .daiHao, .kimThanThatSat, .thienCuong:
-            return -1.5  // Significant negative
-        case .hoaTai, .thienHoa, .nguyetHoa:
-            return -1.0  // Fire-related dangers
-        case .hoangVu, .khongPhong, .bangTieu:
-            return -1.0  // Moderate negative
-        case .thoOn, .hoangSa, .phiMaSat, .nguQuy, .quaTu:
-            return -0.5  // Minor negative
+            return -3.0  // Very severe (Death, Nine Earth Ghosts)
+        case .lySao, .hoaTinh, .kiepSat, .diaPha, .cuuKhong:
+            return -2.0  // Severe (Separation, Fire, Robbery, Nine Empty)
+        case .daiHao, .kimThanThatSat, .thienCuong, .cauTran:
+            return -1.5  // Significant negative (Great Loss, Hook of Dust)
+        case .hoaTai, .thienHoa, .nguyetHoa, .hoaLinh, .huyenVu, .loiCong:
+            return -1.0  // Fire/danger-related (Fire disasters, Dark Warrior, Thunder)
+        case .hoangVu, .khongPhong, .bangTieu, .nguyetYem:
+            return -1.0  // Moderate negative (Desolate, Empty Room, Moon Sickness)
+        case .thoOn, .hoangSa, .phiMaSat, .nguQuy, .quaTu, .nguHu, .nguyetHu:
+            return -0.5  // Minor negative (Five Empty, Moon Empty, etc.)
+        case .tieuHongSa, .tieuHao:
+            return -0.3  // Very minor negative (Small obstacles/loss)
         }
     }
 }
