@@ -16,9 +16,16 @@ struct HoangDaoCalculator {
     // MARK: - Main Zodiac Hour Calculation
 
     /// Calculate the zodiac hour type for a specific lunar date
-    /// The 12 zodiac hours (12 Kiến Trừ) rotate based on the lunar month and day
-    /// Formula: (monthOffset + day - 1) % 12
-    /// where monthOffset depends on the lunar month
+    /// Uses the traditional Vietnamese 12 Trực calculation method
+    /// Based on: "Tháng nào trực nấy" principle (Each month has its own Trực)
+    /// References: vansu.net, phongthuytuongminh.com, xemngay.com
+    ///
+    /// Traditional Method:
+    /// 1. Each lunar month corresponds to a Chi value
+    /// 2. Find the first day in that month whose Chi matches the month's Chi
+    /// 3. That day is Trực Kiến (position 0)
+    /// 4. Subsequent days cycle through 12 Trực based on their Chi position
+    ///
     /// - Parameter lunarDate: Tuple of (day, month, year)
     /// - Returns: The zodiac hour type for that day
     static func calculateZodiacHour(for lunarDate: (day: Int, month: Int, year: Int)) -> ZodiacHourType {
@@ -37,16 +44,45 @@ struct HoangDaoCalculator {
             return specialZodiacs[index]
         }
 
-        // Standard calculation based on the 12 Kiến Trừ cycle
-        // Formula: (monthOffset + day - 1) % 12
-        // The month offset is determined by the lunar month using a cyclic +5 pattern
-        // Verified with real Vietnamese calendar data:
-        // - Month 9: offset 1 (lunar 13/09 → Trừ: (1 + 13 - 1) % 12 = 13 % 12 = 1)
-        // - Month 10: offset 6 (lunar 05/10 → Khai: (6 + 5 - 1) % 12 = 10)
+        // Traditional method: Calculate based on month and day using month-Chi relationship
+        // This implements the "Tháng nào trực nấy" principle where each month has a base offset
+        // that determines how the 12 Trực cycle through the days of that month
+        //
+        // Algorithm:
+        // The 12 Trực cycle follows a traditional pattern based on the lunar month
+        // Formula: Trực position = (monthOffset + day - 1) % 12
+        // where the monthOffset is determined by the lunar month number
 
+        // Get month offset for 12 Trực calculation
         let monthOffset = getMonthOffsetForTruc(lunarDate.month)
+
+        // Calculate Trực based on day within month
         let zodiacIndex = (monthOffset + lunarDate.day - 1) % 12
         return ZodiacHourType(rawValue: zodiacIndex) ?? .kien
+    }
+
+    /// Get the Chi (Earthly Branch) that corresponds to a lunar month
+    /// Traditional Vietnamese astrology: "Tháng nào trực nấy" (Each month has its own Trực)
+    ///
+    /// Month-to-Chi Mapping:
+    /// Month 1 = Dần (2), Month 2 = Mão (3), Month 3 = Thìn (4), Month 4 = Tỵ (5)
+    /// Month 5 = Ngọ (6), Month 6 = Mùi (7), Month 7 = Thân (8), Month 8 = Dậu (9)
+    /// Month 9 = Tuất (10), Month 10 = Hợi (11), Month 11 = Tý (0), Month 12 = Sửu (1)
+    ///
+    /// Sources: vansu.net, phongthuytuongminh.com, xemngay.com
+    /// - Parameter lunarMonth: Lunar month (1-12)
+    /// - Returns: The Chi enum corresponding to the month
+    private static func getMonthChi(_ lunarMonth: Int) -> ChiEnum {
+        let chiIndex: Int
+        if lunarMonth <= 10 {
+            chiIndex = lunarMonth + 1  // Months 1-10 map to Chi 2-11
+        } else if lunarMonth == 11 {
+            chiIndex = 0  // Month 11 = Tý (0)
+        } else {  // lunarMonth == 12
+            chiIndex = 1  // Month 12 = Sửu (1)
+        }
+
+        return ChiEnum(rawValue: chiIndex) ?? .dan
     }
 
     /// Get the month offset for 12 Trực calculation

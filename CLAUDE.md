@@ -69,6 +69,21 @@ open lich-plus.xcodeproj
 
 **Testing:**
 ```bash
+# Run all tests (unit and UI) using the test runner script
+./run-tests.sh
+
+# Run only unit tests
+./run-tests.sh --unit
+
+# Run only UI tests
+./run-tests.sh --ui
+
+# View test runner help
+./run-tests.sh --help
+```
+
+Alternatively, run tests directly with xcodebuild:
+```bash
 # Run all unit tests
 xcodebuild -scheme lich-plus -destination 'generic/platform=iOS Simulator' test
 
@@ -285,7 +300,29 @@ The Tasks feature implements a complete task and event management system with th
 
 ## Testing
 
-The project includes test targets for unit tests (`lich-plusTests`) and UI tests (`lich-plusUITests`). Tests can be run via Xcode or command line using the testing commands listed above.
+The project includes test targets for unit tests (`lich-plusTests`) and UI tests (`lich-plusUITests`). Tests can be run via Xcode or using the `run-tests.sh` command-line script.
+
+**Using the Test Runner Script:**
+The `run-tests.sh` script provides a convenient way to run tests with clean, formatted output:
+
+```bash
+# Run all tests (default)
+./run-tests.sh
+
+# Run only unit tests
+./run-tests.sh --unit
+
+# Run only UI tests
+./run-tests.sh --ui
+
+# Display help
+./run-tests.sh --help
+```
+
+The script uses `xcbeautify` for formatted output and handles errors gracefully. It's the recommended approach for command-line test execution.
+
+**Manual xcodebuild Commands:**
+For more control, you can also run tests directly using the xcodebuild commands listed in the "Essential Commands" section above.
 
 ## Deployment
 

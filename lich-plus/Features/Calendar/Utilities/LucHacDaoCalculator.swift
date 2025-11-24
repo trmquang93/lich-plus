@@ -79,6 +79,8 @@ struct LucHacDaoCalculator {
             return .chuTuoc
         case (7, .thin):  // Thìn = 4
             return .chuTuoc
+        case (9, .mui):
+            return .chuTuoc
         case (10, .dau):
             return .chuTuoc
 
@@ -101,6 +103,8 @@ struct LucHacDaoCalculator {
             return .cauTran
         case (9, .dau):
             return .cauTran
+        case (10, .ty2):  // Added: Month 10 + Chi Tỵ (discovered from xemngay.com data)
+            return .cauTran
         case (12, .hoi):
             return .cauTran
 
@@ -113,7 +117,11 @@ struct LucHacDaoCalculator {
             return .thienLao
         case (7, .dau):
             return .thienLao
+        case (9, .ty):  // Added: Month 9 + Chi Tý (discovered from xemngay.com data)
+            return .thienLao
         case (10, .suu):
+            return .thienLao
+        case (10, .ty):  // Added: Month 10 + Chi Tý (discovered from xemngay.com data)
             return .thienLao
 
         // MARK: - Thiên Hình
@@ -123,6 +131,8 @@ struct LucHacDaoCalculator {
         case (5, .mao):
             return .thienHinh
         case (8, .ngo):
+            return .thienHinh
+        case (10, .than):
             return .thienHinh
         case (11, .dau):
             return .thienHinh

@@ -252,20 +252,46 @@ struct DayQuality: Equatable {
     }
 
     /// Final composite day quality considering all systems
+    /// Uses a weighted scoring system where unlucky days significantly impact the final quality
+    /// Higher severity unlucky days always push days to bad or neutral at best
     var finalQuality: DayType {
-        // Lục Hắc Đạo (unlucky days) override positive base quality
-        if unluckyDayType != nil {
-            return .bad
-        }
+        // Calculate base score from Trực (zodiac hour quality)
+        var score: Double = 0
 
-        // Otherwise use zodiac hour quality
         switch zodiacHour.quality {
         case .veryAuspicious:
-            return .good
+            score = 2.0
         case .neutral:
-            return .neutral
+            score = 0.0
         case .inauspicious:
-            return .bad
+            score = -2.0
+        }
+
+        // Adjust score based on unlucky day severity
+        if let unluckyDay = unluckyDayType {
+            let severityPenalty: Double
+            switch unluckyDay.severity {
+            case 5: severityPenalty = -4.0      // Chu Tước - most severe, always bad
+            case 4: severityPenalty = -2.5      // Thiên Lao, Thiên Hình - usually bad
+            case 3: severityPenalty = -2.0      // Bạch Hổ, Câu Trần - usually bad
+            case 2: severityPenalty = -1.5      // Nguyên Vũ - least severe
+            default: severityPenalty = -2.5
+            }
+            score += severityPenalty
+        }
+
+        // Map final score to day type
+        // Unlucky days have significant negative impact:
+        // - Severity 5: Always bad (minimum score would be 2.0 - 4.0 = -2.0)
+        // - Severity 4: Usually bad (2.0 - 2.5 = -0.5 is bad, 0.0 - 2.5 = -2.5 is bad)
+        // - Severity 3: Usually bad (2.0 - 2.0 = 0.0 is bad, -2.0 - 2.0 = -4.0 is bad)
+        // - Severity 2: Can be neutral (2.0 - 1.5 = 0.5 is neutral)
+        if score >= 1.5 {
+            return .good          // Very auspicious with no unlucky day
+        } else if score < 0.5 {
+            return .bad           // Unlucky day scenarios and inauspicious Trước
+        } else {
+            return .neutral       // Borderline cases: mild unlucky days with auspicious Trước
         }
     }
 

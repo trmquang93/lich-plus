@@ -84,6 +84,7 @@ struct QuickInfoBannerView: View {
         }
         .padding(AppTheme.spacing16)
         .background(AppColors.background)
+        .shadow(radius: 1)
     }
 
     private var dayTypeBackgroundColor: Color {
@@ -93,7 +94,7 @@ struct QuickInfoBannerView: View {
         case .bad:
             return Color(red: 1, green: 0.93, blue: 0.93)
         case .neutral:
-            return AppColors.backgroundLight
+            return AppColors.background
         }
     }
 }

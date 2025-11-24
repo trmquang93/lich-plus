@@ -372,46 +372,32 @@ struct ZodiacHourData {
 
 struct SpecialLunarDates {
     /// Check if a lunar date is a special auspicious date
+    /// Only truly special festival dates, not generic first/15th days of month
+    /// Generic days should use the traditional 12 Trực method instead
     static func isSpecialAuspiciousDate(lunarDay: Int, lunarMonth: Int) -> Bool {
-        // Tết (Lunar New Year) - First 3 days
-        if lunarMonth == 1 && lunarDay <= 3 {
-            return true
-        }
-
-        // Mid-month (Full moon days)
-        if lunarDay == 15 {
-            return true
-        }
-
-        // First day of month
-        if lunarDay == 1 {
-            return true
-        }
-
-        // Special festival days
+        // Special festival days only
         let specialDays: [(month: Int, day: Int)] = [
-            (1, 1),   // Tết Nguyên Đán
-            (1, 15),  // Tết Nguyên Tiêu
-            (3, 3),   // Tết Hàn Thực
-            (5, 5),   // Tết Đoan Ngọ
-            (7, 15),  // Vu Lan
-            (8, 15),  // Tết Trung Thu
-            (10, 10), // Tết Thường Tân
+            (1, 1),   // Tết Nguyên Đán (Lunar New Year)
+            (1, 15),  // Tết Nguyên Tiêu (Lantern Festival)
+            (3, 3),   // Tết Hàn Thực (Cold Food Festival)
+            (5, 5),   // Tết Đoan Ngọ (Dragon Boat Festival)
+            (7, 15),  // Vu Lan (Ghost Festival)
+            (8, 15),  // Tết Trung Thu (Mid-Autumn Festival)
+            (10, 10), // Tết Thường Tân (Double Ninth Festival)
         ]
 
         return specialDays.contains { $0.month == lunarMonth && $0.day == lunarDay }
     }
 
     /// Check if a lunar date is a special inauspicious date
+    /// Note: Generic inauspicious days (like end of month) are handled by the 12 Trực system
     static func isSpecialInauspiciousDate(lunarDay: Int, lunarMonth: Int) -> Bool {
-        // Last days of month (often considered less auspicious)
-        if lunarDay >= 29 {
-            return true
-        }
-
-        // 7th lunar month (Ghost month) - days 1, 15, and end of month
-        if lunarMonth == 7 && (lunarDay == 1 || lunarDay == 15 || lunarDay >= 28) {
-            return true
+        // 7th lunar month (Ghost month) - traditionally considered unlucky
+        if lunarMonth == 7 {
+            // 7th month is considered inauspicious for major activities
+            // But specific days' Trực values are still calculated by the traditional method
+            // This is a placeholder - actual behavior depends on traditional Trực system
+            return false
         }
 
         return false
@@ -439,46 +425,47 @@ struct SpecialLunarDates {
 
 struct HourlyZodiacHelper {
     /// Calculate which hours are auspicious for a given day zodiac
-    /// In Vietnamese astrology, auspicious hours depend on the day's Trực (Zodiac Hour Type)
+    /// In Vietnamese astrology, auspicious hours depend on the day's Chi (Earthly Branch), NOT the day's Trực
     /// This follows the traditional "Hoàng Đạo Cát Thời" (Auspicious Hours) system
+    ///
+    /// CRITICAL FIX: Previous implementation incorrectly used the day's Trực (ZodiacHourType) to determine
+    /// lucky hours. This has been corrected to use the day's Chi (Earthly Branch) instead, which aligns with
+    /// authoritative Vietnamese astrology sources and the traditional calendar calculation formulas.
+    ///
+    /// The lucky hours mapping follows a consistent 6-pair system based on the 12 Earthly Branches:
+    /// - Days with paired Chi values share the same set of 6 auspicious hours
+    /// - Hour index 0-11 maps directly to Chi values in sequence
+    ///
+    /// Pairing (based on traditional Vietnamese astrology):
+    /// - Tý (0) & Ngọ (6) → same lucky hours
+    /// - Sửu (1) & Mùi (7) → same lucky hours
+    /// - Dần (2) & Thân (8) → same lucky hours
+    /// - Mão (3) & Dậu (9) → same lucky hours
+    /// - Thìn (4) & Tuất (10) → same lucky hours
+    /// - Tỵ (5) & Hợi (11) → same lucky hours
     static func getAuspiciousHours(for dayZodiacHour: ZodiacHourType, dayChi: ChiEnum) -> [Int] {
-        // The auspicious hours are determined by the day's Trực (ZodiacHourType)
-        // Each of the 12 Trực types has specific auspicious hours throughout the day
+        // Lucky hours are determined by the day's Chi (Earthly Branch), NOT the day's Trực
+        // This is the correct traditional Vietnamese astrology calculation method
 
-        let auspiciousHours: [Int]
-        switch dayZodiacHour {
-        // VERY AUSPICIOUS (Tứ Hộ Thần)
-        case .tru:  // Trừ - Very auspicious for spiritual/removal activities
-            auspiciousHours = [1, 4, 6, 7, 10, 11]  // Sửu, Thìn, Ngọ, Mùi, Tuất, Hợi
-        case .dinh:  // Định - Very auspicious for business/stabilization
-            auspiciousHours = [0, 2, 5, 6, 8, 11]  // Tý, Dần, Tỵ, Ngọ, Thân, Hợi
-        case .nguy:  // Nguy - Very auspicious for spiritual activities
-            auspiciousHours = [1, 3, 4, 7, 9, 10]  // Sửu, Mão, Thìn, Mùi, Dậu, Tuất
-        case .khai:  // Khai - Very auspicious for opening/major events
-            auspiciousHours = [0, 2, 3, 6, 7, 9]   // Tý, Dần, Mão, Ngọ, Mùi, Dậu
+        switch dayChi {
+        case .ty, .ngo:          // Tý (0), Ngọ (6) days
+            return [0, 1, 3, 6, 8, 9]      // Tý, Sửu, Mão, Ngọ, Thân, Dậu
 
-        // NEUTRAL (Bán Cát Bán Hung)
-        case .kien:  // Kiên - Semi-auspicious, good for starting things
-            auspiciousHours = [1, 2, 4, 6, 10, 11] // Sửu, Dần, Thìn, Ngọ, Tuất, Hợi
-        case .chap:  // Chấp - Neutral, good for maintenance
-            auspiciousHours = [0, 3, 5, 7, 8, 9]   // Tý, Mão, Tỵ, Mùi, Thân, Dậu
+        case .suu, .mui:         // Sửu (1), Mùi (7) days
+            return [2, 3, 5, 8, 10, 11]    // Dần, Mão, Tỵ, Thân, Tuất, Hợi
 
-        // INAUSPICIOUS (Thần Hung) - Fewer auspicious hours
-        case .pha:  // Phá - Inauspicious, limited auspicious hours
-            auspiciousHours = [2, 5, 8, 11]        // Dần, Tỵ, Thân, Hợi
-        case .be:   // Bế - Inauspicious, limited auspicious hours
-            auspiciousHours = [1, 4, 7, 10]        // Sửu, Thìn, Mùi, Tuất
-        case .man:  // Mãn - Inauspicious, some auspicious hours
-            auspiciousHours = [0, 3, 6, 9]         // Tý, Mão, Ngọ, Dậu
-        case .binh: // Bình - Inauspicious, limited auspicious hours
-            auspiciousHours = [2, 4, 6, 8, 10]     // Dần, Thìn, Ngọ, Thân, Tuất
-        case .thanh: // Thành - Inauspicious, limited auspicious hours
-            auspiciousHours = [1, 3, 5, 7, 9, 11]  // Sửu, Mão, Tỵ, Mùi, Dậu, Hợi
-        case .thu:  // Thu - Inauspicious, some auspicious hours
-            auspiciousHours = [0, 4, 8, 11]        // Tý, Thìn, Thân, Hợi
+        case .dan, .than:        // Dần (2), Thân (8) days
+            return [2, 4, 5, 8, 9, 11]     // Dần, Thìn, Tỵ, Thân, Tuất, Hợi
+
+        case .mao, .dau:         // Mão (3), Dậu (9) days
+            return [0, 2, 3, 6, 7, 9]      // Tý, Dần, Mão, Ngọ, Mùi, Dậu
+
+        case .thin, .tuat:       // Thìn (4), Tuất (10) days
+            return [2, 4, 5, 8, 9, 11]     // Dần, Thìn, Tỵ, Thân, Tuất, Hợi
+
+        case .ty2, .hoi:         // Tỵ (5), Hợi (11) days
+            return [1, 4, 6, 7, 10, 11]    // Sửu, Thìn, Ngọ, Mùi, Tuất, Hợi
         }
-
-        return auspiciousHours
     }
 
     /// Get the Chi for a specific hour (0-11)

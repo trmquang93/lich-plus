@@ -6,8 +6,4 @@ target 'lich-plus' do
   target 'lich-plusTests' do
     inherit! :search_paths
   end
-
-  target 'lich-plusUITests' do
-    inherit! :search_paths
-  end
 end

@@ -74,11 +74,213 @@ class VietnameseCalendarTests: XCTestCase {
             expectedLuckyHourChis: [.suu, .thin, .ngo, .mui, .tuat, .hoi]  // Sửu, Thìn, Ngọ, Mùi, Tuất, Hợi
         ),
 
-        // Test Case 3: TODO - Different unlucky day type
-        // TODO: Get actual data with Bạch Hổ Hắc Đạo or other unlucky type
+        // Test Case 3: November 15, 2025 - Thiên Lao Hắc Đạo
+        // Reference: xemngay.com
+        // Solar: 15/11/2025
+        // Lunar: 17/09 Ất Tỵ
+        // Trực: Trừ (very auspicious)
+        // Unlucky Day: Thiên Lao (severity 4)
+        // Quality: Bad (2.0 (tru) - 2.5 (thienlao) = -0.5)
+        TestDate(
+            name: "Nov 15, 2025 - Thiên Lao Hắc Đạo (severity 4)",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 11, day: 15),
+            lunarDay: 17,
+            lunarMonth: 9,
+            lunarYear: 2025,
+            expectedDayCanChi: "Mậu Tý",
+            expectedDayChiIndex: 0,  // Tý
+            expectedMonthCanChi: "Bính Tuất",
+            expectedYearCanChi: "Ất Tỵ",
+            expectedTruc: .tru,  // Trừ is very auspicious
+            expectedUnluckyDay: "Thiên Lao",
+            expectedFinalQuality: .bad,  // Score: 2.0 (tru) - 2.5 (thienlao) = -0.5 = bad
+            expectedLuckyHourChis: [.ty, .suu, .mao, .ngo, .than, .dau]  // From xemngay.com
+        ),
 
-        // Test Case 4: TODO - Inauspicious Trực type
-        // TODO: Get actual data with Phá, Nguy, etc.
+        // Test Case 4: November 20, 2025 - Câu Trần Hắc Đạo + Phá
+        // Reference: xemngay.com
+        // Solar: 20/11/2025
+        // Lunar: 01/10 Ất Tỵ (new lunar month)
+        // Trực: Phá (inauspicious)
+        // Unlucky Day: Câu Trần (severity 3)
+        // Quality: Bad (score -4.0)
+        TestDate(
+            name: "Nov 20, 2025 - Câu Trần Hắc Đạo (severity 3) + Phá",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 11, day: 20),
+            lunarDay: 1,
+            lunarMonth: 10,
+            lunarYear: 2025,
+            expectedDayCanChi: "Quý Tỵ",
+            expectedDayChiIndex: 5,  // Tỵ
+            expectedMonthCanChi: "Đinh Hợi",
+            expectedYearCanChi: "Ất Tỵ",
+            expectedTruc: .pha,  // Phá is inauspicious
+            expectedUnluckyDay: "Câu Trần",  // Now correctly detected with the fix
+            expectedFinalQuality: .bad,  // Score: -2.0 (pha) - 2.0 (cautran) = -4.0 = bad
+            expectedLuckyHourChis: [.suu, .thin, .ngo, .mui, .tuat, .hoi]  // From xemngay.com
+        ),
+
+        // Test Case 5: December 1, 2025 - Chấp (Neutral Trực, no unlucky day)
+        // Reference: xemngay.com
+        // Solar: 01/12/2025
+        // Lunar: 03/11 Ất Tỵ
+        // Trực: Chấp (neutral)
+        // Unlucky Day: None
+        // Quality: Neutral (0.0 score from chap)
+        TestDate(
+            name: "Dec 1, 2025 - Chấp (Neutral Trực, no unlucky day)",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 12, day: 1),
+            lunarDay: 3,
+            lunarMonth: 11,
+            lunarYear: 2025,
+            expectedDayCanChi: "Giáp Thìn",
+            expectedDayChiIndex: 4,  // Thìn
+            expectedMonthCanChi: "Canh Tý",
+            expectedYearCanChi: "Ất Tỵ",
+            expectedTruc: .chap,  // Chấp is neutral
+            expectedUnluckyDay: nil,
+            expectedFinalQuality: .neutral,  // Score: 0.0 (chap) = neutral
+            expectedLuckyHourChis: [.dan, .thin, .ty2, .than, .dau, .hoi]  // From xemngay.com
+        ),
+
+        // Test Case 6: November 3, 2025 - Thiên Lao with favorable Trực (tests weighted scoring)
+        // Reference: xemngay.com
+        // Solar: 03/11/2025
+        // Lunar: 14/09 Ất Tỵ
+        // Trực: Khai (very auspicious - one of Tứ Hộ Thần)
+        // Unlucky Day: Thiên Lao (severity 4)
+        // Quality: Bad (conservative scoring: 2.0 (khai) - 2.5 (thienlao) = -0.5)
+        TestDate(
+            name: "Nov 3, 2025 - Thiên Lao + Khai (demonstrates severity weighting)",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 11, day: 3),
+            lunarDay: 14,
+            lunarMonth: 9,
+            lunarYear: 2025,
+            expectedDayCanChi: "Bính Tý",
+            expectedDayChiIndex: 0,  // Tý
+            expectedMonthCanChi: "Bính Tuất",
+            expectedYearCanChi: "Ất Tỵ",
+            expectedTruc: .khai,  // Khai is very auspicious (one of Tứ Hộ Thần)
+            expectedUnluckyDay: "Thiên Lao",
+            expectedFinalQuality: .bad,  // Score: 2.0 (khai) - 2.5 (thienlao) = -0.5 = bad (conservative)
+            expectedLuckyHourChis: [.ty, .suu, .mao, .ngo, .than, .dau]  // From xemngay.com
+        ),
+
+        // Test Case 7: November 28, 2025 - Mãn (Full) + Ngọc Đường Hoàng Đạo
+        // Reference: xemlicham.com, licham.vn
+        // Solar: 28/11/2025
+        // Lunar: 09/10 Ất Tỵ
+        // Trực: Mãn (inauspicious)
+        // Unlucky Day: None
+        // Quality: Neutral (rating 3/5 = slightly good, but Mãn is inauspicious)
+        TestDate(
+            name: "Nov 28, 2025 - Mãn (Full) + Ngọc Đường Hoàng Đạo (rating 3/5)",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 11, day: 28),
+            lunarDay: 9,
+            lunarMonth: 10,
+            lunarYear: 2025,
+            expectedDayCanChi: "Tân Sửu",
+            expectedDayChiIndex: 1,  // Sửu
+            expectedMonthCanChi: "Đinh Hợi",
+            expectedYearCanChi: "Ất Tỵ",
+            expectedTruc: .man,  // Mãn (inauspicious in 3-tier, but website says rating 3/5)
+            expectedUnluckyDay: nil,
+            expectedFinalQuality: .neutral,  // Website rating 3/5 = somewhat good, but Mãn is inauspicious
+            expectedLuckyHourChis: [.dan, .mao, .ty2, .than, .tuat, .hoi]  // [2, 3, 5, 8, 10, 11]
+        ),
+
+        // Test Case 8: December 8, 2025 - Bế (Close) + Bảo Quang Hoàng Đạo
+        // Reference: xemlicham.com, licham.vn
+        // Solar: 08/12/2025
+        // Lunar: 19/10 Ất Tỵ
+        // Trực: Bế (inauspicious)
+        // Unlucky Day: None
+        // Quality: Bad (rating 0.5 - very inauspicious)
+        TestDate(
+            name: "Dec 8, 2025 - Bế (Close) + Bảo Quang Hoàng Đạo (rating 0.5 - very inauspicious)",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 12, day: 8),
+            lunarDay: 19,
+            lunarMonth: 10,
+            lunarYear: 2025,
+            expectedDayCanChi: "Tân Sửu",
+            expectedDayChiIndex: 1,  // Sửu
+            expectedMonthCanChi: "Đinh Hợi",
+            expectedYearCanChi: "Ất Tỵ",
+            expectedTruc: .be,  // Bế (inauspicious)
+            expectedUnluckyDay: nil,
+            expectedFinalQuality: .bad,  // Website rating 0.5
+            expectedLuckyHourChis: [.suu, .thin, .ngo, .mui, .tuat, .hoi]  // [1, 4, 6, 7, 10, 11]
+        ),
+
+        // Test Case 9: December 12, 2025 - Bình (Balance) + somewhat auspicious
+        // Reference: xemlicham.com, licham.vn
+        // Solar: 12/12/2025
+        // Lunar: 23/10 Ất Tỵ
+        // Trực: Bình (inauspicious in 3-tier, but website says somewhat auspicious)
+        // Unlucky Day: None
+        // Quality: Neutral (rating 2.5/5 = neutral)
+        TestDate(
+            name: "Dec 12, 2025 - Bình (Balance) (rating 2.5/5 - somewhat auspicious)",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 12, day: 12),
+            lunarDay: 23,
+            lunarMonth: 10,
+            lunarYear: 2025,
+            expectedDayCanChi: "Ất Mão",
+            expectedDayChiIndex: 3,  // Mão
+            expectedMonthCanChi: "Đinh Hợi",
+            expectedYearCanChi: "Ất Tỵ",
+            expectedTruc: .binh,  // Bình (inauspicious in 3-tier, but website says somewhat auspicious)
+            expectedUnluckyDay: nil,
+            expectedFinalQuality: .neutral,  // Website rating 2.5/5 = neutral
+            expectedLuckyHourChis: [.ty, .dan, .mao, .ngo, .mui, .dau]  // [0, 2, 3, 6, 7, 9]
+        ),
+
+        // Test Case 10: December 15, 2025 - Phá (Break) + Thanh Long Hoàng Đạo
+        // Reference: xemlicham.com, licham.vn
+        // Solar: 15/12/2025
+        // Lunar: 26/10 Ất Tỵ
+        // Trực: Phá (inauspicious)
+        // Unlucky Day: None
+        // Quality: Bad (rating 1 - quite bad)
+        TestDate(
+            name: "Dec 15, 2025 - Phá (Break) + Thanh Long Hoàng Đạo (rating 1 - quite bad)",
+            solarDate: VietnameseCalendarTests.createDate(year: 2025, month: 12, day: 15),
+            lunarDay: 26,
+            lunarMonth: 10,
+            lunarYear: 2025,
+            expectedDayCanChi: "Mậu Ngọ",
+            expectedDayChiIndex: 6,  // Ngọ
+            expectedMonthCanChi: "Đinh Hợi",
+            expectedYearCanChi: "Ất Tỵ",
+            expectedTruc: .pha,  // Phá (inauspicious)
+            expectedUnluckyDay: nil,
+            expectedFinalQuality: .bad,  // Website rating [1] = quite bad
+            expectedLuckyHourChis: [.ty, .suu, .mao, .ngo, .than, .dau]  // [0, 1, 3, 6, 8, 9]
+        ),
+
+        // Test Case 11: January 1, 2026 - Bế (Close) + somewhat inauspicious
+        // Reference: xemlicham.com, licham.vn
+        // Solar: 01/01/2026
+        // Lunar: 13/11 Ất Tỵ
+        // Trực: Bế (inauspicious)
+        // Unlucky Day: None
+        // Quality: Bad (rating 1.5/10 - somewhat inauspicious)
+        TestDate(
+            name: "Jan 1, 2026 - Bế (Close) (rating 1.5/10 - somewhat inauspicious)",
+            solarDate: VietnameseCalendarTests.createDate(year: 2026, month: 1, day: 1),
+            lunarDay: 13,
+            lunarMonth: 11,
+            lunarYear: 2025,
+            expectedDayCanChi: "Ất Hợi",
+            expectedDayChiIndex: 11,  // Hợi
+            expectedMonthCanChi: "Mậu Tý",
+            expectedYearCanChi: "Ất Tỵ",
+            expectedTruc: .be,  // Bế (inauspicious, but rating 1.5/10 vs Dec 8's 0.5)
+            expectedUnluckyDay: nil,
+            expectedFinalQuality: .bad,  // Website rating 1.5/10
+            expectedLuckyHourChis: [.suu, .thin, .ngo, .mui, .tuat, .hoi]  // [1, 4, 6, 7, 10, 11]
+        ),
+
     ]
 
     // MARK: - Setup & Helpers

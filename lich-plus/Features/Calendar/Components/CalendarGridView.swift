@@ -42,18 +42,6 @@ struct CalendarDayCell: View {
     let onTap: () -> Void
 
     var backgroundColor: Color {
-        if !day.isCurrentMonth {
-            return AppColors.background
-        }
-
-        if isSelected {
-            return AppColors.primary.opacity(0.15)
-        }
-
-        if day.isToday {
-            return AppColors.backgroundLight
-        }
-
         switch day.dayType {
         case .good:
             return AppColors.accentLight
