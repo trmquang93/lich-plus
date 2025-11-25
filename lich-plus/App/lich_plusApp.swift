@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct lich_plusApp: App {
@@ -13,6 +14,7 @@ struct lich_plusApp: App {
         WindowGroup {
             MainTabView()
                 .preferredColorScheme(.light)
+                .modelContainer(PersistenceController.shared.container)
         }
     }
 }

@@ -6,16 +6,31 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct TasksView: View {
-    // MARK: - State
+    // MARK: - Environment & State
 
-    @State private var tasks: [Task] = []
+    @Environment(\.modelContext) var modelContext
+    @EnvironmentObject var syncService: CalendarSyncService
+
+    @Query(
+        filter: #Predicate<SyncableEvent> { !$0.isDeleted },
+        sort: \.startDate
+    )
+    private var syncableEvents: [SyncableEvent]
+
     @State private var searchText: String = ""
     @State private var selectedFilter: TaskFilter = .all
     @State private var showAddSheet: Bool = false
-    @State private var editingTask: Task? = nil
+    @State private var editingEventId: UUID? = nil
     @State private var showEditSheet: Bool = false
+
+    // MARK: - Computed Properties
+
+    private var tasks: [TaskItem] {
+        syncableEvents.map { TaskItem(from: $0) }
+    }
 
     var body: some View {
         NavigationStack {
@@ -66,26 +81,28 @@ struct TasksView: View {
             .background(AppColors.background)
             .sheet(isPresented: $showAddSheet) {
                 AddEditTaskSheet(
-                    isEditMode: false,
-                    editingTask: nil,
-                    onSave: addTask
+                    editingEventId: nil,
+                    onSave: { _ in
+                        showAddSheet = false
+                    }
                 )
+                .environmentObject(syncService)
             }
             .sheet(isPresented: $showEditSheet) {
-                if let editingTask = editingTask {
+                if let editingEventId = editingEventId {
                     AddEditTaskSheet(
-                        isEditMode: true,
-                        editingTask: editingTask,
-                        onSave: updateTask
+                        editingEventId: editingEventId,
+                        onSave: { _ in
+                            showEditSheet = false
+                        }
                     )
+                    .environmentObject(syncService)
                 }
             }
         }
     }
 
-    // MARK: - Computed Properties
-
-    private var filteredTasks: [Task] {
+    private var filteredTasks: [TaskItem] {
         var filtered = tasks
 
         // Apply search filter
@@ -111,12 +128,12 @@ struct TasksView: View {
         return filtered.sorted { $0.date < $1.date }
     }
 
-    private var filteredAndGroupedTasks: [(title: String, tasks: [Task])] {
+    private var filteredAndGroupedTasks: [(title: String, tasks: [TaskItem])] {
         let filtered = filteredTasks
 
-        var today: [Task] = []
-        var tomorrow: [Task] = []
-        var upcoming: [Task] = []
+        var today: [TaskItem] = []
+        var tomorrow: [TaskItem] = []
+        var upcoming: [TaskItem] = []
 
         for task in filtered {
             if task.isToday {
@@ -128,7 +145,7 @@ struct TasksView: View {
             }
         }
 
-        var sections: [(String, [Task])] = []
+        var sections: [(String, [TaskItem])] = []
 
         if !today.isEmpty {
             sections.append((String(localized: "task.today"), today))
@@ -151,42 +168,29 @@ struct TasksView: View {
         var counts: [TaskFilter: Int] = [:]
 
         counts[.all] = tasks.count
-
         counts[.today] = tasks.filter { $0.isToday }.count
-
         counts[.thisWeek] = tasks.filter { $0.isThisWeek }.count
-
         counts[.thisMonth] = tasks.filter { $0.isThisMonth }.count
 
         return counts
     }
 
-    private func addTask(_ task: Task) {
-        tasks.append(task)
-    }
-
-    private func updateTask(_ task: Task) {
-        if let index = tasks.firstIndex(where: { $0.id == task.id }) {
-            tasks[index] = task
-        }
-        editingTask = nil
-        showEditSheet = false
-    }
-
-    private func toggleTaskCompletion(_ task: Task) {
-        if let index = tasks.firstIndex(where: { $0.id == task.id }) {
-            var updatedTask = task
-            updatedTask.isCompleted.toggle()
-            tasks[index] = updatedTask
+    private func toggleTaskCompletion(_ task: TaskItem) {
+        if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
+            syncableEvent.isCompleted.toggle()
+            syncableEvent.setSyncStatus(.pending)
         }
     }
 
-    private func deleteTask(_ task: Task) {
-        tasks.removeAll { $0.id == task.id }
+    private func deleteTask(_ task: TaskItem) {
+        if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
+            syncableEvent.isDeleted = true
+            syncableEvent.setSyncStatus(.pending)
+        }
     }
 
-    private func startEditingTask(_ task: Task) {
-        editingTask = task
+    private func startEditingTask(_ task: TaskItem) {
+        editingEventId = task.id
         showEditSheet = true
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftData
 
 // MARK: - Task Category
 
@@ -83,7 +84,7 @@ enum RecurrenceType: String, CaseIterable, Identifiable {
 
 // MARK: - Task Model
 
-struct Task: Identifiable, Equatable {
+struct TaskItem: Identifiable, Equatable {
     let id: UUID
     var title: String
     var date: Date
@@ -183,7 +184,60 @@ struct Task: Identifiable, Equatable {
         }
     }
 
-    static func == (lhs: Task, rhs: Task) -> Bool {
+    static func == (lhs: TaskItem, rhs: TaskItem) -> Bool {
         lhs.id == rhs.id
+    }
+
+    // MARK: - SwiftData Conversion Methods
+
+    /// Create a TaskItem from a SyncableEvent
+    /// - Parameter syncable: The SyncableEvent to convert
+    init(from syncable: SyncableEvent) {
+        self.id = syncable.id
+        self.title = syncable.title
+        self.date = syncable.startDate
+        self.startTime = syncable.isAllDay ? nil : syncable.startDate
+        self.endTime = syncable.endDate
+        self.category = TaskCategory(rawValue: syncable.category.prefix(1).uppercased() + syncable.category.dropFirst()) ?? .other
+        self.notes = syncable.notes
+        self.isCompleted = syncable.isCompleted
+        self.reminderMinutes = syncable.reminderMinutes
+        self.recurrence = .none  // TODO: decode from recurrenceRuleData
+        self.createdAt = syncable.createdAt
+        self.updatedAt = syncable.lastModifiedLocal
+    }
+
+    /// Convert TaskItem to SyncableEvent for persistence
+    /// - Parameter existing: Optional existing SyncableEvent to update instead of creating new
+    /// - Returns: A SyncableEvent with properties from this TaskItem
+    func toSyncableEvent(existing: SyncableEvent? = nil) -> SyncableEvent {
+        if let existing = existing {
+            // Update existing event
+            existing.title = self.title
+            existing.startDate = self.startTime ?? self.date
+            existing.endDate = self.endTime
+            existing.isAllDay = self.startTime == nil
+            existing.category = self.category.rawValue
+            existing.notes = self.notes
+            existing.isCompleted = self.isCompleted
+            existing.reminderMinutes = self.reminderMinutes
+            existing.lastModifiedLocal = Date()
+            return existing
+        } else {
+            // Create new event
+            return SyncableEvent(
+                id: self.id,
+                title: self.title,
+                startDate: self.startTime ?? self.date,
+                endDate: self.endTime,
+                isAllDay: self.startTime == nil,
+                notes: self.notes,
+                isCompleted: self.isCompleted,
+                category: self.category.rawValue,
+                reminderMinutes: self.reminderMinutes,
+                syncStatus: SyncStatus.pending.rawValue,
+                createdAt: self.createdAt
+            )
+        }
     }
 }

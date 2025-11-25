@@ -9,10 +9,10 @@ import SwiftUI
 
 struct TaskSection: View {
     let title: String
-    let tasks: [Task]
-    let onToggleCompletion: (Task) -> Void
-    let onDelete: (Task) -> Void
-    let onEdit: (Task) -> Void
+    let tasks: [TaskItem]
+    let onToggleCompletion: (TaskItem) -> Void
+    let onDelete: (TaskItem) -> Void
+    let onEdit: (TaskItem) -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
@@ -65,13 +65,13 @@ struct TaskSection: View {
     TaskSection(
         title: "Today",
         tasks: [
-            Task(
+            TaskItem(
                 title: "Team Meeting",
                 date: Date(),
                 startTime: Date(),
                 category: .meeting
             ),
-            Task(
+            TaskItem(
                 title: "Finish Report",
                 date: Date(),
                 startTime: Date(timeIntervalSinceNow: 7200),

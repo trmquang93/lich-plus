@@ -1,13 +1,35 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
+    "-" : {
+
+    },
     "(%lld)" : {
 
     },
-    "⚙️ Cài đặt" : {
-
+    "%lld calendar%@ selected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld calendar%2$@ selected"
+          }
+        }
+      }
     },
     "🤖 AI" : {
+
+    },
+    "1.0.0" : {
+
+    },
+    "12 Trực" : {
+
+    },
+    "About" : {
 
     },
     "Add Time" : {
@@ -19,13 +41,31 @@
     "AI Features" : {
 
     },
-    "Âm lịch" : {
+    "Âm lịch:" : {
 
     },
     "Are you sure you want to delete this task?" : {
 
     },
-    "Cài đặt" : {
+    "Automatically sync calendar changes" : {
+
+    },
+    "Background Sync" : {
+
+    },
+    "Background sync feature coming soon" : {
+
+    },
+    "Calendar Access Required" : {
+
+    },
+    "Calendar Sync" : {
+
+    },
+    "Calendars to Sync" : {
+
+    },
+    "Can-Chi:" : {
 
     },
     "category.birthday" : {
@@ -130,25 +170,55 @@
         }
       }
     },
-    "Configure app preferences and user settings" : {
+    "Chất lượng ngày" : {
 
     },
-    "Giờ hoàng đạo hôm nay" : {
+    "Chi tiết ngày" : {
+
+    },
+    "Dương lịch:" : {
+
+    },
+    "Giờ Hoàng Đạo" : {
+
+    },
+    "Grant Access" : {
+
+    },
+    "Hom nay" : {
 
     },
     "Hôm nay là một ngày trống rỗi. Thêm sự kiện mới?" : {
 
     },
+    "Hướng may mắn" : {
+
+    },
+    "Import from Apple Calendar" : {
+
+    },
     "Intelligent calendar and task recommendations" : {
 
     },
+    "Không có giờ Hoàng Đạo trong ngày này" : {
+
+    },
     "Không có sự kiện nào" : {
+
+    },
+    "Màu may mắn" : {
+
+    },
+    "No Calendars Found" : {
 
     },
     "No tasks" : {
 
     },
     "No tasks found" : {
+
+    },
+    "Open Settings" : {
 
     },
     "recurrence.daily" : {
@@ -304,10 +374,28 @@
         }
       }
     },
-    "Settings View" : {
+    "Select Calendars" : {
+
+    },
+    "Settings" : {
 
     },
     "Sự kiện hôm nay" : {
+
+    },
+    "Sync" : {
+
+    },
+    "Sync Error" : {
+
+    },
+    "Sync Now" : {
+
+    },
+    "Sync Status" : {
+
+    },
+    "Sync with Apple Calendar" : {
 
     },
     "tab.ai" : {
@@ -805,6 +893,27 @@
           }
         }
       }
+    },
+    "Thông tin may mắn" : {
+
+    },
+    "To sync events with Apple Calendar, we need permission to access your calendars." : {
+
+    },
+    "Version" : {
+
+    },
+    "Việc nên làm" : {
+
+    },
+    "Việc nên tránh" : {
+
+    },
+    "You don't have any calendars available for syncing." : {
+
+    },
+    "You previously denied calendar access. Please enable it in Settings." : {
+
     }
   },
   "version" : "1.1"

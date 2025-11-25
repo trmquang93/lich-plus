@@ -6,38 +6,103 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SettingsView: View {
+    @EnvironmentObject var syncService: CalendarSyncService
+
+    private var syncStatusIcon: String {
+        switch syncService.syncState {
+        case .syncing:
+            return "arrow.triangle.2.circlepath"
+        case .error:
+            return "exclamationmark.triangle.fill"
+        case .idle:
+            return syncService.lastSyncDate != nil ? "checkmark.circle.fill" : "minus.circle"
+        }
+    }
+
+    private var syncStatusColor: Color {
+        switch syncService.syncState {
+        case .syncing:
+            return AppColors.primary
+        case .error:
+            return .red
+        case .idle:
+            return syncService.lastSyncDate != nil ? .green : AppColors.secondary
+        }
+    }
+
     var body: some View {
         NavigationStack {
-            VStack {
-                Text("⚙️ Cài đặt")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .padding()
+            List {
+                // Sync Section
+                Section {
+                    NavigationLink {
+                        CalendarSyncSettingsView()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "calendar.badge.clock")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
 
-                Spacer()
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text("Calendar Sync")
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
 
-                VStack(spacing: 16) {
-                    Text("Settings View")
-                        .font(.title3)
-                        .foregroundStyle(.secondary)
+                                Text("Sync with Apple Calendar")
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
 
-                    Text("Configure app preferences and user settings")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .multilineTextAlignment(.center)
+                            Spacer()
+
+                            Image(systemName: syncStatusIcon)
+                                .foregroundStyle(syncStatusColor)
+                        }
+                    }
+                } header: {
+                    Text("Sync")
                 }
-                .padding()
 
-                Spacer()
+                // About Section
+                Section {
+                    HStack {
+                        Image(systemName: "info.circle")
+                            .font(.title2)
+                            .foregroundStyle(AppColors.secondary)
+                            .frame(width: 32)
+
+                        VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                            Text("Version")
+                                .font(.body)
+                                .foregroundStyle(AppColors.textPrimary)
+
+                            Text("1.0.0")
+                                .font(.caption)
+                                .foregroundStyle(AppColors.textSecondary)
+                        }
+
+                        Spacer()
+                    }
+                } header: {
+                    Text("About")
+                }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .navigationTitle("Cài đặt")
+            .navigationTitle("Settings")
         }
     }
 }
 
 #Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: SyncableEvent.self, SyncedCalendar.self, configurations: config)
+    let modelContext = ModelContext(container)
+
     SettingsView()
+        .environmentObject(EventKitService())
+        .environmentObject(CalendarSyncService(eventKitService: EventKitService(), modelContext: modelContext))
+        .modelContainer(container)
 }

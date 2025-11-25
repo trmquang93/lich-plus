@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddEditTaskSheet: View {
     @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
+    @EnvironmentObject var syncService: CalendarSyncService
+
     @State private var title: String = ""
     @State private var date: Date = Date()
     @State private var hasTime: Bool = false
@@ -19,21 +23,29 @@ struct AddEditTaskSheet: View {
     @State private var selectedRecurrence: RecurrenceType = .none
     @State private var notes: String = ""
 
-    let isEditMode: Bool
-    let editingTask: Task?
-    let onSave: (Task) -> Void
+    // SwiftData support
+    @Query private var allEvents: [SyncableEvent]
+
+    let editingEventId: UUID?
+    let onSave: (SyncableEvent) -> Void
+
+    var isEditMode: Bool {
+        editingEventId != nil
+    }
+
+    var editingEvent: SyncableEvent? {
+        allEvents.first { $0.id == editingEventId }
+    }
 
     var isValid: Bool {
         !title.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
     init(
-        isEditMode: Bool = false,
-        editingTask: Task? = nil,
-        onSave: @escaping (Task) -> Void
+        editingEventId: UUID? = nil,
+        onSave: @escaping (SyncableEvent) -> Void
     ) {
-        self.isEditMode = isEditMode
-        self.editingTask = editingTask
+        self.editingEventId = editingEventId
         self.onSave = onSave
     }
 
@@ -135,25 +147,24 @@ struct AddEditTaskSheet: View {
             }
         }
         .onAppear {
-            if let editingTask = editingTask {
-                populateForm(with: editingTask)
+            if let editingEvent = editingEvent {
+                populateForm(with: editingEvent)
             }
         }
     }
 
-    private func populateForm(with task: Task) {
-        title = task.title
-        date = task.date
-        selectedCategory = task.category
-        selectedReminder = task.reminderMinutes
-        selectedRecurrence = task.recurrence
-        notes = task.notes ?? ""
+    private func populateForm(with syncableEvent: SyncableEvent) {
+        title = syncableEvent.title
+        date = syncableEvent.startDate
+        selectedCategory = TaskCategory(rawValue: syncableEvent.category.prefix(1).uppercased() + syncableEvent.category.dropFirst()) ?? .personal
+        selectedReminder = syncableEvent.reminderMinutes
+        notes = syncableEvent.notes ?? ""
 
-        if let startTime = task.startTime {
+        if !syncableEvent.isAllDay, let startDate = syncableEvent.startDate as Date? {
             hasTime = true
-            self.startTime = startTime
-            if let endTime = task.endTime {
-                self.endTime = endTime
+            self.startTime = startDate
+            if let endDate = syncableEvent.endDate {
+                self.endTime = endDate
             }
         }
     }
@@ -167,22 +178,43 @@ struct AddEditTaskSheet: View {
             finalEndTime = endTime
         }
 
-        let task = Task(
-            id: editingTask?.id ?? UUID(),
-            title: title,
-            date: date,
-            startTime: finalStartTime,
-            endTime: finalEndTime,
-            category: selectedCategory,
-            notes: notes.isEmpty ? nil : notes,
-            isCompleted: editingTask?.isCompleted ?? false,
-            reminderMinutes: selectedReminder,
-            recurrence: selectedRecurrence,
-            createdAt: editingTask?.createdAt ?? Date(),
-            updatedAt: Date()
-        )
+        let syncableEvent: SyncableEvent
+        if let existing = editingEvent {
+            // Update existing
+            existing.title = title
+            existing.startDate = finalStartTime ?? date
+            existing.endDate = finalEndTime
+            existing.isAllDay = finalStartTime == nil
+            existing.category = selectedCategory.rawValue
+            existing.notes = notes.isEmpty ? nil : notes
+            existing.reminderMinutes = selectedReminder
+            existing.lastModifiedLocal = Date()
+            existing.setSyncStatus(.pending)
+            syncableEvent = existing
+        } else {
+            // Create new
+            syncableEvent = SyncableEvent(
+                title: title,
+                startDate: finalStartTime ?? date,
+                endDate: finalEndTime,
+                isAllDay: finalStartTime == nil,
+                notes: notes.isEmpty ? nil : notes,
+                category: selectedCategory.rawValue,
+                reminderMinutes: selectedReminder,
+                syncStatus: SyncStatus.pending.rawValue
+            )
+            modelContext.insert(syncableEvent)
+        }
 
-        onSave(task)
+        do {
+            try modelContext.save()
+
+            // Sync will be handled by the CalendarSyncService observing changes
+        } catch {
+            print("Error saving task: \(error)")
+        }
+
+        onSave(syncableEvent)
         dismiss()
     }
 
@@ -205,5 +237,19 @@ struct AddEditTaskSheet: View {
 }
 
 #Preview {
-    AddEditTaskSheet(isEditMode: false) { _ in }
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: SyncableEvent.self, configurations: config)
+    let modelContext = ModelContext(container)
+    let eventKitService = EventKitService()
+    let syncService = CalendarSyncService(
+        eventKitService: eventKitService,
+        modelContext: modelContext
+    )
+
+    AddEditTaskSheet(
+        editingEventId: nil,
+        onSave: { _ in }
+    )
+    .environmentObject(syncService)
+    .modelContext(modelContext)
 }

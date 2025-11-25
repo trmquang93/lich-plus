@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct TaskCard: View {
-    let task: Task
-    let onToggleCompletion: (Task) -> Void
-    let onDelete: (Task) -> Void
-    let onEdit: (Task) -> Void
+    let task: TaskItem
+    let onToggleCompletion: (TaskItem) -> Void
+    let onDelete: (TaskItem) -> Void
+    let onEdit: (TaskItem) -> Void
 
     @State private var showDeleteConfirmation = false
 
@@ -124,7 +124,7 @@ struct TaskCard: View {
 
 #Preview {
     TaskCard(
-        task: Task(
+        task: TaskItem(
             title: "Sample Task",
             date: Date(),
             startTime: Date(),

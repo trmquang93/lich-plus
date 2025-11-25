@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 // MARK: - Calendar View
 
 struct CalendarView: View {
+    @Environment(\.modelContext) var modelContext
     @StateObject private var dataManager = CalendarDataManager()
     @State private var showDayDetail = false
 
@@ -71,6 +73,9 @@ struct CalendarView: View {
                 if let selectedDay = dataManager.selectedDay {
                     DayDetailView(day: selectedDay)
                 }
+            }
+            .onAppear {
+                dataManager.setModelContext(modelContext)
             }
         }
     }

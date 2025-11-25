@@ -6,9 +6,13 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct MainTabView: View {
+    @Environment(\.modelContext) var modelContext
     @State private var selectedTab: Int = 0
+    @StateObject private var eventKitService = EventKitService()
+    @State private var syncService: CalendarSyncService?
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -41,9 +45,17 @@ struct MainTabView: View {
                 }
                 .tag(3)
         }
+        .environmentObject(eventKitService)
+        .environmentObject(syncService ?? CalendarSyncService(eventKitService: eventKitService, modelContext: modelContext))
         .tint(AppColors.primary)
         .task {
             configureTabBarAppearance()
+        }
+        .onAppear {
+            // Initialize sync service
+            if syncService == nil {
+                syncService = CalendarSyncService(eventKitService: eventKitService, modelContext: modelContext)
+            }
         }
     }
 

@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import SwiftData
 
 // MARK: - Calendar Data Manager
 
@@ -15,11 +16,30 @@ class CalendarDataManager: ObservableObject {
     @Published var selectedDay: CalendarDay?
 
     private let calendar = Calendar.current
+    private var modelContext: ModelContext?
 
     init() {
         let today = Date()
-        self.currentMonth = Self.generateCalendarMonth(for: today)
-        // Default to today's date
+        self.currentMonth = CalendarMonth(
+            month: Calendar.current.component(.month, from: today),
+            year: Calendar.current.component(.year, from: today),
+            days: [],
+            lunarMonth: 0,
+            lunarYear: 0
+        )
+        // Will be properly initialized when modelContext is set
+        self.selectedDay = nil
+    }
+
+    // MARK: - SwiftData Integration
+
+    /// Set the ModelContext for database access and regenerate calendar
+    /// - Parameter context: The ModelContext from the SwiftUI environment
+    func setModelContext(_ context: ModelContext) {
+        self.modelContext = context
+        // Regenerate calendar with database access
+        let today = Date()
+        self.currentMonth = generateCalendarMonth(for: today)
         self.selectedDay = self.currentMonth.days.first { $0.isToday }
     }
 
@@ -29,7 +49,7 @@ class CalendarDataManager: ObservableObject {
         guard let previousDate = calendar.date(byAdding: .month, value: -1, to: currentMonth.days.first?.date ?? Date()) else {
             return
         }
-        currentMonth = Self.generateCalendarMonth(for: previousDate)
+        currentMonth = generateCalendarMonth(for: previousDate)
         selectedDay = nil
     }
 
@@ -37,7 +57,7 @@ class CalendarDataManager: ObservableObject {
         guard let nextDate = calendar.date(byAdding: .month, value: 1, to: currentMonth.days.last?.date ?? Date()) else {
             return
         }
-        currentMonth = Self.generateCalendarMonth(for: nextDate)
+        currentMonth = generateCalendarMonth(for: nextDate)
         selectedDay = nil
     }
 
@@ -45,9 +65,9 @@ class CalendarDataManager: ObservableObject {
         selectedDay = day
     }
 
-    // MARK: - Static Methods
+    // MARK: - Calendar Generation
 
-    static func generateCalendarMonth(for date: Date) -> CalendarMonth {
+    func generateCalendarMonth(for date: Date) -> CalendarMonth {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month], from: date)
 
@@ -103,9 +123,62 @@ class CalendarDataManager: ObservableObject {
         )
     }
 
+    // MARK: - Static Helper Method
+
+    /// Generate calendar month without database access (for testing)
+    static func generateCalendarMonth(for date: Date) -> CalendarMonth {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month], from: date)
+
+        guard let year = components.year, let month = components.month else {
+            return CalendarMonth(month: 1, year: 2025, days: [], lunarMonth: 1, lunarYear: 2024)
+        }
+
+        let firstDay = calendar.date(from: DateComponents(year: year, month: month, day: 1)) ?? Date()
+        let range = calendar.range(of: .day, in: .month, for: firstDay) ?? 1..<2
+        let numberOfDays = range.count
+
+        let firstWeekday = calendar.component(.weekday, from: firstDay)
+        let paddingDays = (firstWeekday + 5) % 7
+
+        var days: [CalendarDay] = []
+        if paddingDays > 0 {
+            for i in 0..<paddingDays {
+                let paddingDate = calendar.date(byAdding: .day, value: -(paddingDays - i), to: firstDay) ?? Date()
+                days.append(createCalendarDayStatic(from: paddingDate, isCurrentMonth: false))
+            }
+        }
+
+        for dayNumber in 1...numberOfDays {
+            let dateComponents = DateComponents(year: year, month: month, day: dayNumber)
+            guard let date = calendar.date(from: dateComponents) else { continue }
+
+            let isToday = calendar.isDateInToday(date)
+            days.append(createCalendarDayStatic(from: date, isCurrentMonth: true, isToday: isToday))
+        }
+
+        let totalNeeded = 42
+        if days.count < totalNeeded {
+            for i in 1...(totalNeeded - days.count) {
+                let paddingDate = calendar.date(byAdding: .day, value: i, to: firstDay.addingTimeInterval(TimeInterval(numberOfDays - 1) * 86400)) ?? Date()
+                days.append(createCalendarDayStatic(from: paddingDate, isCurrentMonth: false))
+            }
+        }
+
+        let (_, lunarMonth, lunarYear) = LunarCalendar.solarToLunar(firstDay)
+
+        return CalendarMonth(
+            month: month,
+            year: year,
+            days: days,
+            lunarMonth: lunarMonth,
+            lunarYear: lunarYear
+        )
+    }
+
     // MARK: - Private Methods
 
-    private static func createCalendarDay(
+    private func createCalendarDay(
         from date: Date,
         isCurrentMonth: Bool,
         isToday: Bool = false
@@ -136,7 +209,7 @@ class CalendarDataManager: ObservableObject {
         let (lunarDay, lunarMonth, lunarYear) = LunarCalendar.solarToLunar(date)
         let dayType = DayTypeCalculator.determineDayType(for: date)
         let isWeekend = weekday == 1 || weekday == 7
-        let events = generateMockEvents(for: date)
+        let events = fetchEvents(for: date)
 
         return CalendarDay(
             date: date,
@@ -154,41 +227,115 @@ class CalendarDataManager: ObservableObject {
         )
     }
 
-    private static func generateMockEvents(for date: Date) -> [Event] {
-        // Generate mock events based on the date
+    /// Fetch events from SwiftData for a specific date
+    /// - Parameter date: The date to fetch events for
+    /// - Returns: Array of Event objects
+    private func fetchEvents(for date: Date) -> [Event] {
+        guard let context = modelContext else { return [] }
+
         let calendar = Calendar.current
-        let day = calendar.component(.day, from: date)
+        let startOfDay = calendar.startOfDay(for: date)
+        let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
 
-        // Add events for specific days (demo purposes)
-        var events: [Event] = []
-
-        if day % 5 == 0 {
-            events.append(Event(
-                title: "Team Meeting",
-                time: "10:00 AM",
-                category: .meeting,
-                description: "Weekly sync"
-            ))
+        let predicate = #Predicate<SyncableEvent> {
+            !$0.isDeleted &&
+            $0.startDate >= startOfDay &&
+            $0.startDate < endOfDay
         }
 
-        if day % 7 == 0 {
-            events.append(Event(
-                title: "Project Deadline",
-                time: "05:00 PM",
-                category: .work,
-                description: "Final submission"
-            ))
+        let descriptor = FetchDescriptor<SyncableEvent>(
+            predicate: predicate,
+            sortBy: [SortDescriptor(\SyncableEvent.startDate)]
+        )
+
+        do {
+            let syncableEvents = try context.fetch(descriptor)
+            return syncableEvents.map { syncable in
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "HH:mm"
+                let timeString = timeFormatter.string(from: syncable.startDate)
+
+                return Event(
+                    title: syncable.title,
+                    time: timeString,
+                    category: parseEventCategory(from: syncable.category),
+                    description: syncable.notes
+                )
+            }
+        } catch {
+            print("Error fetching events for date \(date): \(error)")
+            return []
+        }
+    }
+
+    /// Parse TaskCategory to EventCategory
+    /// - Parameter categoryString: The category string from SyncableEvent
+    /// - Returns: EventCategory
+    private func parseEventCategory(from categoryString: String) -> EventCategory {
+        let taskCategory = TaskCategory(rawValue: categoryString.prefix(1).uppercased() + categoryString.dropFirst()) ?? .other
+
+        switch taskCategory {
+        case .work:
+            return .work
+        case .personal:
+            return .personal
+        case .birthday:
+            return .birthday
+        case .holiday:
+            return .holiday
+        case .meeting:
+            return .meeting
+        case .other:
+            return .other
+        }
+    }
+
+    /// Static helper for creating calendar days without database access
+    private static func createCalendarDayStatic(
+        from date: Date,
+        isCurrentMonth: Bool,
+        isToday: Bool = false
+    ) -> CalendarDay {
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day, .weekday], from: date)
+
+        guard let day = components.day,
+              let month = components.month,
+              let year = components.year,
+              let weekday = components.weekday else {
+            return CalendarDay(
+                date: date,
+                solarDay: 0,
+                solarMonth: 0,
+                solarYear: 0,
+                lunarDay: 0,
+                lunarMonth: 0,
+                lunarYear: 0,
+                dayType: .neutral,
+                isCurrentMonth: false,
+                isToday: false,
+                events: [],
+                isWeekend: false
+            )
         }
 
-        if day % 3 == 0 {
-            events.append(Event(
-                title: "Lunch",
-                time: "12:00 PM",
-                category: .personal,
-                description: nil
-            ))
-        }
+        let (lunarDay, lunarMonth, lunarYear) = LunarCalendar.solarToLunar(date)
+        let dayType = DayTypeCalculator.determineDayType(for: date)
+        let isWeekend = weekday == 1 || weekday == 7
 
-        return events
+        return CalendarDay(
+            date: date,
+            solarDay: day,
+            solarMonth: month,
+            solarYear: year,
+            lunarDay: lunarDay,
+            lunarMonth: lunarMonth,
+            lunarYear: lunarYear,
+            dayType: dayType,
+            isCurrentMonth: isCurrentMonth,
+            isToday: isToday,
+            events: [],  // No events in static version
+            isWeekend: isWeekend
+        )
     }
 }
