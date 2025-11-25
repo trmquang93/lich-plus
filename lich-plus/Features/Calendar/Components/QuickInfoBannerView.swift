@@ -33,7 +33,6 @@ struct QuickInfoBannerView: View {
                     Text(luckyHoursText)
                         .font(.system(size: AppTheme.fontCaption))
                         .foregroundStyle(AppColors.textSecondary)
-                        .lineLimit(1)
                 }
 
                 Spacer()

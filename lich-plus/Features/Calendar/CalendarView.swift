@@ -18,7 +18,7 @@ struct CalendarView: View {
             VStack(spacing: 0) {
                 // Header with month/year selector
                 CalendarHeaderView(
-                    selectedDate: .constant(dataManager.currentMonth.days.first?.date ?? Date()),
+                    selectedDate: .constant(dataManager.currentMonth.days.first { $0.isCurrentMonth }?.date ?? Date()),
                     onPreviousMonth: {
                         dataManager.goToPreviousMonth()
                     },
