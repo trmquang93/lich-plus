@@ -420,25 +420,46 @@ Result: GOOD | NEUTRAL | BAD
 **IMPORTANT:** When working on calendar logic or verifying accuracy, use the reference book and extraction tools.
 
 **Source Book:**
-- **Title**: Lịch Vạn Niên 2005-2009 (Vietnamese Perpetual Calendar)
+- **Title**: Lich Van Nien 2005-2009 (Vietnamese Perpetual Calendar)
 - **Location**: `lich-van-nien.pdf` in project root
 - **Coverage**: All 12 lunar months, 720 Can-Chi combinations
-- **Pages**: 113-172 (60 pages total)
+- **Total Pages**: 193
+- **Star Data Pages**: 104-175 (72 pages total, 6 pages per month)
 
-**Page Mapping:**
+**Page Mapping (from official book index, pages 188-191):**
 ```
-Month 1:  Pages 113-117 (5 pages)
-Month 2:  Pages 118-122 (5 pages)
-Month 3:  Pages 123-127 (5 pages)
-Month 4:  Pages 128-132 (5 pages)
-Month 5:  Pages 133-137 (5 pages)
-Month 6:  Pages 138-142 (5 pages)
-Month 7:  Pages 143-147 (5 pages)
-Month 8:  Pages 148-152 (5 pages)
-Month 9:  Pages 153-157 (5 pages) ✓ Detailed extraction complete
-Month 10: Pages 158-162 (5 pages) ✓ Detailed extraction complete
-Month 11: Pages 163-167 (5 pages) ✓ Detailed extraction complete
-Month 12: Pages 168-172 (5 pages) ✓ Detailed extraction complete
+Month 1 (Gieng):  Pages 104-109 (6 pages)
+Month 2:          Pages 110-115 (6 pages)
+Month 3:          Pages 116-121 (6 pages)
+Month 4:          Pages 122-127 (6 pages)
+Month 5:          Pages 128-133 (6 pages)
+Month 6:          Pages 134-139 (6 pages)
+Month 7:          Pages 140-145 (6 pages)
+Month 8:          Pages 146-151 (6 pages)
+Month 9:          Pages 152-157 (6 pages)
+Month 10:         Pages 158-163 (6 pages)
+Month 11:         Pages 164-169 (6 pages)
+Month 12 (Chap):  Pages 170-175 (6 pages)
+
+Key Reference Pages:
+- 12 Truc System: Pages 48-49
+- Hoang Dao/Hac Dao: Pages 50-52
+- Good Stars by Month: Pages 60-63
+- Bad Stars by Month: Pages 64-67
+- Star Quality Tables: Pages 77-91
+- Book Index: Pages 188-191
+```
+
+**Book Folder Structure:**
+All 193 pages are extracted to `book/pages/` with consistent naming:
+```
+book/
+├── pages/              # All 193 extracted pages
+│   ├── page_0001.jpg   # Cover
+│   ├── page_0002.jpg
+│   ├── ...
+│   └── page_0193.jpg   # Back cover
+└── BOOK_INDEX.md       # Complete table of contents
 ```
 
 **PDF Extraction Tools:**
@@ -448,25 +469,30 @@ Month 12: Pages 168-172 (5 pages) ✓ Detailed extraction complete
    # Extract pages for a specific lunar month
    ./extract_book_pages.sh lich-van-nien.pdf <month_number>
 
-   # Example: Extract Month 5 pages (133-137)
+   # Example: Extract Month 5 pages (128-133) to book/extract/month_05
    ./extract_book_pages.sh lich-van-nien.pdf 5
+
+   # Extract special sections
+   ./extract_book_pages.sh lich-van-nien.pdf hoangdao  # Pages 50-52
+   ./extract_book_pages.sh lich-van-nien.pdf 12truc    # Pages 48-49
+   ./extract_book_pages.sh lich-van-nien.pdf stars     # Pages 77-91
    ```
 
 2. **Custom page extraction:**
    ```bash
    # Extract specific page range
-   ./pdf_to_images.py lich-van-nien.pdf --pages 133-137 --output ./month5_pages
+   ./pdf_to_images.py lich-van-nien.pdf --pages 128-133 --output ./temp_extract
 
    # Extract with high quality (300 DPI)
-   ./pdf_to_images.py lich-van-nien.pdf --pages 133-137 --dpi 300
+   ./pdf_to_images.py lich-van-nien.pdf --pages 50-52 --dpi 300 --output ./temp_extract
 
    # View help
    ./pdf_to_images.py --help
    ```
 
-3. **View documentation:**
+3. **View full book index:**
    ```bash
-   cat PDF_EXTRACTION_README.md
+   cat book/BOOK_INDEX.md
    ```
 
 **Verification Workflow:**
@@ -496,15 +522,15 @@ When you encounter issues with calendar logic or star calculations:
 // Problem: Day quality seems incorrect for Nov 3, 2025
 // Step 1: Identify lunar date
 let date = Date(year: 2025, month: 11, day: 3)
-// Result: Lunar 14/09/2025, Can-Chi: Bính Tý
+// Result: Lunar 14/09/2025, Can-Chi: Binh Ty
 
-// Step 2: Extract Month 9 pages
-// $ ./extract_book_pages.sh lich-van-nien.pdf 9
+// Step 2: Look up in book/pages/ (Month 9 = pages 152-157)
+// Or extract fresh: ./extract_book_pages.sh lich-van-nien.pdf 9
 
-// Step 3: Read page_0153.jpg - Row 13: Bính Tý
+// Step 3: Read page_0152.jpg onwards - find Row: Binh Ty
 // Book shows:
-// - Good: Thiên ân, Trực linh
-// - Bad: Hỏa tai, Thiên hỏa, Thổ ôn, Hoang sa, Phi ma sát, Ngũ quỷ, Quả tú
+// - Good: Thien an, Truc linh
+// - Bad: Hoa tai, Thien hoa, Tho on, Hoang sa, Phi ma sat, Ngu quy, Qua tu
 
 // Step 4: Verify in Month9StarData.swift
 // Should match the book exactly

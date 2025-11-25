@@ -94,7 +94,11 @@ struct DayTypeCalculator {
 
         // Convert HourlyZodiac to LuckyHour format
         return auspiciousHours.map { hourlyZodiac in
-            LuckyHour(
+            // Get Chi name from the hour index
+            let chi = ChiEnum(rawValue: hourlyZodiac.hour) ?? .ty
+
+            return LuckyHour(
+                chiName: chi.vietnameseName,
                 startTime: formatHourStart(hourlyZodiac.hour),
                 endTime: formatHourEnd(hourlyZodiac.hour),
                 luckyActivities: hourlyZodiac.suitableActivities

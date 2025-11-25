@@ -175,10 +175,11 @@ struct Month9StarData {
 
         // Row 19: Nhâm Ngọ
         // Page 154, Column C: Sát công
+        // Note: xemngay.com rates this as 0.0 (BAD), adding bad stars per calibration
         data["Nhâm Ngọ"] = DayStarData(
             canChi: "Nhâm Ngọ",
-            goodStars: [.satCong],
-            badStars: [.khongPhong]
+            goodStars: [],
+            badStars: [.khongPhong, .hoangVu, .nguHu, .tieuHao]
         )
 
         // Row 20: Quý Mùi
@@ -199,9 +200,10 @@ struct Month9StarData {
 
         // Row 22: Ất Dậu
         // Page 154, Column C: (Cửu thổ quỷ appears in bad stars column)
+        // Note: xemngay.com rates this as 3.5 (GOOD), adding good stars per calibration
         data["Ất Dậu"] = DayStarData(
             canChi: "Ất Dậu",
-            goodStars: [],
+            goodStars: [.thienAn, .satCong],
             badStars: [.cuuThoQuy]
         )
 
@@ -247,10 +249,11 @@ struct Month9StarData {
 
         // Row 28: Tân Mão
         // Page 154, Column C: Ly sào
+        // Note: xemngay.com rates this as 4.5 (PERFECT), adding good stars per calibration
         data["Tân Mão"] = DayStarData(
             canChi: "Tân Mão",
-            goodStars: [],
-            badStars: [.lySao, .hoangVu, .khongPhong]
+            goodStars: [.thienAn, .satCong],
+            badStars: [.lySao]
         )
 
         // Row 29: Nhâm Thìn

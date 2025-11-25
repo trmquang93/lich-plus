@@ -386,10 +386,14 @@ struct HoangDaoCalculator {
     }
 
     /// Determine DayType for a specific date
+    /// Uses full calculation including 12 Trực, Lục Hắc Đạo, and star system
     static func determineDayType(for date: Date) -> DayType {
-        let lunarDate = LunarCalendar.solarToLunar(date)
-        let zodiacHour = calculateZodiacHour(for: lunarDate)
-        return mapToDayType(zodiacHour)
+        // Use the complete day quality calculation which includes:
+        // 1. Base score from 12 Trực (zodiac hour)
+        // 2. Lục Hắc Đạo penalties
+        // 3. Good and bad stars from MonthXStarData
+        let dayQuality = determineDayQuality(for: date)
+        return dayQuality.finalQuality
     }
 
     // MARK: - Special Date Helpers

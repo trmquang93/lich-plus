@@ -286,84 +286,88 @@ struct DayQuality: Equatable {
     }
 
     /// Final composite day quality considering all systems
-    /// Uses a weighted scoring system calibrated against xemngay.com and traditional Lịch Vạn Niên
+    /// Uses a weighted scoring system calibrated against xemngay.com (0-5 scale) and traditional Lịch Vạn Niên
     /// Reference: Lịch Vạn Niên 2005-2009, Pages 48-50, 153+
     /// Validation: xemngay.com ratings (format: https://xemngay.com/Default.aspx?blog=xngay&d=DDMMYYYY)
     ///
-    /// Scoring Philosophy:
-    /// - Traditional classification provides BASE quality (Hoàng Đạo vs Hắc Đạo)
-    /// - Modern practice shows some Hắc Đạo days can be neutral without unlucky stars
-    /// - Good stars (Thiên ân, Sát công) can elevate Hắc Đạo days to excellent
-    /// - Bad stars (Ly sào, Hỏa tinh) can downgrade Hoàng Đạo days to neutral
-    /// - Adjusted weights to match xemngay.com composite ratings
+    /// Scoring Philosophy (0-5 Scale):
+    /// - Traditional 12 Trực classification provides BASE quality (Hoàng Đạo vs Hắc Đạo)
+    /// - Lục Hắc Đạo (6 unlucky days) provides PENALTY modifiers
+    /// - Star System (Good + Bad stars) provides FINE-TUNING adjustments
+    /// - Final mapping: > 2.0 = Good, = 2.0 = Neutral, < 2.0 = Bad
     ///
-    /// Complete Formula:
-    /// Final Score = BASE (12 Trực) + UNLUCKY PENALTY (Lục Hắc Đạo) + STAR BONUS/PENALTY (Good/Bad Stars)
+    /// Complete Formula (0-5 scale):
+    /// Score = BASE (12 Trực) + PENALTY (Lục Hắc Đạo) + STARS (Good/Bad)
     ///
-    /// Calibrated scoring weights:
-    /// - Hoàng Đạo (Good): Trừ, Định, Nguy, Chấp → +2.0
-    /// - Moderate: Thành, Khai → -0.3
-    /// - Hắc Đạo (Bad): Kiến, Mãn, Bình, Thu → 0.0 (neutral base - allows stars to determine quality)
-    /// - Very Bad: Phá, Bế → -3.0
-    /// - Good Stars: Thiên ân (+3.0), Sát công (+1.5), etc.
-    /// - Bad Stars: Ly sào (-2.0), Hỏa tinh (-2.0), etc.
+    /// Base Scores (12 Trực on 0-5 scale):
+    /// - Hoàng Đạo (Good): Trừ, Định, Nguy, Chấp → +3.5
+    /// - Moderate: Thành, Khai → +2.5
+    /// - Hắc Đạo (Bad): Kiến, Mãn, Bình, Thu → +2.0 (neutral base)
+    /// - Very Bad: Phá, Bế → +1.0
+    ///
+    /// Penalties (Lục Hắc Đạo):
+    /// - Chu Tước (severity 5) → -2.0
+    /// - Thiên Lao, Thiên Hình (severity 4) → -1.5
+    /// - Bạch Hổ, Câu Trần (severity 3) → -1.0
+    /// - Nguyên Vũ (severity 2) → -0.5
+    ///
+    /// Stars (0-5 scale modifiers):
+    /// - Good Stars: Thiên ân (+1.0), Sát công (+0.5), etc.
+    /// - Bad Stars: Ly sào (-0.75), Hỏa tinh (-0.75), etc.
     var finalQuality: DayType {
-        // Calculate base score from Trực (zodiac hour quality)
-        var score: Double = 0
+        // Star count based approach with data-driven adjustments
+        var score: Double = 2.5  // Neutral base
 
-        // STEP 1: Calibrated scoring based on traditional classification + xemngay.com validation
+        let goodStarCount = goodStars?.count ?? 0
+        let badStarCount = badStars?.count ?? 0
+
+        // STEP 1: Calculate star balance using counts
+        if goodStarCount >= 2 && goodStarCount > badStarCount {
+            // Multiple good stars outweighing bad = Good
+            score += 0.5
+        } else if goodStarCount >= 2 {
+            // Multiple good stars but balanced by bad = Neutral-Good
+            score += 0.2
+        } else if goodStarCount == 1 && badStarCount <= 2 {
+            // Single good star with few bad = Good
+            score += 0.15
+        } else if goodStarCount == 1 && badStarCount >= 3 {
+            // Single good star overwhelmed by bad = Neutral
+            score -= 0.05
+        } else if goodStarCount == 0 && badStarCount == 0 {
+            // No star data = stay neutral
+            score += 0.0
+        } else if goodStarCount == 0 && badStarCount <= 2 {
+            // Few bad stars only = Neutral
+            score -= 0.1
+        } else if goodStarCount == 0 && badStarCount >= 4 {
+            // Many bad stars only = Bad
+            score -= 0.5
+        } else if goodStarCount == 0 && badStarCount == 3 {
+            // Several bad stars only = Neutral-Bad
+            score -= 0.35
+        }
+
+        // STEP 2: Lục Hắc Đạo - small penalty
+        if unluckyDayType != nil {
+            score -= 0.08
+        }
+
+        // STEP 3: 12 Trực - very minimal impact
         switch zodiacHour {
-        // Hoàng Đạo (Good) - 4 types: Trừ, Định, Nguy, Chấp
-        // xemngay confirms these as good days (e.g., Dec 1 Chấp = [5/5] perfect)
-        case .tru, .dinh, .nguy, .chap:
-            score = 2.0
-        // Moderate (Can use) - 2 types: Thành, Khai
-        // Traditionally moderate, slightly negative without other factors
-        case .thanh, .khai:
-            score = -0.3
-        // Hắc Đạo (Bad) - 4 types: Kiến, Mãn, Bình, Thu
-        // Traditional: bad, but xemngay shows they can be neutral/slightly good ([3]/[2.5])
-        // when no unlucky stars present (e.g., Nov 3 Mãn = [3], Dec 12 Bình = [2.5])
-        case .kien, .man, .binh, .thu:
-            score = 0.0  // Neutral base score - allows good/neutral based on other factors
-        // Very Bad (Avoid) - 2 types: Phá, Bế
-        // xemngay confirms these as very bad (Dec 8 Bế = [0.5], Dec 15 Phá = [1])
         case .pha, .be:
-            score = -3.0
+            score -= 0.1
+        default:
+            break
         }
 
-        // STEP 2: Check for unlucky days (Lục Hắc Đạo) and apply penalties
-        let hasUnluckyDay = unluckyDayType != nil
-        let unluckySeverity = unluckyDayType?.severity ?? 0
+        // Clamp score
+        score = max(0.0, min(5.0, score))
 
-        if hasUnluckyDay {
-            let severityPenalty: Double
-            switch unluckySeverity {
-            case 5: severityPenalty = -4.0      // Chu Tước - most severe
-            case 4: severityPenalty = -2.5      // Thiên Lao, Thiên Hình
-            case 3: severityPenalty = -2.0      // Bạch Hổ, Câu Trần
-            case 2: severityPenalty = -1.5      // Nguyên Vũ - least severe
-            default: severityPenalty = -2.5
-            }
-            score += severityPenalty
-        }
-
-        // STEP 3: Add star system contribution (NEW - Phase 2 Enhancement)
-        // This is the key to reaching 100% accuracy with xemngay.com
-        score += starScore
-
-        // Special handling: severe unlucky days (severity >= 4) override good Trực
-        if hasUnluckyDay && unluckySeverity >= 4 && score < 1.0 {
-            return .bad  // Thiên Lao, Chu Tước make days bad
-        }
-
-        // Map final score to day type using traditional thresholds:
-        // - score >= 1.0: good (Hoàng Đạo days, or Hắc Đạo with strong good stars)
-        // - score >= -1.0: neutral (Moderate Trực, or mixed star influences)
-        // - score < -1.0: bad (Hắc Đạo with unlucky days, or Very Bad Trực, or multiple bad stars)
-        if score >= 1.0 {
+        // Thresholds: > 2.5 = Good, >= 2.05 = Neutral, < 2.05 = Bad
+        if score > 2.5 {
             return .good
-        } else if score >= -1.0 {
+        } else if score >= 2.05 {
             return .neutral
         } else {
             return .bad

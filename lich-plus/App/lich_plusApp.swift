@@ -12,6 +12,7 @@ struct lich_plusApp: App {
     var body: some Scene {
         WindowGroup {
             MainTabView()
+                .preferredColorScheme(.light)
         }
     }
 }

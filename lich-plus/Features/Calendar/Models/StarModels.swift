@@ -30,23 +30,27 @@ enum GoodStar: String, CaseIterable {
     // MARK: - Newly Added Stars (Phase 2A)
     case ngoHop = "Ngọ hợp"             // Horse Harmony - Good for cooperation, partnerships
 
-    /// Scoring weight for this good star
+    // MARK: - Newly Added Stars (Phase 2B - from xemngay.com validation)
+    case catKhanh = "Cát khánh"         // Good Fortune - Auspicious celebrations
+    case daiHongSa = "Đại hồng sa"      // Great Red Sand - Major positive influence
+    case ichHau = "Ích hậu"             // Beneficial Posterity - Good for descendants
+    case thienTai = "Thiên tài"         // Heavenly Talent - Good for career/study
+
+    /// Scoring weight for this good star (0-5 scale modifiers for xemngay.com compatibility)
     var score: Double {
         switch self {
         case .thienAn:
-            return 3.0  // Very powerful positive influence
+            return 1.0  // Heavenly Grace - strong positive (0-5 scale)
         case .tamHopThienGiai:
-            return 2.5  // Major positive factor
+            return 0.75  // Three Harmony Heaven Release - major positive
         case .thienQuan:
-            return 2.0  // Strong authority blessing
-        case .satCong:
-            return 1.5  // Good for work completion
-        case .thienDuc, .nguyetDuc:
-            return 1.5  // Virtue blessings
-        case .trucLinh, .thienThuy, .nhanChuyen, .ngoHop:
-            return 1.0  // Moderate positive influence
-        case .mannDucTinh, .nguyetKhong:
-            return 0.5  // Minor positive influence
+            return 0.75  // Heavenly Official - strong blessing
+        case .satCong, .thienDuc, .nguyetDuc:
+            return 0.5  // Kill Work Success, Heavenly Virtue, Moon Virtue - moderate positive
+        case .trucLinh, .thienThuy, .nhanChuyen, .ngoHop, .catKhanh, .daiHongSa:
+            return 0.5  // Moderate positive influence
+        case .mannDucTinh, .nguyetKhong, .ichHau, .thienTai:
+            return 0.25  // Minor positive influence
         }
     }
 }
@@ -90,23 +94,28 @@ enum ExtendedBadStar: String, CaseIterable {
     case nguyetYem = "Nguyệt yếm"       // Moon Sickness - Illness
     case loiCong = "Lôi công"           // Thunder Attack - Sudden danger
 
-    /// Scoring weight for this bad star (negative values)
+    // MARK: - Newly Added Stars (Phase 2B - from xemngay.com validation)
+    case quyKhoc = "Quỷ khóc"           // Ghost Crying - Mourning, sadness
+    case tuThoiCoQua = "Tứ thời cô quả" // Four Seasons Orphan - Isolation, loneliness
+    case xichKhau = "Xích khẩu"         // Red Mouth - Conflicts, arguments
+
+    /// Scoring weight for this bad star (negative values, 0-5 scale modifiers)
     var score: Double {
         switch self {
         case .thuTu, .cuuThoQuy:
-            return -3.0  // Very severe (Death, Nine Earth Ghosts)
+            return -1.0  // Very severe (Death, Nine Earth Ghosts) - 0-5 scale
         case .lySao, .hoaTinh, .kiepSat, .diaPha, .cuuKhong:
-            return -2.0  // Severe (Separation, Fire, Robbery, Nine Empty)
+            return -0.75  // Severe (Separation, Fire, Robbery, Nine Empty)
         case .daiHao, .kimThanThatSat, .thienCuong, .cauTran:
-            return -1.5  // Significant negative (Great Loss, Hook of Dust)
+            return -0.5  // Significant negative (Great Loss, Hook of Dust)
         case .hoaTai, .thienHoa, .nguyetHoa, .hoaLinh, .huyenVu, .loiCong:
-            return -1.0  // Fire/danger-related (Fire disasters, Dark Warrior, Thunder)
+            return -0.5  // Fire/danger-related (Fire disasters, Dark Warrior, Thunder)
         case .hoangVu, .khongPhong, .bangTieu, .nguyetYem:
-            return -1.0  // Moderate negative (Desolate, Empty Room, Moon Sickness)
+            return -0.5  // Moderate negative (Desolate, Empty Room, Moon Sickness)
         case .thoOn, .hoangSa, .phiMaSat, .nguQuy, .quaTu, .nguHu, .nguyetHu:
-            return -0.5  // Minor negative (Five Empty, Moon Empty, etc.)
-        case .tieuHongSa, .tieuHao:
-            return -0.3  // Very minor negative (Small obstacles/loss)
+            return -0.25  // Minor negative (Five Empty, Moon Empty, etc.)
+        case .tieuHongSa, .tieuHao, .quyKhoc, .tuThoiCoQua, .xichKhau:
+            return -0.25  // Very minor negative (Small obstacles, crying ghost, conflicts)
         }
     }
 }

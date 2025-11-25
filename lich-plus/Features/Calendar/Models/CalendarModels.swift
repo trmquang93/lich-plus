@@ -100,12 +100,21 @@ enum EventCategory: String, CaseIterable {
 
 struct LuckyHour: Identifiable, Equatable {
     let id = UUID()
-    let startTime: String
-    let endTime: String
+    let chiName: String      // e.g., "Dần", "Thìn"
+    let startTime: String    // e.g., "03:00"
+    let endTime: String      // e.g., "05:00"
     let luckyActivities: [String]
 
     var timeRange: String {
         "\(startTime) - \(endTime)"
+    }
+
+    /// Compact display format "Dần (3-5)"
+    var compactDisplay: String {
+        // Extract hour number from startTime and endTime (remove leading zeros)
+        let startHour = String(Int(startTime.prefix(2)) ?? 0)
+        let endHour = String(Int(endTime.prefix(2)) ?? 0)
+        return "\(chiName) (\(startHour)-\(endHour))"
     }
 }
 

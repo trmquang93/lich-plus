@@ -189,285 +189,287 @@ struct Month12StarData {
             badStars: [.huyenVu]
         )
 
-        // Page 170: Rows 21-40
-        // Row 21: Giáp Thân
+        // Page 169: Rows 21-40 (Extracted from book pages 169-170)
+        // Row 21: Giáp Thân - Bad: Đại hao
         data["Giáp Thân"] = DayStarData(
             canChi: "Giáp Thân",
-            goodStars: [.thienQuan],
-            badStars: []
+            goodStars: [.thienAn],
+            badStars: [.daiHao]
         )
 
-        // Row 22: Ất Dậu
+        // Row 22: Ất Dậu - Bad: Kiếp sát, Huyền vũ, Lôi công, Ly sào
         data["Ất Dậu"] = DayStarData(
             canChi: "Ất Dậu",
             goodStars: [],
-            badStars: []
+            badStars: [.kiepSat, .huyenVu, .loiCong, .lySao]
         )
 
-        // Row 23: Bính Tuất
+        // Row 23: Bính Tuất - Good: Nhân chuyên | Bad: Thiên hỏa, Nguyệt phá, Hoang vu, Ngũ hư, Hỏa tai, Phi ma sát
         data["Bính Tuất"] = DayStarData(
             canChi: "Bính Tuất",
-            goodStars: [],
-            badStars: []
+            goodStars: [.nhanChuyen],
+            badStars: [.thienHoa, .hoangVu, .nguHu, .hoaTai, .phiMaSat]
         )
 
-        // Row 24: Đinh Hợi
+        // Row 24: Đinh Hợi - Bad: Nguyệt hỏa, Nguyệt hư, Ngũ quỷ, Câu trần
         data["Đinh Hợi"] = DayStarData(
             canChi: "Đinh Hợi",
             goodStars: [],
-            badStars: []
+            badStars: [.nguyetHoa, .nguyetHu, .nguQuy, .cauTran]
         )
 
-        // Row 25: Mậu Tý
+        // Row 25: Mậu Tý - Bad: Cửu không, Cô thần, Thổ cấm
         data["Mậu Tý"] = DayStarData(
             canChi: "Mậu Tý",
             goodStars: [],
-            badStars: []
+            badStars: [.cuuKhong, .thoOn]
         )
 
-        // Row 26: Kỷ Sửu
+        // Row 26: Kỷ Sửu - Bad: Tiểu hồng sa, Địa phá, Thần cách, Không phòng, Băng tiêu, Hà khôi, Lô ban sát
         data["Kỷ Sửu"] = DayStarData(
             canChi: "Kỷ Sửu",
             goodStars: [],
-            badStars: []
+            badStars: [.tieuHongSa, .diaPha, .khongPhong, .bangTieu]
         )
 
-        // Row 27: Canh Dần
+        // Row 27: Canh Dần - Good: Thiên ân | Bad: Hoang vu, Vãng vong, Tứ thời cô quả, Quý khốc, Ngũ hư
         data["Canh Dần"] = DayStarData(
             canChi: "Canh Dần",
-            goodStars: [.thienDuc],
-            badStars: []
+            goodStars: [.thienAn],
+            badStars: [.hoangVu, .tuThoiCoQua, .nguHu]
         )
 
-        // Row 28: Tân Mão
+        // Row 28: Tân Mão - Good: Thiên ân, Sát công | Bad: Tội chí, Chu tước
         data["Tân Mão"] = DayStarData(
             canChi: "Tân Mão",
-            goodStars: [],
-            badStars: []
+            goodStars: [.thienAn, .satCong],
+            badStars: [.xichKhau]
         )
 
-        // Row 29: Nhâm Thìn
+        // Row 29: Nhâm Thìn - Good: Thiên thụy, Trực linh | Bad: Thổ phủ, Nguyệt yếm, Phủ đầu sát, Nguyệt kiến chuyển sát, Âm dương thác
         data["Nhâm Thìn"] = DayStarData(
             canChi: "Nhâm Thìn",
-            goodStars: [.thienQuan],
-            badStars: []
+            goodStars: [.thienThuy, .trucLinh],
+            badStars: [.nguyetYem]
         )
 
-        // Row 30: Quý Tỵ
+        // Row 30: Quý Tỵ - Good: Thiên ân | Bad: Thiên ôn, Nhân cách, Tam tang, Trùng tang, Trùng phục
         data["Quý Tỵ"] = DayStarData(
             canChi: "Quý Tỵ",
-            goodStars: [.tamHopThienGiai],
-            badStars: []
+            goodStars: [.thienAn],
+            badStars: [.thoOn]
         )
 
-        // Row 31: Giáp Ngọ
+        // Row 31: Giáp Ngọ - Bad: Thổ ôn, Hoang sa, Sát chủ, Quả tú, Bach hổ
         data["Giáp Ngọ"] = DayStarData(
             canChi: "Giáp Ngọ",
             goodStars: [],
-            badStars: []
+            badStars: [.thoOn, .hoangSa, .quaTu]
         )
 
-        // Row 32: Ất Mùi
+        // Row 32: Ất Mùi - Good: Nhân chuyên | Bad: Thiên cương, Thiên lại, Tiểu hao, Thu tử, Địa tặc, Nguyệt hình, Lục bát thành
         data["Ất Mùi"] = DayStarData(
             canChi: "Ất Mùi",
-            goodStars: [.thienDuc],
-            badStars: []
+            goodStars: [.nhanChuyen],
+            badStars: [.thienCuong, .tieuHao, .thuTu]
         )
 
-        // Row 33: Bính Thân
+        // Row 33: Bính Thân - Bad: Đại hao
         data["Bính Thân"] = DayStarData(
             canChi: "Bính Thân",
-            goodStars: [.thienQuan],
-            badStars: []
+            goodStars: [],
+            badStars: [.daiHao]
         )
 
-        // Row 34: Đinh Dậu
+        // Row 34: Đinh Dậu - Bad: Kiếp sát, Huyền vũ, Lôi công, Ly sào
         data["Đinh Dậu"] = DayStarData(
             canChi: "Đinh Dậu",
-            goodStars: [.tamHopThienGiai],
-            badStars: []
+            goodStars: [],
+            badStars: [.kiepSat, .huyenVu, .loiCong, .lySao]
         )
 
-        // Row 35: Mậu Tuất
+        // Row 35: Mậu Tuất - Good: Ngũ hợp | Bad: Thiên hỏa, Nguyệt phá, Hoang vu, Ngũ hư, Hỏa tai, Phi ma sát, Cửu thổ quỷ, Hỏa tinh
         data["Mậu Tuất"] = DayStarData(
             canChi: "Mậu Tuất",
-            goodStars: [],
-            badStars: []
+            goodStars: [.ngoHop],
+            badStars: [.thienHoa, .hoangVu, .nguHu, .hoaTai, .phiMaSat, .cuuThoQuy, .hoaTinh]
         )
 
-        // Row 36: Kỷ Hợi
+        // Row 36: Kỷ Hợi - Good: Ngũ hợp | Bad: Nguyệt hỏa, Nguyệt hư, Ngũ quỷ, Câu trần
         data["Kỷ Hợi"] = DayStarData(
             canChi: "Kỷ Hợi",
-            goodStars: [],
-            badStars: []
+            goodStars: [.ngoHop],
+            badStars: [.nguyetHoa, .nguyetHu, .nguQuy, .cauTran]
         )
 
-        // Row 37: Canh Tý
+        // Row 37: Canh Tý - Good: Sát công | Bad: Cửu không, Cô thần, Thổ cấm
         data["Canh Tý"] = DayStarData(
             canChi: "Canh Tý",
-            goodStars: [],
-            badStars: []
+            goodStars: [.satCong],
+            badStars: [.cuuKhong, .thoOn]
         )
 
-        // Row 38: Tân Sửu
+        // Row 38: Tân Sửu - Good: Trực linh, Ngũ hợp | Bad: Tiểu hồng sa, Địa phá, Thần cách, Không phòng, Băng tiêu, Hà khôi, Lô ban sát
         data["Tân Sửu"] = DayStarData(
             canChi: "Tân Sửu",
-            goodStars: [.thienDuc],
-            badStars: []
+            goodStars: [.trucLinh, .ngoHop],
+            badStars: [.tieuHongSa, .diaPha, .khongPhong, .bangTieu]
         )
 
-        // Row 39: Nhâm Dần
+        // Row 39: Nhâm Dần - Bad: Hoang vu, Vãng vong, Tứ thời cô quả, Ngũ hư, Quý khốc, Ly sào
         data["Nhâm Dần"] = DayStarData(
             canChi: "Nhâm Dần",
             goodStars: [],
-            badStars: []
+            badStars: [.hoangVu, .tuThoiCoQua, .nguHu, .quyKhoc, .lySao]
         )
 
         // Row 40: Quý Mão
-        data["Quý Mão"] = DayStarData(
-            canChi: "Quý Mão",
+        data["Quý Mào"] = DayStarData(
+            canChi: "Quý Mào",
+            goodStars: [.ngoHop],
+            badStars: [.xichKhau]
+        )
+
+        // Page 170: Rows 41-60 (Extracted from book page 170)
+        // NOTE: Many good stars from page 170 don't have enum mappings yet. See comment in CLAUDE.md for list.
+
+        // Row 41: Giáp Thìn - Good: Cát khánh, Tục thế, Lục hợp, Thiên xá, Nguyệt không
+        data["Giáp Thìn"] = DayStarData(
+            canChi: "Giáp Thìn",
+            goodStars: [.catKhanh, .nguyetKhong],
+            badStars: []
+        )
+
+        // Row 42: Ất Tỵ - Good: Yếu yên, Thiên Nguyệt đức hợp (not in enum yet)
+        data["Ất Tỵ"] = DayStarData(
+            canChi: "Ất Tỵ",
             goodStars: [],
             badStars: []
         )
 
-        // Page 172: Rows 41-60
-        // Row 41: Giáp Thìn
-        data["Giáp Thìn"] = DayStarData(
-            canChi: "Giáp Thìn",
-            goodStars: [.thienQuan],
-            badStars: []
-        )
-
-        // Row 42: Ất Tỵ
-        data["Ất Tỵ"] = DayStarData(
-            canChi: "Ất Tỵ",
-            goodStars: [.tamHopThienGiai],
-            badStars: []
-        )
-
-        // Row 43: Bính Ngọ
+        // Row 43: Bính Ngọ - Good: Thiên tài, U vi tinh, Tuế hợp
         data["Bính Ngọ"] = DayStarData(
             canChi: "Bính Ngọ",
-            goodStars: [.thienQuan],
+            goodStars: [.thienTai],
             badStars: []
         )
 
-        // Row 44: Đinh Mùi
+        // Row 44: Đinh Mùi - Good: Thiên phú, Địa tài, Dân nhật, Kim đường (not in enum yet)
         data["Đinh Mùi"] = DayStarData(
             canChi: "Đinh Mùi",
             goodStars: [],
             badStars: []
         )
 
-        // Row 45: Mậu Thân
+        // Row 45: Mậu Thân - Good: Thiên mã (not in enum yet)
         data["Mậu Thân"] = DayStarData(
             canChi: "Mậu Thân",
             goodStars: [],
             badStars: []
         )
 
-        // Row 46: Kỷ Dậu
+        // Row 46: Kỷ Dậu - Good: Thiên thành, Mẫn đức tinh, Nguyệt ân, Thiên giải Tam hợp, Ngọc đường
         data["Kỷ Dậu"] = DayStarData(
             canChi: "Kỷ Dậu",
+            goodStars: [.mannDucTinh, .nguyetDuc, .tamHopThienGiai],
+            badStars: []
+        )
+
+        // Row 47: Canh Tuất - Good: Minh tinh, Giải thần, Kinh tâm, Thiên quý (not in enum yet)
+        data["Canh Tuất"] = DayStarData(
+            canChi: "Canh Tuất",
             goodStars: [],
             badStars: []
         )
 
-        // Row 47: Canh Tuất
-        data["Canh Tuất"] = DayStarData(
-            canChi: "Canh Tuất",
-            goodStars: [.thienDuc],
-            badStars: []
-        )
-
-        // Row 48: Tân Hợi
+        // Row 48: Tân Hợi - Good: Phổ hộ, Hoàng ân, Nguyệt giải, Nguyệt ân (not in enum yet)
         data["Tân Hợi"] = DayStarData(
             canChi: "Tân Hợi",
             goodStars: [],
             badStars: []
         )
 
-        // Row 49: Nhâm Tý
+        // Row 49: Nhâm Tý - Good: Thiên quan, Ngũ phú, Phúc sinh, Hoạt diệu Đại hồng sa, Mẫu thương, Thiên quý
         data["Nhâm Tý"] = DayStarData(
             canChi: "Nhâm Tý",
-            goodStars: [],
+            goodStars: [.thienQuan],
             badStars: []
         )
 
-        // Row 50: Quý Sửu
+        // Row 50: Quý Sửu - Good: Thiên hỷ, Tam hợp, Mẫu thương, Thiên quý
         data["Quý Sửu"] = DayStarData(
             canChi: "Quý Sửu",
-            goodStars: [],
-            badStars: []
-        )
-
-        // Row 51: Giáp Dần
-        data["Giáp Dần"] = DayStarData(
-            canChi: "Giáp Dần",
-            goodStars: [.thienQuan],
-            badStars: []
-        )
-
-        // Row 52: Ất Mão
-        data["Ất Mão"] = DayStarData(
-            canChi: "Ất Mão",
-            goodStars: [.thienDuc, .tamHopThienGiai],
-            badStars: []
-        )
-
-        // Row 53: Bính Thìn
-        data["Bính Thìn"] = DayStarData(
-            canChi: "Bính Thìn",
-            goodStars: [.thienQuan],
-            badStars: []
-        )
-
-        // Row 54: Đinh Tỵ
-        data["Đinh Tỵ"] = DayStarData(
-            canChi: "Đinh Tỵ",
             goodStars: [.tamHopThienGiai],
             badStars: []
         )
 
-        // Row 55: Mậu Ngọ
-        data["Mậu Ngọ"] = DayStarData(
-            canChi: "Mậu Ngọ",
+        // Row 51: Giáp Dần - Good: Thành tâm, Đại hồng sa, Thanh long, Nguyệt không
+        data["Giáp Dần"] = DayStarData(
+            canChi: "Giáp Dần",
+            goodStars: [.daiHongSa, .nguyetKhong],
+            badStars: []
+        )
+
+        // Row 52: Ất Mão - Good: Sinh khí, Nguyệt tài, Ấm đức, Ích hậu, Thiên Nguyệt đức hợp, Minh dương, Dịch mã, Phúc hậu
+        data["Ất Mão"] = DayStarData(
+            canChi: "Ất Mão",
+            goodStars: [.ichHau],
+            badStars: []
+        )
+
+        // Row 53: Bính Thìn - Good: Cát khánh, Tục thế, Lục hợp
+        data["Bính Thìn"] = DayStarData(
+            canChi: "Bính Thìn",
+            goodStars: [.catKhanh],
+            badStars: []
+        )
+
+        // Row 54: Đinh Tỵ - Good: Yếu yên (not in enum yet)
+        data["Đinh Tỵ"] = DayStarData(
+            canChi: "Đinh Tỵ",
             goodStars: [],
             badStars: []
         )
 
-        // Row 56: Kỷ Mùi
+        // Row 55: Mậu Ngọ - Good: Thiên tài, U vi tinh, Tuế hợp
+        data["Mậu Ngọ"] = DayStarData(
+            canChi: "Mậu Ngọ",
+            goodStars: [.thienTai],
+            badStars: []
+        )
+
+        // Row 56: Kỷ Mùi - Good: Thiên phú, Địa tài, Dân nhật, Kim đường (not in enum yet)
         data["Kỷ Mùi"] = DayStarData(
             canChi: "Kỷ Mùi",
             goodStars: [],
             badStars: []
         )
 
-        // Row 57: Canh Thân
+        // Row 57: Canh Thân - Good: Thiên mã, Thiên đức, Nguyệt đức
         data["Canh Thân"] = DayStarData(
             canChi: "Canh Thân",
-            goodStars: [],
+            goodStars: [.thienDuc, .nguyetDuc],
             badStars: []
         )
 
-        // Row 58: Tân Dậu
+        // Row 58: Tân Dậu - Good: Thiên thành, Mẫn đức tinh, Nguyệt ân, Thiên giải Tam hợp, Ngọc đường
         data["Tân Dậu"] = DayStarData(
             canChi: "Tân Dậu",
-            goodStars: [],
+            goodStars: [.mannDucTinh, .nguyetDuc, .tamHopThienGiai],
             badStars: []
         )
 
-        // Row 59: Nhâm Tuất
+        // Row 59: Nhâm Tuất - Good: Minh tinh, Giải thần, Kinh tâm, Thiên quý (not in enum yet)
         data["Nhâm Tuất"] = DayStarData(
             canChi: "Nhâm Tuất",
             goodStars: [],
             badStars: []
         )
 
-        // Row 60: Quý Hợi
+        // Row 60: Quý Hợi - Good: Phổ hộ, Hoàng ân, Nguyệt giải, Thiên quý (not in enum yet)
         data["Quý Hợi"] = DayStarData(
             canChi: "Quý Hợi",
-            goodStars: [.thienQuan, .tamHopThienGiai],
+            goodStars: [],
             badStars: []
         )
 
