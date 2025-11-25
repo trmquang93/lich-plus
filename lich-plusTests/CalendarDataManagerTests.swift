@@ -154,8 +154,8 @@ final class CalendarDataManagerTests: XCTestCase {
 
         // All days should have lunar month and year
         for day in month.days {
-            XCTAssertGreater(day.lunarMonth, 0)
-            XCTAssertGreater(day.lunarYear, 0)
+            XCTAssert(day.lunarMonth > 0)
+            XCTAssert(day.lunarYear > 0)
         }
     }
 

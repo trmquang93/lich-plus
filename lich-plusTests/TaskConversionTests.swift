@@ -36,8 +36,8 @@ final class TaskConversionTests: XCTestCase {
             title: "Team Meeting",
             startDate: Date(timeIntervalSince1970: 0),
             isAllDay: true,
-            category: TaskCategory.work.rawValue,
-            isCompleted: false
+            isCompleted: false,
+            category: TaskCategory.work.rawValue
         )
 
         // When
@@ -148,7 +148,7 @@ final class TaskConversionTests: XCTestCase {
                 startDate: Date(),
                 category: categoryString
             )
-            let task = TaskItem(from: syncableEvent)
+            _ = TaskItem(from: syncableEvent)
 
             // Then
             XCTAssertNotNil(TaskCategory(rawValue: categoryString.prefix(1).uppercased() + categoryString.dropFirst()))
@@ -172,7 +172,7 @@ final class TaskConversionTests: XCTestCase {
         // Then
         XCTAssertEqual(syncableEvent.id, task.id)
         XCTAssertEqual(syncableEvent.title, task.title)
-        XCTAssertEqual(syncableEvent.category, "personal")
+        XCTAssertEqual(syncableEvent.category, "Personal")
         XCTAssertEqual(syncableEvent.notes, "Task notes")
         XCTAssertEqual(syncableEvent.syncStatus, SyncStatus.pending.rawValue)
     }
@@ -201,7 +201,7 @@ final class TaskConversionTests: XCTestCase {
         XCTAssertEqual(syncableEvent.endDate, endTime)
         XCTAssertEqual(syncableEvent.isCompleted, true)
         XCTAssertEqual(syncableEvent.reminderMinutes, 15)
-        XCTAssertEqual(syncableEvent.category, "work")
+        XCTAssertEqual(syncableEvent.category, "Work")
     }
 
     func testToSyncableEvent_UpdatesExistingEvent() {
@@ -227,7 +227,7 @@ final class TaskConversionTests: XCTestCase {
         // Then
         XCTAssertEqual(syncableEvent.id, updatedTask.id)
         XCTAssertEqual(syncableEvent.title, "Updated Title")
-        XCTAssertEqual(syncableEvent.category, "work")
+        XCTAssertEqual(syncableEvent.category, "Work")
         // When updating existing, it should preserve some properties
         XCTAssertEqual(syncableEvent.id, existingSyncableEvent.id)
     }

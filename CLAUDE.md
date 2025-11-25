@@ -57,17 +57,11 @@ Before committing changes that modify the project:
 
 **Building and Running:**
 ```bash
-# Build the app for the iOS Simulator
-xcodebuild -scheme lich-plus -destination 'generic/platform=iOS Simulator' build
-
-# Build and run on the default simulator
-xcodebuild -scheme lich-plus -destination 'generic/platform=iOS Simulator' -derivedDataPath ./build run
-
-# Open in Xcode for interactive development
-open lich-plus.xcodeproj
+./build-app.sh
 ```
 
 **Testing:**
+Use the script with `grep -E "✖"` to filter for failed tests.
 ```bash
 # Run all tests (unit and UI) using the test runner script
 ./run-tests.sh
@@ -80,18 +74,6 @@ open lich-plus.xcodeproj
 
 # View test runner help
 ./run-tests.sh --help
-```
-
-Alternatively, run tests directly with xcodebuild:
-```bash
-# Run all unit tests
-xcodebuild -scheme lich-plus -destination 'generic/platform=iOS Simulator' test
-
-# Run tests with detailed output
-xcodebuild -scheme lich-plus -destination 'generic/platform=iOS Simulator' test -verbose
-
-# Run UI tests
-xcodebuild -scheme lich-plus test-lich-plusUITests -destination 'generic/platform=iOS Simulator'
 ```
 
 **Dependencies:**

@@ -100,9 +100,8 @@ final class CalendarSyncService: ObservableObject {
         await setSync(state: .syncing, error: nil)
 
         defer {
-            DispatchQueue.main.async {
-                self.syncState = .idle
-            }
+            // Use synchronous update since we're already on MainActor
+            self.syncState = .idle
         }
 
         do {

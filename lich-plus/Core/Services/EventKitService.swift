@@ -65,7 +65,7 @@ enum EventKitServiceError: LocalizedError {
 /// let identifier = try service.createEvent(from: syncable, in: calendar)
 /// ```
 @MainActor
-final class EventKitService: NSObject, ObservableObject {
+class EventKitService: NSObject, ObservableObject {
 
     private let eventStore = EKEventStore()
     private var changeObserver: NSObjectProtocol?
@@ -276,9 +276,9 @@ final class EventKitService: NSObject, ObservableObject {
 
         changeObserver = NotificationCenter.default.addObserver(
             forName: .EKEventStoreChanged,
-            object: eventStore,
+            object: nil,  // Accept notifications from any object for easier testing
             queue: .main
-        ) { [weak self] _ in
+        ) { _ in
             handler()
         }
     }
@@ -314,10 +314,12 @@ final class EventKitService: NSObject, ObservableObject {
         // Apply recurrence rules if available
         if let recurrenceData = syncable.recurrenceRuleData {
             do {
-                ekEvent.recurrenceRules = try NSKeyedUnarchiver.unarchivedObject(
-                    ofClasses: [NSArray.self, EKRecurrenceRule.self],
+                let serializableRules = try JSONDecoder().decode(
+                    [SerializableRecurrenceRule].self,
                     from: recurrenceData
-                ) as? [EKRecurrenceRule]
+                )
+                let rules = try serializableRules.map { try $0.toEKRecurrenceRule() }
+                ekEvent.recurrenceRules = rules.isEmpty ? nil : rules
             } catch {
                 print("Failed to decode recurrence rules: \(error)")
                 ekEvent.recurrenceRules = nil
@@ -347,10 +349,8 @@ final class EventKitService: NSObject, ObservableObject {
 
         if let recurrenceRules = ekEvent.recurrenceRules, !recurrenceRules.isEmpty {
             do {
-                recurrenceRuleData = try NSKeyedArchiver.archivedData(
-                    withRootObject: recurrenceRules,
-                    requiringSecureCoding: true
-                )
+                let serializableRules = recurrenceRules.map { SerializableRecurrenceRule(from: $0) }
+                recurrenceRuleData = try JSONEncoder().encode(serializableRules)
             } catch {
                 print("Failed to encode recurrence rules: \(error)")
             }

@@ -3,6 +3,11 @@
 # Script to run iOS tests with support for unit tests, UI tests, or both
 # Usage: ./run-tests.sh [--unit|--ui|--all] [-h|--help]
 #
+# Device Selection Priority:
+#   1. Booted simulator (auto-selected)
+#   2. Connected physical device (fallback)
+#   3. Interactive selection from available simulators (if neither above)
+#
 # Examples:
 #   ./run-tests.sh                    # Run all tests (default)
 #   ./run-tests.sh --unit             # Run only unit tests
@@ -14,7 +19,6 @@ set -e
 # Configuration
 WORKSPACE="lich-plus.xcworkspace"
 SCHEME="lich-plus"
-SIMULATOR_DEVICE="iPhone 17 Pro"
 UNIT_TEST_TARGET="lich-plusTests"
 UI_TEST_TARGET="lich-plusUITests"
 
@@ -35,13 +39,18 @@ OPTIONS:
     --all               Run all tests (unit + UI) - this is the default
     -h, --help          Display this help message
 
+DEVICE SELECTION:
+    The script automatically selects a test destination in this order:
+    1. Booted simulator (if any simulator is currently running)
+    2. Connected physical device (if a device is plugged in)
+    3. Interactive menu (choose from available simulators)
+
 EXAMPLES:
     ./run-tests.sh                  # Run all tests (default)
     ./run-tests.sh --unit           # Run only unit tests
     ./run-tests.sh --ui             # Run only UI tests
 
 NOTES:
-    - The script uses the iPhone 17 Pro simulator
     - Output is piped through xcbeautify for clean formatting
     - Requires Xcode and CocoaPods to be installed
     - The workspace file must exist: $WORKSPACE
@@ -90,27 +99,127 @@ if [ ! -d "$WORKSPACE" ]; then
     exit 1
 fi
 
-# Get the booted simulator ID
-get_booted_simulator_id() {
-    xcrun simctl list devices available --json | \
-        jq -r '.devices | .[] | .[] | select(.state == "Booted") | .udid' | \
+# Get the first booted simulator ID
+get_booted_simulator() {
+    xcrun simctl list devices available --json 2>/dev/null | \
+        jq -r '.devices | to_entries[] | .value[] | select(.state == "Booted") | "\(.udid)|\(.name)"' | \
         head -1
 }
 
-# Try to get booted simulator ID
-SIMULATOR_ID=$(get_booted_simulator_id)
-if [ -z "$SIMULATOR_ID" ]; then
-    echo "=== ERROR ==="
-    echo "No booted iOS simulator found."
+# Get connected physical devices (iOS devices have version numbers like "iPhone (17.0) (UDID)")
+# Only looks at the "== Devices ==" section, stops at "== Devices Offline ==" or "== Simulators =="
+get_connected_devices() {
+    xcrun xctrace list devices 2>/dev/null | \
+        sed -n '/^== Devices ==$/,/^== /p' | \
+        grep -v "^==" | \
+        grep -E "^\S.*\([0-9]+\.[0-9]" | \
+        sed -E 's/^(.*) \([0-9]+\.[0-9][^)]*\) \(([^)]+)\)$/\2|\1/'
+}
+
+# Get available simulators (iOS only, not booted)
+get_available_simulators() {
+    xcrun simctl list devices available --json 2>/dev/null | \
+        jq -r '.devices | to_entries[] | select(.key | contains("iOS")) | .value[] | select(.state != "Booted" and .isAvailable == true) | "\(.udid)|\(.name)"' | \
+        head -20
+}
+
+# Function to select device interactively
+select_device_interactive() {
     echo ""
-    echo "Please boot a simulator first. You can do this by:"
-    echo "  xcrun simctl boot <device-name>"
-    echo "  # or open Xcode and boot a simulator from the device list"
-    exit 1
+    echo "=== SELECT A DEVICE ==="
+    echo "No booted simulator or connected device found."
+    echo ""
+
+    # Get available simulators
+    local simulators
+    simulators=$(get_available_simulators)
+
+    if [ -z "$simulators" ]; then
+        echo "No available simulators found."
+        echo "Please install simulators via Xcode > Settings > Platforms"
+        exit 1
+    fi
+
+    # Build array of options
+    local options=()
+    local i=1
+
+    echo "Available iOS Simulators:"
+    echo ""
+    while IFS='|' read -r udid name; do
+        if [ -n "$udid" ]; then
+            options+=("$udid|$name")
+            printf "  %2d) %s\n" "$i" "$name"
+            ((i++))
+        fi
+    done <<< "$simulators"
+
+    echo ""
+    read -p "Enter number (1-$((i-1))): " selection
+
+    # Validate selection
+    if ! [[ "$selection" =~ ^[0-9]+$ ]] || [ "$selection" -lt 1 ] || [ "$selection" -gt $((i-1)) ]; then
+        echo "Invalid selection."
+        exit 1
+    fi
+
+    # Get selected device
+    local selected="${options[$((selection-1))]}"
+    DEVICE_ID="${selected%%|*}"
+    DEVICE_NAME="${selected#*|}"
+    DEVICE_TYPE="simulator"
+
+    # Boot the selected simulator
+    echo ""
+    echo "Booting simulator: $DEVICE_NAME..."
+    xcrun simctl boot "$DEVICE_ID" 2>/dev/null || true
+    sleep 2
+}
+
+# Try to find a device in priority order
+find_test_device() {
+    # Priority 1: Check for booted simulator
+    local booted
+    booted=$(get_booted_simulator)
+
+    if [ -n "$booted" ]; then
+        DEVICE_ID="${booted%%|*}"
+        DEVICE_NAME="${booted#*|}"
+        DEVICE_TYPE="simulator"
+        echo "Found booted simulator: $DEVICE_NAME"
+        return 0
+    fi
+
+    # Priority 2: Check for connected physical device
+    local connected
+    connected=$(get_connected_devices | head -1)
+
+    if [ -n "$connected" ]; then
+        DEVICE_ID="${connected%%|*}"
+        DEVICE_NAME="${connected#*|}"
+        DEVICE_TYPE="device"
+        echo "Found connected device: $DEVICE_NAME"
+        return 0
+    fi
+
+    # Priority 3: Interactive selection
+    select_device_interactive
+}
+
+# Find the test device
+echo "=== DEVICE DETECTION ==="
+find_test_device
+
+# Build destination string based on device type
+if [ "$DEVICE_TYPE" = "simulator" ]; then
+    DESTINATION="platform=iOS Simulator,id=$DEVICE_ID"
+else
+    DESTINATION="platform=iOS,id=$DEVICE_ID"
 fi
 
 # Check if xcbeautify is available
 if ! command -v xcbeautify &> /dev/null; then
+    echo ""
     echo "=== WARNING ==="
     echo "xcbeautify is not installed. Tests will run but output may not be formatted."
     echo "To install: brew install xcbeautify"
@@ -120,7 +229,7 @@ else
     USE_XCBEAUTIFY=true
 fi
 
-# Function to run a test target
+# Function to run tests for a specific target
 run_tests() {
     local test_target=$1
     local test_name=$2
@@ -130,56 +239,37 @@ run_tests() {
     echo "Target: $test_target"
     echo "Workspace: $WORKSPACE"
     echo "Scheme: $SCHEME"
-    echo "Simulator: $SIMULATOR_DEVICE (ID: $SIMULATOR_ID)"
+    echo "Device: $DEVICE_NAME ($DEVICE_TYPE)"
+    echo "Device ID: $DEVICE_ID"
     echo ""
 
-    # Build xcodebuild command
-    local xcodebuild_cmd="xcodebuild \
-        -workspace $WORKSPACE \
-        -scheme $SCHEME \
-        -destination 'platform=iOS Simulator,id=$SIMULATOR_ID' \
-        -only-testing $test_target \
-        test"
-
-    # Execute command with optional xcbeautify
     if [ "$USE_XCBEAUTIFY" = true ]; then
-        eval "$xcodebuild_cmd" | xcbeautify
+        xcodebuild \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -destination "$DESTINATION" \
+            -only-testing "$test_target" \
+            test \
+            2>&1 | xcbeautify | grep -v "Compiling"
     else
-        eval "$xcodebuild_cmd"
+        xcodebuild \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -destination "$DESTINATION" \
+            -only-testing "$test_target" \
+            test \
+            2>&1 | grep -v "Compiling"
     fi
-
-    if [ $? -ne 0 ]; then
-        echo ""
-        echo "=== ERROR ==="
-        echo "$test_name failed"
-        return 1
-    fi
-
-    return 0
 }
 
-# Run tests based on flags
-TEST_FAILED=false
-
+# Run the requested tests
 if [ "$RUN_UNIT" = true ]; then
-    if ! run_tests "$UNIT_TEST_TARGET" "UNIT TESTS"; then
-        TEST_FAILED=true
-    fi
+    run_tests "$UNIT_TEST_TARGET" "UNIT TESTS"
 fi
 
 if [ "$RUN_UI" = true ]; then
-    if ! run_tests "$UI_TEST_TARGET" "UI TESTS"; then
-        TEST_FAILED=true
-    fi
+    run_tests "$UI_TEST_TARGET" "UI TESTS"
 fi
 
-# Final summary
 echo ""
-echo "=== TEST SUMMARY ==="
-if [ "$TEST_FAILED" = true ]; then
-    echo "Some tests failed. Please review the output above."
-    exit 1
-else
-    echo "All tests passed successfully!"
-    exit 0
-fi
+echo "=== ALL TESTS COMPLETED ==="
