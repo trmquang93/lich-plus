@@ -12,126 +12,56 @@ import SwiftUI
 struct QuickInfoBannerView: View {
     let day: CalendarDay
     let luckyHours: [LuckyHour]
-
-    var dayTypeEmoji: String {
-        switch day.dayType {
-        case .good:
-            return "✨"
-        case .bad:
-            return "⚠️"
-        case .neutral:
-            return "📅"
-        }
-    }
+    let onTap: () -> Void
 
     var body: some View {
-        VStack(spacing: AppTheme.spacing16) {
-            // Day Type Section
-            HStack(spacing: AppTheme.spacing12) {
-                VStack(alignment: .leading, spacing: AppTheme.spacing4) {
-                    HStack(spacing: AppTheme.spacing8) {
-                        Text(dayTypeEmoji)
-                            .font(.system(size: 24))
-
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(day.dayType.displayName)
-                                .font(.system(size: AppTheme.fontTitle3, weight: .bold))
-                                .foregroundStyle(AppColors.textPrimary)
-
-                            Text(day.displaySolar + " tháng " + String(day.solarMonth))
-                                .font(.system(size: AppTheme.fontCaption, weight: .regular))
-                                .foregroundStyle(AppColors.textSecondary)
-                        }
+        Button(action: onTap) {
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    // Title: "Hom nay - Ngay tot"
+                    HStack(spacing: 4) {
+                        Text("Hom nay")
+                            .foregroundStyle(AppColors.textPrimary)
+                        Text("-")
+                            .foregroundStyle(AppColors.textSecondary)
+                        Text(day.dayType.displayName)
+                            .foregroundStyle(dayTypeColor)
                     }
+                    .font(.system(size: AppTheme.fontBody, weight: .semibold))
 
-                    Text(day.dayType.description)
-                        .font(.system(size: AppTheme.fontCaption, weight: .regular))
+                    // Lucky hours line
+                    Text(luckyHoursText)
+                        .font(.system(size: AppTheme.fontCaption))
                         .foregroundStyle(AppColors.textSecondary)
-                        .lineLimit(2)
+                        .lineLimit(1)
                 }
 
                 Spacer()
 
-                VStack(alignment: .leading, spacing: AppTheme.spacing4) {
-                    Text("Âm lịch")
-                        .font(.system(size: AppTheme.fontCaption, weight: .semibold))
-                        .foregroundStyle(AppColors.textSecondary)
-
-                    Text(day.displayLunar)
-                        .font(.system(size: AppTheme.fontTitle3, weight: .bold))
-                        .foregroundStyle(AppColors.primary)
-                }
-            }
-            .padding(AppTheme.spacing12)
-            .background(dayTypeBackgroundColor)
-            .cornerRadius(AppTheme.cornerRadiusMedium)
-
-            // Lucky Hours Section
-            VStack(alignment: .leading, spacing: AppTheme.spacing8) {
-                Text("Giờ hoàng đạo hôm nay")
-                    .font(.system(size: AppTheme.fontBody, weight: .semibold))
-                    .foregroundStyle(AppColors.textPrimary)
-
-                VStack(spacing: AppTheme.spacing8) {
-                    ForEach(luckyHours.prefix(2)) { hour in
-                        LuckyHourRow(hour: hour)
-                    }
-                }
-            }
-            .padding(AppTheme.spacing12)
-            .background(AppColors.backgroundLightGray)
-            .cornerRadius(AppTheme.cornerRadiusMedium)
-        }
-        .padding(AppTheme.spacing16)
-        .background(AppColors.background)
-        .shadow(radius: 1)
-    }
-
-    private var dayTypeBackgroundColor: Color {
-        switch day.dayType {
-        case .good:
-            return AppColors.accentLight
-        case .bad:
-            return Color(red: 1, green: 0.93, blue: 0.93)
-        case .neutral:
-            return AppColors.background
-        }
-    }
-}
-
-// MARK: - Lucky Hour Row
-
-struct LuckyHourRow: View {
-    let hour: LuckyHour
-
-    var body: some View {
-        HStack(spacing: AppTheme.spacing12) {
-            VStack(alignment: .leading, spacing: 2) {
-                HStack(spacing: AppTheme.spacing8) {
-                    Image(systemName: "clock.fill")
-                        .font(.system(size: 12, weight: .semibold))
-                        .foregroundStyle(AppColors.primary)
-
-                    Text(hour.timeRange)
-                        .font(.system(size: AppTheme.fontBody, weight: .semibold))
-                        .foregroundStyle(AppColors.textPrimary)
-                }
-
-                Text(hour.luckyActivities.joined(separator: ", "))
-                    .font(.system(size: AppTheme.fontCaption, weight: .regular))
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(AppColors.textSecondary)
-                    .lineLimit(1)
             }
-
-            Spacer()
-
-            Image(systemName: "star.fill")
-                .font(.system(size: 12, weight: .semibold))
-                .foregroundStyle(AppColors.eventYellow)
+            .padding(AppTheme.spacing12)
+            .background(AppColors.background)
+            .cornerRadius(AppTheme.cornerRadiusMedium)
+            .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
         }
-        .padding(AppTheme.spacing8)
-        .background(AppColors.background)
-        .cornerRadius(AppTheme.cornerRadiusSmall)
+        .buttonStyle(.plain)
+        .padding(.horizontal, AppTheme.spacing16)
+    }
+
+    private var dayTypeColor: Color {
+        switch day.dayType {
+        case .good: return AppColors.accent
+        case .bad: return AppColors.primary
+        case .neutral: return AppColors.textSecondary
+        }
+    }
+
+    private var luckyHoursText: String {
+        let hoursText = luckyHours.map { $0.compactDisplay }.joined(separator: ", ")
+        return "Gio hoang dao: \(hoursText)"
     }
 }
 
@@ -155,11 +85,13 @@ struct LuckyHourRow: View {
 
     let mockLuckyHours = [
         LuckyHour(
+            chiName: "Mão",
             startTime: "05:00",
             endTime: "07:00",
             luckyActivities: ["Bắt đầu công việc", "Khởi động dự án"]
         ),
         LuckyHour(
+            chiName: "Tỵ",
             startTime: "09:00",
             endTime: "11:00",
             luckyActivities: ["Làm việc quan trọng", "Gặp khách hàng"]
@@ -167,7 +99,9 @@ struct LuckyHourRow: View {
     ]
 
     return VStack {
-        QuickInfoBannerView(day: mockDay, luckyHours: mockLuckyHours)
+        QuickInfoBannerView(day: mockDay, luckyHours: mockLuckyHours) {
+            // onTap action
+        }
 
         Spacer()
     }

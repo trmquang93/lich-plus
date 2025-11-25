@@ -560,32 +560,6 @@ The book PDF and extraction tools are the authoritative source for verifying cal
 - Adding new calendar features
 - Resolving user-reported accuracy issues
 
-## Testing
-
-The project includes test targets for unit tests (`lich-plusTests`) and UI tests (`lich-plusUITests`). Tests can be run via Xcode or using the `run-tests.sh` command-line script.
-
-**Using the Test Runner Script:**
-The `run-tests.sh` script provides a convenient way to run tests with clean, formatted output:
-
-```bash
-# Run all tests (default)
-./run-tests.sh
-
-# Run only unit tests
-./run-tests.sh --unit
-
-# Run only UI tests
-./run-tests.sh --ui
-
-# Display help
-./run-tests.sh --help
-```
-
-The script uses `xcbeautify` for formatted output and handles errors gracefully. It's the recommended approach for command-line test execution.
-
-**Manual xcodebuild Commands:**
-For more control, you can also run tests directly using the xcodebuild commands listed in the "Essential Commands" section above.
-
 ## Deployment
 
 iOS 17.0 is the minimum deployment target. The app uses SwiftUI exclusively without legacy UIKit patterns.

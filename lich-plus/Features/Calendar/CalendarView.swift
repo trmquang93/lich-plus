@@ -11,6 +11,7 @@ import SwiftUI
 
 struct CalendarView: View {
     @StateObject private var dataManager = CalendarDataManager()
+    @State private var showDayDetail = false
 
     var body: some View {
         NavigationStack {
@@ -46,7 +47,10 @@ struct CalendarView: View {
                             let luckyHours = DayTypeCalculator.getLuckyHours(for: selectedDay.date)
                             QuickInfoBannerView(
                                 day: selectedDay,
-                                luckyHours: luckyHours
+                                luckyHours: luckyHours,
+                                onTap: {
+                                    showDayDetail = true
+                                }
                             )
                         }
 
@@ -61,6 +65,11 @@ struct CalendarView: View {
                         Spacer(minLength: AppTheme.spacing16)
                     }
                     .background(AppColors.background)
+                }
+            }
+            .navigationDestination(isPresented: $showDayDetail) {
+                if let selectedDay = dataManager.selectedDay {
+                    DayDetailView(day: selectedDay)
                 }
             }
         }
