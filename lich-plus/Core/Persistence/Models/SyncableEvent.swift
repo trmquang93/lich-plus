@@ -28,6 +28,9 @@ final class SyncableEvent {
     var source: String      // EventSource.rawValue
     var isDeleted: Bool
     var createdAt: Date
+    var itemType: String        // "task" or "event" - default: "task"
+    var priority: String        // "none", "low", "medium", "high" - default: "none"
+    var location: String?       // For events (meeting room, address)
 
     init(
         id: UUID = UUID(),
@@ -47,7 +50,10 @@ final class SyncableEvent {
         syncStatus: String = SyncStatus.pending.rawValue,
         source: String = EventSource.local.rawValue,
         isDeleted: Bool = false,
-        createdAt: Date = Date()
+        createdAt: Date = Date(),
+        itemType: String = "task",
+        priority: String = "none",
+        location: String? = nil
     ) {
         self.id = id
         self.ekEventIdentifier = ekEventIdentifier
@@ -67,6 +73,9 @@ final class SyncableEvent {
         self.source = source
         self.isDeleted = isDeleted
         self.createdAt = createdAt
+        self.itemType = itemType
+        self.priority = priority
+        self.location = location
     }
 
     // Computed properties for type-safe enum access
@@ -76,6 +85,14 @@ final class SyncableEvent {
 
     var sourceEnum: EventSource {
         EventSource(rawValue: source) ?? .local
+    }
+
+    var itemTypeEnum: ItemType {
+        ItemType(rawValue: itemType) ?? .task
+    }
+
+    var priorityEnum: Priority {
+        Priority(rawValue: priority) ?? .none
     }
 
     // Update sync status

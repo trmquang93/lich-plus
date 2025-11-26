@@ -1,15 +1,14 @@
 //
-//  TaskCard.swift
+//  EventCard.swift
 //  lich-plus
 //
-//  Created by Quang Tran Minh on 23/11/25.
+//  Created by Quang Tran Minh on 26/11/25.
 //
 
 import SwiftUI
 
-struct TaskCard: View {
+struct EventCard: View {
     let task: TaskItem
-    let onToggleCompletion: (TaskItem) -> Void
     let onDelete: (TaskItem) -> Void
     let onEdit: (TaskItem) -> Void
 
@@ -17,27 +16,26 @@ struct TaskCard: View {
 
     var body: some View {
         HStack(spacing: AppTheme.spacing12) {
-            // Checkbox
-            Button(action: { onToggleCompletion(task) }) {
-                Image(systemName: task.isCompleted ? "checkmark.circle.fill" : "circle")
-                    .font(.system(size: 24))
-                    .foregroundStyle(task.isCompleted ? AppColors.primary : AppColors.borderLight)
+            // Time Badge
+            if let timeDisplay = task.timeDisplay {
+                VStack {
+                    Text(timeDisplay)
+                        .font(.system(size: AppTheme.fontCaption, weight: .semibold))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, AppTheme.spacing8)
+                        .padding(.vertical, AppTheme.spacing4)
+                        .background(AppColors.primary)
+                        .cornerRadius(AppTheme.cornerRadiusSmall)
+                }
+                .frame(width: 50)
             }
 
-            // Task Content
+            // Event Content
             VStack(alignment: .leading, spacing: AppTheme.spacing4) {
                 HStack(spacing: AppTheme.spacing8) {
-                    // Priority Indicator
-                    if task.priority != .none {
-                        Circle()
-                            .fill(task.priority.color)
-                            .frame(width: 6, height: 6)
-                    }
-
                     Text(task.title)
                         .font(.system(size: AppTheme.fontBody, weight: .semibold))
                         .foregroundStyle(AppColors.textPrimary)
-                        .strikethrough(task.isCompleted, color: AppColors.textSecondary)
                         .lineLimit(1)
 
                     Spacer()
@@ -52,8 +50,19 @@ struct TaskCard: View {
                         .cornerRadius(AppTheme.cornerRadiusSmall)
                 }
 
-                // Time and Details
-                HStack(spacing: AppTheme.spacing12) {
+                // Location and Duration
+                VStack(alignment: .leading, spacing: AppTheme.spacing4) {
+                    if let location = task.location {
+                        HStack(spacing: AppTheme.spacing4) {
+                            Image(systemName: "mappin.circle.fill")
+                                .font(.system(size: 12))
+                            Text(location)
+                                .font(.system(size: AppTheme.fontCaption))
+                                .lineLimit(1)
+                        }
+                        .foregroundStyle(AppColors.textSecondary)
+                    }
+
                     if let timeRange = task.timeRangeDisplay {
                         HStack(spacing: AppTheme.spacing4) {
                             Image(systemName: "clock")
@@ -63,34 +72,26 @@ struct TaskCard: View {
                         }
                         .foregroundStyle(AppColors.textSecondary)
                     }
-
-                    if let reminder = task.reminderDisplay {
-                        HStack(spacing: AppTheme.spacing4) {
-                            Image(systemName: "bell")
-                                .font(.system(size: 12))
-                            Text(reminder)
-                                .font(.system(size: AppTheme.fontCaption))
-                        }
-                        .foregroundStyle(AppColors.textSecondary)
-                    }
-
-                    Spacer()
                 }
             }
 
             // Actions
             VStack(spacing: AppTheme.spacing8) {
-                Button(action: { onEdit(task) }) {
+                Button(action: {
+                    onEdit(task)
+                }, label: {
                     Image(systemName: "pencil")
                         .font(.system(size: 14))
                         .foregroundStyle(AppColors.primary)
-                }
+                })
 
-                Button(action: { showDeleteConfirmation = true }) {
+                Button(action: {
+                    showDeleteConfirmation = true
+                }, label: {
                     Image(systemName: "trash")
                         .font(.system(size: 14))
                         .foregroundStyle(AppColors.primary)
-                }
+                })
             }
         }
         .padding(AppTheme.spacing12)
@@ -104,29 +105,30 @@ struct TaskCard: View {
         .confirmationDialog(
             "task.delete",
             isPresented: $showDeleteConfirmation,
-            presenting: task
-        ) { _ in
-            Button("task.delete", role: .destructive) {
-                onDelete(task)
+            presenting: task,
+            actions: { _ in
+                Button("task.delete", role: .destructive) {
+                    onDelete(task)
+                }
+            },
+            message: { _ in
+                Text(String(localized: "event.deleteConfirmMessage"))
             }
-        } message: { _ in
-            Text(String(localized: "task.deleteConfirmMessage"))
-        }
+        )
     }
 }
 
 #Preview {
-    TaskCard(
+    EventCard(
         task: TaskItem(
-            title: "Sample Task",
+            title: "Team Meeting",
             date: Date(),
             startTime: Date(),
             endTime: Date(timeIntervalSinceNow: 3600),
-            category: .work,
-            reminderMinutes: 15,
-            priority: .high
+            category: .meeting,
+            itemType: .event,
+            location: "Conference Room 123"
         ),
-        onToggleCompletion: { _ in },
         onDelete: { _ in },
         onEdit: { _ in }
     )

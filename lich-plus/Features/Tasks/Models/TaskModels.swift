@@ -7,6 +7,62 @@
 
 import Foundation
 import SwiftData
+import SwiftUI
+
+// MARK: - Item Type
+
+enum ItemType: String, CaseIterable, Identifiable {
+    case task = "task"
+    case event = "event"
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .task:
+            return String(localized: "item.task")
+        case .event:
+            return String(localized: "item.event")
+        }
+    }
+}
+
+// MARK: - Priority
+
+enum Priority: String, CaseIterable, Identifiable {
+    case none = "none"
+    case low = "low"
+    case medium = "medium"
+    case high = "high"
+
+    var id: String { rawValue }
+
+    var displayName: String {
+        switch self {
+        case .none:
+            return String(localized: "priority.none")
+        case .low:
+            return String(localized: "priority.low")
+        case .medium:
+            return String(localized: "priority.medium")
+        case .high:
+            return String(localized: "priority.high")
+        }
+    }
+
+    var color: Color {
+        switch self {
+        case .none:
+            return AppColors.textSecondary
+        case .low:
+            return AppColors.eventBlue
+        case .medium:
+            return AppColors.eventYellow
+        case .high:
+            return AppColors.primary
+        }
+    }
+}
 
 // MARK: - Task Category
 
@@ -53,6 +109,23 @@ enum TaskCategory: String, CaseIterable, Identifiable {
             return "secondary"
         }
     }
+
+    var colorValue: Color {
+        switch self {
+        case .work:
+            return AppColors.eventBlue
+        case .personal:
+            return AppColors.primary
+        case .birthday:
+            return AppColors.eventPink
+        case .holiday:
+            return AppColors.eventOrange
+        case .meeting:
+            return AppColors.eventYellow
+        case .other:
+            return AppColors.secondary
+        }
+    }
 }
 
 // MARK: - Recurrence Type
@@ -97,6 +170,9 @@ struct TaskItem: Identifiable, Equatable {
     var recurrence: RecurrenceType
     var createdAt: Date
     var updatedAt: Date
+    var itemType: ItemType
+    var priority: Priority
+    var location: String?
 
     init(
         id: UUID = UUID(),
@@ -110,7 +186,10 @@ struct TaskItem: Identifiable, Equatable {
         reminderMinutes: Int? = nil,
         recurrence: RecurrenceType = .none,
         createdAt: Date = Date(),
-        updatedAt: Date = Date()
+        updatedAt: Date = Date(),
+        itemType: ItemType = .task,
+        priority: Priority = .none,
+        location: String? = nil
     ) {
         self.id = id
         self.title = title
@@ -124,6 +203,9 @@ struct TaskItem: Identifiable, Equatable {
         self.recurrence = recurrence
         self.createdAt = createdAt
         self.updatedAt = updatedAt
+        self.itemType = itemType
+        self.priority = priority
+        self.location = location
     }
 
     // MARK: - Computed Properties
@@ -198,13 +280,18 @@ struct TaskItem: Identifiable, Equatable {
         self.date = syncable.startDate
         self.startTime = syncable.isAllDay ? nil : syncable.startDate
         self.endTime = syncable.endDate
-        self.category = TaskCategory(rawValue: syncable.category.prefix(1).uppercased() + syncable.category.dropFirst()) ?? .other
+        self.category = TaskCategory.allCases.first(where: {
+            $0.rawValue.caseInsensitiveCompare(syncable.category) == .orderedSame
+        }) ?? .other
         self.notes = syncable.notes
         self.isCompleted = syncable.isCompleted
         self.reminderMinutes = syncable.reminderMinutes
         self.recurrence = .none  // TODO: decode from recurrenceRuleData
         self.createdAt = syncable.createdAt
         self.updatedAt = syncable.lastModifiedLocal
+        self.itemType = ItemType(rawValue: syncable.itemType) ?? .task
+        self.priority = Priority(rawValue: syncable.priority) ?? .none
+        self.location = syncable.location
     }
 
     /// Convert TaskItem to SyncableEvent for persistence
@@ -221,6 +308,9 @@ struct TaskItem: Identifiable, Equatable {
             existing.notes = self.notes
             existing.isCompleted = self.isCompleted
             existing.reminderMinutes = self.reminderMinutes
+            existing.itemType = self.itemType.rawValue
+            existing.priority = self.priority.rawValue
+            existing.location = self.location
             existing.lastModifiedLocal = Date()
             return existing
         } else {
@@ -236,7 +326,10 @@ struct TaskItem: Identifiable, Equatable {
                 category: self.category.rawValue,
                 reminderMinutes: self.reminderMinutes,
                 syncStatus: SyncStatus.pending.rawValue,
-                createdAt: self.createdAt
+                createdAt: self.createdAt,
+                itemType: self.itemType.rawValue,
+                priority: self.priority.rawValue,
+                location: self.location
             )
         }
     }

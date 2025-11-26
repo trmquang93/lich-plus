@@ -22,6 +22,8 @@ struct TasksView: View {
 
     @State private var searchText: String = ""
     @State private var selectedFilter: TaskFilter = .all
+    @State private var viewMode: ViewMode = .today
+    @State private var selectedDate: Date = Date()
     @State private var showAddSheet: Bool = false
     @State private var editingEventId: UUID? = nil
     @State private var showEditSheet: Bool = false
@@ -30,76 +32,6 @@ struct TasksView: View {
 
     private var tasks: [TaskItem] {
         syncableEvents.map { TaskItem(from: $0) }
-    }
-
-    var body: some View {
-        NavigationStack {
-            VStack(spacing: 0) {
-                // Header with Search
-                TaskListHeader(
-                    searchText: $searchText,
-                    showAddSheet: $showAddSheet
-                )
-
-                // Filter Bar
-                FilterBar(
-                    selectedFilter: $selectedFilter,
-                    taskCounts: calculateTaskCounts()
-                )
-
-                // Task Sections
-                ScrollView {
-                    if filteredAndGroupedTasks.isEmpty {
-                        VStack(spacing: AppTheme.spacing16) {
-                            Image(systemName: "checkmark.circle")
-                                .font(.system(size: 48))
-                                .foregroundStyle(AppColors.borderLight)
-
-                            Text("No tasks found")
-                                .font(.system(size: AppTheme.fontBody))
-                                .foregroundStyle(AppColors.textSecondary)
-                        }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .padding(AppTheme.spacing24)
-                    } else {
-                        VStack(spacing: AppTheme.spacing24) {
-                            ForEach(filteredAndGroupedTasks, id: \.title) { section in
-                                TaskSection(
-                                    title: section.title,
-                                    tasks: section.tasks,
-                                    onToggleCompletion: toggleTaskCompletion,
-                                    onDelete: deleteTask,
-                                    onEdit: startEditingTask
-                                )
-                            }
-                        }
-                        .padding(.vertical, AppTheme.spacing16)
-                    }
-                }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-            }
-            .background(AppColors.background)
-            .sheet(isPresented: $showAddSheet) {
-                AddEditTaskSheet(
-                    editingEventId: nil,
-                    onSave: { _ in
-                        showAddSheet = false
-                    }
-                )
-                .environmentObject(syncService)
-            }
-            .sheet(isPresented: $showEditSheet) {
-                if let editingEventId = editingEventId {
-                    AddEditTaskSheet(
-                        editingEventId: editingEventId,
-                        onSave: { _ in
-                            showEditSheet = false
-                        }
-                    )
-                    .environmentObject(syncService)
-                }
-            }
-        }
     }
 
     private var filteredTasks: [TaskItem] {
@@ -128,52 +60,89 @@ struct TasksView: View {
         return filtered.sorted { $0.date < $1.date }
     }
 
-    private var filteredAndGroupedTasks: [(title: String, tasks: [TaskItem])] {
-        let filtered = filteredTasks
+    private var todayTasks: [TaskItem] {
+        filteredTasks.filter { $0.isToday }
+            .sorted { ($0.startTime ?? $0.date) < ($1.startTime ?? $1.date) }
+    }
 
-        var today: [TaskItem] = []
-        var tomorrow: [TaskItem] = []
-        var upcoming: [TaskItem] = []
+    private var weekTasks: [TaskItem] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        guard let weekEnd = calendar.date(byAdding: .day, value: 7, to: today) else { return [] }
+        return filteredTasks.filter { $0.date >= today && $0.date < weekEnd }
+            .sorted { $0.date < $1.date }
+    }
 
-        for task in filtered {
-            if task.isToday {
-                today.append(task)
-            } else if task.isTomorrow {
-                tomorrow.append(task)
-            } else {
-                upcoming.append(task)
+    var body: some View {
+        NavigationStack {
+            VStack(spacing: 0) {
+                // Header with Search
+                TaskListHeader(
+                    searchText: $searchText,
+                    showAddSheet: $showAddSheet
+                )
+
+                // View Mode Switcher (replaces FilterBar)
+                ViewModeSwitcher(selectedMode: $viewMode)
+                    .padding(.vertical, AppTheme.spacing8)
+                    .padding(.horizontal, AppTheme.spacing16)
+
+                // Content based on view mode
+                switch viewMode {
+                case .today:
+                    TodayView(
+                        tasks: todayTasks,
+                        onToggleCompletion: toggleTaskCompletion,
+                        onDelete: deleteTask,
+                        onEdit: startEditingTask,
+                        onAddNew: { showAddSheet = true }
+                    )
+
+                case .thisWeek:
+                    WeekView(
+                        tasks: weekTasks,
+                        onToggleCompletion: toggleTaskCompletion,
+                        onDelete: deleteTask,
+                        onEdit: startEditingTask,
+                        onAddNew: { showAddSheet = true }
+                    )
+
+                case .calendar:
+                    CalendarModeView(
+                        tasks: filteredTasks,
+                        selectedDate: $selectedDate,
+                        onToggleCompletion: toggleTaskCompletion,
+                        onDelete: deleteTask,
+                        onEdit: startEditingTask,
+                        onAddNew: { showAddSheet = true }
+                    )
+                }
+            }
+            .background(AppColors.background)
+            .sheet(isPresented: $showAddSheet) {
+                AddEditTaskSheet(
+                    editingEventId: nil,
+                    onSave: { _ in
+                        showAddSheet = false
+                    }
+                )
+                .environmentObject(syncService)
+            }
+            .sheet(isPresented: $showEditSheet) {
+                if let editingEventId = editingEventId {
+                    AddEditTaskSheet(
+                        editingEventId: editingEventId,
+                        onSave: { _ in
+                            showEditSheet = false
+                        }
+                    )
+                    .environmentObject(syncService)
+                }
             }
         }
-
-        var sections: [(String, [TaskItem])] = []
-
-        if !today.isEmpty {
-            sections.append((String(localized: "task.today"), today))
-        }
-
-        if !tomorrow.isEmpty {
-            sections.append((String(localized: "task.tomorrow"), tomorrow))
-        }
-
-        if !upcoming.isEmpty {
-            sections.append((String(localized: "task.upcoming"), upcoming))
-        }
-
-        return sections
     }
 
     // MARK: - Methods
-
-    private func calculateTaskCounts() -> [TaskFilter: Int] {
-        var counts: [TaskFilter: Int] = [:]
-
-        counts[.all] = tasks.count
-        counts[.today] = tasks.filter { $0.isToday }.count
-        counts[.thisWeek] = tasks.filter { $0.isThisWeek }.count
-        counts[.thisMonth] = tasks.filter { $0.isThisMonth }.count
-
-        return counts
-    }
 
     private func toggleTaskCompletion(_ task: TaskItem) {
         if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {

@@ -23,6 +23,11 @@ struct AddEditTaskSheet: View {
     @State private var selectedRecurrence: RecurrenceType = .none
     @State private var notes: String = ""
 
+    // New fields for Phase 4
+    @State private var selectedItemType: ItemType = .task
+    @State private var selectedPriority: Priority = .none
+    @State private var location: String = ""
+
     // SwiftData support
     @Query private var allEvents: [SyncableEvent]
 
@@ -41,6 +46,14 @@ struct AddEditTaskSheet: View {
         !title.trimmingCharacters(in: .whitespaces).isEmpty
     }
 
+    var navigationTitle: String {
+        if isEditMode {
+            return selectedItemType == .task ? "task.edit" : "event.edit"
+        } else {
+            return selectedItemType == .task ? "task.addNew" : "event.addNew"
+        }
+    }
+
     init(
         editingEventId: UUID? = nil,
         onSave: @escaping (SyncableEvent) -> Void
@@ -52,6 +65,51 @@ struct AddEditTaskSheet: View {
     var body: some View {
         NavigationStack {
             Form {
+                // Item Type Selector Section
+                Section {
+                    HStack(spacing: AppTheme.spacing12) {
+                        // Task Button
+                        Button(action: { selectedItemType = .task }) {
+                            VStack(spacing: AppTheme.spacing4) {
+                                Image(systemName: "checkmark.circle")
+                                    .font(.system(size: 24))
+                                Text(String(localized: "addSheet.typeTask"))
+                                    .font(.system(size: AppTheme.fontCaption))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, AppTheme.spacing12)
+                            .background(selectedItemType == .task ? AppColors.primary.opacity(0.1) : AppColors.backgroundLightGray)
+                            .foregroundStyle(selectedItemType == .task ? AppColors.primary : AppColors.textSecondary)
+                            .cornerRadius(AppTheme.cornerRadiusMedium)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium)
+                                    .stroke(selectedItemType == .task ? AppColors.primary : Color.clear, lineWidth: 2)
+                            )
+                        }
+                        .buttonStyle(.plain)
+
+                        // Event Button
+                        Button(action: { selectedItemType = .event }) {
+                            VStack(spacing: AppTheme.spacing4) {
+                                Image(systemName: "calendar")
+                                    .font(.system(size: 24))
+                                Text(String(localized: "addSheet.typeEvent"))
+                                    .font(.system(size: AppTheme.fontCaption))
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, AppTheme.spacing12)
+                            .background(selectedItemType == .event ? AppColors.primary.opacity(0.1) : AppColors.backgroundLightGray)
+                            .foregroundStyle(selectedItemType == .event ? AppColors.primary : AppColors.textSecondary)
+                            .cornerRadius(AppTheme.cornerRadiusMedium)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium)
+                                    .stroke(selectedItemType == .event ? AppColors.primary : Color.clear, lineWidth: 2)
+                            )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
                 // Title Section
                 Section(header: Text("task.title")) {
                     TextField("task.title", text: $title)
@@ -65,7 +123,7 @@ struct AddEditTaskSheet: View {
                         displayedComponents: .date
                     )
 
-                    Toggle("Add Time", isOn: $hasTime)
+                    Toggle(String(localized: "task.addTime"), isOn: $hasTime)
 
                     if hasTime {
                         DatePicker(
@@ -93,10 +151,34 @@ struct AddEditTaskSheet: View {
                                 Spacer()
 
                                 Circle()
-                                    .fill(getCategoryColor(category))
+                                    .fill(category.colorValue)
                                     .frame(width: 12, height: 12)
                             }
                         }
+                    }
+                }
+
+                // Priority Section (Tasks only)
+                if selectedItemType == .task {
+                    Section(header: Text("task.priority")) {
+                        Picker("task.priority", selection: $selectedPriority) {
+                            ForEach(Priority.allCases) { priority in
+                                HStack {
+                                    Circle()
+                                        .fill(priority.color)
+                                        .frame(width: 12, height: 12)
+                                    Text(priority.displayName)
+                                }
+                                .tag(priority)
+                            }
+                        }
+                    }
+                }
+
+                // Location Section (Events only)
+                if selectedItemType == .event {
+                    Section(header: Text("task.location")) {
+                        TextField("task.locationPlaceholder", text: $location)
                     }
                 }
 
@@ -111,11 +193,13 @@ struct AddEditTaskSheet: View {
                     }
                 }
 
-                // Recurrence Section
-                Section(header: Text("task.recurrence")) {
-                    Picker("task.recurrence", selection: $selectedRecurrence) {
-                        ForEach(RecurrenceType.allCases, id: \.self) { recurrence in
-                            Text(recurrence.displayName).tag(recurrence)
+                // Recurrence Section (Tasks only)
+                if selectedItemType == .task {
+                    Section(header: Text("task.recurrence")) {
+                        Picker("task.recurrence", selection: $selectedRecurrence) {
+                            ForEach(RecurrenceType.allCases, id: \.self) { recurrence in
+                                Text(recurrence.displayName).tag(recurrence)
+                            }
                         }
                     }
                 }
@@ -127,7 +211,7 @@ struct AddEditTaskSheet: View {
                         .foregroundStyle(AppColors.textPrimary)
                 }
             }
-            .navigationTitle(isEditMode ? "task.edit" : "task.addNew")
+            .navigationTitle(navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -156,9 +240,14 @@ struct AddEditTaskSheet: View {
     private func populateForm(with syncableEvent: SyncableEvent) {
         title = syncableEvent.title
         date = syncableEvent.startDate
-        selectedCategory = TaskCategory(rawValue: syncableEvent.category.prefix(1).uppercased() + syncableEvent.category.dropFirst()) ?? .personal
+        selectedCategory = TaskCategory.allCases.first(where: {
+            $0.rawValue.caseInsensitiveCompare(syncableEvent.category) == .orderedSame
+        }) ?? .personal
         selectedReminder = syncableEvent.reminderMinutes
         notes = syncableEvent.notes ?? ""
+        selectedItemType = syncableEvent.itemTypeEnum
+        selectedPriority = syncableEvent.priorityEnum
+        location = syncableEvent.location ?? ""
 
         if !syncableEvent.isAllDay, let startDate = syncableEvent.startDate as Date? {
             hasTime = true
@@ -188,6 +277,9 @@ struct AddEditTaskSheet: View {
             existing.category = selectedCategory.rawValue
             existing.notes = notes.isEmpty ? nil : notes
             existing.reminderMinutes = selectedReminder
+            existing.itemType = selectedItemType.rawValue
+            existing.priority = selectedPriority.rawValue
+            existing.location = location.isEmpty ? nil : location
             existing.lastModifiedLocal = Date()
             existing.setSyncStatus(.pending)
             syncableEvent = existing
@@ -201,7 +293,10 @@ struct AddEditTaskSheet: View {
                 notes: notes.isEmpty ? nil : notes,
                 category: selectedCategory.rawValue,
                 reminderMinutes: selectedReminder,
-                syncStatus: SyncStatus.pending.rawValue
+                syncStatus: SyncStatus.pending.rawValue,
+                itemType: selectedItemType.rawValue,
+                priority: selectedPriority.rawValue,
+                location: location.isEmpty ? nil : location
             )
             modelContext.insert(syncableEvent)
         }
@@ -218,22 +313,6 @@ struct AddEditTaskSheet: View {
         dismiss()
     }
 
-    private func getCategoryColor(_ category: TaskCategory) -> Color {
-        switch category {
-        case .work:
-            return AppColors.eventBlue
-        case .personal:
-            return AppColors.primary
-        case .birthday:
-            return AppColors.eventPink
-        case .holiday:
-            return AppColors.eventOrange
-        case .meeting:
-            return AppColors.eventYellow
-        case .other:
-            return AppColors.secondary
-        }
-    }
 }
 
 #Preview {
