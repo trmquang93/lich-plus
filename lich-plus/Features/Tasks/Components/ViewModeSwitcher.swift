@@ -12,7 +12,7 @@ import SwiftUI
 enum ViewMode: String, CaseIterable, Identifiable {
     case today
     case thisWeek
-    case calendar
+    case all
 
     var id: String { rawValue }
 
@@ -22,8 +22,8 @@ enum ViewMode: String, CaseIterable, Identifiable {
             return String(localized: "viewMode.today")
         case .thisWeek:
             return String(localized: "viewMode.thisWeek")
-        case .calendar:
-            return String(localized: "viewMode.calendar")
+        case .all:
+            return String(localized: "viewMode.all")
         }
     }
 }

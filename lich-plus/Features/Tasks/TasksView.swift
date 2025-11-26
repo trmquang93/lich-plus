@@ -23,7 +23,6 @@ struct TasksView: View {
     @State private var searchText: String = ""
     @State private var selectedFilter: TaskFilter = .all
     @State private var viewMode: ViewMode = .today
-    @State private var selectedDate: Date = Date()
     @State private var showAddSheet: Bool = false
     @State private var editingEventId: UUID? = nil
     @State private var showEditSheet: Bool = false
@@ -107,10 +106,9 @@ struct TasksView: View {
                         onAddNew: { showAddSheet = true }
                     )
 
-                case .calendar:
-                    CalendarModeView(
+                case .all:
+                    AllTasksView(
                         tasks: filteredTasks,
-                        selectedDate: $selectedDate,
                         onToggleCompletion: toggleTaskCompletion,
                         onDelete: deleteTask,
                         onEdit: startEditingTask,
