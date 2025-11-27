@@ -154,6 +154,26 @@ lich-plus/
 │   │   └── Theme.swift             # Design system (colors, spacing, typography)
 │   ├── Features/                   # Feature-specific code organized by domain
 │   │   ├── Calendar/               # Calendar feature
+│   │   │   ├── Components/
+│   │   │   │   ├── CalendarHeaderView.swift      # Header with month/year navigation and picker
+│   │   │   │   ├── MonthPickerView.swift         # Apple Calendar-style month picker (3x4 grid, swipe navigation)
+│   │   │   │   ├── CalendarGridView.swift        # Calendar day grid display
+│   │   │   │   ├── QuickInfoBannerView.swift     # Quick astrological info banner
+│   │   │   │   ├── DayDetailView.swift           # Detailed day view with astrological data
+│   │   │   │   └── EventsListView.swift          # Events display for selected day
+│   │   │   ├── Managers/
+│   │   │   │   └── CalendarDataManager.swift     # Calendar data and month navigation
+│   │   │   ├── Models/
+│   │   │   │   └── CalendarModels.swift          # Calendar, CalendarDay, CalendarMonth models
+│   │   │   ├── Utilities/
+│   │   │   │   ├── HoangDaoCalculator.swift      # 12 Trực (zodiac hours) and day quality calculation
+│   │   │   │   ├── CanChiCalculator.swift        # Can-Chi calculation for date components
+│   │   │   │   ├── LucHacDaoCalculator.swift     # Lục Hắc Đạo (unlucky days) detection
+│   │   │   │   ├── StarCalculator.swift          # Star data retrieval and scoring
+│   │   │   │   └── AstrologyData.swift           # Special festival dates and astrological data
+│   │   │   ├── Data/
+│   │   │   │   ├── Month1StarData.swift through Month12StarData.swift  # Star data for all 12 months
+│   │   │   │   └── StarModels.swift              # Good and bad star enums and data structures
 │   │   │   └── CalendarView.swift
 │   │   ├── Tasks/                  # Tasks feature
 │   │   │   ├── Models/
@@ -251,6 +271,52 @@ The app uses Xcode's **String Catalog** format (`Localizable.xcstrings`) for man
 ### Working with SwiftUI Previews
 
 All views include `#Preview` blocks for Xcode canvas preview support. Use the Xcode canvas to iterate on UI without building.
+
+### Working with the Calendar Month Picker
+
+The Calendar feature includes an Apple Calendar-style month picker for quick month/year navigation:
+
+**MonthPickerView (`MonthPickerView.swift`):**
+- 3x4 grid layout displaying all 12 months with abbreviated labels (Th.1 through Th.12)
+- Year navigation with left/right chevron buttons
+- Year range bounds: 1900-2100
+- Vertical swipe gesture support: swipe up = next year, swipe down = previous year
+- Three visual states for months:
+  - Current month (today): Red background (AppColors.primary) with white text
+  - Selected month (from selectedDate): Light red background (AppColors.backgroundLight)
+  - Other months: Default text on transparent background
+- Bottom "Done" button to dismiss the picker
+
+**Integration (`CalendarHeaderView.swift`):**
+- Month/year text is tappable to open the month picker as a bottom sheet
+- Sheet presentation with `.medium` and `.large` detents
+- Optional callback `onMonthSelected: ((Int, Int) -> Void)?` for month selection handling
+
+**Data Manager (`CalendarDataManager.swift`):**
+- New method: `goToMonth(_ month: Int, year: Int)`
+  - Creates a date for the first day of the specified month/year
+  - Regenerates the calendar month using `generateCalendarMonth()`
+  - Clears the selected day (to force re-selection in new month)
+  - Handles invalid date components gracefully
+
+**Usage Example:**
+```swift
+// In CalendarView
+CalendarHeaderView(
+    selectedDate: .constant(Date()),
+    onPreviousMonth: { dataManager.goToPreviousMonth() },
+    onNextMonth: { dataManager.goToNextMonth() },
+    onMonthSelected: { month, year in
+        dataManager.goToMonth(month, year: year)
+    }
+)
+```
+
+**Design System Integration:**
+- Colors: AppColors.primary, AppColors.backgroundLight, AppColors.textPrimary
+- Spacing: AppTheme.spacing8, AppTheme.spacing12, AppTheme.spacing16
+- Typography: AppTheme.fontBody, AppTheme.fontTitle2, AppTheme.fontTitle3
+- Corner radius: AppTheme.cornerRadiusMedium, AppTheme.cornerRadiusLarge
 
 ### Working with the Tasks Feature
 
