@@ -22,8 +22,6 @@ struct TasksView: View {
     private var syncableEvents: [SyncableEvent]
 
     @State private var searchText: String = ""
-    @State private var selectedFilter: TaskFilter = .all
-    @State private var viewMode: ViewMode = .today
     @State private var showAddSheet: Bool = false
     @State private var editingEventId: UUID? = nil
     @State private var showEditSheet: Bool = false
@@ -55,32 +53,7 @@ struct TasksView: View {
             }
         }
 
-        // Apply date filter
-        switch selectedFilter {
-        case .all:
-            break
-        case .today:
-            filtered = filtered.filter { $0.isToday }
-        case .thisWeek:
-            filtered = filtered.filter { $0.isThisWeek }
-        case .thisMonth:
-            filtered = filtered.filter { $0.isThisMonth }
-        }
-
         return filtered.sorted { $0.date < $1.date }
-    }
-
-    private var todayTasks: [TaskItem] {
-        filteredTasks.filter { $0.isToday }
-            .sorted { ($0.startTime ?? $0.date) < ($1.startTime ?? $1.date) }
-    }
-
-    private var weekTasks: [TaskItem] {
-        let calendar = Calendar.current
-        let today = calendar.startOfDay(for: Date())
-        guard let weekEnd = calendar.date(byAdding: .day, value: 7, to: today) else { return [] }
-        return filteredTasks.filter { $0.date >= today && $0.date < weekEnd }
-            .sorted { $0.date < $1.date }
     }
 
     var body: some View {
@@ -93,40 +66,14 @@ struct TasksView: View {
                     isAISearchMode: $isAISearchMode
                 )
 
-                // View Mode Switcher (replaces FilterBar)
-                ViewModeSwitcher(selectedMode: $viewMode)
-                    .padding(.vertical, AppTheme.spacing8)
-                    .padding(.horizontal, AppTheme.spacing16)
-
-                // Content based on view mode
-                switch viewMode {
-                case .today:
-                    TodayView(
-                        tasks: todayTasks,
-                        onToggleCompletion: toggleTaskCompletion,
-                        onDelete: deleteTask,
-                        onEdit: startEditingTask,
-                        onAddNew: { showAddSheet = true }
-                    )
-
-                case .thisWeek:
-                    WeekView(
-                        tasks: weekTasks,
-                        onToggleCompletion: toggleTaskCompletion,
-                        onDelete: deleteTask,
-                        onEdit: startEditingTask,
-                        onAddNew: { showAddSheet = true }
-                    )
-
-                case .all:
-                    AllTasksView(
-                        tasks: filteredTasks,
-                        onToggleCompletion: toggleTaskCompletion,
-                        onDelete: deleteTask,
-                        onEdit: startEditingTask,
-                        onAddNew: { showAddSheet = true }
-                    )
-                }
+                // Infinite Timeline View
+                InfiniteTimelineView(
+                    tasks: filteredTasks,
+                    onToggleCompletion: toggleTaskCompletion,
+                    onDelete: deleteTask,
+                    onEdit: startEditingTask,
+                    onAddNew: { showAddSheet = true }
+                )
             }
             .background(AppColors.background)
             .onChange(of: searchText) { oldValue, newValue in

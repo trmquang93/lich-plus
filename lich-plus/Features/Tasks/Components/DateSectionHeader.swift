@@ -9,6 +9,7 @@ import SwiftUI
 
 struct DateSectionHeader: View {
     let date: Date
+    var showTodayBadge: Bool = false
 
     var vietnameseWeekday: String {
         let formatter = DateFormatter()
@@ -24,18 +25,30 @@ struct DateSectionHeader: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: AppTheme.spacing8) {
-            // Solar date with Vietnamese weekday
-            Text(vietnameseWeekday)
-                .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
-                .foregroundStyle(AppColors.textPrimary)
+        HStack(spacing: AppTheme.spacing12) {
+            VStack(alignment: .leading, spacing: AppTheme.spacing8) {
+                // Solar date with Vietnamese weekday
+                Text(vietnameseWeekday)
+                    .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
+                    .foregroundStyle(AppColors.textPrimary)
 
-            // Lunar date with year Can-Chi
-            Text(lunarDateDisplay)
-                .font(.system(size: AppTheme.fontBody, weight: .regular))
-                .foregroundStyle(AppColors.textSecondary)
+                // Lunar date with year Can-Chi
+                Text(lunarDateDisplay)
+                    .font(.system(size: AppTheme.fontBody, weight: .regular))
+                    .foregroundStyle(AppColors.textSecondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            if showTodayBadge {
+                Text(String(localized: "date.today"))
+                    .font(.system(size: AppTheme.fontCaption, weight: .semibold))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, AppTheme.spacing8)
+                    .padding(.vertical, AppTheme.spacing4)
+                    .background(AppColors.primary)
+                    .clipShape(Capsule())
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(.horizontal, AppTheme.spacing16)
         .padding(.vertical, AppTheme.spacing12)
     }
