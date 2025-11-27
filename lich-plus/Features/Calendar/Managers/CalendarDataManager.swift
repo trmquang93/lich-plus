@@ -46,7 +46,8 @@ class CalendarDataManager: ObservableObject {
     // MARK: - Public Methods
 
     func goToPreviousMonth() {
-        guard let previousDate = calendar.date(byAdding: .month, value: -1, to: currentMonth.days.first?.date ?? Date()) else {
+        let currentDate = currentMonth.days.first { $0.isCurrentMonth }?.date ?? Date()
+        guard let previousDate = calendar.date(byAdding: .month, value: -1, to: currentDate) else {
             return
         }
         currentMonth = generateCalendarMonth(for: previousDate)
@@ -54,7 +55,8 @@ class CalendarDataManager: ObservableObject {
     }
 
     func goToNextMonth() {
-        guard let nextDate = calendar.date(byAdding: .month, value: 1, to: currentMonth.days.last?.date ?? Date()) else {
+        let currentDate = currentMonth.days.first { $0.isCurrentMonth }?.date ?? Date()
+        guard let nextDate = calendar.date(byAdding: .month, value: 1, to: currentDate) else {
             return
         }
         currentMonth = generateCalendarMonth(for: nextDate)
