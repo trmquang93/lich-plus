@@ -60,6 +60,9 @@
         }
       }
     },
+    "Account" : {
+
+    },
     "Add Time" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -315,6 +318,9 @@
         }
       }
     },
+    "Available Calendars" : {
+
+    },
     "Background Sync" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -433,6 +439,9 @@
           }
         }
       }
+    },
+    "Calendars" : {
+
     },
     "Calendars to Sync" : {
       "extractionState" : "manual",
@@ -603,6 +612,18 @@
           }
         }
       }
+    },
+    "Choose which Google calendars to display in this app." : {
+
+    },
+    "Connect with Google" : {
+
+    },
+    "Connect your Google account to sync your Google Calendar events with this app." : {
+
+    },
+    "Connected" : {
+
     },
     "D" : {
       "extractionState" : "manual",
@@ -784,6 +805,12 @@
         }
       }
     },
+    "Disconnect Google Account" : {
+
+    },
+    "Done" : {
+
+    },
     "Dương lịch:" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -817,6 +844,12 @@
           }
         }
       }
+    },
+    "Enable the calendars you want to display in this app. Changes are saved automatically." : {
+
+    },
+    "Error" : {
+
     },
     "event.addNew" : {
       "extractionState" : "manual",
@@ -885,6 +918,12 @@
           }
         }
       }
+    },
+    "Google Calendar" : {
+
+    },
+    "Google Calendars" : {
+
     },
     "Grant Access" : {
       "extractionState" : "manual",
@@ -1056,6 +1095,12 @@
         }
       }
     },
+    "Last synced" : {
+
+    },
+    "Loading..." : {
+
+    },
     "Màu may mắn" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1072,6 +1117,9 @@
           }
         }
       }
+    },
+    "No calendars found" : {
+
     },
     "No Calendars Found" : {
       "extractionState" : "manual",
@@ -1123,6 +1171,12 @@
           }
         }
       }
+    },
+    "Not connected" : {
+
+    },
+    "OK" : {
+
     },
     "Open Settings" : {
       "extractionState" : "manual",
@@ -1294,6 +1348,9 @@
         }
       }
     },
+    "Refresh Calendars" : {
+
+    },
     "reminder.1hr" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1447,6 +1504,15 @@
         }
       }
     },
+    "Signed in as" : {
+
+    },
+    "Signing in..." : {
+
+    },
+    "Status" : {
+
+    },
     "Sự kiện hôm nay" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1549,6 +1615,12 @@
         }
       }
     },
+    "Synced" : {
+
+    },
+    "Syncing..." : {
+
+    },
     "tab.calendar" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1599,6 +1671,9 @@
           }
         }
       }
+    },
+    "Tap the refresh button to fetch your Google calendars." : {
+
     },
     "task.add" : {
       "extractionState" : "manual",
@@ -2127,6 +2202,9 @@
         }
       }
     },
+    "This will remove all synced Google Calendar events from this app." : {
+
+    },
     "Thông tin may mắn" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2140,6 +2218,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Thông tin may mắn"
+          }
+        }
+      }
+    },
+    "timeline.today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôm nay"
           }
         }
       }
@@ -2191,23 +2286,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Không có gì hôm nay"
-          }
-        }
-      }
-    },
-    "timeline.today" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Today"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hôm nay"
           }
         }
       }

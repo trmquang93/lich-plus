@@ -10,6 +10,7 @@ import SwiftData
 
 struct SettingsView: View {
     @EnvironmentObject var syncService: CalendarSyncService
+    @EnvironmentObject var googleAuthService: GoogleAuthService
 
     private var syncStatusIcon: String {
         switch syncService.syncState {
@@ -61,6 +62,29 @@ struct SettingsView: View {
 
                             Image(systemName: syncStatusIcon)
                                 .foregroundStyle(syncStatusColor)
+                        }
+                    }
+
+                    NavigationLink {
+                        GoogleCalendarSettingsView()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "g.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(Color(red: 0.26, green: 0.52, blue: 0.96)) // Google blue
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text("Google Calendar")
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(googleAuthService.isSignedIn ? "Connected" : "Not connected")
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
                         }
                     }
                 } header: {

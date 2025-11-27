@@ -11,8 +11,15 @@ import SwiftData
 struct MainTabView: View {
     @Environment(\.modelContext) var modelContext
     @State private var selectedTab: Int = 0
+
+    // Apple Calendar services
     @StateObject private var eventKitService = EventKitService()
     @State private var syncService: CalendarSyncService?
+
+    // Google Calendar services
+    @StateObject private var googleAuthService = GoogleAuthService()
+    @State private var googleCalendarService: GoogleCalendarService?
+    @State private var googleSyncService: GoogleCalendarSyncService?
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -34,17 +41,30 @@ struct MainTabView: View {
                 }
                 .tag(2)
         }
+        // Apple Calendar environment objects
         .environmentObject(eventKitService)
         .environmentObject(syncService ?? CalendarSyncService(eventKitService: eventKitService, modelContext: modelContext))
+        // Google Calendar environment objects
+        .environmentObject(googleAuthService)
+        .environmentObject(googleSyncService ?? createGoogleSyncService())
         .tint(AppColors.primary)
-        .task {
-            configureTabBarAppearance()
+        // Handle Google Sign-In URL callback
+        .onOpenURL { url in
+            _ = googleAuthService.handle(url)
         }
         .onAppear {
-            // Initialize sync service
+            // Initialize Apple Calendar sync service
             if syncService == nil {
                 syncService = CalendarSyncService(eventKitService: eventKitService, modelContext: modelContext)
             }
+            // Initialize Google Calendar services
+            initializeGoogleServices()
+        }
+        .task {
+            // Configure tab bar appearance
+            configureTabBarAppearance()
+            // Restore previous Google sign-in session
+            await googleAuthService.restorePreviousSignIn()
         }
     }
 
@@ -72,6 +92,32 @@ struct MainTabView: View {
         UITabBar.appearance().standardAppearance = appearance
         if #available(iOS 15.0, *) {
             UITabBar.appearance().scrollEdgeAppearance = appearance
+        }
+    }
+
+    // MARK: - Google Services Initialization
+
+    /// Create GoogleSyncService with proper dependencies
+    private func createGoogleSyncService() -> GoogleCalendarSyncService {
+        let calService = googleCalendarService ?? GoogleCalendarService(authService: googleAuthService)
+        return GoogleCalendarSyncService(
+            authService: googleAuthService,
+            calendarService: calService,
+            modelContext: modelContext
+        )
+    }
+
+    /// Initialize Google Calendar services on app appearance
+    private func initializeGoogleServices() {
+        if googleCalendarService == nil {
+            googleCalendarService = GoogleCalendarService(authService: googleAuthService)
+        }
+        if googleSyncService == nil {
+            googleSyncService = GoogleCalendarSyncService(
+                authService: googleAuthService,
+                calendarService: googleCalendarService!,
+                modelContext: modelContext
+            )
         }
     }
 }

@@ -13,6 +13,8 @@ final class SyncableEvent {
     @Attribute(.unique) var id: UUID
     var ekEventIdentifier: String?
     var calendarIdentifier: String?
+    var googleEventId: String?
+    var googleCalendarId: String?
     var title: String
     var startDate: Date
     var endDate: Date?
@@ -36,6 +38,8 @@ final class SyncableEvent {
         id: UUID = UUID(),
         ekEventIdentifier: String? = nil,
         calendarIdentifier: String? = nil,
+        googleEventId: String? = nil,
+        googleCalendarId: String? = nil,
         title: String,
         startDate: Date,
         endDate: Date? = nil,
@@ -58,6 +62,8 @@ final class SyncableEvent {
         self.id = id
         self.ekEventIdentifier = ekEventIdentifier
         self.calendarIdentifier = calendarIdentifier
+        self.googleEventId = googleEventId
+        self.googleCalendarId = googleCalendarId
         self.title = title
         self.startDate = startDate
         self.endDate = endDate

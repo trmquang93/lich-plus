@@ -1,0 +1,225 @@
+//
+//  GoogleCalendarService.swift
+//  lich-plus
+//
+//  Created by Quang Tran Minh on 27/11/25.
+//
+
+import Foundation
+
+@MainActor
+class GoogleCalendarService {
+    private let authService: GoogleAuthService
+    private let baseURL = "https://www.googleapis.com/calendar/v3"
+    private let session: URLSession
+
+    init(authService: GoogleAuthService) {
+        self.authService = authService
+        self.session = URLSession.shared
+    }
+
+    // MARK: - Fetch Calendar List
+
+    /// Fetch all calendars for the signed-in user
+    func fetchCalendarList() async throws -> [GoogleCalendar] {
+        let accessToken = try await authService.getAccessToken()
+
+        var allCalendars: [GoogleCalendar] = []
+        var pageToken: String?
+
+        repeat {
+            var urlComponents = URLComponents(string: "\(baseURL)/users/me/calendarList")!
+            var queryItems = [URLQueryItem(name: "maxResults", value: "250")]
+            if let token = pageToken {
+                queryItems.append(URLQueryItem(name: "pageToken", value: token))
+            }
+            urlComponents.queryItems = queryItems
+
+            guard let url = urlComponents.url else {
+                throw GoogleCalendarError.invalidURL
+            }
+
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+            let (data, response) = try await session.data(for: request)
+
+            try validateResponse(response, data: data)
+
+            let calendarResponse = try JSONDecoder().decode(GoogleCalendarListResponse.self, from: data)
+            allCalendars.append(contentsOf: calendarResponse.items)
+            pageToken = calendarResponse.nextPageToken
+
+        } while pageToken != nil
+
+        return allCalendars
+    }
+
+    // MARK: - Fetch Events
+
+    /// Fetch events from a specific calendar within a date range
+    func fetchEvents(
+        calendarId: String,
+        from startDate: Date,
+        to endDate: Date
+    ) async throws -> [GoogleEvent] {
+        let accessToken = try await authService.getAccessToken()
+
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+
+        var allEvents: [GoogleEvent] = []
+        var pageToken: String?
+
+        repeat {
+            var urlComponents = URLComponents(string: "\(baseURL)/calendars/\(calendarId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? calendarId)/events")!
+            var queryItems = [
+                URLQueryItem(name: "maxResults", value: "2500"),
+                URLQueryItem(name: "singleEvents", value: "true"),
+                URLQueryItem(name: "orderBy", value: "startTime"),
+                URLQueryItem(name: "timeMin", value: formatter.string(from: startDate)),
+                URLQueryItem(name: "timeMax", value: formatter.string(from: endDate))
+            ]
+            if let token = pageToken {
+                queryItems.append(URLQueryItem(name: "pageToken", value: token))
+            }
+            urlComponents.queryItems = queryItems
+
+            guard let url = urlComponents.url else {
+                throw GoogleCalendarError.invalidURL
+            }
+
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+            let (data, response) = try await session.data(for: request)
+
+            try validateResponse(response, data: data)
+
+            let eventResponse = try JSONDecoder().decode(GoogleEventListResponse.self, from: data)
+            if let items = eventResponse.items {
+                // Filter out cancelled events
+                let activeEvents = items.filter { $0.status != "cancelled" }
+                allEvents.append(contentsOf: activeEvents)
+            }
+            pageToken = eventResponse.nextPageToken
+
+        } while pageToken != nil
+
+        return allEvents
+    }
+
+    // MARK: - Convert to SyncableEvent
+
+    /// Convert a GoogleEvent to SyncableEvent for local storage
+    func convertToSyncableEvent(_ googleEvent: GoogleEvent, calendarId: String) -> SyncableEvent {
+        let startDate = googleEvent.start?.toDate() ?? Date()
+        let endDate = googleEvent.end?.toDate()
+        let isAllDay = googleEvent.start?.isAllDay ?? false
+
+        let event = SyncableEvent(
+            title: googleEvent.summary ?? "Untitled Event",
+            startDate: startDate,
+            endDate: endDate,
+            isAllDay: isAllDay,
+            notes: googleEvent.description,
+            isCompleted: false,
+            category: "other",
+            reminderMinutes: nil,
+            recurrenceRuleData: nil,
+            itemType: "event",
+            priority: "none",
+            location: googleEvent.location
+        )
+
+        // Set Google-specific fields
+        event.googleEventId = googleEvent.id
+        event.googleCalendarId = calendarId
+        event.source = EventSource.googleCalendar.rawValue
+        event.syncStatus = SyncStatus.synced.rawValue
+
+        // Parse updated timestamp
+        if let updated = googleEvent.updated {
+            let formatter = ISO8601DateFormatter()
+            formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            event.lastModifiedRemote = formatter.date(from: updated)
+        }
+
+        return event
+    }
+
+    // MARK: - Private Helpers
+
+    private func validateResponse(_ response: URLResponse, data: Data) throws {
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw GoogleCalendarError.invalidResponse
+        }
+
+        switch httpResponse.statusCode {
+        case 200...299:
+            return // Success
+        case 401:
+            throw GoogleCalendarError.unauthorized
+        case 403:
+            throw GoogleCalendarError.forbidden
+        case 404:
+            throw GoogleCalendarError.notFound
+        case 429:
+            throw GoogleCalendarError.rateLimited
+        default:
+            // Try to extract error message from response
+            if let errorResponse = try? JSONDecoder().decode(GoogleErrorResponse.self, from: data) {
+                throw GoogleCalendarError.apiError(errorResponse.error.message)
+            }
+            throw GoogleCalendarError.httpError(httpResponse.statusCode)
+        }
+    }
+}
+
+// MARK: - Errors
+
+enum GoogleCalendarError: LocalizedError {
+    case invalidURL
+    case invalidResponse
+    case unauthorized
+    case forbidden
+    case notFound
+    case rateLimited
+    case httpError(Int)
+    case apiError(String)
+
+    var errorDescription: String? {
+        switch self {
+        case .invalidURL:
+            return "Invalid API URL"
+        case .invalidResponse:
+            return "Invalid response from Google Calendar API"
+        case .unauthorized:
+            return "Authentication expired. Please sign in again."
+        case .forbidden:
+            return "Access denied to Google Calendar"
+        case .notFound:
+            return "Calendar not found"
+        case .rateLimited:
+            return "Too many requests. Please try again later."
+        case .httpError(let code):
+            return "HTTP error: \(code)"
+        case .apiError(let message):
+            return message
+        }
+    }
+}
+
+// MARK: - Error Response Model
+
+private struct GoogleErrorResponse: Codable {
+    let error: GoogleAPIError
+}
+
+private struct GoogleAPIError: Codable {
+    let code: Int
+    let message: String
+    let status: String?
+}

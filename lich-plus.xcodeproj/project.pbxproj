@@ -32,9 +32,22 @@
 		DABB94E481F0B06D7D37C431 /* Pods-lich-plus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plus.release.xcconfig"; path = "Target Support Files/Pods-lich-plus/Pods-lich-plus.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4DDBFDF22ED8F66900B892E0 /* Exceptions for "lich-plus" folder in "lich-plus" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = 4DA45ED52ED108FE00C1F1F6 /* lich-plus */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		4DA45ED82ED108FE00C1F1F6 /* lich-plus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				4DDBFDF22ED8F66900B892E0 /* Exceptions for "lich-plus" folder in "lich-plus" target */,
+			);
 			path = "lich-plus";
 			sourceTree = "<group>";
 		};
@@ -116,6 +129,7 @@
 				4DA45ED22ED108FE00C1F1F6 /* Sources */,
 				4DA45ED32ED108FE00C1F1F6 /* Frameworks */,
 				4DA45ED42ED108FE00C1F1F6 /* Resources */,
+				0923B34961DD003386B60CDF /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -208,6 +222,27 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0923B34961DD003386B60CDF /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-lich-plus/Pods-lich-plus-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-lich-plus/Pods-lich-plus-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lich-plus/Pods-lich-plus-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		4CF2FF6F499AB08F5F80F52E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -414,6 +449,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = WVYA86B7LC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "lich-plus/Info.plist";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Lich+ syncs your events with Apple Calendar to show them in the app and keep them updated across devices.";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Lich+ syncs your events with Apple Calendar to show them in the app and keep them updated across devices.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -453,6 +489,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = WVYA86B7LC;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "lich-plus/Info.plist";
 				INFOPLIST_KEY_NSCalendarsFullAccessUsageDescription = "Lich+ syncs your events with Apple Calendar to show them in the app and keep them updated across devices.";
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "Lich+ syncs your events with Apple Calendar to show them in the app and keep them updated across devices.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
