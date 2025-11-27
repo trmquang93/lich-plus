@@ -11,7 +11,7 @@ import SwiftUI
 
 struct CalendarGridView: View {
     let month: CalendarMonth
-    @Binding var selectedDay: CalendarDay?
+    @Binding var selectedDate: Date
     let onDaySelected: (CalendarDay) -> Void
 
     private let columns = Array(repeating: GridItem(.flexible()), count: 7)
@@ -21,9 +21,9 @@ struct CalendarGridView: View {
             ForEach(month.days) { day in
                 CalendarDayCell(
                     day: day,
-                    isSelected: selectedDay?.id == day.id,
+                    isSelected: Calendar.current.isDate(selectedDate, inSameDayAs: day.date),
                     onTap: {
-                        selectedDay = day
+                        selectedDate = day.date
                         onDaySelected(day)
                     }
                 )
@@ -158,7 +158,7 @@ struct CalendarDayCell: View {
     return VStack {
         CalendarGridView(
             month: month,
-            selectedDay: .constant(nil),
+            selectedDate: .constant(Date()),
             onDaySelected: { _ in }
         )
 

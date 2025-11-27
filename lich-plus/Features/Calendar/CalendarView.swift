@@ -38,7 +38,7 @@ struct CalendarView: View {
                         // Calendar grid
                         CalendarGridView(
                             month: dataManager.currentMonth,
-                            selectedDay: $dataManager.selectedDay,
+                            selectedDate: $dataManager.selectedDate,
                             onDaySelected: { day in
                                 dataManager.selectDay(day)
                             }

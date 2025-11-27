@@ -122,18 +122,22 @@ final class CalendarDataManagerTests: XCTestCase {
 
     func testGoToNextMonth() {
         let currentMonth = sut.currentMonth.month
+        let previousSelectedDate = sut.selectedDate
         sut.goToNextMonth()
 
         XCTAssertNotEqual(sut.currentMonth.month, currentMonth)
-        XCTAssertNil(sut.selectedDay)
+        // Selected date should persist after month navigation
+        XCTAssertEqual(sut.selectedDate, previousSelectedDate)
     }
 
     func testGoToPreviousMonth() {
         let currentMonth = sut.currentMonth.month
+        let previousSelectedDate = sut.selectedDate
         sut.goToPreviousMonth()
 
         XCTAssertNotEqual(sut.currentMonth.month, currentMonth)
-        XCTAssertNil(sut.selectedDay)
+        // Selected date should persist after month navigation
+        XCTAssertEqual(sut.selectedDate, previousSelectedDate)
     }
 
     // MARK: - Model Context Integration

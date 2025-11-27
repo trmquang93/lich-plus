@@ -13,11 +13,15 @@ import SwiftData
 
 class CalendarDataManager: ObservableObject {
     @Published var currentMonth: CalendarMonth
-    @Published var selectedDay: CalendarDay?
+    @Published var selectedDate: Date = Date()
 
     private let calendar = Calendar.current
     private var modelContext: ModelContext?
     private var hasInitialized = false
+
+    var selectedDay: CalendarDay? {
+        createCalendarDay(from: selectedDate, isCurrentMonth: true, isToday: Calendar.current.isDateInToday(selectedDate))
+    }
 
     init() {
         let today = Date()
@@ -29,7 +33,6 @@ class CalendarDataManager: ObservableObject {
             lunarYear: 0
         )
         // Will be properly initialized when modelContext is set
-        self.selectedDay = nil
     }
 
     // MARK: - SwiftData Integration
@@ -45,7 +48,7 @@ class CalendarDataManager: ObservableObject {
 
         let today = Date()
         self.currentMonth = generateCalendarMonth(for: today)
-        self.selectedDay = self.currentMonth.days.first { $0.isToday }
+        self.selectedDate = Date()
     }
 
     // MARK: - Public Methods
@@ -56,7 +59,6 @@ class CalendarDataManager: ObservableObject {
             return
         }
         currentMonth = generateCalendarMonth(for: previousDate)
-        selectedDay = nil
     }
 
     func goToNextMonth() {
@@ -65,11 +67,10 @@ class CalendarDataManager: ObservableObject {
             return
         }
         currentMonth = generateCalendarMonth(for: nextDate)
-        selectedDay = nil
     }
 
     func selectDay(_ day: CalendarDay) {
-        selectedDay = day
+        selectedDate = day.date
     }
 
     func goToMonth(_ month: Int, year: Int) {
@@ -78,7 +79,6 @@ class CalendarDataManager: ObservableObject {
             return
         }
         currentMonth = generateCalendarMonth(for: date)
-        selectedDay = nil
     }
 
     // MARK: - Calendar Generation
