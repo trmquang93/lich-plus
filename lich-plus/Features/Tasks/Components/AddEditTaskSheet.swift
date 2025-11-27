@@ -31,8 +31,14 @@ struct AddEditTaskSheet: View {
     // SwiftData support
     @Query private var allEvents: [SyncableEvent]
 
+    // AI Input state
+    @State private var aiInputText: String = ""
+    @State private var isAIParsing: Bool = false
+    @State private var aiError: String? = nil
+
     let editingEventId: UUID?
     let onSave: (SyncableEvent) -> Void
+    let nlpService: NLPService = MockNLPService()
 
     var isEditMode: Bool {
         editingEventId != nil
@@ -109,6 +115,18 @@ struct AddEditTaskSheet: View {
                         .buttonStyle(.plain)
                     }
                 }
+
+                // AI Input Section
+                AIInputSection(
+                    nlpService: nlpService,
+                    itemType: selectedItemType,
+                    onTaskParsed: { parsed in
+                        handleAITaskParsed(parsed)
+                    },
+                    onEventParsed: { parsed in
+                        handleAIEventParsed(parsed)
+                    }
+                )
 
                 // Title Section
                 Section(header: Text("task.title")) {
@@ -234,6 +252,58 @@ struct AddEditTaskSheet: View {
             if let editingEvent = editingEvent {
                 populateForm(with: editingEvent)
             }
+        }
+    }
+
+    private func handleAITaskParsed(_ parsed: ParsedTask) {
+        title = parsed.title
+
+        if let dueDate = parsed.dueDate {
+            date = dueDate
+        }
+
+        if let category = parsed.category {
+            selectedCategory = TaskCategory(rawValue: category) ?? .personal
+        }
+
+        if let dueTime = parsed.dueTime {
+            hasTime = true
+            startTime = dueTime
+            endTime = Calendar.current.date(byAdding: .hour, value: 1, to: dueTime) ?? dueTime
+        }
+
+        if let notes = parsed.notes {
+            self.notes = notes
+        }
+
+        if parsed.hasReminder {
+            selectedReminder = 15
+        }
+    }
+
+    private func handleAIEventParsed(_ parsed: ParsedEvent) {
+        title = parsed.title
+
+        if let startDate = parsed.startDate {
+            date = startDate
+        }
+
+        if !parsed.isAllDay {
+            hasTime = true
+            if let startDate = parsed.startDate {
+                startTime = startDate
+            }
+            if let endDate = parsed.endDate {
+                endTime = endDate
+            }
+        }
+
+        if let location = parsed.location {
+            self.location = location
+        }
+
+        if let notes = parsed.notes {
+            self.notes = notes
         }
     }
 
