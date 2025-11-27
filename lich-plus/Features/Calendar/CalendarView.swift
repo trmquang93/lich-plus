@@ -27,6 +27,9 @@ struct CalendarView: View {
                     },
                     onNextMonth: {
                         dataManager.goToNextMonth()
+                    },
+                    onMonthSelected: { month, year in
+                        dataManager.goToMonth(month, year: year)
                     }
                 )
 

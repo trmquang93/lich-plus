@@ -13,6 +13,7 @@ struct CalendarHeaderView: View {
     @Binding var selectedDate: Date
     let onPreviousMonth: () -> Void
     let onNextMonth: () -> Void
+    let onMonthSelected: ((Int, Int) -> Void)?
 
     @State private var showMonthPicker = false
 
@@ -77,6 +78,19 @@ struct CalendarHeaderView: View {
         .padding(.horizontal, AppTheme.spacing16)
         .padding(.vertical, AppTheme.spacing12)
         .background(AppColors.background)
+        .sheet(isPresented: $showMonthPicker) {
+            MonthPickerView(
+                selectedDate: selectedDate,
+                onMonthSelected: { month, year in
+                    onMonthSelected?(month, year)
+                },
+                onDismiss: {
+                    showMonthPicker = false
+                }
+            )
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
     }
 }
 
@@ -87,7 +101,8 @@ struct CalendarHeaderView: View {
         CalendarHeaderView(
             selectedDate: .constant(Date()),
             onPreviousMonth: {},
-            onNextMonth: {}
+            onNextMonth: {},
+            onMonthSelected: nil
         )
 
         Spacer()

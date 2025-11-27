@@ -17,6 +17,7 @@ class CalendarDataManager: ObservableObject {
 
     private let calendar = Calendar.current
     private var modelContext: ModelContext?
+    private var hasInitialized = false
 
     init() {
         let today = Date()
@@ -37,7 +38,11 @@ class CalendarDataManager: ObservableObject {
     /// - Parameter context: The ModelContext from the SwiftUI environment
     func setModelContext(_ context: ModelContext) {
         self.modelContext = context
-        // Regenerate calendar with database access
+
+        // Only do full initialization on first appear
+        guard !hasInitialized else { return }
+        hasInitialized = true
+
         let today = Date()
         self.currentMonth = generateCalendarMonth(for: today)
         self.selectedDay = self.currentMonth.days.first { $0.isToday }
@@ -65,6 +70,15 @@ class CalendarDataManager: ObservableObject {
 
     func selectDay(_ day: CalendarDay) {
         selectedDay = day
+    }
+
+    func goToMonth(_ month: Int, year: Int) {
+        let dateComponents = DateComponents(year: year, month: month, day: 1)
+        guard let date = calendar.date(from: dateComponents) else {
+            return
+        }
+        currentMonth = generateCalendarMonth(for: date)
+        selectedDay = nil
     }
 
     // MARK: - Calendar Generation
