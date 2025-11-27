@@ -28,22 +28,11 @@ struct MainTabView: View {
                 }
                 .tag(1)
 
-            AIView()
-                .tabItem {
-                    Label {
-                        Text("tab.ai")
-                    } icon: {
-                        Image("ai.tab")
-                            .renderingMode(.template)
-                    }
-                }
-                .tag(2)
-
             SettingsView()
                 .tabItem {
                     Label("tab.settings", systemImage: "gear")
                 }
-                .tag(3)
+                .tag(2)
         }
         .environmentObject(eventKitService)
         .environmentObject(syncService ?? CalendarSyncService(eventKitService: eventKitService, modelContext: modelContext))

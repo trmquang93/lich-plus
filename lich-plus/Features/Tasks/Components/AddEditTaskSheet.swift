@@ -37,6 +37,7 @@ struct AddEditTaskSheet: View {
     @State private var aiError: String? = nil
 
     let editingEventId: UUID?
+    let initialItemType: ItemType?
     let onSave: (SyncableEvent) -> Void
     let nlpService: NLPService = MockNLPService()
 
@@ -62,9 +63,11 @@ struct AddEditTaskSheet: View {
 
     init(
         editingEventId: UUID? = nil,
+        initialItemType: ItemType? = nil,
         onSave: @escaping (SyncableEvent) -> Void
     ) {
         self.editingEventId = editingEventId
+        self.initialItemType = initialItemType
         self.onSave = onSave
     }
 
@@ -251,6 +254,8 @@ struct AddEditTaskSheet: View {
         .onAppear {
             if let editingEvent = editingEvent {
                 populateForm(with: editingEvent)
+            } else if let initialType = initialItemType {
+                selectedItemType = initialType
             }
         }
     }
@@ -397,6 +402,7 @@ struct AddEditTaskSheet: View {
 
     AddEditTaskSheet(
         editingEventId: nil,
+        initialItemType: nil,
         onSave: { _ in }
     )
     .environmentObject(syncService)

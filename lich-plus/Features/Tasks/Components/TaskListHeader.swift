@@ -10,6 +10,7 @@ import SwiftUI
 struct TaskListHeader: View {
     @Binding var searchText: String
     @Binding var showAddSheet: Bool
+    @Binding var isAISearchMode: Bool
 
     var body: some View {
         VStack(spacing: AppTheme.spacing12) {
@@ -50,6 +51,11 @@ struct TaskListHeader: View {
                             .foregroundStyle(AppColors.textSecondary)
                     }
                 }
+
+                Divider()
+                    .frame(height: 24)
+
+                SearchModeToggle(isAIMode: $isAISearchMode)
             }
             .padding(.horizontal, AppTheme.spacing12)
             .padding(.vertical, AppTheme.spacing8)
@@ -64,6 +70,7 @@ struct TaskListHeader: View {
 #Preview {
     TaskListHeader(
         searchText: .constant(""),
-        showAddSheet: .constant(false)
+        showAddSheet: .constant(false),
+        isAISearchMode: .constant(false)
     )
 }

@@ -14,6 +14,7 @@ struct CalendarView: View {
     @Environment(\.modelContext) var modelContext
     @StateObject private var dataManager = CalendarDataManager()
     @State private var showDayDetail = false
+    @EnvironmentObject var syncService: CalendarSyncService
 
     var body: some View {
         NavigationStack {

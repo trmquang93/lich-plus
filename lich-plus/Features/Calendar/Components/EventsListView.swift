@@ -6,12 +6,18 @@
 //
 
 import SwiftUI
+import SwiftData
 
 // MARK: - Events List View
 
 struct EventsListView: View {
     let events: [Event]
     let day: CalendarDay?
+
+    @Environment(\.modelContext) var modelContext
+    @EnvironmentObject var syncService: CalendarSyncService
+
+    @State private var showAddEventSheet: Bool = false
 
     var body: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
@@ -25,6 +31,12 @@ struct EventsListView: View {
                     .foregroundStyle(AppColors.textPrimary)
 
                 Spacer()
+
+                Button(action: { showAddEventSheet = true }) {
+                    Image(systemName: "plus.circle.fill")
+                        .font(.system(size: 18, weight: .semibold))
+                        .foregroundStyle(AppColors.primary)
+                }
 
                 if !events.isEmpty {
                     Text(String(events.count))
@@ -51,6 +63,16 @@ struct EventsListView: View {
         .cornerRadius(AppTheme.cornerRadiusMedium)
         .padding(.horizontal, AppTheme.spacing16)
         .padding(.vertical, AppTheme.spacing8)
+        .sheet(isPresented: $showAddEventSheet) {
+            AddEditTaskSheet(
+                initialItemType: .event,
+                onSave: { _ in
+                    showAddEventSheet = false
+                }
+            )
+            .environmentObject(syncService)
+            .modelContext(modelContext)
+        }
     }
 }
 
@@ -150,7 +172,16 @@ struct EmptyEventsView: View {
 // MARK: - Preview
 
 #Preview {
-    VStack(spacing: 20) {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: SyncableEvent.self, configurations: config)
+    let modelContext = ModelContext(container)
+    let eventKitService = EventKitService()
+    let syncService = CalendarSyncService(
+        eventKitService: eventKitService,
+        modelContext: modelContext
+    )
+
+    return VStack(spacing: 20) {
         // With events
         EventsListView(
             events: [
@@ -187,4 +218,6 @@ struct EmptyEventsView: View {
         Spacer()
     }
     .background(AppColors.background)
+    .environmentObject(syncService)
+    .modelContext(modelContext)
 }

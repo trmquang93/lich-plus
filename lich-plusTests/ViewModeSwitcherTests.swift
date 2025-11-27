@@ -19,18 +19,18 @@ final class ViewModeSwitcherTests: XCTestCase {
     func testViewModeEnum_HasCorrectIdentifiers() {
         XCTAssertEqual(ViewMode.today.id, "today")
         XCTAssertEqual(ViewMode.thisWeek.id, "thisWeek")
-        XCTAssertEqual(ViewMode.calendar.id, "calendar")
+        XCTAssertEqual(ViewMode.all.id, "all")
     }
 
     func testViewModeEnum_DisplayNamesAreLocalized() {
         let todayName = ViewMode.today.displayName
         let thisWeekName = ViewMode.thisWeek.displayName
-        let calendarName = ViewMode.calendar.displayName
+        let allName = ViewMode.all.displayName
 
         // Display names should not be empty
         XCTAssertFalse(todayName.isEmpty)
         XCTAssertFalse(thisWeekName.isEmpty)
-        XCTAssertFalse(calendarName.isEmpty)
+        XCTAssertFalse(allName.isEmpty)
     }
 
     func testViewModeSwitcher_InitializesWithBinding() {

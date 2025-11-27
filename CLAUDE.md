@@ -55,9 +55,16 @@ Before committing changes that modify the project:
 
 ### Essential Commands
 
-**Building and Running:**
+**Building:**
 ```bash
+# Build the app and check for compile errors
 ./build-app.sh
+
+# Clean build folder first, then build
+./build-app.sh --clean
+
+# View build script help
+./build-app.sh --help
 ```
 
 **Testing:**
