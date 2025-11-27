@@ -14,13 +14,21 @@ struct QuickInfoBannerView: View {
     let luckyHours: [LuckyHour]
     let onTap: () -> Void
 
+    private var dateLabel: String {
+        if day.isToday {
+            return "Hom nay"
+        } else {
+            return "\(day.solarDay)/\(day.solarMonth)"
+        }
+    }
+
     var body: some View {
         Button(action: onTap) {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
-                    // Title: "Hom nay - Ngay tot"
+                    // Title: "Hom nay - Ngay tot" or "DD/MM - Ngay tot"
                     HStack(spacing: 4) {
-                        Text("Hom nay")
+                        Text(dateLabel)
                             .foregroundStyle(AppColors.textPrimary)
                         Text("-")
                             .foregroundStyle(AppColors.textSecondary)

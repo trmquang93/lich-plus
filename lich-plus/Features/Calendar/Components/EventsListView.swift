@@ -19,6 +19,16 @@ struct EventsListView: View {
 
     @State private var showAddEventSheet: Bool = false
 
+    private var sectionTitle: String {
+        if day?.isToday == true {
+            return "Sự kiện hôm nay"
+        } else if let day = day {
+            return "Sự kiện ngày \(day.solarDay)/\(day.solarMonth)"
+        } else {
+            return "Sự kiện"
+        }
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
             HStack(spacing: AppTheme.spacing8) {
@@ -26,7 +36,7 @@ struct EventsListView: View {
                     .font(.system(size: AppTheme.fontBody, weight: .semibold))
                     .foregroundStyle(AppColors.primary)
 
-                Text("Sự kiện hôm nay")
+                Text(sectionTitle)
                     .font(.system(size: AppTheme.fontTitle3, weight: .bold))
                     .foregroundStyle(AppColors.textPrimary)
 
@@ -49,7 +59,7 @@ struct EventsListView: View {
             }
 
             if events.isEmpty {
-                EmptyEventsView()
+                EmptyEventsView(day: day)
             } else {
                 VStack(spacing: AppTheme.spacing8) {
                     ForEach(events) { event in
@@ -145,6 +155,18 @@ struct EventRow: View {
 // MARK: - Empty Events View
 
 struct EmptyEventsView: View {
+    let day: CalendarDay?
+
+    private var emptyMessage: String {
+        if day?.isToday == true {
+            return "Hôm nay là một ngày trống rỗi. Thêm sự kiện mới?"
+        } else if let day = day {
+            return "Ngày \(day.solarDay)/\(day.solarMonth) không có sự kiện. Thêm sự kiện mới?"
+        } else {
+            return "Không có sự kiện. Thêm sự kiện mới?"
+        }
+    }
+
     var body: some View {
         VStack(spacing: AppTheme.spacing12) {
             Image(systemName: "calendar.badge.exclamationmark")
@@ -156,7 +178,7 @@ struct EmptyEventsView: View {
                     .font(.system(size: AppTheme.fontBody, weight: .semibold))
                     .foregroundStyle(AppColors.textPrimary)
 
-                Text("Hôm nay là một ngày trống rỗi. Thêm sự kiện mới?")
+                Text(emptyMessage)
                     .font(.system(size: AppTheme.fontCaption, weight: .regular))
                     .foregroundStyle(AppColors.textSecondary)
                     .multilineTextAlignment(.center)
@@ -181,7 +203,7 @@ struct EmptyEventsView: View {
         modelContext: modelContext
     )
 
-    return VStack(spacing: 20) {
+    VStack(spacing: 20) {
         // With events
         EventsListView(
             events: [
@@ -204,7 +226,20 @@ struct EmptyEventsView: View {
                     description: nil
                 ),
             ],
-            day: nil
+            day: CalendarDay(
+                date: Date(),
+                solarDay: 27,
+                solarMonth: 11,
+                solarYear: 2025,
+                lunarDay: 27,
+                lunarMonth: 10,
+                lunarYear: 2025,
+                dayType: .good,
+                isCurrentMonth: true,
+                isToday: true,
+                events: [],
+                isWeekend: false
+            )
         )
 
         Divider()
@@ -212,7 +247,20 @@ struct EmptyEventsView: View {
         // Empty state
         EventsListView(
             events: [],
-            day: nil
+            day: CalendarDay(
+                date: Date(),
+                solarDay: 27,
+                solarMonth: 11,
+                solarYear: 2025,
+                lunarDay: 27,
+                lunarMonth: 10,
+                lunarYear: 2025,
+                dayType: .neutral,
+                isCurrentMonth: true,
+                isToday: false,
+                events: [],
+                isWeekend: false
+            )
         )
 
         Spacer()
