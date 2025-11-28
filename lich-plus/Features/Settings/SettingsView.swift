@@ -11,6 +11,7 @@ import SwiftData
 struct SettingsView: View {
     @EnvironmentObject var syncService: CalendarSyncService
     @EnvironmentObject var googleAuthService: GoogleAuthService
+    @EnvironmentObject var microsoftAuthService: MicrosoftAuthService
 
     private var syncStatusIcon: String {
         switch syncService.syncState {
@@ -87,6 +88,29 @@ struct SettingsView: View {
                             Spacer()
                         }
                     }
+
+                    NavigationLink {
+                        MicrosoftCalendarSettingsView()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "m.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(Color(red: 0.0, green: 0.47, blue: 0.84)) // Microsoft blue
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text("Outlook Calendar")
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(microsoftAuthService.isSignedIn ? "Connected" : "Not connected")
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
                 } header: {
                     Text("Sync")
                 }
@@ -128,5 +152,7 @@ struct SettingsView: View {
     SettingsView()
         .environmentObject(EventKitService())
         .environmentObject(CalendarSyncService(eventKitService: EventKitService(), modelContext: modelContext))
+        .environmentObject(GoogleAuthService())
+        .environmentObject(MicrosoftAuthService())
         .modelContainer(container)
 }

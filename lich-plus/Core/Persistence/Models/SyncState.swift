@@ -18,4 +18,5 @@ enum EventSource: String, Codable {
     case local = "local"              // Created in this app
     case appleCalendar = "appleCalendar"  // Imported from Apple Calendar
     case googleCalendar = "googleCalendar"  // Imported from Google Calendar
+    case microsoftExchange = "microsoftExchange"  // Imported from Microsoft Exchange/Outlook
 }

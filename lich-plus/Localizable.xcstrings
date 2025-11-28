@@ -616,10 +616,16 @@
     "Choose which Google calendars to display in this app." : {
 
     },
+    "Choose which Outlook calendars to display in this app." : {
+
+    },
     "Connect with Google" : {
 
     },
     "Connect your Google account to sync your Google Calendar events with this app." : {
+
+    },
+    "Connect your Microsoft account to sync your Outlook calendar events with this app." : {
 
     },
     "Connected" : {
@@ -806,6 +812,9 @@
       }
     },
     "Disconnect Google Account" : {
+
+    },
+    "Disconnect Microsoft Account" : {
 
     },
     "Done" : {
@@ -1195,6 +1204,12 @@
         }
       }
     },
+    "Outlook Calendar" : {
+
+    },
+    "Outlook Calendars" : {
+
+    },
     "priority.high" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1504,6 +1519,9 @@
         }
       }
     },
+    "Sign in with Microsoft" : {
+
+    },
     "Signed in as" : {
 
     },
@@ -1673,6 +1691,9 @@
       }
     },
     "Tap the refresh button to fetch your Google calendars." : {
+
+    },
+    "Tap the refresh button to fetch your Outlook calendars." : {
 
     },
     "task.add" : {
@@ -2203,6 +2224,9 @@
       }
     },
     "This will remove all synced Google Calendar events from this app." : {
+
+    },
+    "This will remove all synced Outlook calendar events from this app." : {
 
     },
     "Thông tin may mắn" : {

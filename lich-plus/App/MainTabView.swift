@@ -21,6 +21,11 @@ struct MainTabView: View {
     @State private var googleCalendarService: GoogleCalendarService?
     @State private var googleSyncService: GoogleCalendarSyncService?
 
+    // Microsoft Calendar services
+    @StateObject private var microsoftAuthService = MicrosoftAuthService()
+    @State private var microsoftCalendarService: MicrosoftCalendarService?
+    @State private var microsoftSyncService: MicrosoftCalendarSyncService?
+
     var body: some View {
         TabView(selection: $selectedTab) {
             CalendarView()
@@ -47,6 +52,9 @@ struct MainTabView: View {
         // Google Calendar environment objects
         .environmentObject(googleAuthService)
         .environmentObject(googleSyncService ?? createGoogleSyncService())
+        // Microsoft Calendar environment objects
+        .environmentObject(microsoftAuthService)
+        .environmentObject(microsoftSyncService ?? createMicrosoftSyncService())
         .tint(AppColors.primary)
         // Handle Google Sign-In URL callback
         .onOpenURL { url in
@@ -59,12 +67,16 @@ struct MainTabView: View {
             }
             // Initialize Google Calendar services
             initializeGoogleServices()
+            // Initialize Microsoft Calendar services
+            initializeMicrosoftServices()
         }
         .task {
             // Configure tab bar appearance
             configureTabBarAppearance()
             // Restore previous Google sign-in session
             await googleAuthService.restorePreviousSignIn()
+            // Restore previous Microsoft sign-in session
+            await microsoftAuthService.restorePreviousSignIn()
         }
     }
 
@@ -116,6 +128,32 @@ struct MainTabView: View {
             googleSyncService = GoogleCalendarSyncService(
                 authService: googleAuthService,
                 calendarService: googleCalendarService!,
+                modelContext: modelContext
+            )
+        }
+    }
+
+    // MARK: - Microsoft Services Initialization
+
+    /// Create MicrosoftSyncService with proper dependencies
+    private func createMicrosoftSyncService() -> MicrosoftCalendarSyncService {
+        let calService = microsoftCalendarService ?? MicrosoftCalendarService(authService: microsoftAuthService)
+        return MicrosoftCalendarSyncService(
+            authService: microsoftAuthService,
+            calendarService: calService,
+            modelContext: modelContext
+        )
+    }
+
+    /// Initialize Microsoft Calendar services on app appearance
+    private func initializeMicrosoftServices() {
+        if microsoftCalendarService == nil {
+            microsoftCalendarService = MicrosoftCalendarService(authService: microsoftAuthService)
+        }
+        if microsoftSyncService == nil {
+            microsoftSyncService = MicrosoftCalendarSyncService(
+                authService: microsoftAuthService,
+                calendarService: microsoftCalendarService!,
                 modelContext: modelContext
             )
         }

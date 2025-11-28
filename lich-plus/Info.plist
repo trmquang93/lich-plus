@@ -12,8 +12,21 @@
 				<string>com.googleusercontent.apps.339268183792-l99ev0r7sdpu41ni78vv4avjnsq4oecl</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>msauth.com.qtran.lich-plus</string>
+			</array>
+		</dict>
 	</array>
 	<key>GIDClientID</key>
 	<string>339268183792-l99ev0r7sdpu41ni78vv4avjnsq4oecl.apps.googleusercontent.com</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>msauthv2</string>
+		<string>msauthv3</string>
+	</array>
 </dict>
 </plist>

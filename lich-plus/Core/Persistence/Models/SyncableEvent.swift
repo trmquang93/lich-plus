@@ -15,6 +15,8 @@ final class SyncableEvent {
     var calendarIdentifier: String?
     var googleEventId: String?
     var googleCalendarId: String?
+    var microsoftEventId: String?
+    var microsoftCalendarId: String?
     var title: String
     var startDate: Date
     var endDate: Date?
@@ -40,6 +42,8 @@ final class SyncableEvent {
         calendarIdentifier: String? = nil,
         googleEventId: String? = nil,
         googleCalendarId: String? = nil,
+        microsoftEventId: String? = nil,
+        microsoftCalendarId: String? = nil,
         title: String,
         startDate: Date,
         endDate: Date? = nil,
@@ -64,6 +68,8 @@ final class SyncableEvent {
         self.calendarIdentifier = calendarIdentifier
         self.googleEventId = googleEventId
         self.googleCalendarId = googleCalendarId
+        self.microsoftEventId = microsoftEventId
+        self.microsoftCalendarId = microsoftCalendarId
         self.title = title
         self.startDate = startDate
         self.endDate = endDate
