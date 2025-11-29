@@ -81,6 +81,27 @@ class CalendarDataManager: ObservableObject {
         currentMonth = generateCalendarMonth(for: date)
     }
 
+    /// Get calendar month with offset from current month (-1 = previous, 0 = current, 1 = next)
+    func getMonth(offset: Int) -> CalendarMonth {
+        guard offset != 0 else { return currentMonth }
+
+        let currentDate = currentMonth.days.first { $0.isCurrentMonth }?.date ?? Date()
+        guard let targetDate = calendar.date(byAdding: .month, value: offset, to: currentDate) else {
+            return currentMonth
+        }
+        return generateCalendarMonth(for: targetDate)
+    }
+
+    /// Get calendar month with offset from TODAY (not currentMonth)
+    /// offset 0 = current month, -1 = previous month, 1 = next month
+    func getMonthFromToday(offset: Int) -> CalendarMonth {
+        let today = Date()
+        guard let targetDate = calendar.date(byAdding: .month, value: offset, to: today) else {
+            return generateCalendarMonth(for: today)
+        }
+        return generateCalendarMonth(for: targetDate)
+    }
+
     // MARK: - Calendar Generation
 
     func generateCalendarMonth(for date: Date) -> CalendarMonth {

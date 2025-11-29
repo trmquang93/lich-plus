@@ -5,8 +5,8 @@
 //  Created by Quang Tran Minh on 23/11/25.
 //
 
-import SwiftUI
 import SwiftData
+import SwiftUI
 
 // MARK: - Calendar View
 
@@ -14,35 +14,52 @@ struct CalendarView: View {
     @Environment(\.modelContext) var modelContext
     @StateObject private var dataManager = CalendarDataManager()
     @State private var showDayDetail = false
+    @State private var displayedMonthOffset: Int = 0
     @EnvironmentObject var syncService: CalendarSyncService
+
+    private var displayedDate: Date {
+        Calendar.current.date(byAdding: .month, value: displayedMonthOffset, to: Date()) ?? Date()
+    }
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 // Header with month/year selector
                 CalendarHeaderView(
-                    selectedDate: .constant(dataManager.currentMonth.days.first { $0.isCurrentMonth }?.date ?? Date()),
+                    selectedDate: .constant(displayedDate),
                     onPreviousMonth: {
-                        dataManager.goToPreviousMonth()
+                        displayedMonthOffset -= 1
                     },
                     onNextMonth: {
-                        dataManager.goToNextMonth()
+                        displayedMonthOffset += 1
                     },
                     onMonthSelected: { month, year in
-                        dataManager.goToMonth(month, year: year)
+                        let today = Date()
+                        let calendar = Calendar.current
+                        let todayComponents = calendar.dateComponents([.year, .month], from: today)
+                        let monthDiff = (year - todayComponents.year!) * 12 + (month - todayComponents.month!)
+                        displayedMonthOffset = monthDiff
                     }
                 )
 
-                ScrollView {
-                    VStack(spacing: 0) {
-                        // Calendar grid
+                // Calendar grid with horizontal swipe navigation
+                InfinitePageView(
+                    initialPage: displayedMonthOffset,
+                    content: { offset in
                         CalendarGridView(
-                            month: dataManager.currentMonth,
+                            month: dataManager.getMonthFromToday(offset: offset),
                             selectedDate: $dataManager.selectedDate,
                             onDaySelected: { day in
                                 dataManager.selectDay(day)
                             }
                         )
+                    },
+                    onPageChanged: { newOffset in
+                        displayedMonthOffset = newOffset
+                    }
+                )
+                ScrollView {
+                    VStack(spacing: 0) {
 
                         // Quick info banner for selected day or today
                         if let selectedDay = dataManager.selectedDay {
@@ -89,11 +106,14 @@ struct CalendarView: View {
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: SyncableEvent.self, SyncedCalendar.self, ICSSubscription.self, configurations: config)
+    let container = try! ModelContainer(
+        for: SyncableEvent.self, SyncedCalendar.self, ICSSubscription.self, configurations: config)
     let modelContext = ModelContext(container)
     let eventKitService = EventKitService()
 
     return CalendarView()
-        .environmentObject(CalendarSyncService(eventKitService: eventKitService, modelContext: modelContext))
+        .environmentObject(
+            CalendarSyncService(eventKitService: eventKitService, modelContext: modelContext)
+        )
         .modelContainer(container)
 }
