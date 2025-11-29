@@ -24,7 +24,7 @@ struct CalendarHeaderView: View {
     }
 
     var body: some View {
-        VStack(spacing: AppTheme.spacing12) {
+        VStack(spacing: AppTheme.spacing8) {
             // Month/Year with dropdown
             HStack {
                 Button(action: onPreviousMonth) {
@@ -59,7 +59,7 @@ struct CalendarHeaderView: View {
                         .frame(width: 40, height: 40)
                 }
             }
-            .frame(height: 44)
+            .frame(height: 36)
 
             // Day labels (Monday to Sunday in Vietnamese)
             HStack(spacing: 0) {
@@ -68,7 +68,7 @@ struct CalendarHeaderView: View {
                         .font(.system(size: AppTheme.fontCaption, weight: .semibold))
                         .foregroundStyle(AppColors.textSecondary)
                         .frame(maxWidth: .infinity)
-                        .frame(height: 32)
+                        .frame(height: 28)
                 }
             }
 
@@ -76,7 +76,7 @@ struct CalendarHeaderView: View {
                 .foregroundStyle(AppColors.borderLight)
         }
         .padding(.horizontal, AppTheme.spacing16)
-        .padding(.vertical, AppTheme.spacing12)
+        .padding(.vertical, AppTheme.spacing8)
         .background(AppColors.background)
         .sheet(isPresented: $showMonthPicker) {
             MonthPickerView(

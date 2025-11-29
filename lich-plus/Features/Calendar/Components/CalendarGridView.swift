@@ -17,7 +17,7 @@ struct CalendarGridView: View {
     private let columns = Array(repeating: GridItem(.flexible()), count: 7)
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: AppTheme.spacing8) {
+        LazyVGrid(columns: columns, spacing: AppTheme.spacing4) {
             ForEach(month.days) { day in
                 CalendarDayCell(
                     day: day,
@@ -30,7 +30,7 @@ struct CalendarGridView: View {
             }
         }
         .padding(.horizontal, AppTheme.spacing16)
-        .padding(.vertical, AppTheme.spacing12)
+        .padding(.vertical, AppTheme.spacing8)
     }
 }
 
@@ -77,8 +77,8 @@ struct CalendarDayCell: View {
     }
 
     var body: some View {
-        VStack(spacing: AppTheme.spacing4) {
-            Spacer().frame(height: 4)
+        VStack(spacing: AppTheme.spacing2) {
+            Spacer().frame(height: 2)
 
             // Solar date (large)
             Text(day.displaySolar)
@@ -104,11 +104,11 @@ struct CalendarDayCell: View {
             } else {
                 Spacer()
             }
-            Spacer().frame(height: 4)
+            Spacer().frame(height: 2)
         }
-        .frame(height: 45)
+        .frame(height: 38)
         .frame(maxWidth: .infinity)
-        .padding(AppTheme.spacing8)
+        .padding(AppTheme.spacing4)
         .background(backgroundColor)
         .border(borderColor, width: borderWidth)
         .cornerRadius(AppTheme.cornerRadiusSmall)
