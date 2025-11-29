@@ -13,7 +13,7 @@ class MicrosoftAuthService: ObservableObject {
     private let clientId = "5fe4ebd3-b32c-4686-9a51-ea54b1e05bbf"  // Placeholder
     private let authority = "https://login.microsoftonline.com/common"
     private let redirectUri = "msauth.com.qtran.lich-plus://auth"
-    private let scopes = ["Calendars.Read", "User.Read"]
+    private let scopes = ["Calendars.Read"]
 
     private var application: MSALPublicClientApplication?
 
@@ -22,6 +22,8 @@ class MicrosoftAuthService: ObservableObject {
     }
 
     private func setupApplication() {
+        MSALGlobalConfig.brokerAvailability = .none
+
         guard let authorityURL = URL(string: authority) else { return }
 
         do {
@@ -50,6 +52,7 @@ class MicrosoftAuthService: ObservableObject {
         }
 
         let webViewParameters = MSALWebviewParameters(authPresentationViewController: rootViewController)
+        webViewParameters.webviewType = .wkWebView
         let interactiveParameters = MSALInteractiveTokenParameters(scopes: scopes, webviewParameters: webViewParameters)
 
         do {

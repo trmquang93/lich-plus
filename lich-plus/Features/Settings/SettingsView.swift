@@ -111,6 +111,29 @@ struct SettingsView: View {
                             Spacer()
                         }
                     }
+
+                    NavigationLink {
+                        ICSCalendarSettingsView()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "calendar.badge.plus")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text("ICS Calendar")
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text("Subscribe to calendars")
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
                 } header: {
                     Text("Sync")
                 }

@@ -88,5 +88,12 @@ struct CalendarView: View {
 // MARK: - Preview
 
 #Preview {
-    CalendarView()
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: SyncableEvent.self, SyncedCalendar.self, ICSSubscription.self, configurations: config)
+    let modelContext = ModelContext(container)
+    let eventKitService = EventKitService()
+
+    return CalendarView()
+        .environmentObject(CalendarSyncService(eventKitService: eventKitService, modelContext: modelContext))
+        .modelContainer(container)
 }
