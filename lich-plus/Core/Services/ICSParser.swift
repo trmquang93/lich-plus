@@ -127,10 +127,12 @@ class ICSParser {
 
             if cleanLine.starts(with: "UID:") {
                 uid = extractValue(from: cleanLine, prefix: "UID:")
-            } else if cleanLine.starts(with: "SUMMARY:") {
-                summary = extractValue(from: cleanLine, prefix: "SUMMARY:")
-            } else if cleanLine.starts(with: "DESCRIPTION:") {
-                description = extractValue(from: cleanLine, prefix: "DESCRIPTION:")
+            } else if cleanLine.hasPrefix("SUMMARY") {
+                // Handle both SUMMARY: and SUMMARY;params: formats
+                summary = extractValueWithParams(from: cleanLine)
+            } else if cleanLine.hasPrefix("DESCRIPTION") {
+                // Handle both DESCRIPTION: and DESCRIPTION;params: formats
+                description = extractValueWithParams(from: cleanLine)
             } else if cleanLine.starts(with: "DTSTART") {
                 (startDate, isAllDay) = try parseDateTime(cleanLine)
             } else if cleanLine.starts(with: "DTEND") {
@@ -206,6 +208,16 @@ class ICSParser {
     }
 
     private func extractValue(from line: String, prefix: String) -> String {
+        guard let colonIndex = line.firstIndex(of: ":") else {
+            return ""
+        }
+        let value = String(line[line.index(after: colonIndex)...])
+        return unescapeICSString(value)
+    }
+
+    /// Extract value from ICS property that may have parameters
+    /// Handles both "PROP:value" and "PROP;param=x:value" formats
+    private func extractValueWithParams(from line: String) -> String {
         guard let colonIndex = line.firstIndex(of: ":") else {
             return ""
         }

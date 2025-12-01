@@ -199,4 +199,108 @@ final class ICSSubscriptionTests: XCTestCase {
         XCTAssertEqual(subscription.url, "https://example.com/very/long/path/to/calendar.ics")
         XCTAssertTrue(subscription.url.starts(with: "https://"))
     }
+
+    // MARK: - Type Field Tests
+
+    func testDefaultTypeIsUser() {
+        let subscription = ICSSubscription(
+            name: "Test Calendar",
+            url: "https://example.com/calendar.ics"
+        )
+
+        XCTAssertEqual(subscription.type, SubscriptionType.user.rawValue)
+    }
+
+    func testCustomTypeCanBeSetToBuiltin() {
+        let subscription = ICSSubscription(
+            name: "Built-in Calendar",
+            url: "https://example.com/calendar.ics",
+            type: SubscriptionType.builtin.rawValue
+        )
+
+        XCTAssertEqual(subscription.type, SubscriptionType.builtin.rawValue)
+    }
+
+    func testCustomTypeCanBeSetToUser() {
+        let subscription = ICSSubscription(
+            name: "User Calendar",
+            url: "https://example.com/calendar.ics",
+            type: SubscriptionType.user.rawValue
+        )
+
+        XCTAssertEqual(subscription.type, SubscriptionType.user.rawValue)
+    }
+
+    // MARK: - isBuiltIn Computed Property Tests
+
+    func testIsBuiltInReturnsTrueForBuiltinType() {
+        let subscription = ICSSubscription(
+            name: "Built-in Calendar",
+            url: "https://example.com/calendar.ics",
+            type: SubscriptionType.builtin.rawValue
+        )
+
+        XCTAssertTrue(subscription.isBuiltIn)
+    }
+
+    func testIsBuiltInReturnsFalseForUserType() {
+        let subscription = ICSSubscription(
+            name: "User Calendar",
+            url: "https://example.com/calendar.ics",
+            type: SubscriptionType.user.rawValue
+        )
+
+        XCTAssertFalse(subscription.isBuiltIn)
+    }
+
+    // MARK: - isDeletable Computed Property Tests
+
+    func testIsDeletableReturnsTrueForUserType() {
+        let subscription = ICSSubscription(
+            name: "User Calendar",
+            url: "https://example.com/calendar.ics",
+            type: SubscriptionType.user.rawValue
+        )
+
+        XCTAssertTrue(subscription.isDeletable)
+    }
+
+    func testIsDeletableReturnsFalseForBuiltinType() {
+        let subscription = ICSSubscription(
+            name: "Built-in Calendar",
+            url: "https://example.com/calendar.ics",
+            type: SubscriptionType.builtin.rawValue
+        )
+
+        XCTAssertFalse(subscription.isDeletable)
+    }
+
+    func testIsDeletableReturnsTrueByDefault() {
+        let subscription = ICSSubscription(
+            name: "Default Calendar",
+            url: "https://example.com/calendar.ics"
+        )
+
+        XCTAssertTrue(subscription.isDeletable)
+    }
+
+    // MARK: - SubscriptionType Enum Tests
+
+    func testSubscriptionTypeEnum() {
+        XCTAssertEqual(SubscriptionType.user.rawValue, "user")
+        XCTAssertEqual(SubscriptionType.builtin.rawValue, "builtin")
+    }
+
+    func testSubscriptionTypeEnumRawValueInit() {
+        let userType = SubscriptionType(rawValue: "user")
+        let builtinType = SubscriptionType(rawValue: "builtin")
+
+        XCTAssertEqual(userType, SubscriptionType.user)
+        XCTAssertEqual(builtinType, SubscriptionType.builtin)
+    }
+
+    func testSubscriptionTypeEnumInvalidRawValue() {
+        let invalidType = SubscriptionType(rawValue: "invalid")
+        XCTAssertNil(invalidType)
+    }
 }

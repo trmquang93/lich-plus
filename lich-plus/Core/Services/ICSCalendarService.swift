@@ -40,7 +40,8 @@ class ICSCalendarService {
         _ icsEvent: ICSEvent,
         subscriptionId: String,
         subscriptionName: String,
-        colorHex: String
+        colorHex: String,
+        defaultCategory: String = "other"
     ) -> SyncableEvent {
         let event = SyncableEvent(
             icsEventUid: icsEvent.uid,
@@ -51,7 +52,7 @@ class ICSCalendarService {
             isAllDay: icsEvent.isAllDay,
             notes: icsEvent.description,
             isCompleted: false,
-            category: "other",
+            category: defaultCategory,
             reminderMinutes: nil,
             recurrenceRuleData: nil,
             source: EventSource.icsSubscription.rawValue,

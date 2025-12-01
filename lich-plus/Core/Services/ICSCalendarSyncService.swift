@@ -152,11 +152,15 @@ class ICSCalendarSyncService: ObservableObject {
             // Check if event already exists
             let existingEvent = findExistingEvent(icsEventUid: icsEvent.uid, subscriptionId: subscription.id.uuidString)
 
+            // Determine default category based on subscription type
+            let defaultCategory = subscription.isBuiltIn ? "holiday" : "other"
+
             let syncableEvent = calendarService.convertToSyncableEvent(
                 icsEvent,
                 subscriptionId: subscription.id.uuidString,
                 subscriptionName: subscription.name,
-                colorHex: subscription.colorHex
+                colorHex: subscription.colorHex,
+                defaultCategory: defaultCategory
             )
 
             if let existing = existingEvent {

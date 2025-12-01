@@ -29,6 +29,9 @@ struct MainTabView: View {
     // ICS Calendar services
     @State private var icsSyncService: ICSCalendarSyncService?
 
+    // Built-in Calendar services
+    @State private var builtInCalendarManager: BuiltInCalendarManager?
+
     var body: some View {
         TabView(selection: $selectedTab) {
             CalendarView()
@@ -76,6 +79,8 @@ struct MainTabView: View {
             initializeMicrosoftServices()
             // Initialize ICS Calendar services
             initializeICSServices()
+            // Initialize built-in calendars (first launch only)
+            initializeBuiltInCalendars()
         }
         .task {
             // Configure tab bar appearance
@@ -178,6 +183,25 @@ struct MainTabView: View {
         if icsSyncService == nil {
             icsSyncService = ICSCalendarSyncService(modelContext: modelContext)
         }
+    }
+
+    // MARK: - Built-in Calendars Initialization
+
+    /// Initialize built-in calendars on first app launch
+    private func initializeBuiltInCalendars() {
+        let manager = BuiltInCalendarManager()
+        if !manager.isInitialized() {
+            Task {
+                do {
+                    try await manager.initializeBuiltInCalendars(modelContext: modelContext)
+                    // Trigger sync to fetch events from built-in calendars
+                    try await icsSyncService?.pullRemoteChanges()
+                } catch {
+                    print("Failed to initialize built-in calendars: \(error)")
+                }
+            }
+        }
+        builtInCalendarManager = manager
     }
 }
 

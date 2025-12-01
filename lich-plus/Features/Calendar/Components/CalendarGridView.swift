@@ -95,9 +95,9 @@ struct CalendarDayCell: View {
             // Event indicator dots
             if day.hasEvents {
                 HStack(spacing: 2) {
-                    ForEach(0..<min(day.events.count, 3), id: \.self) { _ in
+                    ForEach(Array(day.events.prefix(3)), id: \.id) { event in
                         Circle()
-                            .fill(AppColors.eventOrange)
+                            .fill(eventDotColor(for: event))
                             .frame(width: 4, height: 4)
                     }
                 }
@@ -117,6 +117,17 @@ struct CalendarDayCell: View {
             if day.isCurrentMonth {
                 onTap()
             }
+        }
+    }
+
+    // MARK: - Helper Methods
+
+    private func eventDotColor(for event: Event) -> Color {
+        switch event.category {
+        case .holiday:
+            return AppColors.primary  // Red for holidays
+        default:
+            return AppColors.eventOrange  // Orange for other events
         }
     }
 }

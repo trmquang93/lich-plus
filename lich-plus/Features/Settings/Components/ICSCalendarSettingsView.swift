@@ -16,6 +16,16 @@ struct ICSCalendarSettingsView: View {
     @State private var errorMessage: String?
     @State private var showError = false
 
+    // MARK: - Computed Properties
+
+    var builtInSubscriptions: [ICSSubscription] {
+        syncService.subscriptions.filter { $0.isBuiltIn }
+    }
+
+    var userSubscriptions: [ICSSubscription] {
+        syncService.subscriptions.filter { !$0.isBuiltIn }
+    }
+
     var body: some View {
         NavigationStack {
             List {
@@ -58,9 +68,30 @@ struct ICSCalendarSettingsView: View {
                     Text("Sync Status")
                 }
 
-                // Subscriptions Section
+                // Built-in Calendars Section
+                if !builtInSubscriptions.isEmpty {
+                    Section {
+                        ForEach(builtInSubscriptions, id: \.id) { subscription in
+                            BuiltInSubscriptionRowView(subscription: subscription) {
+                                Task {
+                                    do {
+                                        try await syncService.updateSubscription(subscription, isEnabled: !subscription.isEnabled)
+                                    } catch {
+                                        errorMessage = error.localizedDescription
+                                        showError = true
+                                    }
+                                }
+                            }
+                        }
+                    } header: {
+                        Text("settings.builtInCalendars")
+                    }
+                }
+
+                // My Calendars Section
                 Section {
-                    if syncService.subscriptions.isEmpty {
+                    if userSubscriptions.isEmpty && builtInSubscriptions.isEmpty {
+                        // Show comprehensive empty state only when both are empty
                         VStack(alignment: .center, spacing: AppTheme.spacing12) {
                             Image(systemName: "calendar.badge.plus")
                                 .font(.title)
@@ -89,8 +120,9 @@ struct ICSCalendarSettingsView: View {
                         }
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, AppTheme.spacing12)
-                    } else {
-                        ForEach(syncService.subscriptions, id: \.id) { subscription in
+                    } else if !userSubscriptions.isEmpty {
+                        // Show user subscriptions with delete actions
+                        ForEach(userSubscriptions, id: \.id) { subscription in
                             SubscriptionRowView(subscription: subscription) {
                                 Task {
                                     do {
@@ -107,7 +139,7 @@ struct ICSCalendarSettingsView: View {
                     }
                 } header: {
                     HStack {
-                        Text("Subscriptions")
+                        Text("settings.myCalendars")
                         Spacer()
                         Button(action: { showAddSubscription = true }) {
                             Image(systemName: "plus.circle.fill")
@@ -273,8 +305,10 @@ struct SubscriptionRowView: View {
         }
         .padding(.vertical, AppTheme.spacing8)
         .swipeActions(edge: .trailing) {
-            Button(role: .destructive, action: onDelete) {
-                Label("Delete", systemImage: "trash")
+            if subscription.isDeletable {
+                Button(role: .destructive, action: onDelete) {
+                    Label("Delete", systemImage: "trash")
+                }
             }
         }
     }
@@ -284,6 +318,40 @@ struct SubscriptionRowView: View {
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         return formatter.string(from: date)
+    }
+}
+
+// MARK: - Built-In Subscription Row View
+
+struct BuiltInSubscriptionRowView: View {
+    let subscription: ICSSubscription
+    let onToggle: () -> Void
+
+    var body: some View {
+        HStack(spacing: AppTheme.spacing12) {
+            // Star icon for built-in
+            Image(systemName: "star.fill")
+                .foregroundStyle(AppColors.primary)
+                .font(.body)
+
+            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                Text(subscription.name)
+                    .font(.body)
+                    .foregroundStyle(AppColors.textPrimary)
+
+                Text("settings.systemCalendar")
+                    .font(.caption)
+                    .foregroundStyle(AppColors.textSecondary)
+            }
+
+            Spacer()
+
+            Toggle("", isOn: .constant(subscription.isEnabled))
+                .onChange(of: subscription.isEnabled) {
+                    onToggle()
+                }
+        }
+        .padding(.vertical, AppTheme.spacing8)
     }
 }
 

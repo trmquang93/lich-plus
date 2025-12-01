@@ -1564,6 +1564,57 @@
         }
       }
     },
+    "settings.builtInCalendars" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Built-in Calendars"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lịch tích hợp"
+          }
+        }
+      }
+    },
+    "settings.myCalendars" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Calendars"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lịch của tôi"
+          }
+        }
+      }
+    },
+    "settings.systemCalendar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System calendar"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lịch hệ thống"
+          }
+        }
+      }
+    },
     "Sign in with Microsoft" : {
 
     },
@@ -1594,9 +1645,6 @@
       }
     },
     "Subscribe to calendars" : {
-
-    },
-    "Subscriptions" : {
 
     },
     "Supported URL formats:" : {
