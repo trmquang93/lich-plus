@@ -103,11 +103,11 @@ struct CalendarView: View {
 
                 // Calendar grid with horizontal swipe navigation
                 InfinitePageView(
-                    initialPage: currentNavigationOffset,
-                    selectedDate: dataManager.selectedDate,
-                    navigationUnit: navigationUnit,
-                    content: { offset, unit in
-                        let month = unit == .month
+                    initialIndex: currentNavigationOffset,
+                    currentValue: currentNavigationOffset,
+                    refreshTrigger: AnyHashable(dataManager.selectedDate),
+                    content: { offset in
+                        let month = navigationUnit == .month
                             ? dataManager.getMonthFromToday(offset: offset)
                             : dataManager.getMonthForWeek(offset: offset)
 
@@ -135,42 +135,60 @@ struct CalendarView: View {
                         }
                     }
                 )
-                ScrollView {
-                    VStack(spacing: 0) {
 
-                        // Quick info banner for selected day or today
-                        if let selectedDay = dataManager.selectedDay {
-                            Divider()
-                                .foregroundStyle(AppColors.borderLight)
-                                .padding(.horizontal, AppTheme.spacing16)
+                // Quick info banner + events with swipe navigation
+                if dataManager.selectedDay != nil {
+                    Divider()
+                        .foregroundStyle(AppColors.borderLight)
+                        .padding(.horizontal, AppTheme.spacing16)
 
-                            let luckyHours = DayTypeCalculator.getLuckyHours(for: selectedDay.date)
-                            QuickInfoBannerView(
-                                day: selectedDay,
-                                luckyHours: luckyHours,
-                                onTap: {
-                                    showDayDetail = true
+                    InfinitePageView(
+                        initialIndex: dataManager.selectedDate,
+                        currentValue: dataManager.selectedDate,
+                        content: { date in
+                            let day = dataManager.createCalendarDay(
+                                from: date,
+                                isCurrentMonth: true,
+                                isToday: Calendar.current.isDateInToday(date)
+                            )
+                            let hours = DayTypeCalculator.getLuckyHours(for: date)
+
+                            // ScrollView inside each page for scrollable content
+                            return ScrollView {
+                                VStack(spacing: 0) {
+                                    QuickInfoBannerView(
+                                        day: day,
+                                        luckyHours: hours,
+                                        onTap: {
+                                            showDayDetail = true
+                                        }
+                                    )
+
+                                    EventsListView(
+                                        events: day.events,
+                                        day: day
+                                    )
+
+                                    Spacer(minLength: AppTheme.spacing16)
                                 }
-                            )
-                        }
+                                .background(AppColors.background)
+                                .trackScrollOffset()
+                            }
+                            .coordinateSpace(name: "scrollView")
+                        },
+                        onPageChanged: { newDate in
+                            dataManager.selectedDate = newDate
 
-                        // Events list for selected day
-                        if let selectedDay = dataManager.selectedDay {
-                            EventsListView(
-                                events: selectedDay.events,
-                                day: selectedDay
-                            )
+                            let newOffset = dataManager.calculateMonthOffsetFromToday(for: newDate)
+                            if newOffset != displayedMonthOffset {
+                                displayedMonthOffset = newOffset
+                            }
                         }
-
-                        Spacer(minLength: AppTheme.spacing16)
+                    )
+                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
+                        scrollOffset = offset
+                        updateDisplayMode(for: offset)
                     }
-                    .background(AppColors.background)
-                    .trackScrollOffset()
-                }
-                .coordinateSpace(name: "scrollView")
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
-                    scrollOffset = offset
-                    updateDisplayMode(for: offset)
                 }
             }
             .navigationDestination(isPresented: $showDayDetail) {

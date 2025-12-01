@@ -102,7 +102,7 @@ class CalendarDataManager: ObservableObject {
         return generateCalendarMonth(for: targetDate)
     }
 
-    /// Get calendar month containing the week at given offset from today
+/// Get calendar month containing the week at given offset from today
     /// offset 0 = current week, -1 = previous week, 1 = next week
     func getMonthForWeek(offset: Int) -> CalendarMonth {
         let today = Date()
@@ -121,6 +121,22 @@ class CalendarDataManager: ObservableObject {
             }
         }
         return weeks.first ?? []
+    }
+
+    /// Calculate month offset from today for any given date
+    func calculateMonthOffsetFromToday(for date: Date) -> Int {
+        let today = Date()
+        let todayComponents = calendar.dateComponents([.year, .month], from: today)
+        let dateComponents = calendar.dateComponents([.year, .month], from: date)
+
+        guard let todayYear = todayComponents.year,
+              let todayMonth = todayComponents.month,
+              let dateYear = dateComponents.year,
+              let dateMonth = dateComponents.month else {
+            return 0
+        }
+
+        return (dateYear - todayYear) * 12 + (dateMonth - todayMonth)
     }
 
     // MARK: - Calendar Generation
@@ -236,7 +252,7 @@ class CalendarDataManager: ObservableObject {
 
     // MARK: - Private Methods
 
-    private func createCalendarDay(
+    func createCalendarDay(
         from date: Date,
         isCurrentMonth: Bool,
         isToday: Bool = false
