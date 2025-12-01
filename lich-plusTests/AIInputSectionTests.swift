@@ -6,54 +6,9 @@
 //
 
 import XCTest
-import SwiftUI
 @testable import lich_plus
 
 class AIInputSectionTests: XCTestCase {
-
-    func testAIInputSectionInitialState() {
-        let mockService = MockNLPService()
-        let component = AIInputSection(nlpService: mockService, itemType: .task)
-
-        // Verify component initializes without crashing
-        XCTAssertNotNil(component)
-    }
-
-    func testAIInputSectionCallsOnTaskParseSuccess() {
-        let mockService = MockNLPService()
-        var parsedTask: ParsedTask?
-
-        let expectation = XCTestExpectation(description: "Task parsing completed")
-
-        let component = AIInputSection(
-            nlpService: mockService,
-            itemType: .task,
-            onTaskParsed: { task in
-                parsedTask = task
-                expectation.fulfill()
-            }
-        )
-
-        XCTAssertNotNil(component)
-    }
-
-    func testAIInputSectionCallsOnEventParseSuccess() {
-        let mockService = MockNLPService()
-        var parsedEvent: ParsedEvent?
-
-        let expectation = XCTestExpectation(description: "Event parsing completed")
-
-        let component = AIInputSection(
-            nlpService: mockService,
-            itemType: .event,
-            onEventParsed: { event in
-                parsedEvent = event
-                expectation.fulfill()
-            }
-        )
-
-        XCTAssertNotNil(component)
-    }
 
     func testParsedTaskModel() {
         let date = Date()

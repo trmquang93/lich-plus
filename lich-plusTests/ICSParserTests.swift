@@ -122,7 +122,7 @@ final class ICSParserTests: XCTestCase {
 
         let events = try sut.parse(icsContent)
 
-        XCTAssertEqual(events[0].description, "This is a test description")
+        XCTAssertEqual(events.first?.description, "This is a test description")
     }
 
     func testParseEventWithLocation() throws {

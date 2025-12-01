@@ -76,6 +76,7 @@ class ICSParser {
         var events: [ICSEvent] = []
         var currentEventLines: [String] = []
         var inEvent = false
+        var lastParseError: Error?
 
         for line in lines {
             if line == "BEGIN:VEVENT" {
@@ -88,7 +89,9 @@ class ICSParser {
                         let event = try parseEvent(currentEventLines)
                         events.append(event)
                     } catch {
-                        // Skip invalid events and continue parsing
+                        // Track the last error for reporting if no events parse successfully
+                        lastParseError = error
+                        // Continue parsing other events
                         continue
                     }
                 }
@@ -96,6 +99,11 @@ class ICSParser {
             } else if inEvent {
                 currentEventLines.append(line)
             }
+        }
+
+        // If no events were successfully parsed but we had parsing errors, throw the last error
+        if events.isEmpty, let error = lastParseError {
+            throw error
         }
 
         return events
@@ -174,15 +182,23 @@ class ICSParser {
             }
         }
 
-        // Try to parse as datetime with Z (UTC)
+        // Try to parse compact ICS format with Z (UTC): 20231225T100000Z
+        let compactUTCFormatter = DateFormatter()
+        compactUTCFormatter.dateFormat = "yyyyMMdd'T'HHmmss'Z'"
+        compactUTCFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        if let date = compactUTCFormatter.date(from: valuePart) {
+            return (date, false)
+        }
+
+        // Try to parse as ISO8601 datetime with Z (UTC): 2023-12-25T10:00:00Z
         if let date = dateFormatter.date(from: valuePart) {
             return (date, false)
         }
 
-        // Try to parse datetime without timezone info (local interpretation)
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMMdd'T'HHmmss"
-        if let date = formatter.date(from: valuePart) {
+        // Try to parse datetime without timezone info (local interpretation): 20231225T100000
+        let localFormatter = DateFormatter()
+        localFormatter.dateFormat = "yyyyMMdd'T'HHmmss"
+        if let date = localFormatter.date(from: valuePart) {
             return (date, false)
         }
 

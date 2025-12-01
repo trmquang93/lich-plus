@@ -428,4 +428,12 @@ class EventKitService: NSObject, ObservableObject {
 
         return syncable
     }
+
+    /// Get the event identifier for an EKEvent
+    /// This is a helper method that can be overridden in tests to provide mock identifiers
+    /// - Parameter ekEvent: The EKEvent to get the identifier for
+    /// - Returns: The event identifier, or nil if not available
+    func getEventIdentifier(_ ekEvent: EKEvent) -> String? {
+        ekEvent.eventIdentifier
+    }
 }

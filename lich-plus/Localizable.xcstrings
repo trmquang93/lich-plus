@@ -23,6 +23,12 @@
         }
       }
     },
+    "• http://calendar-server.com/events.ics" : {
+
+    },
+    "• https://example.com/calendar.ics" : {
+
+    },
     "1.0.0" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -61,6 +67,15 @@
       }
     },
     "Account" : {
+
+    },
+    "Add an ICS calendar URL to get started" : {
+
+    },
+    "Add Calendar" : {
+
+    },
+    "Add ICS Calendar" : {
 
     },
     "Add Time" : {
@@ -372,6 +387,9 @@
         }
       }
     },
+    "Calendar Name" : {
+
+    },
     "Calendar Sync" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -388,6 +406,9 @@
           }
         }
       }
+    },
+    "Calendar URL" : {
+
     },
     "calendar_selected" : {
       "extractionState" : "manual",
@@ -476,6 +497,9 @@
           }
         }
       }
+    },
+    "Cancel" : {
+
     },
     "category.birthday" : {
       "extractionState" : "manual",
@@ -811,6 +835,9 @@
         }
       }
     },
+    "Delete" : {
+
+    },
     "Disconnect Google Account" : {
 
     },
@@ -1002,6 +1029,12 @@
         }
       }
     },
+    "ICS Calendar" : {
+
+    },
+    "ICS Calendar subscriptions are read-only. Events are automatically synced with your calendar app." : {
+
+    },
     "Import from Apple Calendar" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1018,6 +1051,9 @@
           }
         }
       }
+    },
+    "Information" : {
+
     },
     "Intelligent calendar and task recommendations" : {
       "extractionState" : "manual",
@@ -1104,7 +1140,13 @@
         }
       }
     },
+    "Last sync: %@" : {
+
+    },
     "Last synced" : {
+
+    },
+    "Last synced: %@" : {
 
     },
     "Loading..." : {
@@ -1126,6 +1168,9 @@
           }
         }
       }
+    },
+    "No Calendar Subscriptions" : {
+
     },
     "No calendars found" : {
 
@@ -1547,6 +1592,15 @@
           }
         }
       }
+    },
+    "Subscribe to calendars" : {
+
+    },
+    "Subscriptions" : {
+
+    },
+    "Supported URL formats:" : {
+
     },
     "Sync" : {
       "extractionState" : "manual",

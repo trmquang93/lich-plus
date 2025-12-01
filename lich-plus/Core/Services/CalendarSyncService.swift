@@ -74,6 +74,13 @@ final class CalendarSyncService: ObservableObject {
     @Published var lastSyncDate: Date?
     @Published var syncError: SyncError?
 
+    // Test hooks for verifying deletion logic
+    // Required because SwiftData in-memory containers don't reliably reflect property changes
+    var lastDeleteCheckEventCount: Int = 0
+    var lastMarkedDeletedCount: Int = 0
+    var lastMarkedEventIsDeletedValue: Bool = false
+    var lastHasChangesAfterDeletion: Bool = false
+
     // MARK: - Initialization
 
     init(eventKitService: EventKitService, modelContext: ModelContext) {
@@ -151,11 +158,17 @@ final class CalendarSyncService: ObservableObject {
 
             // Process events in batches to prevent memory issues
             for (index, ekEvent) in remoteEvents.enumerated() {
-                if let existing = findExistingEvent(ekEventIdentifier: ekEvent.eventIdentifier) {
-                    // Event exists locally - check if remote is newer
+                // Use helper method to get identifier (allows mocking in tests)
+                let eventIdentifier = eventKitService.getEventIdentifier(ekEvent)
+
+                // Try to find existing event if we have an identifier
+                let existingEvent = eventIdentifier.flatMap { findExistingEvent(ekEventIdentifier: $0) }
+
+                if let existing = existingEvent {
+                    // Event exists locally - check if remote is newer than local modification
                     let remoteModDate = ekEvent.lastModifiedDate ?? ekEvent.startDate ?? Date()
-                    let existingModDate = existing.lastModifiedRemote ?? Date.distantPast
-                    if remoteModDate > existingModDate {
+                    let localModDate = existing.lastModifiedLocal ?? Date.distantPast
+                    if remoteModDate > localModDate {
                         // Remote is newer - update local
                         updateEventFromRemote(existing, ekEvent)
                     }
@@ -178,19 +191,33 @@ final class CalendarSyncService: ObservableObject {
             try modelContext.save()
 
             // Find deleted events (exist locally but not in remote)
-            let descriptor = FetchDescriptor<SyncableEvent>(
-                predicate: #Predicate { $0.ekEventIdentifier != nil && !$0.isDeleted }
-            )
-            let localEvents = try modelContext.fetch(descriptor)
+            // Build set of remote identifiers using the helper method
+            let remoteIdentifiers = Set(remoteEvents.compactMap { eventKitService.getEventIdentifier($0) })
 
-            let remoteIdentifiers = Set(remoteEvents.map { $0.eventIdentifier })
-            for localEvent in localEvents {
-                if let ekId = localEvent.ekEventIdentifier, !remoteIdentifiers.contains(ekId) {
-                    // Event was deleted remotely
-                    localEvent.isDeleted = true
+            // Fetch all events - filter in Swift to avoid SwiftData predicate issues
+            let descriptor = FetchDescriptor<SyncableEvent>()
+            let allLocalEvents = try modelContext.fetch(descriptor)
+            lastDeleteCheckEventCount = allLocalEvents.count  // Debug
+
+            // Filter to events that have Apple Calendar identifiers and are not in remote
+            lastMarkedDeletedCount = 0  // Reset before loop
+            for localEvent in allLocalEvents {
+                // Skip if already deleted or no Apple Calendar identifier
+                guard !localEvent.isDeleted,
+                      let ekId = localEvent.ekEventIdentifier,
+                      !remoteIdentifiers.contains(ekId) else {
+                    continue
                 }
+                // Event was deleted remotely
+                localEvent.isDeleted = true
+                lastMarkedDeletedCount += 1
+                lastMarkedEventIsDeletedValue = localEvent.isDeleted  // Check if assignment worked
             }
 
+            // Record hasChanges state for debugging
+            lastHasChangesAfterDeletion = modelContext.hasChanges
+
+            // Always save to ensure changes are persisted
             try modelContext.save()
         } catch let error as SyncError {
             throw error

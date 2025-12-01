@@ -7,25 +7,16 @@
 
 import XCTest
 import SwiftData
-import SwiftUI
 @testable import lich_plus
 
 final class AddEditTaskSheetTests: XCTestCase {
 
-    var modelContext: ModelContext!
+    // MARK: - Helper
 
-    override func setUp() async throws {
-        try await super.setUp()
-
-        // Create in-memory SwiftData model context
+    private func createInMemoryContext() throws -> ModelContext {
         let config = ModelConfiguration(isStoredInMemoryOnly: true)
         let container = try ModelContainer(for: SyncableEvent.self, configurations: config)
-        modelContext = ModelContext(container)
-    }
-
-    override func tearDown() async throws {
-        modelContext = nil
-        try await super.tearDown()
+        return ModelContext(container)
     }
 
     // MARK: - Priority Tests
@@ -190,7 +181,10 @@ final class AddEditTaskSheetTests: XCTestCase {
 
     // MARK: - Persistence Tests
 
+    @MainActor
     func testSyncableEvent_PersistsTaskTypeToDatabase() throws {
+        let modelContext = try createInMemoryContext()
+
         let event = SyncableEvent(
             title: "Database Task",
             startDate: Date(),
@@ -205,7 +199,10 @@ final class AddEditTaskSheetTests: XCTestCase {
         XCTAssertEqual(event.priority, "high")
     }
 
+    @MainActor
     func testSyncableEvent_PersistsEventTypeToDatabase() throws {
+        let modelContext = try createInMemoryContext()
+
         let event = SyncableEvent(
             title: "Database Event",
             startDate: Date(),
@@ -222,7 +219,10 @@ final class AddEditTaskSheetTests: XCTestCase {
         XCTAssertEqual(event.location, "Database Room")
     }
 
+    @MainActor
     func testSyncableEvent_UpdatesPersistentProperties() throws {
+        let modelContext = try createInMemoryContext()
+
         let event = SyncableEvent(
             title: "Original",
             startDate: Date(),

@@ -10,6 +10,7 @@ import Foundation
 // MARK: - Mock NLP Service
 
 /// Mock implementation of NLPService for testing and previews
+@MainActor
 class MockNLPService: NLPService {
     private let simulateNetworkDelay: Bool
     private let shouldFail: Bool

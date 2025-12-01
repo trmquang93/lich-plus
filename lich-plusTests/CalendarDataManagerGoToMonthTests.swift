@@ -15,6 +15,9 @@ class CalendarDataManagerGoToMonthTests: XCTestCase {
     override func setUp() {
         super.setUp()
         manager = CalendarDataManager()
+        // Initialize calendar with current month to populate days array
+        let components = Calendar.current.dateComponents([.month, .year], from: Date())
+        manager.goToMonth(components.month ?? 1, year: components.year ?? 2025)
     }
 
     override func tearDown() {
@@ -31,8 +34,11 @@ class CalendarDataManagerGoToMonthTests: XCTestCase {
 
     func testGoToMonthPreservesSelectedDate() {
         // First select a day
-        let firstDay = manager.currentMonth.days.first { $0.isCurrentMonth }
-        manager.selectDay(firstDay!)
+        guard let firstDay = manager.currentMonth.days.first(where: { $0.isCurrentMonth }) else {
+            XCTFail("No day with isCurrentMonth found")
+            return
+        }
+        manager.selectDay(firstDay)
 
         let selectedDateBeforeNavigation = manager.selectedDate
 

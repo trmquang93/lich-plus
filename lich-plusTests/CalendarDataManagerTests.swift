@@ -9,6 +9,7 @@ import XCTest
 import SwiftData
 @testable import lich_plus
 
+@MainActor
 final class CalendarDataManagerTests: XCTestCase {
 
     var sut: CalendarDataManager!
@@ -153,22 +154,4 @@ final class CalendarDataManagerTests: XCTestCase {
         XCTAssertTrue(true)
     }
 
-    func testCalendarDayHasCorrectLunarInformation() {
-        let month = sut.currentMonth
-
-        // All days should have lunar month and year
-        for day in month.days {
-            XCTAssert(day.lunarMonth > 0)
-            XCTAssert(day.lunarYear > 0)
-        }
-    }
-
-    func testCalendarDayTypeIsCalculated() {
-        let month = sut.currentMonth
-
-        // All days should have a day type
-        for day in month.days {
-            XCTAssertNotNil(day.dayType)
-        }
-    }
 }

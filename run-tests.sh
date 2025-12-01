@@ -233,6 +233,7 @@ fi
 run_tests() {
     local test_target=$1
     local test_name=$2
+    local temp_output="/tmp/xcodebuild_output_$$.log"
 
     echo ""
     echo "=== RUNNING $test_name ==="
@@ -243,6 +244,7 @@ run_tests() {
     echo "Device ID: $DEVICE_ID"
     echo ""
 
+    # Run tests and capture raw output to temp file while also displaying via xcbeautify
     if [ "$USE_XCBEAUTIFY" = true ]; then
         xcodebuild \
             -workspace "$WORKSPACE" \
@@ -250,7 +252,7 @@ run_tests() {
             -destination "$DESTINATION" \
             -only-testing "$test_target" \
             test \
-            2>&1 | xcbeautify | grep -v "Compiling"
+            2>&1 | tee "$temp_output" | xcbeautify | grep -v "Compiling"
     else
         xcodebuild \
             -workspace "$WORKSPACE" \
@@ -258,8 +260,28 @@ run_tests() {
             -destination "$DESTINATION" \
             -only-testing "$test_target" \
             test \
-            2>&1 | grep -v "Compiling"
+            2>&1 | tee "$temp_output" | grep -v "Compiling"
     fi
+
+    local test_exit_code=${PIPESTATUS[0]}
+
+    # Check for malloc/memory errors in raw output
+    if grep -q "malloc:.*error\|pointer being freed was not allocated" "$temp_output" 2>/dev/null; then
+        echo ""
+        echo "=== MEMORY ERROR DETECTED ==="
+        grep -E "malloc:|pointer being freed" "$temp_output" | head -20
+        echo ""
+        echo "Memory corruption detected during tests. This may indicate:"
+        echo "  - Third-party library issues"
+        echo "  - iOS simulator version incompatibility"
+        echo "  - Thread safety problems"
+        echo ""
+        rm -f "$temp_output"
+        exit 1
+    fi
+
+    rm -f "$temp_output"
+    return $test_exit_code
 }
 
 # Run the requested tests

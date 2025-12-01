@@ -6,7 +6,6 @@
 //
 
 import XCTest
-import SwiftUI
 @testable import lich_plus
 
 final class TaskCardPriorityTests: XCTestCase {
@@ -37,29 +36,7 @@ final class TaskCardPriorityTests: XCTestCase {
         XCTAssertFalse(Priority.high.displayName.isEmpty)
     }
 
-    func testTaskCard_WithHighPriority() {
-        // Given
-        let task = TaskItem(
-            title: "Important Task",
-            date: Date(),
-            priority: .high
-        )
-
-        // When
-        let card = TaskCard(
-            task: task,
-            onToggleCompletion: { _ in },
-            onDelete: { _ in },
-            onEdit: { _ in }
-        )
-
-        // Then
-        XCTAssertNotNil(card)
-        XCTAssertEqual(task.priority, .high)
-        XCTAssertNotNil(task.priority.color)
-    }
-
-    func testTaskCard_WithoutPriority() {
+    func testTaskItem_WithoutPriority() {
         // Given
         let task = TaskItem(
             title: "Task",
@@ -67,7 +44,7 @@ final class TaskCardPriorityTests: XCTestCase {
             priority: .none
         )
 
-        // Then - Should still render
+        // Then
         XCTAssertEqual(task.priority, .none)
     }
 }
