@@ -3,11 +3,12 @@ import UIKit
 
 struct InfinitePageView<Content: View>: UIViewControllerRepresentable {
     let initialPage: Int
+    let selectedDate: Date
     let content: (Int) -> Content
     let onPageChanged: (Int) -> Void
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+        Coordinator(self, initialSelectedDate: selectedDate)
     }
 
     func makeUIViewController(context: Context) -> UIPageViewController {
@@ -26,6 +27,16 @@ struct InfinitePageView<Content: View>: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ pageVC: UIPageViewController, context: Context) {
+        // Check if selectedDate changed - refresh current page to update selection UI
+        if context.coordinator.lastSelectedDate != selectedDate {
+            context.coordinator.lastSelectedDate = selectedDate
+            if let currentVC = pageVC.viewControllers?.first as? IndexedHostingController<Content> {
+                let newVC = context.coordinator.makeHostingController(for: currentVC.pageIndex)
+                pageVC.setViewControllers([newVC], direction: .forward, animated: false)
+            }
+            return
+        }
+
         // Update content when parent needs to programmatically change page
         guard let currentVC = pageVC.viewControllers?.first as? IndexedHostingController<Content>,
               currentVC.pageIndex != initialPage else { return }
@@ -37,9 +48,11 @@ struct InfinitePageView<Content: View>: UIViewControllerRepresentable {
 
     class Coordinator: NSObject, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
         var parent: InfinitePageView
+        var lastSelectedDate: Date
 
-        init(_ parent: InfinitePageView) {
+        init(_ parent: InfinitePageView, initialSelectedDate: Date) {
             self.parent = parent
+            self.lastSelectedDate = initialSelectedDate
         }
 
         func makeHostingController(for index: Int) -> IndexedHostingController<Content> {

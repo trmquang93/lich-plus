@@ -45,6 +45,7 @@ struct CalendarView: View {
                 // Calendar grid with horizontal swipe navigation
                 InfinitePageView(
                     initialPage: displayedMonthOffset,
+                    selectedDate: dataManager.selectedDate,
                     content: { offset in
                         CalendarGridView(
                             month: dataManager.getMonthFromToday(offset: offset),
