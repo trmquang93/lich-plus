@@ -22,6 +22,14 @@ SCHEME="lich-plus"
 # Flags
 CLEAN_BUILD=false
 
+# Load environment file if it exists
+ENV_FILE=".env"
+if [ -f "$ENV_FILE" ]; then
+    set -a
+    source "$ENV_FILE"
+    set +a
+fi
+
 # Function to display help
 show_help() {
     cat << EOF
@@ -161,6 +169,22 @@ select_device_interactive() {
 
 # Try to find a device in priority order
 find_build_device() {
+    # Priority 0: Check for environment variable
+    if [ -n "$TEST_DEVICE_ID" ]; then
+        DEVICE_ID="$TEST_DEVICE_ID"
+        # Auto-detect device type by checking if it's a simulator
+        if xcrun simctl list devices --json 2>/dev/null | grep -q "\"udid\" : \"$DEVICE_ID\""; then
+            DEVICE_TYPE="simulator"
+            DEVICE_NAME=$(xcrun simctl list devices --json 2>/dev/null | \
+                jq -r ".devices[][] | select(.udid == \"$DEVICE_ID\") | .name" | head -1)
+        else
+            DEVICE_TYPE="device"
+            DEVICE_NAME="Physical Device"
+        fi
+        echo "Using device from .env: $DEVICE_NAME ($DEVICE_TYPE)"
+        return 0
+    fi
+
     # Priority 1: Check for booted simulator
     local booted
     booted=$(get_booted_simulator)
