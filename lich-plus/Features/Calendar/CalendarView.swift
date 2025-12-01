@@ -62,7 +62,7 @@ struct CalendarView: View {
                 )
 
                 // Quick info banner + events with swipe navigation
-                if let _ = dataManager.selectedDay {
+                if dataManager.selectedDay != nil {
                     Divider()
                         .foregroundStyle(AppColors.borderLight)
                         .padding(.horizontal, AppTheme.spacing16)
