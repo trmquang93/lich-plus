@@ -193,3 +193,25 @@ struct Festival: Identifiable, Equatable {
         case traditional
     }
 }
+
+// MARK: - Calendar Display Mode
+
+enum CalendarDisplayMode: Equatable {
+    case expanded
+    case compact
+    case transitioning(progress: Double)
+
+    static let collapseThreshold: CGFloat = 50
+    static let expandThreshold: CGFloat = 20
+    static let minHeight: CGFloat = 46   // 1 row
+    static let maxHeight: CGFloat = 276  // 6 rows
+
+    var gridHeight: CGFloat {
+        switch self {
+        case .expanded: return Self.maxHeight
+        case .compact: return Self.minHeight
+        case .transitioning(let progress):
+            return Self.minHeight + (Self.maxHeight - Self.minHeight) * progress
+        }
+    }
+}

@@ -13,12 +13,23 @@ struct CalendarGridView: View {
     let month: CalendarMonth
     @Binding var selectedDate: Date
     let onDaySelected: (CalendarDay) -> Void
+    let displayMode: CalendarDisplayMode
+    let visibleWeekIndex: Int?
 
     private let columns = Array(repeating: GridItem(.flexible()), count: 7)
 
+    private var visibleDays: [CalendarDay] {
+        guard let weekIndex = visibleWeekIndex else {
+            return month.days
+        }
+        let weeks = month.weeksOfDays
+        guard weekIndex < weeks.count else { return month.days }
+        return weeks[weekIndex]
+    }
+
     var body: some View {
         LazyVGrid(columns: columns, spacing: AppTheme.spacing4) {
-            ForEach(month.days) { day in
+            ForEach(visibleDays) { day in
                 CalendarDayCell(
                     day: day,
                     isSelected: Calendar.current.isDate(selectedDate, inSameDayAs: day.date),
@@ -31,6 +42,9 @@ struct CalendarGridView: View {
         }
         .padding(.horizontal, AppTheme.spacing16)
         .padding(.vertical, AppTheme.spacing8)
+        .frame(height: displayMode.gridHeight)
+        .clipped()
+        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: displayMode)
     }
 }
 
@@ -170,7 +184,9 @@ struct CalendarDayCell: View {
         CalendarGridView(
             month: month,
             selectedDate: .constant(Date()),
-            onDaySelected: { _ in }
+            onDaySelected: { _ in },
+            displayMode: .expanded,
+            visibleWeekIndex: nil
         )
 
         Spacer()

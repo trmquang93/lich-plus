@@ -1,10 +1,16 @@
 import SwiftUI
 import UIKit
 
+enum NavigationUnit {
+    case month
+    case week
+}
+
 struct InfinitePageView<Content: View>: UIViewControllerRepresentable {
     let initialPage: Int
     let selectedDate: Date
-    let content: (Int) -> Content
+    let navigationUnit: NavigationUnit
+    let content: (Int, NavigationUnit) -> Content
     let onPageChanged: (Int) -> Void
 
     func makeCoordinator() -> Coordinator {
@@ -56,7 +62,7 @@ struct InfinitePageView<Content: View>: UIViewControllerRepresentable {
         }
 
         func makeHostingController(for index: Int) -> IndexedHostingController<Content> {
-            let controller = IndexedHostingController(rootView: parent.content(index))
+            let controller = IndexedHostingController(rootView: parent.content(index, parent.navigationUnit))
             controller.pageIndex = index
             return controller
         }
