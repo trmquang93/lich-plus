@@ -86,6 +86,52 @@ class MicrosoftCalendarService {
         return allEvents
     }
 
+    /// Fetch ALL events from a specific calendar without date limits
+    /// - Parameters:
+    ///   - calendarId: The calendar ID
+    ///   - progressHandler: Optional callback for progress updates (events fetched so far)
+    /// - Returns: Array of all MicrosoftEvent objects
+    func fetchAllEvents(
+        calendarId: String,
+        progressHandler: ((Int) -> Void)? = nil
+    ) async throws -> [MicrosoftEvent] {
+        let accessToken = try await authService.getAccessToken()
+
+        var allEvents: [MicrosoftEvent] = []
+        var nextLink: String? = "\(baseURL)/me/calendars/\(calendarId)/events?$top=250&$orderby=start/dateTime"
+
+        while let urlString = nextLink {
+            guard let url = URL(string: urlString) else {
+                throw MicrosoftCalendarError.invalidURL
+            }
+
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+            request.setValue("Pacific Standard Time", forHTTPHeaderField: "Prefer")
+
+            // Use RetryUtility to handle rate limiting with exponential backoff
+            let (data, response) = try await RetryUtility.withExponentialBackoff {
+                return try await self.session.data(for: request)
+            }
+
+            try validateResponse(response, data: data)
+
+            let eventResponse = try JSONDecoder().decode(MicrosoftEventListResponse.self, from: data)
+            if let items = eventResponse.value {
+                // Filter out cancelled events
+                let activeEvents = items.filter { $0.isCancelled != true }
+                allEvents.append(contentsOf: activeEvents)
+
+                // Call progress handler after each page
+                progressHandler?(allEvents.count)
+            }
+            nextLink = eventResponse.nextLink
+        }
+
+        return allEvents
+    }
+
     // MARK: - Convert to SyncableEvent
 
     /// Convert a MicrosoftEvent to SyncableEvent for local storage

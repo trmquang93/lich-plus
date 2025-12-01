@@ -19,12 +19,11 @@ class MicrosoftCalendarSyncService: ObservableObject {
     private let calendarService: MicrosoftCalendarService
     private let modelContext: ModelContext
 
-    // Sync range: 30 days past to 365 days future
-    private let syncRangePast: TimeInterval = -30 * 24 * 60 * 60
-    private let syncRangeFuture: TimeInterval = 365 * 24 * 60 * 60
-
     // UserDefaults key for last sync date
     private let lastSyncDateKey = "MicrosoftCalendarLastSyncDate"
+
+    // Batch size for processing events (prevents memory issues with large calendars)
+    private let eventBatchSize = 100
 
     init(authService: MicrosoftAuthService, calendarService: MicrosoftCalendarService, modelContext: ModelContext) {
         self.authService = authService
@@ -57,26 +56,29 @@ class MicrosoftCalendarSyncService: ObservableObject {
                 return
             }
 
-            // Calculate sync date range
-            let now = Date()
-            let startDate = now.addingTimeInterval(syncRangePast)
-            let endDate = now.addingTimeInterval(syncRangeFuture)
-
             // Track all Microsoft event IDs we see in this sync
             var seenEventIds = Set<String>()
 
             for calendar in enabledCalendars {
-                // Fetch events from Microsoft
-                let microsoftEvents = try await calendarService.fetchEvents(
+                // Fetch all events from Microsoft without date limits
+                let microsoftEvents = try await calendarService.fetchAllEvents(
                     calendarId: calendar.calendarIdentifier,
-                    from: startDate,
-                    to: endDate
+                    progressHandler: nil
                 )
 
-                for microsoftEvent in microsoftEvents {
+                // Process events in batches to prevent memory issues with large calendars
+                for (index, microsoftEvent) in microsoftEvents.enumerated() {
                     seenEventIds.insert(microsoftEvent.id)
                     try await processMicrosoftEvent(microsoftEvent, calendarId: calendar.calendarIdentifier)
+
+                    // Save to database after each batch
+                    if (index + 1) % eventBatchSize == 0 {
+                        try modelContext.save()
+                    }
                 }
+
+                // Save any remaining events
+                try modelContext.save()
             }
 
             // Mark events as deleted if they no longer exist in Microsoft

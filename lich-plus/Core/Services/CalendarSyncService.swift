@@ -66,9 +66,8 @@ final class CalendarSyncService: ObservableObject {
     private let modelContext: ModelContext
     private var changeObserver: NSObjectProtocol?
 
-    // Constants for sync range
-    private let syncStartOffset: TimeInterval = -30 * 24 * 60 * 60 // 30 days ago
-    private let syncEndOffset: TimeInterval = 365 * 24 * 60 * 60   // 1 year from now
+    // Constants for sync
+    private let eventBatchSize = 100
     private let userDefaultsLastSyncKey = "CalendarSyncLastSyncDate"
 
     @Published var syncState: SyncState = .idle
@@ -131,10 +130,11 @@ final class CalendarSyncService: ObservableObject {
 
     /// Pulls remote changes from Apple Calendar into SwiftData
     ///
-    /// Fetches events from all enabled calendars and:
+    /// Fetches all events from enabled calendars and:
     /// - Creates new SyncableEvent entries for events not in SwiftData
     /// - Updates existing events if remote is newer (last-write-wins)
     /// - Marks local events as deleted if they no longer exist remotely
+    /// - Processes events in batches to prevent memory issues with large calendars
     ///
     /// - Throws: `SyncError` if the operation fails
     func pullRemoteChanges() async throws {
@@ -144,20 +144,13 @@ final class CalendarSyncService: ObservableObject {
                 throw SyncError.noEnabledCalendars
             }
 
-            // Calculate sync date range
-            let now = Date()
-            let startDate = now.addingTimeInterval(syncStartOffset)
-            let endDate = now.addingTimeInterval(syncEndOffset)
+            // Fetch all events from Apple Calendar with progress tracking
+            let remoteEvents = eventKitService.fetchAllEvents(from: enabledCalendars) { _ in
+                // Progress handler - can be used for UI updates if needed
+            }
 
-            // Fetch events from Apple Calendar
-            let remoteEvents = eventKitService.fetchEvents(
-                from: startDate,
-                to: endDate,
-                calendars: enabledCalendars
-            )
-
-            // Process each remote event
-            for ekEvent in remoteEvents {
+            // Process events in batches to prevent memory issues
+            for (index, ekEvent) in remoteEvents.enumerated() {
                 if let existing = findExistingEvent(ekEventIdentifier: ekEvent.eventIdentifier) {
                     // Event exists locally - check if remote is newer
                     let remoteModDate = ekEvent.lastModifiedDate ?? ekEvent.startDate ?? Date()
@@ -174,7 +167,15 @@ final class CalendarSyncService: ObservableObject {
                     syncableEvent.lastModifiedRemote = ekEvent.lastModifiedDate ?? ekEvent.startDate
                     modelContext.insert(syncableEvent)
                 }
+
+                // Save periodically to prevent memory buildup (every batch)
+                if (index + 1) % eventBatchSize == 0 {
+                    try modelContext.save()
+                }
             }
+
+            // Save any remaining events
+            try modelContext.save()
 
             // Find deleted events (exist locally but not in remote)
             let descriptor = FetchDescriptor<SyncableEvent>(

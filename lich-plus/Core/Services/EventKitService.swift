@@ -181,6 +181,54 @@ class EventKitService: NSObject, ObservableObject {
         eventStore.event(withIdentifier: identifier)
     }
 
+    /// Fetch all events from specified calendars using extended date range
+    ///
+    /// EventKit requires date predicates for fetching events - you cannot fetch without
+    /// specifying dates. This method uses the widest practical range (1900-2100) to fetch
+    /// effectively all events from a user's calendars.
+    ///
+    /// Note: EventKit does not support pagination. This method returns all events matching
+    /// the predicate in a single call, sorted by start date.
+    ///
+    /// - Parameters:
+    ///   - calendars: The EKCalendars to fetch from
+    ///   - progressHandler: Optional callback for progress updates (not currently used, reserved for future)
+    /// - Returns: Array of `EKEvent` objects sorted by start date
+    func fetchAllEvents(
+        from calendars: [EKCalendar],
+        progressHandler: ((Int) -> Void)? = nil
+    ) -> [EKEvent] {
+        guard !calendars.isEmpty else {
+            return []
+        }
+
+        // Create date components for January 1, 1900
+        var startComponents = DateComponents()
+        startComponents.year = 1900
+        startComponents.month = 1
+        startComponents.day = 1
+
+        // Create date components for December 31, 2100
+        var endComponents = DateComponents()
+        endComponents.year = 2100
+        endComponents.month = 12
+        endComponents.day = 31
+
+        // Create dates from components using the system calendar
+        let calendar = Calendar.current
+        guard let startDate = calendar.date(from: startComponents),
+              let endDate = calendar.date(from: endComponents) else {
+            return []
+        }
+
+        // Create predicate for the extended date range
+        let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
+        let events = eventStore.events(matching: predicate)
+
+        // Return events sorted by start date
+        return events.sorted { $0.startDate < $1.startDate }
+    }
+
     // MARK: - Event Creation
 
     /// Create event in Apple Calendar

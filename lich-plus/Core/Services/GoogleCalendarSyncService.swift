@@ -19,12 +19,11 @@ class GoogleCalendarSyncService: ObservableObject {
     private let calendarService: GoogleCalendarService
     private let modelContext: ModelContext
 
-    // Sync range: 30 days past to 365 days future
-    private let syncRangePast: TimeInterval = -30 * 24 * 60 * 60
-    private let syncRangeFuture: TimeInterval = 365 * 24 * 60 * 60
-
     // UserDefaults key for last sync date
     private let lastSyncDateKey = "GoogleCalendarLastSyncDate"
+
+    // Batch size for processing events to prevent memory issues with large calendars
+    private let eventBatchSize = 100
 
     init(authService: GoogleAuthService, calendarService: GoogleCalendarService, modelContext: ModelContext) {
         self.authService = authService
@@ -57,25 +56,25 @@ class GoogleCalendarSyncService: ObservableObject {
                 return
             }
 
-            // Calculate sync date range
-            let now = Date()
-            let startDate = now.addingTimeInterval(syncRangePast)
-            let endDate = now.addingTimeInterval(syncRangeFuture)
-
             // Track all Google event IDs we see in this sync
             var seenEventIds = Set<String>()
 
             for calendar in enabledCalendars {
-                // Fetch events from Google
-                let googleEvents = try await calendarService.fetchEvents(
+                // Fetch all events from Google (no date limits)
+                let googleEvents = try await calendarService.fetchAllEvents(
                     calendarId: calendar.calendarIdentifier,
-                    from: startDate,
-                    to: endDate
+                    progressHandler: nil
                 )
 
-                for googleEvent in googleEvents {
+                // Process events in batches to prevent memory issues with large calendars
+                for (index, googleEvent) in googleEvents.enumerated() {
                     seenEventIds.insert(googleEvent.id)
                     try await processGoogleEvent(googleEvent, calendarId: calendar.calendarIdentifier)
+
+                    // Save periodically to free memory (every 100 events)
+                    if (index + 1) % eventBatchSize == 0 {
+                        try modelContext.save()
+                    }
                 }
             }
 

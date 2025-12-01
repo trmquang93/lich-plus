@@ -111,6 +111,61 @@ class GoogleCalendarService {
         return allEvents
     }
 
+    /// Fetch ALL events from a specific calendar without date limits
+    /// - Parameters:
+    ///   - calendarId: The calendar ID
+    ///   - progressHandler: Optional callback for progress updates (events fetched so far)
+    /// - Returns: Array of all GoogleEvent objects
+    func fetchAllEvents(
+        calendarId: String,
+        progressHandler: ((Int) -> Void)? = nil
+    ) async throws -> [GoogleEvent] {
+        let accessToken = try await authService.getAccessToken()
+
+        var allEvents: [GoogleEvent] = []
+        var pageToken: String?
+
+        repeat {
+            var urlComponents = URLComponents(string: "\(baseURL)/calendars/\(calendarId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? calendarId)/events")!
+            var queryItems = [
+                URLQueryItem(name: "maxResults", value: "2500"),
+                URLQueryItem(name: "singleEvents", value: "true"),
+                URLQueryItem(name: "orderBy", value: "updated")
+            ]
+            if let token = pageToken {
+                queryItems.append(URLQueryItem(name: "pageToken", value: token))
+            }
+            urlComponents.queryItems = queryItems
+
+            guard let url = urlComponents.url else {
+                throw GoogleCalendarError.invalidURL
+            }
+
+            var request = URLRequest(url: url)
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Accept")
+
+            // Use RetryUtility for rate limit handling
+            let (data, response) = try await RetryUtility.withExponentialBackoff {
+                try await session.data(for: request)
+            }
+
+            try validateResponse(response, data: data)
+
+            let eventResponse = try JSONDecoder().decode(GoogleEventListResponse.self, from: data)
+            if let items = eventResponse.items {
+                // Filter out cancelled events
+                let activeEvents = items.filter { $0.status != "cancelled" }
+                allEvents.append(contentsOf: activeEvents)
+                progressHandler?(allEvents.count)
+            }
+            pageToken = eventResponse.nextPageToken
+
+        } while pageToken != nil
+
+        return allEvents
+    }
+
     // MARK: - Convert to SyncableEvent
 
     /// Convert a GoogleEvent to SyncableEvent for local storage
