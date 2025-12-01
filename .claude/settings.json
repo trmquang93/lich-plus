@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [],
+    "deny": [],
+    "ask": [],
+    "additionalDirectories": [
+      "/Users/quang.tranminh/Projects/new-ios/lich-plus/.claude/backlogs"
+    ]
+  }
+}
