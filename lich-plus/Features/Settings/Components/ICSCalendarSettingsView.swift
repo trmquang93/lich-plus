@@ -9,24 +9,12 @@ import SwiftUI
 import SwiftData
 
 struct ICSCalendarSettingsView: View {
-    @Environment(\.modelContext) var modelContext
-    @StateObject private var syncService: ICSCalendarSyncService
+    @EnvironmentObject var syncService: ICSCalendarSyncService
     @State private var showAddSubscription = false
     @State private var newSubscriptionName = ""
     @State private var newSubscriptionURL = ""
     @State private var errorMessage: String?
     @State private var showError = false
-
-    init() {
-        let container = try! ModelContainer(
-            for: ICSSubscription.self, SyncableEvent.self,
-            configurations: ModelConfiguration(isStoredInMemoryOnly: false)
-        )
-        let modelContext = ModelContext(container)
-        _syncService = StateObject(
-            wrappedValue: ICSCalendarSyncService(modelContext: modelContext)
-        )
-    }
 
     var body: some View {
         NavigationStack {
@@ -369,8 +357,13 @@ struct AddICSSubscriptionSheet: View {
 
 #Preview {
     let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try! ModelContainer(for: ICSSubscription.self, SyncableEvent.self, configurations: config)
+    let container = try! ModelContainer(
+        for: SyncableEvent.self, SyncedCalendar.self, ICSSubscription.self,
+        configurations: config
+    )
+    let modelContext = ModelContext(container)
 
     return ICSCalendarSettingsView()
+        .environmentObject(ICSCalendarSyncService(modelContext: modelContext))
         .modelContainer(container)
 }

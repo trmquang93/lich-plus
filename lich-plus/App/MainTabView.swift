@@ -26,6 +26,9 @@ struct MainTabView: View {
     @State private var microsoftCalendarService: MicrosoftCalendarService?
     @State private var microsoftSyncService: MicrosoftCalendarSyncService?
 
+    // ICS Calendar services
+    @State private var icsSyncService: ICSCalendarSyncService?
+
     var body: some View {
         TabView(selection: $selectedTab) {
             CalendarView()
@@ -55,6 +58,8 @@ struct MainTabView: View {
         // Microsoft Calendar environment objects
         .environmentObject(microsoftAuthService)
         .environmentObject(microsoftSyncService ?? createMicrosoftSyncService())
+        // ICS Calendar environment objects
+        .environmentObject(icsSyncService ?? createICSSyncService())
         .tint(AppColors.primary)
         // Handle Google Sign-In URL callback
         .onOpenURL { url in
@@ -69,6 +74,8 @@ struct MainTabView: View {
             initializeGoogleServices()
             // Initialize Microsoft Calendar services
             initializeMicrosoftServices()
+            // Initialize ICS Calendar services
+            initializeICSServices()
         }
         .task {
             // Configure tab bar appearance
@@ -156,6 +163,20 @@ struct MainTabView: View {
                 calendarService: microsoftCalendarService!,
                 modelContext: modelContext
             )
+        }
+    }
+
+    // MARK: - ICS Services Initialization
+
+    /// Create ICSCalendarSyncService with proper dependencies
+    private func createICSSyncService() -> ICSCalendarSyncService {
+        return ICSCalendarSyncService(modelContext: modelContext)
+    }
+
+    /// Initialize ICS Calendar services on app appearance
+    private func initializeICSServices() {
+        if icsSyncService == nil {
+            icsSyncService = ICSCalendarSyncService(modelContext: modelContext)
         }
     }
 }

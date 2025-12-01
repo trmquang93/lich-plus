@@ -14,9 +14,11 @@ struct PersistenceController {
     let container: ModelContainer
 
     init() {
+        // Use explicit Schema with all models (matches working pattern from commit 3f58563)
         let schema = Schema([
             SyncableEvent.self,
             SyncedCalendar.self,
+            ICSSubscription.self,
         ])
 
         let modelConfiguration = ModelConfiguration(
@@ -39,6 +41,7 @@ struct PersistenceController {
         let schema = Schema([
             SyncableEvent.self,
             SyncedCalendar.self,
+            ICSSubscription.self,
         ])
 
         let modelConfiguration = ModelConfiguration(
