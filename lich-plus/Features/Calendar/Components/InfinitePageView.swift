@@ -35,11 +35,26 @@ extension Date: PageIndex {
 struct InfinitePageView<Index: PageIndex, Content: View>: UIViewControllerRepresentable {
     let initialIndex: Index
     let currentValue: Index
+    let refreshTrigger: AnyHashable?
     let content: (Index) -> Content
     let onPageChanged: (Index) -> Void
 
+    init(
+        initialIndex: Index,
+        currentValue: Index,
+        refreshTrigger: AnyHashable? = nil,
+        content: @escaping (Index) -> Content,
+        onPageChanged: @escaping (Index) -> Void
+    ) {
+        self.initialIndex = initialIndex
+        self.currentValue = currentValue
+        self.refreshTrigger = refreshTrigger
+        self.content = content
+        self.onPageChanged = onPageChanged
+    }
+
     func makeCoordinator() -> Coordinator {
-        Coordinator(self, initialValue: currentValue)
+        Coordinator(self, initialValue: currentValue, initialRefreshTrigger: refreshTrigger)
     }
 
     func makeUIViewController(context: Context) -> UIPageViewController {
@@ -58,32 +73,34 @@ struct InfinitePageView<Index: PageIndex, Content: View>: UIViewControllerRepres
     }
 
     func updateUIViewController(_ pageVC: UIPageViewController, context: Context) {
-        // Check if currentValue changed - refresh current page to update selection UI
-        if context.coordinator.lastIndex != currentValue {
-            context.coordinator.lastIndex = currentValue
+        // Check if refreshTrigger changed - refresh current page to update content
+        let triggerChanged = context.coordinator.lastRefreshTrigger != refreshTrigger
+        if triggerChanged {
+            context.coordinator.lastRefreshTrigger = refreshTrigger
             if let currentVC = pageVC.viewControllers?.first as? IndexedHostingController<Index, Content> {
                 let newVC = context.coordinator.makeHostingController(for: currentVC.pageIndex)
                 pageVC.setViewControllers([newVC], direction: .forward, animated: false)
             }
-            return
         }
 
-        // Update content when parent needs to programmatically change page
-        guard let currentVC = pageVC.viewControllers?.first as? IndexedHostingController<Index, Content>,
-              currentVC.pageIndex != initialIndex else { return }
-
-        let direction: UIPageViewController.NavigationDirection = initialIndex > currentVC.pageIndex ? .forward : .reverse
-        let newVC = context.coordinator.makeHostingController(for: initialIndex)
-        pageVC.setViewControllers([newVC], direction: direction, animated: false)
+        // Check if currentValue (page index) changed - navigate to new page
+        if context.coordinator.lastIndex != currentValue {
+            context.coordinator.lastIndex = currentValue
+            let direction: UIPageViewController.NavigationDirection = currentValue > context.coordinator.lastIndex ? .forward : .reverse
+            let newVC = context.coordinator.makeHostingController(for: currentValue)
+            pageVC.setViewControllers([newVC], direction: direction, animated: false)
+        }
     }
 
     class Coordinator: NSObject, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
         var parent: InfinitePageView
         var lastIndex: Index
+        var lastRefreshTrigger: AnyHashable?
 
-        init(_ parent: InfinitePageView, initialValue: Index) {
+        init(_ parent: InfinitePageView, initialValue: Index, initialRefreshTrigger: AnyHashable?) {
             self.parent = parent
             self.lastIndex = initialValue
+            self.lastRefreshTrigger = initialRefreshTrigger
         }
 
         func makeHostingController(for index: Index) -> IndexedHostingController<Index, Content> {
