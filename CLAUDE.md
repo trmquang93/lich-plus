@@ -83,6 +83,25 @@ Use the script with `grep -E "✖"` to filter for failed tests.
 ./run-tests.sh --help
 ```
 
+**Test Device Configuration:**
+The test runner supports device configuration via a `.env` file (not committed to git).
+```bash
+# Copy the template and set your preferred test device
+cp .env.example .env
+
+# Edit .env with your device UDID
+# TEST_DEVICE_ID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+
+# Find available simulator UDIDs
+xcrun simctl list devices available --json | jq -r '.devices[][] | select(.isAvailable) | "\(.udid) \(.name)"'
+```
+
+Device selection priority:
+1. `TEST_DEVICE_ID` from `.env` file (if set)
+2. Booted simulator (auto-detected)
+3. Connected physical device
+4. Interactive selection from available simulators
+
 **Dependencies:**
 ```bash
 # Install or update CocoaPods dependencies
