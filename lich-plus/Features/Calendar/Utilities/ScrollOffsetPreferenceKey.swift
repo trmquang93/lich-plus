@@ -18,4 +18,19 @@ extension View {
             }
         )
     }
+
+    /// Track scroll offset using a callback (works inside UIViewControllerRepresentable)
+    func trackScrollOffset(onChange: @escaping (CGFloat) -> Void) -> some View {
+        self.background(
+            GeometryReader { geometry in
+                Color.clear
+                    .onChange(of: geometry.frame(in: .named("scrollView")).minY) { _, newValue in
+                        onChange(newValue)
+                    }
+                    .onAppear {
+                        onChange(geometry.frame(in: .named("scrollView")).minY)
+                    }
+            }
+        )
+    }
 }

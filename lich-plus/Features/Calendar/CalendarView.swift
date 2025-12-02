@@ -172,7 +172,10 @@ struct CalendarView: View {
                                     Spacer(minLength: AppTheme.spacing16)
                                 }
                                 .background(AppColors.background)
-                                .trackScrollOffset()
+                                .trackScrollOffset { offset in
+                                    scrollOffset = offset
+                                    updateDisplayMode(for: offset)
+                                }
                             }
                             .coordinateSpace(name: "scrollView")
                         },
@@ -185,10 +188,6 @@ struct CalendarView: View {
                             }
                         }
                     )
-                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { offset in
-                        scrollOffset = offset
-                        updateDisplayMode(for: offset)
-                    }
                 }
             }
             .navigationDestination(isPresented: $showDayDetail) {
