@@ -42,45 +42,33 @@ final class InfinitePageViewTests: XCTestCase {
 
     // MARK: - IndexedHostingController Tests
 
-    func testIndexedHostingController_DefaultPageIndexIsZero() {
-        // Given
-        let hostingController = IndexedHostingController<Int, Text>(rootView: Text("Test"))
-
-        // When
-        hostingController.pageIndex = 0
+    func testIndexedHostingController_PageIndexIsSetOnInit() {
+        // Given & When
+        let hostingController = IndexedHostingController<Int, Text>(pageIndex: 0, rootView: Text("Test"))
 
         // Then
         XCTAssertEqual(hostingController.pageIndex, 0)
     }
 
-    func testIndexedHostingController_PageIndexCanBeSet() {
-        // Given
-        let hostingController = IndexedHostingController<Int, Text>(rootView: Text("Test"))
-
-        // When
-        hostingController.pageIndex = 5
+    func testIndexedHostingController_PageIndexCanBePositive() {
+        // Given & When
+        let hostingController = IndexedHostingController<Int, Text>(pageIndex: 5, rootView: Text("Test"))
 
         // Then
         XCTAssertEqual(hostingController.pageIndex, 5)
     }
 
-    func testIndexedHostingController_PageIndexCanBeSetToNegative() {
-        // Given
-        let hostingController = IndexedHostingController<Int, Text>(rootView: Text("Test"))
-
-        // When
-        hostingController.pageIndex = -10
+    func testIndexedHostingController_PageIndexCanBeNegative() {
+        // Given & When
+        let hostingController = IndexedHostingController<Int, Text>(pageIndex: -10, rootView: Text("Test"))
 
         // Then
         XCTAssertEqual(hostingController.pageIndex, -10)
     }
 
     func testIndexedHostingController_PageIndexCanBeLarge() {
-        // Given
-        let hostingController = IndexedHostingController<Int, Text>(rootView: Text("Test"))
-
-        // When
-        hostingController.pageIndex = 1000
+        // Given & When
+        let hostingController = IndexedHostingController<Int, Text>(pageIndex: 1000, rootView: Text("Test"))
 
         // Then
         XCTAssertEqual(hostingController.pageIndex, 1000)
