@@ -102,6 +102,22 @@ class CalendarDataManager: ObservableObject {
         return generateCalendarMonth(for: targetDate)
     }
 
+    /// Calculate month offset from today for any given date
+    func calculateMonthOffsetFromToday(for date: Date) -> Int {
+        let today = Date()
+        let todayComponents = calendar.dateComponents([.year, .month], from: today)
+        let dateComponents = calendar.dateComponents([.year, .month], from: date)
+
+        guard let todayYear = todayComponents.year,
+              let todayMonth = todayComponents.month,
+              let dateYear = dateComponents.year,
+              let dateMonth = dateComponents.month else {
+            return 0
+        }
+
+        return (dateYear - todayYear) * 12 + (dateMonth - todayMonth)
+    }
+
     // MARK: - Calendar Generation
 
     func generateCalendarMonth(for date: Date) -> CalendarMonth {
@@ -215,7 +231,7 @@ class CalendarDataManager: ObservableObject {
 
     // MARK: - Private Methods
 
-    private func createCalendarDay(
+    func createCalendarDay(
         from date: Date,
         isCurrentMonth: Bool,
         isToday: Bool = false
