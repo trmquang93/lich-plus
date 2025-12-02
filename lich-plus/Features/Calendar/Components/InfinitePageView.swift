@@ -85,8 +85,8 @@ struct InfinitePageView<Index: PageIndex, Content: View>: UIViewControllerRepres
 
         // Check if currentValue (page index) changed - navigate to new page
         if context.coordinator.lastIndex != currentValue {
-            context.coordinator.lastIndex = currentValue
             let direction: UIPageViewController.NavigationDirection = currentValue > context.coordinator.lastIndex ? .forward : .reverse
+            context.coordinator.lastIndex = currentValue
             let newVC = context.coordinator.makeHostingController(for: currentValue)
             pageVC.setViewControllers([newVC], direction: direction, animated: false)
         }
@@ -104,9 +104,7 @@ struct InfinitePageView<Index: PageIndex, Content: View>: UIViewControllerRepres
         }
 
         func makeHostingController(for index: Index) -> IndexedHostingController<Index, Content> {
-            let controller = IndexedHostingController<Index, Content>(rootView: parent.content(index))
-            controller.pageIndex = index
-            return controller
+            return IndexedHostingController(pageIndex: index, rootView: parent.content(index))
         }
 
         // MARK: - DataSource (infinite - always return prev/next)
@@ -139,5 +137,14 @@ struct InfinitePageView<Index: PageIndex, Content: View>: UIViewControllerRepres
 // MARK: - IndexedHostingController
 
 class IndexedHostingController<Index: PageIndex, Content: View>: UIHostingController<Content> {
-    var pageIndex: Index!
+    let pageIndex: Index
+
+    init(pageIndex: Index, rootView: Content) {
+        self.pageIndex = pageIndex
+        super.init(rootView: rootView)
+    }
+
+    @MainActor required dynamic init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 }
