@@ -105,7 +105,7 @@ struct CalendarView: View {
                 InfinitePageView(
                     initialIndex: currentNavigationOffset,
                     currentValue: currentNavigationOffset,
-                    refreshTrigger: AnyHashable(dataManager.selectedDate),
+                    refreshTrigger: AnyHashable("\(dataManager.selectedDate)_\(displayMode)"),
                     content: { offset in
                         let month = navigationUnit == .month
                             ? dataManager.getMonthFromToday(offset: offset)
