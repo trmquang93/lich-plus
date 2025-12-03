@@ -17,18 +17,16 @@ struct CalendarView: View {
     @State private var displayedMonthOffset: Int = 0
     @State private var displayedWeekOffset: Int = 0
     @EnvironmentObject var syncService: CalendarSyncService
-    @State private var scrollOffset: CGFloat = 0
-    @State private var displayMode: CalendarDisplayMode = .expanded
+    @State private var collapseProgress: CGFloat = 0
 
     private var displayedDate: Date {
         Calendar.current.date(byAdding: .month, value: displayedMonthOffset, to: Date()) ?? Date()
     }
 
     private var navigationUnit: NavigationUnit {
-        switch displayMode {
-        case .compact:
+        if collapseProgress > 0.9 {
             return .week
-        case .expanded, .transitioning:
+        } else {
             return .month
         }
     }
@@ -82,109 +80,115 @@ struct CalendarView: View {
 
     var body: some View {
         NavigationStack {
-            VStack(spacing: 0) {
-                // Header with month/year selector
-                CalendarHeaderView(
-                    selectedDate: .constant(displayedDate),
-                    onPreviousMonth: {
-                        displayedMonthOffset -= 1
-                    },
-                    onNextMonth: {
-                        displayedMonthOffset += 1
-                    },
-                    onMonthSelected: { month, year in
-                        let today = Date()
-                        let calendar = Calendar.current
-                        let todayComponents = calendar.dateComponents([.year, .month], from: today)
-                        let monthDiff = (year - todayComponents.year!) * 12 + (month - todayComponents.month!)
-                        displayedMonthOffset = monthDiff
-                    }
-                )
-
-                // Calendar grid with horizontal swipe navigation
-                InfinitePageView(
-                    initialIndex: currentNavigationOffset,
-                    currentValue: currentNavigationOffset,
-                    refreshTrigger: AnyHashable("\(dataManager.selectedDate)_\(displayMode)"),
-                    content: { offset in
-                        let month = navigationUnit == .month
-                            ? dataManager.getMonthFromToday(offset: offset)
-                            : dataManager.getMonthForWeek(offset: offset)
-
-                        let weekIndex: Int? = {
-                            guard case .compact = displayMode else { return nil }
-                            return calculateWeekIndex(for: dataManager.selectedDate, in: month)
-                        }()
-
-                        return CalendarGridView(
-                            month: month,
-                            selectedDate: $dataManager.selectedDate,
-                            onDaySelected: { day in
-                                dataManager.selectDay(day)
-                            },
-                            displayMode: displayMode,
-                            visibleWeekIndex: weekIndex
-                        )
-                    },
-                    onPageChanged: { newOffset in
-                        if navigationUnit == .month {
-                            displayedMonthOffset = newOffset
-                        } else {
-                            displayedWeekOffset = newOffset
-                            syncMonthOffsetFromWeek()
+            GeometryReader { geometry in
+                VStack(spacing: 0) {
+                    // Header with month/year selector (stays fixed at top)
+                    CalendarHeaderView(
+                        selectedDate: .constant(displayedDate),
+                        onPreviousMonth: {
+                            displayedMonthOffset -= 1
+                        },
+                        onNextMonth: {
+                            displayedMonthOffset += 1
+                        },
+                        onMonthSelected: { month, year in
+                            let today = Date()
+                            let calendar = Calendar.current
+                            let todayComponents = calendar.dateComponents([.year, .month], from: today)
+                            let monthDiff = (year - todayComponents.year!) * 12 + (month - todayComponents.month!)
+                            displayedMonthOffset = monthDiff
                         }
-                    }
-                )
+                    )
 
-                // Quick info banner + events with swipe navigation
-                if dataManager.selectedDay != nil {
-                    Divider()
-                        .foregroundStyle(AppColors.borderLight)
-                        .padding(.horizontal, AppTheme.spacing16)
+                    // Parallax scroll container
+                    ParallaxScrollView(
+                        minHeaderHeight: CalendarDisplayMode.minHeight,
+                        maxHeaderHeight: CalendarDisplayMode.maxHeight,
+                        header: { height, progress in
+                            // Calendar grid with horizontal swipe navigation
+                            InfinitePageView(
+                                initialIndex: currentNavigationOffset,
+                                currentValue: currentNavigationOffset,
+                                refreshTrigger: AnyHashable("\(dataManager.selectedDate)_\(progress)"),
+                                content: { offset in
+                                    let month = navigationUnit == .month
+                                        ? dataManager.getMonthFromToday(offset: offset)
+                                        : dataManager.getMonthForWeek(offset: offset)
 
-                    InfinitePageView(
-                        initialIndex: dataManager.selectedDate,
-                        currentValue: dataManager.selectedDate,
-                        content: { date in
-                            let day = dataManager.createCalendarDay(
-                                from: date,
-                                isCurrentMonth: true,
-                                isToday: Calendar.current.isDateInToday(date)
-                            )
-                            let hours = DayTypeCalculator.getLuckyHours(for: date)
-
-                            // ScrollView inside each page for scrollable content
-                            return ScrollView {
-                                VStack(spacing: 0) {
-                                    QuickInfoBannerView(
-                                        day: day,
-                                        luckyHours: hours,
-                                        onTap: {
-                                            showDayDetail = true
-                                        }
+                                    return CalendarGridView(
+                                        month: month,
+                                        selectedDate: $dataManager.selectedDate,
+                                        onDaySelected: { day in
+                                            dataManager.selectDay(day)
+                                        },
+                                        collapseProgress: progress
                                     )
-
-                                    EventsListView(
-                                        events: day.events,
-                                        day: day
-                                    )
-
-                                    Spacer(minLength: AppTheme.spacing16)
+                                },
+                                onPageChanged: { newOffset in
+                                    if navigationUnit == .month {
+                                        displayedMonthOffset = newOffset
+                                    } else {
+                                        displayedWeekOffset = newOffset
+                                        syncMonthOffsetFromWeek()
+                                    }
                                 }
-                                .background(AppColors.background)
-                                .trackScrollOffset { offset in
-                                    scrollOffset = offset
-                                    updateDisplayMode(for: offset)
+                            )
+                            .onChange(of: progress) { _, newProgress in
+                                collapseProgress = newProgress
+                                if newProgress >= 0.9 {
+                                    displayedWeekOffset = calculateWeekOffsetForDate(dataManager.selectedDate)
                                 }
                             }
-                            .coordinateSpace(name: "scrollView")
                         },
-                        onPageChanged: { newDate in
-                            dataManager.selectedDate = newDate
+                        content: {
+                            // QuickInfo + Events content
+                            if dataManager.selectedDay != nil {
+                                VStack(spacing: 0) {
+                                    Divider()
+                                        .foregroundStyle(AppColors.borderLight)
+                                        .padding(.horizontal, AppTheme.spacing16)
 
-                            let newOffset = dataManager.calculateMonthOffsetFromToday(for: newDate)
-                            if newOffset != displayedMonthOffset {
-                                displayedMonthOffset = newOffset
+                                    InfinitePageView(
+                                        initialIndex: dataManager.selectedDate,
+                                        currentValue: dataManager.selectedDate,
+                                        content: { date in
+                                            let day = dataManager.createCalendarDay(
+                                                from: date,
+                                                isCurrentMonth: true,
+                                                isToday: Calendar.current.isDateInToday(date)
+                                            )
+                                            let hours = DayTypeCalculator.getLuckyHours(for: date)
+
+                                            // No ScrollView needed - ParallaxScrollView handles scrolling
+                                            return VStack(spacing: 0) {
+                                                QuickInfoBannerView(
+                                                    day: day,
+                                                    luckyHours: hours,
+                                                    onTap: {
+                                                        showDayDetail = true
+                                                    }
+                                                )
+
+                                                EventsListView(
+                                                    events: day.events,
+                                                    day: day
+                                                )
+
+                                                Spacer(minLength: AppTheme.spacing16)
+                                            }
+                                            .background(AppColors.background)
+                                        },
+                                        onPageChanged: { newDate in
+                                            dataManager.selectedDate = newDate
+
+                                            let newOffset = dataManager.calculateMonthOffsetFromToday(for: newDate)
+                                            if newOffset != displayedMonthOffset {
+                                                displayedMonthOffset = newOffset
+                                            }
+                                        }
+                                    )
+                                    .frame(height: geometry.size.height - 60)
+                                }
                             }
                         }
                     )
@@ -201,27 +205,6 @@ struct CalendarView: View {
         }
     }
 
-    // MARK: - Private Methods
-
-    private func updateDisplayMode(for offset: CGFloat) {
-        let adjustedOffset = -offset // Negative because scrolling down gives negative Y
-
-        if adjustedOffset > CalendarDisplayMode.collapseThreshold {
-            let progress = 1.0 - min(1.0,
-                (adjustedOffset - CalendarDisplayMode.collapseThreshold) /
-                (CalendarDisplayMode.collapseThreshold * 2))
-
-            if progress <= 0.1 {
-                displayMode = .compact
-                // Initialize week offset based on selected date when entering compact mode
-                displayedWeekOffset = calculateWeekOffsetForDate(dataManager.selectedDate)
-            } else {
-                displayMode = .transitioning(progress: progress)
-            }
-        } else if adjustedOffset < CalendarDisplayMode.expandThreshold {
-            displayMode = .expanded
-        }
-    }
 }
 
 // MARK: - Preview

@@ -179,7 +179,9 @@ lich-plus/
 │   │   │   │   ├── CalendarGridView.swift        # Calendar day grid display
 │   │   │   │   ├── QuickInfoBannerView.swift     # Quick astrological info banner
 │   │   │   │   ├── DayDetailView.swift           # Detailed day view with astrological data
-│   │   │   │   └── EventsListView.swift          # Events display for selected day
+│   │   │   │   ├── EventsListView.swift          # Events display for selected day
+│   │   │   │   ├── ParallaxScrollView.swift      # Reusable parallax scroll view with collapsible header
+│   │   │   │   └── InfinitePageView.swift        # Infinite page view controller for smooth paging
 │   │   │   ├── Managers/
 │   │   │   │   └── CalendarDataManager.swift     # Calendar data and month navigation
 │   │   │   ├── Models/
@@ -290,6 +292,62 @@ The app uses Xcode's **String Catalog** format (`Localizable.xcstrings`) for man
 ### Working with SwiftUI Previews
 
 All views include `#Preview` blocks for Xcode canvas preview support. Use the Xcode canvas to iterate on UI without building.
+
+### Working with the Parallax Scroll View
+
+The project includes a reusable `ParallaxScrollView` component for implementing collapsible header effects with smooth parallax animations.
+
+**ParallaxScrollView (`ParallaxScrollView.swift`):**
+- Generic component accepting custom header and content views
+- Tracks scroll offset using `ScrollOffsetPreferenceKey` and geometry reader
+- Provides two values to header closure:
+  - `height`: Current header height (between minHeaderHeight and maxHeaderHeight)
+  - `collapseProgress`: Value from 0 (expanded) to 1 (collapsed) for animations
+- Supports spring animations for smooth parallax feel
+- Handles both scroll-up (collapse) and scroll-down (expand) gestures
+
+**Usage Example:**
+```swift
+ParallaxScrollView(
+    minHeaderHeight: 100,
+    maxHeaderHeight: 300,
+    header: { height, progress in
+        VStack {
+            Text("Header Title")
+                .opacity(1.0 - progress)  // Fade out as collapsed
+            Spacer()
+            Text("Collapsed Title")
+                .opacity(progress)  // Fade in when collapsed
+        }
+        .frame(height: height)
+        .background(Color.blue)
+    },
+    content: {
+        VStack(spacing: 16) {
+            ForEach(0..<20, id: \.self) { index in
+                Text("Item \(index)")
+                    .padding()
+            }
+        }
+    }
+)
+```
+
+**Key Properties:**
+- `minHeaderHeight`: Minimum height when fully collapsed (e.g., 100)
+- `maxHeaderHeight`: Height at top (expanded state, e.g., 300)
+- `header`: ViewBuilder closure receiving `(height, collapseProgress)`
+- `content`: ViewBuilder closure for scrollable content
+
+**Behavior:**
+- When scrolling down: Header stays at maxHeaderHeight
+- When scrolling up: Header collapses proportionally, clamped to minHeaderHeight
+- Progress value enables smooth transitions and conditional rendering
+- Coordinate space name: `"scrollView"`
+
+**Integration with Design System:**
+- Use AppColors and AppTheme for consistent styling
+- Remember to apply `.clipped()` to header to prevent overflow during collapse
 
 ### Working with the Calendar Month Picker
 

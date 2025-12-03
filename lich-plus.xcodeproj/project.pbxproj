@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D01FCE02EDE8B99008DF610 /* ParallaxScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 4D01FCDF2EDE8B99008DF610 /* ParallaxScrollView */; };
 		C63ECA53367BF224122B1CD5 /* libPods-lich-plus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB89303E18829DA587A5C91F /* libPods-lich-plus.a */; };
 		DE5B0E9D3EDCDB9C25DB164A /* libPods-lich-plusTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF797DDCB19A1578F299626B /* libPods-lich-plusTests.a */; };
 /* End PBXBuildFile section */
@@ -53,8 +54,6 @@
 		};
 		4DA45EE82ED1090100C1F1F6 /* lich-plusTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "lich-plusTests";
 			sourceTree = "<group>";
 		};
@@ -66,6 +65,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C63ECA53367BF224122B1CD5 /* libPods-lich-plus.a in Frameworks */,
+				4D01FCE02EDE8B99008DF610 /* ParallaxScrollView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,6 +195,9 @@
 			);
 			mainGroup = 4DA45ECD2ED108FE00C1F1F6;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4D01FCDE2EDE8B99008DF610 /* XCRemoteSwiftPackageReference "parallax-scrollview" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4DA45ED72ED108FE00C1F1F6 /* Products */;
 			projectDirPath = "";
@@ -276,9 +279,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-lich-plus/Pods-lich-plus-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-lich-plus/Pods-lich-plus-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -593,6 +600,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4D01FCDE2EDE8B99008DF610 /* XCRemoteSwiftPackageReference "parallax-scrollview" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mtzaquia/parallax-scrollview.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4D01FCDF2EDE8B99008DF610 /* ParallaxScrollView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D01FCDE2EDE8B99008DF610 /* XCRemoteSwiftPackageReference "parallax-scrollview" */;
+			productName = ParallaxScrollView;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4DA45ECE2ED108FE00C1F1F6 /* Project object */;
 }
