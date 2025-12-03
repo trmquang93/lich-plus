@@ -15,12 +15,11 @@ struct CalendarGridView: View {
     let onDaySelected: (CalendarDay) -> Void
     let collapseProgress: CGFloat
 
-    private let rowHeight: CGFloat = 46
-
     private var selectedWeekIndex: Int {
         let weeks = month.weeksOfDays
         for (index, week) in weeks.enumerated() {
-            if week.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }) {
+            if week.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) })
+            {
                 return index
             }
         }
@@ -28,18 +27,25 @@ struct CalendarGridView: View {
     }
 
     private var translationOffset: CGFloat {
-        let maxTranslation = CGFloat(selectedWeekIndex) * rowHeight
+        var maxTranslation = CGFloat(selectedWeekIndex) * CalendarDisplayMode.rowHeight
+        maxTranslation =
+            maxTranslation + CalendarDisplayMode.spacingBetweenItems * CGFloat(selectedWeekIndex)
         return -maxTranslation * collapseProgress
     }
 
+    private var progressOffset: CGFloat {
+        return (CalendarDisplayMode.maxHeight - CalendarDisplayMode.rowHeight) * collapseProgress
+    }
+
     var body: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: CalendarDisplayMode.spacingBetweenItems) {
             ForEach(month.weeksOfDays.indices, id: \.self) { weekIndex in
-                HStack(spacing: 0) {
+                HStack(spacing: CalendarDisplayMode.spacingBetweenItems) {
                     ForEach(month.weeksOfDays[weekIndex]) { day in
                         CalendarDayCell(
                             day: day,
-                            isSelected: Calendar.current.isDate(selectedDate, inSameDayAs: day.date),
+                            isSelected: Calendar.current.isDate(
+                                selectedDate, inSameDayAs: day.date),
                             onTap: {
                                 selectedDate = day.date
                                 onDaySelected(day)
@@ -47,10 +53,10 @@ struct CalendarGridView: View {
                         )
                     }
                 }
-                .frame(height: rowHeight)
+                .frame(height: CalendarDisplayMode.rowHeight)
             }
         }
-        .offset(y: translationOffset)
+        .offset(y: translationOffset + (progressOffset / 2))
         .padding(.horizontal, AppTheme.spacing16)
         .frame(height: CalendarDisplayMode.maxHeight, alignment: .top)
         .clipped()

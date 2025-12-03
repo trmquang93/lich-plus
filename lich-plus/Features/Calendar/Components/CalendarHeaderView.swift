@@ -76,7 +76,7 @@ struct CalendarHeaderView: View {
                 .foregroundStyle(AppColors.borderLight)
         }
         .padding(.horizontal, AppTheme.spacing16)
-        .padding(.vertical, AppTheme.spacing8)
+        .padding(.top, AppTheme.spacing8)
         .background(AppColors.background)
         .sheet(isPresented: $showMonthPicker) {
             MonthPickerView(

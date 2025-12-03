@@ -62,7 +62,10 @@ struct CalendarView: View {
     private func syncMonthOffsetFromWeek() {
         // Get the date for the current week offset
         let today = Date()
-        guard let weekDate = Calendar.current.date(byAdding: .weekOfYear, value: displayedWeekOffset, to: today) else { return }
+        guard
+            let weekDate = Calendar.current.date(
+                byAdding: .weekOfYear, value: displayedWeekOffset, to: today)
+        else { return }
 
         // Calculate which month this week belongs to
         let calendar = Calendar.current
@@ -70,7 +73,9 @@ struct CalendarView: View {
         let weekComponents = calendar.dateComponents([.year, .month], from: weekDate)
 
         // Calculate month difference
-        let monthDiff = (weekComponents.year! - todayComponents.year!) * 12 + (weekComponents.month! - todayComponents.month!)
+        let monthDiff =
+            (weekComponents.year! - todayComponents.year!) * 12
+            + (weekComponents.month! - todayComponents.month!)
 
         // Update month offset if different
         if displayedMonthOffset != monthDiff {
@@ -94,8 +99,11 @@ struct CalendarView: View {
                         onMonthSelected: { month, year in
                             let today = Date()
                             let calendar = Calendar.current
-                            let todayComponents = calendar.dateComponents([.year, .month], from: today)
-                            let monthDiff = (year - todayComponents.year!) * 12 + (month - todayComponents.month!)
+                            let todayComponents = calendar.dateComponents(
+                                [.year, .month], from: today)
+                            let monthDiff =
+                                (year - todayComponents.year!) * 12
+                                + (month - todayComponents.month!)
                             displayedMonthOffset = monthDiff
                         }
                     )
@@ -105,13 +113,16 @@ struct CalendarView: View {
                         minHeaderHeight: CalendarDisplayMode.minHeight,
                         maxHeaderHeight: CalendarDisplayMode.maxHeight,
                         header: { height, progress in
+                            print("Header Height: \(height), Progress: \(progress)")
                             // Calendar grid with horizontal swipe navigation
-                            InfinitePageView(
+                            return InfinitePageView(
                                 initialIndex: currentNavigationOffset,
                                 currentValue: currentNavigationOffset,
-                                refreshTrigger: AnyHashable("\(dataManager.selectedDate)_\(progress)"),
+                                refreshTrigger: AnyHashable(
+                                    "\(dataManager.selectedDate)_\(progress)"),
                                 content: { offset in
-                                    let month = navigationUnit == .month
+                                    let month =
+                                        navigationUnit == .month
                                         ? dataManager.getMonthFromToday(offset: offset)
                                         : dataManager.getMonthForWeek(offset: offset)
 
@@ -136,7 +147,8 @@ struct CalendarView: View {
                             .onChange(of: progress) { _, newProgress in
                                 collapseProgress = newProgress
                                 if newProgress >= 0.9 {
-                                    displayedWeekOffset = calculateWeekOffsetForDate(dataManager.selectedDate)
+                                    displayedWeekOffset = calculateWeekOffsetForDate(
+                                        dataManager.selectedDate)
                                 }
                             }
                         },
@@ -181,7 +193,9 @@ struct CalendarView: View {
                                         onPageChanged: { newDate in
                                             dataManager.selectedDate = newDate
 
-                                            let newOffset = dataManager.calculateMonthOffsetFromToday(for: newDate)
+                                            let newOffset =
+                                                dataManager.calculateMonthOffsetFromToday(
+                                                    for: newDate)
                                             if newOffset != displayedMonthOffset {
                                                 displayedMonthOffset = newOffset
                                             }
