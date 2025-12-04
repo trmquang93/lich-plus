@@ -113,7 +113,6 @@ struct CalendarView: View {
                         minHeaderHeight: CalendarDisplayMode.minHeight,
                         maxHeaderHeight: CalendarDisplayMode.maxHeight,
                         header: { height, progress in
-                            print("Header Height: \(height), Progress: \(progress)")
                             // Calendar grid with horizontal swipe navigation
                             return InfinitePageView(
                                 initialIndex: currentNavigationOffset,

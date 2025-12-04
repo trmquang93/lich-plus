@@ -1,59 +1,145 @@
 import SwiftUI
 
+// MARK: - SnapScrollView (UIScrollView Wrapper)
+
+struct SnapScrollView<Content: View>: UIViewRepresentable {
+    let content: Content
+    let minHeaderHeight: CGFloat
+    let maxHeaderHeight: CGFloat
+    @Binding var scrollOffset: CGFloat
+
+    func makeUIView(context: Context) -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.delegate = context.coordinator
+        scrollView.showsVerticalScrollIndicator = true
+        scrollView.showsHorizontalScrollIndicator = false
+        scrollView.alwaysBounceVertical = true
+        scrollView.contentInsetAdjustmentBehavior = .never
+
+        // No contentInset - using SwiftUI spacer for visual positioning
+        // Scroll indicator starts below the header
+        scrollView.scrollIndicatorInsets = UIEdgeInsets(top: maxHeaderHeight, left: 0, bottom: 0, right: 0)
+
+        // Start at top (offset 0 = expanded state with spacer)
+        scrollView.contentOffset = CGPoint(x: 0, y: 0)
+
+        let hostingController = UIHostingController(rootView: content)
+        hostingController.view.translatesAutoresizingMaskIntoConstraints = false
+        hostingController.view.backgroundColor = .clear
+        hostingController.safeAreaRegions = []
+
+        scrollView.addSubview(hostingController.view)
+
+        context.coordinator.hostingController = hostingController
+        context.coordinator.maxHeaderHeight = maxHeaderHeight
+
+        NSLayoutConstraint.activate([
+            hostingController.view.leadingAnchor.constraint(
+                equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            hostingController.view.trailingAnchor.constraint(
+                equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            hostingController.view.topAnchor.constraint(
+                equalTo: scrollView.contentLayoutGuide.topAnchor),
+            hostingController.view.bottomAnchor.constraint(
+                equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            hostingController.view.widthAnchor.constraint(
+                equalTo: scrollView.frameLayoutGuide.widthAnchor),
+        ])
+
+        return scrollView
+    }
+
+    func updateUIView(_ scrollView: UIScrollView, context: Context) {
+        context.coordinator.hostingController?.rootView = content
+        context.coordinator.snapRange = maxHeaderHeight - minHeaderHeight
+        context.coordinator.maxHeaderHeight = maxHeaderHeight
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator(
+            scrollOffset: $scrollOffset,
+            snapRange: maxHeaderHeight - minHeaderHeight,
+            maxHeaderHeight: maxHeaderHeight
+        )
+    }
+
+    // MARK: - Coordinator
+
+    class Coordinator: NSObject, UIScrollViewDelegate {
+        @Binding var scrollOffset: CGFloat
+        var snapRange: CGFloat
+        var maxHeaderHeight: CGFloat
+        var hostingController: UIHostingController<Content>?
+
+        // Snap points (no contentInset, using spacer)
+        // When expanded: contentOffset.y = 0 (spacer at top)
+        // When collapsed: contentOffset.y = snapRange (spacer scrolled up)
+        private var expandedOffset: CGFloat { 0 }
+        private var collapsedOffset: CGFloat { snapRange }
+        private var snapThreshold: CGFloat { snapRange * 0.5 }
+
+        init(scrollOffset: Binding<CGFloat>, snapRange: CGFloat, maxHeaderHeight: CGFloat) {
+            self._scrollOffset = scrollOffset
+            self.snapRange = snapRange
+            self.maxHeaderHeight = maxHeaderHeight
+        }
+
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            DispatchQueue.main.async {
+                self.scrollOffset = scrollView.contentOffset.y
+            }
+        }
+
+        func scrollViewWillEndDragging(
+            _ scrollView: UIScrollView,
+            withVelocity velocity: CGPoint,
+            targetContentOffset: UnsafeMutablePointer<CGPoint>
+        ) {
+            let targetY = targetContentOffset.pointee.y
+
+            // Only snap if target is in the transitional range (0 to snapRange)
+            guard targetY > expandedOffset && targetY < collapsedOffset else { return }
+
+            // Determine snap target based on predicted destination
+            let snapTarget: CGFloat
+            if targetY > snapThreshold {
+                snapTarget = collapsedOffset
+            } else {
+                snapTarget = expandedOffset
+            }
+
+            targetContentOffset.pointee.y = snapTarget
+        }
+    }
+}
+
+// MARK: - ParallaxScrollView
+
 struct ParallaxScrollView<Header: View, Content: View>: View {
     let minHeaderHeight: CGFloat
     let maxHeaderHeight: CGFloat
-    @ViewBuilder let header: (CGFloat, CGFloat) -> Header
-    @ViewBuilder let content: () -> Content
+    let header: (CGFloat, CGFloat) -> Header
+    let content: () -> Content
 
-    @State private var scrollOffset: CGFloat = 0
+    @State private var scrollOffset: CGFloat
 
-    var body: some View {
-        ZStack(alignment: .top) {
-            scrollContent
-
-            header(calculatedHeaderHeight, collapseProgress)
-                .frame(height: calculatedHeaderHeight, alignment: .top)
-                .clipped()
-        }
+    init(
+        minHeaderHeight: CGFloat,
+        maxHeaderHeight: CGFloat,
+        @ViewBuilder header: @escaping (CGFloat, CGFloat) -> Header,
+        @ViewBuilder content: @escaping () -> Content
+    ) {
+        self.minHeaderHeight = minHeaderHeight
+        self.maxHeaderHeight = maxHeaderHeight
+        self.header = header
+        self.content = content
+        // Initialize to expanded state (offset 0 = top of content visible)
+        self._scrollOffset = State(initialValue: 0)
     }
 
-    @ViewBuilder
-    private var scrollContent: some View {
-        if #available(iOS 18.0, *) {
-            ScrollView {
-                VStack(spacing: 0) {
-                    Color.clear.frame(height: maxHeaderHeight)
-                    content()
-                }
-            }
-            .onScrollGeometryChange(for: CGFloat.self, of: { geo in
-                geo.contentOffset.y + geo.contentInsets.top
-            }, action: { newValue, _ in
-                scrollOffset = newValue
-            })
-        } else {
-            ScrollView {
-                VStack(spacing: 0) {
-                    Color.clear.frame(height: maxHeaderHeight)
-                    content()
-                }
-                .background(
-                    GeometryReader { geo in
-                        Color.clear.preference(
-                            key: ScrollOffsetPreferenceKey.self,
-                            value: -geo.frame(in: .named("parallaxScroll")).minY
-                        )
-                    }
-                )
-            }
-            .coordinateSpace(name: "parallaxScroll")
-            .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                scrollOffset = value
-            }
-        }
-    }
-
+    // Convert scroll offset to header height
+    // scrollOffset = 0 means fully expanded (header = maxHeaderHeight)
+    // scrollOffset = snapRange means fully collapsed (header = minHeaderHeight)
     private var calculatedHeaderHeight: CGFloat {
         if scrollOffset <= 0 {
             return maxHeaderHeight
@@ -66,9 +152,32 @@ struct ParallaxScrollView<Header: View, Content: View>: View {
     private var collapseProgress: CGFloat {
         let range = maxHeaderHeight - minHeaderHeight
         guard range > 0 else { return 0 }
-        return (maxHeaderHeight - calculatedHeaderHeight) / range
+        return min(1, max(0, scrollOffset / range))
+    }
+
+    var body: some View {
+        ZStack(alignment: .top) {
+            // Content with spacer to position below header
+            // Note: Extra 20px padding compensates for UIScrollView/UIHostingController
+            // coordinate offset when hosting SwiftUI content in UIKit scroll view.
+            SnapScrollView(
+                content: VStack(spacing: 0) {
+                    Color.clear.frame(height: maxHeaderHeight + 20)
+                    content()
+                },
+                minHeaderHeight: minHeaderHeight,
+                maxHeaderHeight: maxHeaderHeight,
+                scrollOffset: $scrollOffset
+            )
+
+            header(calculatedHeaderHeight, collapseProgress)
+                .frame(height: calculatedHeaderHeight, alignment: .top)
+                .clipped()
+        }
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     ParallaxScrollView(
@@ -99,9 +208,11 @@ struct ParallaxScrollView<Header: View, Content: View>: View {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Item \(index + 1)")
                             .font(.headline)
-                        Text("This is a content item that demonstrates the parallax scroll view in action.")
-                            .font(.body)
-                            .lineLimit(2)
+                        Text(
+                            "This is a content item that demonstrates the parallax scroll view in action."
+                        )
+                        .font(.body)
+                        .lineLimit(2)
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding()
