@@ -161,6 +161,35 @@ Each tab is implemented as a separate SwiftUI `View` file in its own feature fol
 2. **Navigation Stack** - Each view wraps its content in `NavigationStack` for hierarchical navigation capabilities
 3. **Centralized Colors & Typography** - All colors and spacing values are defined in `Theme.swift` to maintain consistency and enable theming
 
+### Thread Safety & SwiftData Patterns
+
+**CRITICAL:** All service classes that interact with SwiftData must be annotated with `@MainActor` to prevent thread safety issues (malloc crashes, "pointer being freed was not allocated" errors).
+
+**Pattern:**
+```swift
+@MainActor
+final class MyService {
+    private let modelContext: ModelContext
+    // ...
+}
+```
+
+**Existing services following this pattern:**
+- `CalendarSyncService`
+- `EventKitService`
+- `GoogleCalendarSyncService`
+- `MicrosoftCalendarSyncService`
+- `ICSCalendarSyncService`
+- `RecurrenceEngine`
+- `RecurrenceExceptionManager`
+
+**When adding new services:**
+1. Add `@MainActor` annotation to the class
+2. Add `@MainActor` to any mock classes used in tests
+3. Add `@MainActor` to test classes that use these services
+
+**Reference:** See commit `c8c7076` for the original fix pattern.
+
 ## File Structure
 
 ```
