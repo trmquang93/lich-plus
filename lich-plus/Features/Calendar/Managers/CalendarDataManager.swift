@@ -102,6 +102,27 @@ class CalendarDataManager: ObservableObject {
         return generateCalendarMonth(for: targetDate)
     }
 
+/// Get calendar month containing the week at given offset from today
+    /// offset 0 = current week, -1 = previous week, 1 = next week
+    func getMonthForWeek(offset: Int) -> CalendarMonth {
+        let today = Date()
+        guard let targetDate = calendar.date(byAdding: .weekOfYear, value: offset, to: today) else {
+            return generateCalendarMonth(for: today)
+        }
+        return generateCalendarMonth(for: targetDate)
+    }
+
+    /// Get the specific week containing a date within a month
+    func getWeekDays(containing date: Date, in month: CalendarMonth) -> [CalendarDay] {
+        let weeks = month.weeksOfDays
+        for week in weeks {
+            if week.contains(where: { calendar.isDate($0.date, inSameDayAs: date) }) {
+                return week
+            }
+        }
+        return weeks.first ?? []
+    }
+
     /// Calculate month offset from today for any given date
     func calculateMonthOffsetFromToday(for date: Date) -> Int {
         let today = Date()

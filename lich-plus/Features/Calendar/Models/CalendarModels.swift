@@ -100,9 +100,9 @@ enum EventCategory: String, CaseIterable {
 
 struct LuckyHour: Identifiable, Equatable {
     let id = UUID()
-    let chiName: String      // e.g., "Dần", "Thìn"
-    let startTime: String    // e.g., "03:00"
-    let endTime: String      // e.g., "05:00"
+    let chiName: String  // e.g., "Dần", "Thìn"
+    let startTime: String  // e.g., "03:00"
+    let endTime: String  // e.g., "05:00"
     let luckyActivities: [String]
 
     var timeRange: String {
@@ -152,21 +152,23 @@ struct CalendarMonth: Identifiable, Equatable {
             while currentWeek.count < 7 {
                 // Pad with empty days
                 if let lastDay = currentWeek.last {
-                    let nextDate = Calendar.current.date(byAdding: .day, value: 1, to: lastDay.date) ?? Date()
-                    currentWeek.append(CalendarDay(
-                        date: nextDate,
-                        solarDay: 0,
-                        solarMonth: 0,
-                        solarYear: 0,
-                        lunarDay: 0,
-                        lunarMonth: 0,
-                        lunarYear: 0,
-                        dayType: .neutral,
-                        isCurrentMonth: false,
-                        isToday: false,
-                        events: [],
-                        isWeekend: false
-                    ))
+                    let nextDate =
+                        Calendar.current.date(byAdding: .day, value: 1, to: lastDay.date) ?? Date()
+                    currentWeek.append(
+                        CalendarDay(
+                            date: nextDate,
+                            solarDay: 0,
+                            solarMonth: 0,
+                            solarYear: 0,
+                            lunarDay: 0,
+                            lunarMonth: 0,
+                            lunarYear: 0,
+                            dayType: .neutral,
+                            isCurrentMonth: false,
+                            isToday: false,
+                            events: [],
+                            isWeekend: false
+                        ))
                 }
             }
             weeks.append(currentWeek)
@@ -191,5 +193,30 @@ struct Festival: Identifiable, Equatable {
         case lunar
         case solar
         case traditional
+    }
+}
+
+// MARK: - Calendar Display Mode
+
+enum CalendarDisplayMode: Equatable {
+    case expanded
+    case compact
+    case transitioning(progress: Double)
+
+    static let collapseThreshold: CGFloat = 50
+    static let expandThreshold: CGFloat = 20
+    static var minHeight: CGFloat { rowHeight }
+    static var maxHeight: CGFloat { rowHeight * 6 + spacingBetweenItems * 5 }  // 6 rows
+
+    static let rowHeight: CGFloat = 46
+    static let spacingBetweenItems: CGFloat = 2
+
+    var gridHeight: CGFloat {
+        switch self {
+        case .expanded: return Self.maxHeight
+        case .compact: return Self.minHeight
+        case .transitioning(let progress):
+            return Self.minHeight + (Self.maxHeight - Self.minHeight) * progress
+        }
     }
 }

@@ -13,24 +13,54 @@ struct CalendarGridView: View {
     let month: CalendarMonth
     @Binding var selectedDate: Date
     let onDaySelected: (CalendarDay) -> Void
+    let collapseProgress: CGFloat
 
-    private let columns = Array(repeating: GridItem(.flexible()), count: 7)
-
-    var body: some View {
-        LazyVGrid(columns: columns, spacing: AppTheme.spacing4) {
-            ForEach(month.days) { day in
-                CalendarDayCell(
-                    day: day,
-                    isSelected: Calendar.current.isDate(selectedDate, inSameDayAs: day.date),
-                    onTap: {
-                        selectedDate = day.date
-                        onDaySelected(day)
-                    }
-                )
+    private var selectedWeekIndex: Int {
+        let weeks = month.weeksOfDays
+        for (index, week) in weeks.enumerated() {
+            if week.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) })
+            {
+                return index
             }
         }
+        return 0
+    }
+
+    private var translationOffset: CGFloat {
+        var maxTranslation = CGFloat(selectedWeekIndex) * CalendarDisplayMode.rowHeight
+        maxTranslation =
+            maxTranslation + CalendarDisplayMode.spacingBetweenItems * CGFloat(selectedWeekIndex)
+        return -maxTranslation * collapseProgress
+    }
+
+    private var progressOffset: CGFloat {
+        return (CalendarDisplayMode.maxHeight - CalendarDisplayMode.rowHeight) * collapseProgress
+    }
+
+    var body: some View {
+        VStack(spacing: CalendarDisplayMode.spacingBetweenItems) {
+            ForEach(month.weeksOfDays.indices, id: \.self) { weekIndex in
+                HStack(spacing: CalendarDisplayMode.spacingBetweenItems) {
+                    ForEach(month.weeksOfDays[weekIndex]) { day in
+                        CalendarDayCell(
+                            day: day,
+                            isSelected: Calendar.current.isDate(
+                                selectedDate, inSameDayAs: day.date),
+                            onTap: {
+                                selectedDate = day.date
+                                onDaySelected(day)
+                            }
+                        )
+                    }
+                }
+                .frame(height: CalendarDisplayMode.rowHeight)
+            }
+        }
+        .offset(y: translationOffset + (progressOffset / 2))
         .padding(.horizontal, AppTheme.spacing16)
-        .padding(.vertical, AppTheme.spacing8)
+        .frame(height: CalendarDisplayMode.maxHeight, alignment: .top)
+        .clipped()
+        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: collapseProgress)
     }
 }
 
@@ -170,7 +200,8 @@ struct CalendarDayCell: View {
         CalendarGridView(
             month: month,
             selectedDate: .constant(Date()),
-            onDaySelected: { _ in }
+            onDaySelected: { _ in },
+            collapseProgress: 0
         )
 
         Spacer()

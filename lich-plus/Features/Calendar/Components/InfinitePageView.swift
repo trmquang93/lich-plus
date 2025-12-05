@@ -1,6 +1,13 @@
 import SwiftUI
 import UIKit
 
+// MARK: - NavigationUnit (for CalendarView internal use)
+
+enum NavigationUnit {
+    case month
+    case week
+}
+
 // MARK: - PageIndex Protocol
 
 protocol PageIndex: Equatable, Comparable {
@@ -73,6 +80,9 @@ struct InfinitePageView<Index: PageIndex, Content: View>: UIViewControllerRepres
     }
 
     func updateUIViewController(_ pageVC: UIPageViewController, context: Context) {
+        // Update parent reference to get latest values from SwiftUI
+        context.coordinator.parent = self
+
         // Check if refreshTrigger changed - refresh current page to update content
         let triggerChanged = context.coordinator.lastRefreshTrigger != refreshTrigger
         if triggerChanged {
