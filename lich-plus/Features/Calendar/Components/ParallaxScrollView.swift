@@ -1,5 +1,19 @@
 import SwiftUI
 
+// MARK: - VerticalOnlyScrollView
+
+/// Custom UIScrollView that only responds to vertical pan gestures
+class VerticalOnlyScrollView: UIScrollView {
+    override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let panGesture = gestureRecognizer as? UIPanGestureRecognizer {
+            let velocity = panGesture.velocity(in: self)
+            // Only begin if gesture is primarily vertical
+            return abs(velocity.y) > abs(velocity.x)
+        }
+        return super.gestureRecognizerShouldBegin(gestureRecognizer)
+    }
+}
+
 // MARK: - SnapScrollView (UIScrollView Wrapper)
 
 struct SnapScrollView<Content: View>: UIViewRepresentable {
@@ -9,7 +23,8 @@ struct SnapScrollView<Content: View>: UIViewRepresentable {
     @Binding var scrollOffset: CGFloat
 
     func makeUIView(context: Context) -> UIScrollView {
-        let scrollView = UIScrollView()
+        // Use custom scroll view that only responds to vertical gestures
+        let scrollView = VerticalOnlyScrollView()
         scrollView.delegate = context.coordinator
         scrollView.showsVerticalScrollIndicator = true
         scrollView.showsHorizontalScrollIndicator = false
@@ -20,8 +35,8 @@ struct SnapScrollView<Content: View>: UIViewRepresentable {
         // Scroll indicator starts below the header
         scrollView.scrollIndicatorInsets = UIEdgeInsets(top: maxHeaderHeight, left: 0, bottom: 0, right: 0)
 
-        // Start at top (offset 0 = expanded state with spacer)
-        scrollView.contentOffset = CGPoint(x: 0, y: 0)
+        // Store initial offset to apply after layout
+        context.coordinator.initialOffset = scrollOffset
 
         let hostingController = UIHostingController(rootView: content)
         hostingController.view.translatesAutoresizingMaskIntoConstraints = false
@@ -70,6 +85,8 @@ struct SnapScrollView<Content: View>: UIViewRepresentable {
         var snapRange: CGFloat
         var maxHeaderHeight: CGFloat
         var hostingController: UIHostingController<Content>?
+        var initialOffset: CGFloat = 0
+        private var hasAppliedInitialOffset = false
 
         // Snap points (no contentInset, using spacer)
         // When expanded: contentOffset.y = 0 (spacer at top)
@@ -85,6 +102,15 @@ struct SnapScrollView<Content: View>: UIViewRepresentable {
         }
 
         func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            // Apply initial offset once content is laid out
+            if !hasAppliedInitialOffset && scrollView.contentSize.height > 0 && initialOffset > 0 {
+                hasAppliedInitialOffset = true
+                DispatchQueue.main.async {
+                    scrollView.setContentOffset(CGPoint(x: 0, y: self.initialOffset), animated: false)
+                }
+                return
+            }
+
             DispatchQueue.main.async {
                 self.scrollOffset = scrollView.contentOffset.y
             }
@@ -134,7 +160,9 @@ struct ParallaxScrollView<Header: View, Content: View>: View {
         self.header = header
         self.content = content
         // Initialize to expanded state (offset 0 = top of content visible)
-        self._scrollOffset = State(initialValue: 0)
+        // TODO: Week swipe navigation blocked by UIScrollView gesture conflict
+        let initialOffset: CGFloat = 0
+        self._scrollOffset = State(initialValue: initialOffset)
     }
 
     // Convert scroll offset to header height
@@ -162,7 +190,10 @@ struct ParallaxScrollView<Header: View, Content: View>: View {
             // coordinate offset when hosting SwiftUI content in UIKit scroll view.
             SnapScrollView(
                 content: VStack(spacing: 0) {
-                    Color.clear.frame(height: maxHeaderHeight + 20)
+                    // Spacer for header area - disabled hit testing so header overlay captures gestures
+                    Color.clear
+                        .frame(height: maxHeaderHeight + 20)
+                        .allowsHitTesting(false)
                     content()
                 },
                 minHeaderHeight: minHeaderHeight,
@@ -172,7 +203,9 @@ struct ParallaxScrollView<Header: View, Content: View>: View {
 
             header(calculatedHeaderHeight, collapseProgress)
                 .frame(height: calculatedHeaderHeight, alignment: .top)
+                .background(Color.white)  // Solid background to block gesture pass-through
                 .clipped()
+                .contentShape(Rectangle())  // Ensure header captures all gestures in its frame
         }
     }
 }

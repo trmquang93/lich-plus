@@ -138,6 +138,16 @@ struct CalendarView: View {
                                     if navigationUnit == .month {
                                         displayedMonthOffset = newOffset
                                     } else {
+                                        // Calculate week delta and update selected date
+                                        let weekDelta = newOffset - displayedWeekOffset
+                                        if weekDelta != 0,
+                                           let newDate = Calendar.current.date(
+                                               byAdding: .weekOfYear,
+                                               value: weekDelta,
+                                               to: dataManager.selectedDate
+                                           ) {
+                                            dataManager.selectedDate = newDate
+                                        }
                                         displayedWeekOffset = newOffset
                                         syncMonthOffsetFromWeek()
                                     }
