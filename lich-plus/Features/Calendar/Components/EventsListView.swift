@@ -74,7 +74,7 @@ struct EventsListView: View {
         .padding(.horizontal, AppTheme.spacing16)
         .padding(.vertical, AppTheme.spacing8)
         .sheet(isPresented: $showAddEventSheet) {
-            AddEditTaskSheet(
+            CreateItemSheet(
                 initialItemType: .event,
                 onSave: { _ in
                     showAddEventSheet = false

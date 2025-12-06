@@ -1,0 +1,812 @@
+//
+//  CreateItemSheet.swift
+//  lich-plus
+//
+//  Modern event/task creation sheet with card-based design
+//
+
+import SwiftUI
+import SwiftData
+
+struct CreateItemSheet: View {
+    @Environment(\.dismiss) var dismiss
+    @Environment(\.modelContext) var modelContext
+    @EnvironmentObject var syncService: CalendarSyncService
+
+    // MARK: - State
+    @State private var selectedItemType: ItemType = .event
+    @State private var title: String = ""
+    @State private var selectedCategory: TaskCategory = .personal
+    @State private var startDate: Date = Date()
+    @State private var endDate: Date = Date(timeIntervalSinceNow: 3600)
+    @State private var location: String = ""
+    @State private var notes: String = ""
+    @State private var selectedRecurrence: RecurrenceType = .none
+    @State private var selectedPriority: Priority = .medium
+    @State private var selectedReminder: Int? = nil
+
+    // Date picker states
+    @State private var showStartDatePicker = false
+    @State private var showEndDatePicker = false
+    @State private var showRecurrencePicker = false
+
+    // SwiftData support
+    @Query private var allEvents: [SyncableEvent]
+
+    let editingEventId: UUID?
+    let initialItemType: ItemType?
+    let onSave: (SyncableEvent) -> Void
+
+    var isEditMode: Bool {
+        editingEventId != nil
+    }
+
+    var editingEvent: SyncableEvent? {
+        allEvents.first { $0.id == editingEventId }
+    }
+
+    var isValid: Bool {
+        !title.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    init(
+        editingEventId: UUID? = nil,
+        initialItemType: ItemType? = nil,
+        onSave: @escaping (SyncableEvent) -> Void
+    ) {
+        self.editingEventId = editingEventId
+        self.initialItemType = initialItemType
+        self.onSave = onSave
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Header
+            headerView
+
+            // Content
+            ScrollView {
+                VStack(spacing: AppTheme.spacing24) {
+                    // Item Type Toggle
+                    itemTypeToggle
+
+                    // Form content based on type
+                    if selectedItemType == .event {
+                        eventFormContent
+                    } else {
+                        taskFormContent
+                    }
+                }
+                .padding(.horizontal, AppTheme.spacing16)
+                .padding(.top, AppTheme.spacing24)
+                .padding(.bottom, 100) // Space for footer
+            }
+
+            // Footer
+            footerView
+        }
+        .background(AppColors.backgroundLightGray)
+        .onAppear {
+            if let editingEvent = editingEvent {
+                populateForm(with: editingEvent)
+            } else if let initialType = initialItemType {
+                selectedItemType = initialType
+            }
+        }
+        .sheet(isPresented: $showStartDatePicker) {
+            DatePickerSheet(
+                title: String(localized: "createItem.starts"),
+                selectedDate: $startDate,
+                onDone: {
+                    showStartDatePicker = false
+                    // Ensure end date is after start date
+                    if endDate < startDate {
+                        endDate = startDate.addingTimeInterval(3600)
+                    }
+                }
+            )
+            .presentationDetents([.medium])
+        }
+        .sheet(isPresented: $showEndDatePicker) {
+            DatePickerSheet(
+                title: String(localized: "createItem.ends"),
+                selectedDate: $endDate,
+                onDone: { showEndDatePicker = false }
+            )
+            .presentationDetents([.medium])
+        }
+        .sheet(isPresented: $showRecurrencePicker) {
+            RecurrencePickerSheet(
+                selectedRecurrence: $selectedRecurrence,
+                onDone: { showRecurrencePicker = false }
+            )
+            .presentationDetents([.medium])
+        }
+    }
+
+    // MARK: - Header View
+    private var headerView: some View {
+        HStack {
+            // Empty space for balance
+            Color.clear
+                .frame(width: 32, height: 32)
+
+            Spacer()
+
+            Text(String(localized: "createItem.title"))
+                .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                .foregroundStyle(AppColors.textPrimary)
+
+            Spacer()
+
+            Button {
+                dismiss()
+            } label: {
+                Image(systemName: "xmark")
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundStyle(AppColors.textSecondary)
+                    .frame(width: 32, height: 32)
+            }
+        }
+        .padding(.horizontal, AppTheme.spacing16)
+        .padding(.top, AppTheme.spacing20)
+        .padding(.bottom, AppTheme.spacing16)
+        .background(AppColors.backgroundLightGray)
+    }
+
+    // MARK: - Item Type Toggle
+    private var itemTypeToggle: some View {
+        HStack(spacing: 4) {
+            // Event Button
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    selectedItemType = .event
+                }
+            } label: {
+                Text(String(localized: "createItem.event"))
+                    .font(.system(size: AppTheme.fontBody, weight: .semibold))
+                    .foregroundStyle(selectedItemType == .event ? .white : AppColors.textSecondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, AppTheme.spacing8)
+                    .background(selectedItemType == .event ? AppColors.primary : Color.clear)
+                    .cornerRadius(AppTheme.cornerRadiusMedium)
+            }
+            .buttonStyle(.plain)
+
+            // Task Button
+            Button {
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    selectedItemType = .task
+                }
+            } label: {
+                Text(String(localized: "createItem.task"))
+                    .font(.system(size: AppTheme.fontBody, weight: .semibold))
+                    .foregroundStyle(selectedItemType == .task ? .white : AppColors.textSecondary)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, AppTheme.spacing8)
+                    .background(selectedItemType == .task ? AppColors.primary : Color.clear)
+                    .cornerRadius(AppTheme.cornerRadiusMedium)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(4)
+        .background(Color(red: 229/255, green: 231/255, blue: 235/255))
+        .cornerRadius(AppTheme.cornerRadiusLarge)
+    }
+
+    // MARK: - Event Form Content
+    private var eventFormContent: some View {
+        VStack(spacing: AppTheme.spacing24) {
+            // Title
+            FormSection(title: String(localized: "createItem.eventTitle")) {
+                TextField(String(localized: "createItem.eventTitlePlaceholder"), text: $title)
+                    .font(.system(size: AppTheme.fontBody))
+                    .padding(AppTheme.spacing12)
+                    .background(AppColors.background)
+                    .cornerRadius(AppTheme.cornerRadiusLarge)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
+                            .stroke(AppColors.borderLight, lineWidth: 1)
+                    )
+            }
+
+            // Category
+            FormSection(title: String(localized: "createItem.eventCategory")) {
+                categoryPills
+            }
+
+            // Start/End Time
+            HStack(spacing: AppTheme.spacing16) {
+                FormSection(title: String(localized: "createItem.starts")) {
+                    DateButton(date: startDate) {
+                        showStartDatePicker = true
+                    }
+                }
+
+                FormSection(title: String(localized: "createItem.ends")) {
+                    DateButton(date: endDate) {
+                        showEndDatePicker = true
+                    }
+                }
+            }
+
+            // Location
+            FormSection(title: String(localized: "createItem.location")) {
+                HStack(spacing: AppTheme.spacing8) {
+                    Image(systemName: "mappin.circle.fill")
+                        .font(.system(size: 20))
+                        .foregroundStyle(AppColors.primary)
+
+                    TextField(String(localized: "createItem.locationPlaceholder"), text: $location)
+                        .font(.system(size: AppTheme.fontBody))
+
+                    if !location.isEmpty {
+                        Button {
+                            location = ""
+                        } label: {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 12, weight: .medium))
+                                .foregroundStyle(AppColors.textSecondary)
+                        }
+                    }
+                }
+                .padding(AppTheme.spacing12)
+                .background(AppColors.background)
+                .cornerRadius(AppTheme.cornerRadiusLarge)
+                .overlay(
+                    RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
+                        .stroke(AppColors.borderLight, lineWidth: 1)
+                )
+            }
+
+            // Description
+            FormSection(title: String(localized: "createItem.description")) {
+                TextEditor(text: $notes)
+                    .font(.system(size: AppTheme.fontBody))
+                    .frame(minHeight: 80)
+                    .padding(AppTheme.spacing8)
+                    .background(AppColors.background)
+                    .cornerRadius(AppTheme.cornerRadiusLarge)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
+                            .stroke(AppColors.borderLight, lineWidth: 1)
+                    )
+                    .scrollContentBackground(.hidden)
+            }
+
+            // Recurrence
+            FormSection(title: String(localized: "createItem.recurrence")) {
+                Button {
+                    showRecurrencePicker = true
+                } label: {
+                    HStack {
+                        Text(selectedRecurrence.displayName)
+                            .font(.system(size: AppTheme.fontBody))
+                            .foregroundStyle(AppColors.textPrimary)
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(AppColors.textSecondary)
+                    }
+                    .padding(AppTheme.spacing12)
+                    .background(AppColors.background)
+                    .cornerRadius(AppTheme.cornerRadiusLarge)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
+                            .stroke(AppColors.borderLight, lineWidth: 1)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+    }
+
+    // MARK: - Task Form Content
+    private var taskFormContent: some View {
+        VStack(spacing: AppTheme.spacing24) {
+            // Title
+            FormSection(title: String(localized: "createItem.taskTitle")) {
+                TextField(String(localized: "createItem.taskTitlePlaceholder"), text: $title)
+                    .font(.system(size: AppTheme.fontBody))
+                    .padding(AppTheme.spacing12)
+                    .background(AppColors.background)
+                    .cornerRadius(AppTheme.cornerRadiusLarge)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
+                            .stroke(AppColors.borderLight, lineWidth: 1)
+                    )
+            }
+
+            // Category
+            FormSection(title: String(localized: "createItem.category")) {
+                taskCategoryPills
+            }
+
+            // Due Date
+            FormSection(title: String(localized: "createItem.dueDate")) {
+                DateButton(date: startDate) {
+                    showStartDatePicker = true
+                }
+            }
+
+            // Priority
+            FormSection(title: String(localized: "createItem.priority")) {
+                priorityButtons
+            }
+
+            // Recurrence
+            FormSection(title: String(localized: "createItem.recurrence")) {
+                Button {
+                    showRecurrencePicker = true
+                } label: {
+                    HStack {
+                        Text(selectedRecurrence.displayName)
+                            .font(.system(size: AppTheme.fontBody))
+                            .foregroundStyle(AppColors.textPrimary)
+
+                        Spacer()
+
+                        Image(systemName: "chevron.right")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundStyle(AppColors.textSecondary)
+                    }
+                    .padding(AppTheme.spacing12)
+                    .background(AppColors.background)
+                    .cornerRadius(AppTheme.cornerRadiusLarge)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
+                            .stroke(AppColors.borderLight, lineWidth: 1)
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+
+            // Description
+            FormSection(title: String(localized: "createItem.description")) {
+                TextEditor(text: $notes)
+                    .font(.system(size: AppTheme.fontBody))
+                    .frame(minHeight: 80)
+                    .padding(AppTheme.spacing8)
+                    .background(AppColors.background)
+                    .cornerRadius(AppTheme.cornerRadiusLarge)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
+                            .stroke(AppColors.borderLight, lineWidth: 1)
+                    )
+                    .scrollContentBackground(.hidden)
+            }
+        }
+    }
+
+    // MARK: - Category Pills (Event)
+    private var categoryPills: some View {
+        let eventCategories: [TaskCategory] = [.work, .personal, .meeting]
+
+        return ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: AppTheme.spacing8) {
+                ForEach(eventCategories, id: \.self) { category in
+                    CategoryPill(
+                        category: category,
+                        isSelected: selectedCategory == category
+                    ) {
+                        selectedCategory = category
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Category Pills (Task)
+    private var taskCategoryPills: some View {
+        let taskCategories: [TaskCategory] = [.work, .personal, .other]
+
+        return ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: AppTheme.spacing8) {
+                ForEach(taskCategories, id: \.self) { category in
+                    CategoryPill(
+                        category: category,
+                        isSelected: selectedCategory == category
+                    ) {
+                        selectedCategory = category
+                    }
+                }
+            }
+        }
+    }
+
+    // MARK: - Priority Buttons
+    private var priorityButtons: some View {
+        HStack(spacing: AppTheme.spacing12) {
+            PriorityButton(
+                priority: .high,
+                isSelected: selectedPriority == .high
+            ) {
+                selectedPriority = .high
+            }
+
+            PriorityButton(
+                priority: .medium,
+                isSelected: selectedPriority == .medium
+            ) {
+                selectedPriority = .medium
+            }
+
+            PriorityButton(
+                priority: .low,
+                isSelected: selectedPriority == .low
+            ) {
+                selectedPriority = .low
+            }
+        }
+    }
+
+    // MARK: - Footer View
+    private var footerView: some View {
+        VStack {
+            Button {
+                saveItem()
+            } label: {
+                Text(selectedItemType == .event
+                     ? String(localized: "createItem.createEvent")
+                     : String(localized: "createItem.createTask"))
+                    .font(.system(size: AppTheme.fontSubheading, weight: .bold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, AppTheme.spacing12)
+                    .background(isValid ? AppColors.primary : AppColors.primary.opacity(0.5))
+                    .cornerRadius(AppTheme.cornerRadiusLarge)
+                    .shadow(color: AppColors.primary.opacity(0.3), radius: 8, y: 4)
+            }
+            .disabled(!isValid)
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, AppTheme.spacing16)
+        .padding(.vertical, AppTheme.spacing16)
+        .padding(.bottom, AppTheme.spacing16)
+        .background(AppColors.backgroundLightGray)
+    }
+
+    // MARK: - Helper Methods
+    private func populateForm(with syncableEvent: SyncableEvent) {
+        title = syncableEvent.title
+        startDate = syncableEvent.startDate
+        selectedCategory = TaskCategory.allCases.first(where: {
+            $0.rawValue.caseInsensitiveCompare(syncableEvent.category) == .orderedSame
+        }) ?? .personal
+        selectedReminder = syncableEvent.reminderMinutes
+        notes = syncableEvent.notes ?? ""
+        selectedItemType = syncableEvent.itemTypeEnum
+        selectedPriority = syncableEvent.priorityEnum
+        location = syncableEvent.location ?? ""
+
+        if let endDate = syncableEvent.endDate {
+            self.endDate = endDate
+        }
+    }
+
+    private func saveItem() {
+        let syncableEvent: SyncableEvent
+
+        if let existing = editingEvent {
+            // Update existing
+            existing.title = title
+            existing.startDate = startDate
+            existing.endDate = selectedItemType == .event ? endDate : nil
+            existing.isAllDay = false
+            existing.category = selectedCategory.rawValue
+            existing.notes = notes.isEmpty ? nil : notes
+            existing.reminderMinutes = selectedReminder
+            existing.itemType = selectedItemType.rawValue
+            existing.priority = selectedPriority.rawValue
+            existing.location = location.isEmpty ? nil : location
+            existing.lastModifiedLocal = Date()
+            existing.setSyncStatus(.pending)
+            syncableEvent = existing
+        } else {
+            // Create new
+            syncableEvent = SyncableEvent(
+                title: title,
+                startDate: startDate,
+                endDate: selectedItemType == .event ? endDate : nil,
+                isAllDay: false,
+                notes: notes.isEmpty ? nil : notes,
+                category: selectedCategory.rawValue,
+                reminderMinutes: selectedReminder,
+                syncStatus: SyncStatus.pending.rawValue,
+                itemType: selectedItemType.rawValue,
+                priority: selectedPriority.rawValue,
+                location: location.isEmpty ? nil : location
+            )
+            modelContext.insert(syncableEvent)
+        }
+
+        do {
+            try modelContext.save()
+        } catch {
+            print("Error saving item: \(error)")
+        }
+
+        onSave(syncableEvent)
+        dismiss()
+    }
+}
+
+// MARK: - Supporting Views
+
+struct FormSection<Content: View>: View {
+    let title: String
+    @ViewBuilder let content: Content
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: AppTheme.spacing8) {
+            Text(title)
+                .font(.system(size: AppTheme.fontBody, weight: .medium))
+                .foregroundStyle(AppColors.textSecondary)
+
+            content
+        }
+    }
+}
+
+struct DateButton: View {
+    let date: Date
+    let action: () -> Void
+
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d MMM, h:mm a"
+        return formatter
+    }
+
+    var body: some View {
+        Button(action: action) {
+            Text(dateFormatter.string(from: date))
+                .font(.system(size: AppTheme.fontBody))
+                .foregroundStyle(AppColors.textPrimary)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, AppTheme.spacing12)
+                .background(AppColors.background)
+                .cornerRadius(AppTheme.cornerRadiusLarge)
+                .overlay(
+                    RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
+                        .stroke(AppColors.borderLight, lineWidth: 1)
+                )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+struct CategoryPill: View {
+    let category: TaskCategory
+    let isSelected: Bool
+    let action: () -> Void
+
+    private var backgroundColor: Color {
+        switch category {
+        case .work:
+            return Color(red: 220/255, green: 252/255, blue: 231/255) // green-100
+        case .personal:
+            return Color(red: 254/255, green: 226/255, blue: 226/255) // red-100
+        case .meeting:
+            return Color(red: 254/255, green: 249/255, blue: 195/255) // yellow-100
+        case .birthday:
+            return Color(red: 252/255, green: 231/255, blue: 243/255) // pink-100
+        case .holiday:
+            return Color(red: 255/255, green: 237/255, blue: 213/255) // orange-100
+        case .other:
+            return Color(red: 219/255, green: 234/255, blue: 254/255) // blue-100
+        }
+    }
+
+    private var textColor: Color {
+        switch category {
+        case .work:
+            return Color(red: 22/255, green: 101/255, blue: 52/255) // green-800
+        case .personal:
+            return Color(red: 153/255, green: 27/255, blue: 27/255) // red-800
+        case .meeting:
+            return Color(red: 133/255, green: 77/255, blue: 14/255) // yellow-800
+        case .birthday:
+            return Color(red: 157/255, green: 23/255, blue: 77/255) // pink-800
+        case .holiday:
+            return Color(red: 154/255, green: 52/255, blue: 18/255) // orange-800
+        case .other:
+            return Color(red: 30/255, green: 64/255, blue: 175/255) // blue-800
+        }
+    }
+
+    private var iconName: String {
+        switch category {
+        case .work:
+            return "briefcase.fill"
+        case .personal:
+            return "heart.fill"
+        case .meeting:
+            return "person.2.fill"
+        case .birthday:
+            return "gift.fill"
+        case .holiday:
+            return "sun.max.fill"
+        case .other:
+            return "tag.fill"
+        }
+    }
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: AppTheme.spacing4) {
+                Image(systemName: iconName)
+                    .font(.system(size: 12))
+
+                Text(category.displayName)
+                    .font(.system(size: AppTheme.fontBody, weight: .medium))
+            }
+            .foregroundStyle(textColor)
+            .padding(.horizontal, AppTheme.spacing12)
+            .padding(.vertical, AppTheme.spacing8)
+            .background(backgroundColor)
+            .cornerRadius(AppTheme.cornerRadiusLarge)
+            .overlay(
+                RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
+                    .stroke(isSelected ? textColor : Color.clear, lineWidth: 2)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+struct PriorityButton: View {
+    let priority: Priority
+    let isSelected: Bool
+    let action: () -> Void
+
+    private var borderColor: Color {
+        switch priority {
+        case .high:
+            return AppColors.primary
+        case .medium:
+            return AppColors.eventOrange
+        case .low, .none:
+            return AppColors.borderLight
+        }
+    }
+
+    private var textColor: Color {
+        switch priority {
+        case .high:
+            return AppColors.primary
+        case .medium:
+            return AppColors.eventOrange
+        case .low, .none:
+            return AppColors.textSecondary
+        }
+    }
+
+    private var backgroundColor: Color {
+        guard isSelected else { return AppColors.background }
+        switch priority {
+        case .high:
+            return Color(red: 254/255, green: 242/255, blue: 242/255) // red-50
+        case .medium:
+            return Color(red: 255/255, green: 247/255, blue: 237/255) // orange-50
+        case .low, .none:
+            return AppColors.background
+        }
+    }
+
+    var body: some View {
+        Button(action: action) {
+            Text(priority.displayName)
+                .font(.system(size: AppTheme.fontBody, weight: .medium))
+                .foregroundStyle(textColor)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, AppTheme.spacing12)
+                .background(backgroundColor)
+                .cornerRadius(AppTheme.cornerRadiusLarge)
+                .overlay(
+                    RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
+                        .stroke(borderColor, lineWidth: isSelected ? 2 : 1)
+                )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Date Picker Sheet
+
+struct DatePickerSheet: View {
+    let title: String
+    @Binding var selectedDate: Date
+    let onDone: () -> Void
+
+    var body: some View {
+        NavigationStack {
+            VStack {
+                DatePicker(
+                    "",
+                    selection: $selectedDate,
+                    displayedComponents: [.date, .hourAndMinute]
+                )
+                .datePickerStyle(.graphical)
+                .labelsHidden()
+                .padding()
+
+                Spacer()
+            }
+            .navigationTitle(title)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(String(localized: "task.done")) {
+                        onDone()
+                    }
+                    .foregroundStyle(AppColors.primary)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Recurrence Picker Sheet
+
+struct RecurrencePickerSheet: View {
+    @Binding var selectedRecurrence: RecurrenceType
+    let onDone: () -> Void
+
+    var body: some View {
+        NavigationStack {
+            List {
+                ForEach(RecurrenceType.allCases, id: \.self) { recurrence in
+                    Button {
+                        selectedRecurrence = recurrence
+                    } label: {
+                        HStack {
+                            Text(recurrence.displayName)
+                                .foregroundStyle(AppColors.textPrimary)
+
+                            Spacer()
+
+                            if selectedRecurrence == recurrence {
+                                Image(systemName: "checkmark")
+                                    .foregroundStyle(AppColors.primary)
+                            }
+                        }
+                    }
+                }
+            }
+            .navigationTitle(String(localized: "createItem.recurrence"))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button(String(localized: "task.done")) {
+                        onDone()
+                    }
+                    .foregroundStyle(AppColors.primary)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Preview
+
+#Preview {
+    let config = ModelConfiguration(isStoredInMemoryOnly: true)
+    let container = try! ModelContainer(for: SyncableEvent.self, configurations: config)
+    let modelContext = ModelContext(container)
+    let eventKitService = EventKitService()
+    let syncService = CalendarSyncService(
+        eventKitService: eventKitService,
+        modelContext: modelContext
+    )
+
+    CreateItemSheet(
+        editingEventId: nil,
+        initialItemType: nil,
+        onSave: { _ in }
+    )
+    .environmentObject(syncService)
+    .modelContext(modelContext)
+}
