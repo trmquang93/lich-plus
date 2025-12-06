@@ -91,7 +91,7 @@ struct TasksView: View {
                 }
             }
             .sheet(isPresented: $showAddSheet) {
-                AddEditTaskSheet(
+                CreateItemSheet(
                     editingEventId: nil,
                     onSave: { _ in
                         showAddSheet = false
@@ -101,7 +101,7 @@ struct TasksView: View {
             }
             .sheet(isPresented: $showEditSheet) {
                 if let editingEventId = editingEventId {
-                    AddEditTaskSheet(
+                    CreateItemSheet(
                         editingEventId: editingEventId,
                         onSave: { _ in
                             showEditSheet = false

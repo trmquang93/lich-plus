@@ -232,8 +232,7 @@ lich-plus/
 │   │   │   │   ├── TaskListHeader.swift    # Header with search and add button
 │   │   │   │   ├── TaskCard.swift          # Individual task display
 │   │   │   │   ├── TaskSection.swift       # Date-grouped task section
-│   │   │   │   ├── FilterBar.swift         # Date filter options
-│   │   │   │   └── AddEditTaskSheet.swift  # Modal form for task creation/editing
+│   │   │   │   └── FilterBar.swift         # Date filter options
 │   │   │   └── TasksView.swift        # Main tasks view with search, filtering, and management
 │   │   ├── AI/                     # AI assistant feature
 │   │   │   └── AIView.swift
@@ -448,7 +447,6 @@ The Tasks feature implements a complete task and event management system with th
 - `TaskCard`: Displays individual task with checkbox and metadata
 - `TaskSection`: Groups tasks by date range
 - `FilterBar`: Horizontal scrollable filter options
-- `AddEditTaskSheet`: Modal form with full task editing capabilities
 - `TasksView`: Main container managing state and interactions
 
 **Localization Keys** (all keys use `task.` prefix):
