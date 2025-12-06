@@ -60,6 +60,48 @@ struct AppColors {
     /// Very light gray background
     static let backgroundLightGray = Color(red: 245/255, green: 245/255, blue: 245/255)
 
+    /// Segmented control background (gray-200)
+    static let segmentedControlBackground = Color(red: 229/255, green: 231/255, blue: 235/255)
+
+    // MARK: - Category Colors
+
+    /// Work category background (green-100)
+    static let categoryWorkBackground = Color(red: 220/255, green: 252/255, blue: 231/255)
+    /// Work category text (green-800)
+    static let categoryWorkText = Color(red: 22/255, green: 101/255, blue: 52/255)
+
+    /// Personal category background (red-100)
+    static let categoryPersonalBackground = Color(red: 254/255, green: 226/255, blue: 226/255)
+    /// Personal category text (red-800)
+    static let categoryPersonalText = Color(red: 153/255, green: 27/255, blue: 27/255)
+
+    /// Meeting category background (yellow-100)
+    static let categoryMeetingBackground = Color(red: 254/255, green: 249/255, blue: 195/255)
+    /// Meeting category text (yellow-800)
+    static let categoryMeetingText = Color(red: 133/255, green: 77/255, blue: 14/255)
+
+    /// Birthday category background (pink-100)
+    static let categoryBirthdayBackground = Color(red: 252/255, green: 231/255, blue: 243/255)
+    /// Birthday category text (pink-800)
+    static let categoryBirthdayText = Color(red: 157/255, green: 23/255, blue: 77/255)
+
+    /// Holiday category background (orange-100)
+    static let categoryHolidayBackground = Color(red: 255/255, green: 237/255, blue: 213/255)
+    /// Holiday category text (orange-800)
+    static let categoryHolidayText = Color(red: 154/255, green: 52/255, blue: 18/255)
+
+    /// Other category background (blue-100)
+    static let categoryOtherBackground = Color(red: 219/255, green: 234/255, blue: 254/255)
+    /// Other category text (blue-800)
+    static let categoryOtherText = Color(red: 30/255, green: 64/255, blue: 175/255)
+
+    // MARK: - Priority Colors
+
+    /// High priority background (red-50)
+    static let priorityHighBackground = Color(red: 254/255, green: 242/255, blue: 242/255)
+    /// Medium priority background (orange-50)
+    static let priorityMediumBackground = Color(red: 255/255, green: 247/255, blue: 237/255)
+
     // MARK: - Text Colors
 
     /// Primary text color (black)
@@ -105,6 +147,14 @@ struct AppTheme {
     static let spacing16: CGFloat = 16
     static let spacing20: CGFloat = 20
     static let spacing24: CGFloat = 24
+
+    // MARK: - Layout Constants
+
+    /// Footer height for bottom sheet views
+    static let footerHeight: CGFloat = 100
+
+    /// Default event duration in seconds (1 hour)
+    static let defaultEventDuration: TimeInterval = 3600
 
     // MARK: - Corner Radius
 

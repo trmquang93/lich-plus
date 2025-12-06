@@ -18,7 +18,7 @@ struct CreateItemSheet: View {
     @State private var title: String = ""
     @State private var selectedCategory: TaskCategory = .personal
     @State private var startDate: Date = Date()
-    @State private var endDate: Date = Date(timeIntervalSinceNow: 3600)
+    @State private var endDate: Date = Date(timeIntervalSinceNow: AppTheme.defaultEventDuration)
     @State private var location: String = ""
     @State private var notes: String = ""
     @State private var selectedRecurrence: RecurrenceType = .none
@@ -31,7 +31,7 @@ struct CreateItemSheet: View {
     @State private var showRecurrencePicker = false
 
     // SwiftData support
-    @Query private var allEvents: [SyncableEvent]
+    @Query private var editingEvents: [SyncableEvent]
 
     let editingEventId: UUID?
     let initialItemType: ItemType?
@@ -42,7 +42,7 @@ struct CreateItemSheet: View {
     }
 
     var editingEvent: SyncableEvent? {
-        allEvents.first { $0.id == editingEventId }
+        editingEvents.first
     }
 
     var isValid: Bool {
@@ -57,6 +57,13 @@ struct CreateItemSheet: View {
         self.editingEventId = editingEventId
         self.initialItemType = initialItemType
         self.onSave = onSave
+
+        // Filter query to fetch only the event being edited
+        // Use sentinel UUID that will never match any real event when creating new items
+        let targetId = editingEventId ?? UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
+        _editingEvents = Query(filter: #Predicate { event in
+            event.id == targetId
+        })
     }
 
     var body: some View {
@@ -79,7 +86,7 @@ struct CreateItemSheet: View {
                 }
                 .padding(.horizontal, AppTheme.spacing16)
                 .padding(.top, AppTheme.spacing24)
-                .padding(.bottom, 100) // Space for footer
+                .padding(.bottom, AppTheme.footerHeight)
             }
 
             // Footer
@@ -101,7 +108,7 @@ struct CreateItemSheet: View {
                     showStartDatePicker = false
                     // Ensure end date is after start date
                     if endDate < startDate {
-                        endDate = startDate.addingTimeInterval(3600)
+                        endDate = startDate.addingTimeInterval(AppTheme.defaultEventDuration)
                     }
                 }
             )
@@ -156,42 +163,12 @@ struct CreateItemSheet: View {
 
     // MARK: - Item Type Toggle
     private var itemTypeToggle: some View {
-        HStack(spacing: 4) {
-            // Event Button
-            Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    selectedItemType = .event
-                }
-            } label: {
-                Text(String(localized: "createItem.event"))
-                    .font(.system(size: AppTheme.fontBody, weight: .semibold))
-                    .foregroundStyle(selectedItemType == .event ? .white : AppColors.textSecondary)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, AppTheme.spacing8)
-                    .background(selectedItemType == .event ? AppColors.primary : Color.clear)
-                    .cornerRadius(AppTheme.cornerRadiusMedium)
+        Picker("", selection: $selectedItemType) {
+            ForEach(ItemType.allCases) { type in
+                Text(type.displayName).tag(type)
             }
-            .buttonStyle(.plain)
-
-            // Task Button
-            Button {
-                withAnimation(.easeInOut(duration: 0.2)) {
-                    selectedItemType = .task
-                }
-            } label: {
-                Text(String(localized: "createItem.task"))
-                    .font(.system(size: AppTheme.fontBody, weight: .semibold))
-                    .foregroundStyle(selectedItemType == .task ? .white : AppColors.textSecondary)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, AppTheme.spacing8)
-                    .background(selectedItemType == .task ? AppColors.primary : Color.clear)
-                    .cornerRadius(AppTheme.cornerRadiusMedium)
-            }
-            .buttonStyle(.plain)
         }
-        .padding(4)
-        .background(Color(red: 229/255, green: 231/255, blue: 235/255))
-        .cornerRadius(AppTheme.cornerRadiusLarge)
+        .pickerStyle(.segmented)
     }
 
     // MARK: - Event Form Content
@@ -586,34 +563,34 @@ struct CategoryPill: View {
     private var backgroundColor: Color {
         switch category {
         case .work:
-            return Color(red: 220/255, green: 252/255, blue: 231/255) // green-100
+            return AppColors.categoryWorkBackground
         case .personal:
-            return Color(red: 254/255, green: 226/255, blue: 226/255) // red-100
+            return AppColors.categoryPersonalBackground
         case .meeting:
-            return Color(red: 254/255, green: 249/255, blue: 195/255) // yellow-100
+            return AppColors.categoryMeetingBackground
         case .birthday:
-            return Color(red: 252/255, green: 231/255, blue: 243/255) // pink-100
+            return AppColors.categoryBirthdayBackground
         case .holiday:
-            return Color(red: 255/255, green: 237/255, blue: 213/255) // orange-100
+            return AppColors.categoryHolidayBackground
         case .other:
-            return Color(red: 219/255, green: 234/255, blue: 254/255) // blue-100
+            return AppColors.categoryOtherBackground
         }
     }
 
     private var textColor: Color {
         switch category {
         case .work:
-            return Color(red: 22/255, green: 101/255, blue: 52/255) // green-800
+            return AppColors.categoryWorkText
         case .personal:
-            return Color(red: 153/255, green: 27/255, blue: 27/255) // red-800
+            return AppColors.categoryPersonalText
         case .meeting:
-            return Color(red: 133/255, green: 77/255, blue: 14/255) // yellow-800
+            return AppColors.categoryMeetingText
         case .birthday:
-            return Color(red: 157/255, green: 23/255, blue: 77/255) // pink-800
+            return AppColors.categoryBirthdayText
         case .holiday:
-            return Color(red: 154/255, green: 52/255, blue: 18/255) // orange-800
+            return AppColors.categoryHolidayText
         case .other:
-            return Color(red: 30/255, green: 64/255, blue: 175/255) // blue-800
+            return AppColors.categoryOtherText
         }
     }
 
@@ -688,9 +665,9 @@ struct PriorityButton: View {
         guard isSelected else { return AppColors.background }
         switch priority {
         case .high:
-            return Color(red: 254/255, green: 242/255, blue: 242/255) // red-50
+            return AppColors.priorityHighBackground
         case .medium:
-            return Color(red: 255/255, green: 247/255, blue: 237/255) // orange-50
+            return AppColors.priorityMediumBackground
         case .low, .none:
             return AppColors.background
         }
