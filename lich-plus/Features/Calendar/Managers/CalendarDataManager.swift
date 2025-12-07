@@ -11,6 +11,7 @@ import SwiftData
 
 // MARK: - Calendar Data Manager
 
+@MainActor
 class CalendarDataManager: ObservableObject {
     @Published var currentMonth: CalendarMonth
     @Published var selectedDate: Date = Date()
@@ -81,6 +82,11 @@ class CalendarDataManager: ObservableObject {
         currentMonth = generateCalendarMonth(for: date)
     }
 
+    /// Refresh the current month with latest data from the database
+    func refreshCurrentMonth() {
+        currentMonth = generateCalendarMonth(for: selectedDate)
+    }
+
     /// Get calendar month with offset from current month (-1 = previous, 0 = current, 1 = next)
     func getMonth(offset: Int) -> CalendarMonth {
         guard offset != 0 else { return currentMonth }
@@ -142,65 +148,21 @@ class CalendarDataManager: ObservableObject {
     // MARK: - Calendar Generation
 
     func generateCalendarMonth(for date: Date) -> CalendarMonth {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month], from: date)
-
-        guard let year = components.year, let month = components.month else {
-            return CalendarMonth(month: 1, year: 2025, days: [], lunarMonth: 1, lunarYear: 2024)
-        }
-
-        let firstDay = calendar.date(from: DateComponents(year: year, month: month, day: 1)) ?? Date()
-        let range = calendar.range(of: .day, in: .month, for: firstDay) ?? 1..<2
-        let numberOfDays = range.count
-
-        let firstWeekday = calendar.component(.weekday, from: firstDay)
-        // Adjust for Monday-first week: weekday 1=Sunday, 2=Monday, etc.
-        // Convert to 0=Monday, 1=Tuesday, ..., 6=Sunday
-        let paddingDays = (firstWeekday + 5) % 7
-
-        // Create padding for previous month
-        var days: [CalendarDay] = []
-        if paddingDays > 0 {
-            for i in 0..<paddingDays {
-                let paddingDate = calendar.date(byAdding: .day, value: -(paddingDays - i), to: firstDay) ?? Date()
-                days.append(createCalendarDay(from: paddingDate, isCurrentMonth: false))
-            }
-        }
-
-        // Create days for current month
-        for dayNumber in 1...numberOfDays {
-            let dateComponents = DateComponents(year: year, month: month, day: dayNumber)
-            guard let date = calendar.date(from: dateComponents) else { continue }
-
-            let isToday = calendar.isDateInToday(date)
-            days.append(createCalendarDay(from: date, isCurrentMonth: true, isToday: isToday))
-        }
-
-        // Create padding for next month
-        let totalNeeded = 42
-        if days.count < totalNeeded {
-            for i in 1...(totalNeeded - days.count) {
-                let paddingDate = calendar.date(byAdding: .day, value: i, to: firstDay.addingTimeInterval(TimeInterval(numberOfDays - 1) * 86400)) ?? Date()
-                days.append(createCalendarDay(from: paddingDate, isCurrentMonth: false))
-            }
-        }
-
-        // Calculate lunar month/year for the first day
-        let (_, lunarMonth, lunarYear) = LunarCalendar.solarToLunar(firstDay)
-
-        return CalendarMonth(
-            month: month,
-            year: year,
-            days: days,
-            lunarMonth: lunarMonth,
-            lunarYear: lunarYear
-        )
+        return Self.generateCalendarMonthCoreStatic(for: date, createDay: createCalendarDay)
     }
 
     // MARK: - Static Helper Method
 
     /// Generate calendar month without database access (for testing)
     static func generateCalendarMonth(for date: Date) -> CalendarMonth {
+        return generateCalendarMonthCoreStatic(for: date, createDay: createCalendarDayStatic)
+    }
+
+    /// Static core calendar month generation logic
+    private static func generateCalendarMonthCoreStatic(
+        for date: Date,
+        createDay: (Date, Bool, Bool) -> CalendarDay
+    ) -> CalendarMonth {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month], from: date)
 
@@ -219,7 +181,7 @@ class CalendarDataManager: ObservableObject {
         if paddingDays > 0 {
             for i in 0..<paddingDays {
                 let paddingDate = calendar.date(byAdding: .day, value: -(paddingDays - i), to: firstDay) ?? Date()
-                days.append(createCalendarDayStatic(from: paddingDate, isCurrentMonth: false))
+                days.append(createDay(paddingDate, false, false))
             }
         }
 
@@ -228,14 +190,14 @@ class CalendarDataManager: ObservableObject {
             guard let date = calendar.date(from: dateComponents) else { continue }
 
             let isToday = calendar.isDateInToday(date)
-            days.append(createCalendarDayStatic(from: date, isCurrentMonth: true, isToday: isToday))
+            days.append(createDay(date, true, isToday))
         }
 
         let totalNeeded = 42
         if days.count < totalNeeded {
             for i in 1...(totalNeeded - days.count) {
                 let paddingDate = calendar.date(byAdding: .day, value: i, to: firstDay.addingTimeInterval(TimeInterval(numberOfDays - 1) * 86400)) ?? Date()
-                days.append(createCalendarDayStatic(from: paddingDate, isCurrentMonth: false))
+                days.append(createDay(paddingDate, false, false))
             }
         }
 
@@ -304,42 +266,68 @@ class CalendarDataManager: ObservableObject {
     /// Fetch events from SwiftData for a specific date
     /// - Parameter date: The date to fetch events for
     /// - Returns: Array of Event objects
-    private func fetchEvents(for date: Date) -> [Event] {
+    func fetchEvents(for date: Date) -> [Event] {
         guard let context = modelContext else { return [] }
 
         let calendar = Calendar.current
         let startOfDay = calendar.startOfDay(for: date)
         let endOfDay = calendar.date(byAdding: .day, value: 1, to: startOfDay)!
 
-        let predicate = #Predicate<SyncableEvent> {
-            !$0.isDeleted &&
-            $0.startDate >= startOfDay &&
-            $0.startDate < endOfDay
-        }
-
-        let descriptor = FetchDescriptor<SyncableEvent>(
-            predicate: predicate,
-            sortBy: [SortDescriptor(\SyncableEvent.startDate)]
-        )
+        var results: [Event] = []
 
         do {
-            let syncableEvents = try context.fetch(descriptor)
-            return syncableEvents.map { syncable in
-                let timeFormatter = DateFormatter()
-                timeFormatter.dateFormat = "HH:mm"
-                let timeString = timeFormatter.string(from: syncable.startDate)
-
-                return Event(
-                    title: syncable.title,
-                    time: timeString,
-                    category: parseEventCategory(from: syncable.category),
-                    description: syncable.notes
-                )
+            // 1. Fetch non-recurring events for this date (optimized query)
+            let nonRecurringPredicate = #Predicate<SyncableEvent> { event in
+                !event.isDeleted &&
+                event.recurrenceRuleData == nil &&
+                event.startDate >= startOfDay &&
+                event.startDate < endOfDay
             }
+
+            let nonRecurringDescriptor = FetchDescriptor<SyncableEvent>(
+                predicate: nonRecurringPredicate,
+                sortBy: [SortDescriptor(\SyncableEvent.startDate)]
+            )
+
+            let nonRecurring = try context.fetch(nonRecurringDescriptor)
+            results.append(contentsOf: nonRecurring.map { convertToEvent($0) })
+
+            // 2. Fetch recurring events only
+            let recurringPredicate = #Predicate<SyncableEvent> { event in
+                !event.isDeleted && event.recurrenceRuleData != nil
+            }
+
+            let recurringDescriptor = FetchDescriptor<SyncableEvent>(predicate: recurringPredicate)
+            let recurring = try context.fetch(recurringDescriptor)
+
+            // 3. Check each recurring event against target date
+            for event in recurring {
+                if RecurrenceMatcher.occursOnDate(event, targetDate: date) {
+                    results.append(convertToEvent(event))
+                }
+            }
+
+            return results.sorted { $0.time < $1.time }
         } catch {
             print("Error fetching events for date \(date): \(error)")
             return []
         }
+    }
+
+    /// Convert a SyncableEvent to an Event for display
+    /// - Parameter syncable: The SyncableEvent to convert
+    /// - Returns: An Event object
+    private func convertToEvent(_ syncable: SyncableEvent) -> Event {
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        let timeString = timeFormatter.string(from: syncable.startDate)
+
+        return Event(
+            title: syncable.title,
+            time: timeString,
+            category: parseEventCategory(from: syncable.category),
+            description: syncable.notes
+        )
     }
 
     /// Parse TaskCategory to EventCategory

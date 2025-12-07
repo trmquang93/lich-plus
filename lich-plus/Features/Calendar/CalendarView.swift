@@ -225,6 +225,9 @@ struct CalendarView: View {
             .onAppear {
                 dataManager.setModelContext(modelContext)
             }
+            .onReceive(NotificationCenter.default.publisher(for: .calendarDataDidChange)) { _ in
+                dataManager.refreshCurrentMonth()
+            }
         }
     }
 

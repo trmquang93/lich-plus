@@ -8,6 +8,7 @@
 import XCTest
 @testable import lich_plus
 
+@MainActor
 class CalendarDataManagerGoToMonthTests: XCTestCase {
 
     var manager: CalendarDataManager!

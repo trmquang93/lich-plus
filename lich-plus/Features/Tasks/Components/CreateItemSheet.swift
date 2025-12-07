@@ -13,6 +13,9 @@ struct CreateItemSheet: View {
     @Environment(\.modelContext) var modelContext
     @EnvironmentObject var syncService: CalendarSyncService
 
+    // MARK: - Constants
+    private static let sentinelUUID = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
+
     // MARK: - State
     @State private var selectedItemType: ItemType = .event
     @State private var title: String = ""
@@ -24,6 +27,7 @@ struct CreateItemSheet: View {
     @State private var selectedRecurrence: RecurrenceType = .none
     @State private var selectedPriority: Priority = .medium
     @State private var selectedReminder: Int? = nil
+    @State private var lunarRecurrenceRule: SerializableLunarRecurrenceRule? = nil
 
     // Date picker states
     @State private var showStartDatePicker = false
@@ -60,7 +64,7 @@ struct CreateItemSheet: View {
 
         // Filter query to fetch only the event being edited
         // Use sentinel UUID that will never match any real event when creating new items
-        let targetId = editingEventId ?? UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
+        let targetId = editingEventId ?? Self.sentinelUUID
         _editingEvents = Query(filter: #Predicate { event in
             event.id == targetId
         })
@@ -125,9 +129,10 @@ struct CreateItemSheet: View {
         .sheet(isPresented: $showRecurrencePicker) {
             RecurrencePickerSheet(
                 selectedRecurrence: $selectedRecurrence,
+                lunarRecurrenceRule: $lunarRecurrenceRule,
                 onDone: { showRecurrencePicker = false }
             )
-            .presentationDetents([.medium])
+            .presentationDetents([.medium, .large])
         }
     }
 
@@ -253,29 +258,7 @@ struct CreateItemSheet: View {
 
             // Recurrence
             FormSection(title: String(localized: "createItem.recurrence")) {
-                Button {
-                    showRecurrencePicker = true
-                } label: {
-                    HStack {
-                        Text(selectedRecurrence.displayName)
-                            .font(.system(size: AppTheme.fontBody))
-                            .foregroundStyle(AppColors.textPrimary)
-
-                        Spacer()
-
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundStyle(AppColors.textSecondary)
-                    }
-                    .padding(AppTheme.spacing12)
-                    .background(AppColors.background)
-                    .cornerRadius(AppTheme.cornerRadiusLarge)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
-                            .stroke(AppColors.borderLight, lineWidth: 1)
-                    )
-                }
-                .buttonStyle(.plain)
+                recurrenceButton
             }
         }
     }
@@ -315,29 +298,7 @@ struct CreateItemSheet: View {
 
             // Recurrence
             FormSection(title: String(localized: "createItem.recurrence")) {
-                Button {
-                    showRecurrencePicker = true
-                } label: {
-                    HStack {
-                        Text(selectedRecurrence.displayName)
-                            .font(.system(size: AppTheme.fontBody))
-                            .foregroundStyle(AppColors.textPrimary)
-
-                        Spacer()
-
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundStyle(AppColors.textSecondary)
-                    }
-                    .padding(AppTheme.spacing12)
-                    .background(AppColors.background)
-                    .cornerRadius(AppTheme.cornerRadiusLarge)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
-                            .stroke(AppColors.borderLight, lineWidth: 1)
-                    )
-                }
-                .buttonStyle(.plain)
+                recurrenceButton
             }
 
             // Description
@@ -357,13 +318,40 @@ struct CreateItemSheet: View {
         }
     }
 
-    // MARK: - Category Pills (Event)
-    private var categoryPills: some View {
-        let eventCategories: [TaskCategory] = [.work, .personal, .meeting]
+    // MARK: - Shared UI Components
 
-        return ScrollView(.horizontal, showsIndicators: false) {
+    /// Shared recurrence button view
+    private var recurrenceButton: some View {
+        Button {
+            showRecurrencePicker = true
+        } label: {
+            HStack {
+                Text(selectedRecurrence.displayName)
+                    .font(.system(size: AppTheme.fontBody))
+                    .foregroundStyle(AppColors.textPrimary)
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 14, weight: .medium))
+                    .foregroundStyle(AppColors.textSecondary)
+            }
+            .padding(AppTheme.spacing12)
+            .background(AppColors.background)
+            .cornerRadius(AppTheme.cornerRadiusLarge)
+            .overlay(
+                RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
+                    .stroke(AppColors.borderLight, lineWidth: 1)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    /// Create category pills view for given categories
+    private func categoryPillsView(categories: [TaskCategory]) -> some View {
+        ScrollView(.horizontal, showsIndicators: false) {
             HStack(spacing: AppTheme.spacing8) {
-                ForEach(eventCategories, id: \.self) { category in
+                ForEach(categories, id: \.self) { category in
                     CategoryPill(
                         category: category,
                         isSelected: selectedCategory == category
@@ -375,22 +363,14 @@ struct CreateItemSheet: View {
         }
     }
 
+    // MARK: - Category Pills (Event)
+    private var categoryPills: some View {
+        categoryPillsView(categories: [.work, .personal, .meeting])
+    }
+
     // MARK: - Category Pills (Task)
     private var taskCategoryPills: some View {
-        let taskCategories: [TaskCategory] = [.work, .personal, .other]
-
-        return ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: AppTheme.spacing8) {
-                ForEach(taskCategories, id: \.self) { category in
-                    CategoryPill(
-                        category: category,
-                        isSelected: selectedCategory == category
-                    ) {
-                        selectedCategory = category
-                    }
-                }
-            }
-        }
+        categoryPillsView(categories: [.work, .personal, .other])
     }
 
     // MARK: - Priority Buttons
@@ -461,6 +441,11 @@ struct CreateItemSheet: View {
         if let endDate = syncableEvent.endDate {
             self.endDate = endDate
         }
+
+        // Load recurrence from persisted data
+        if let recurrenceData = syncableEvent.recurrenceRuleData {
+            decodeRecurrence(from: recurrenceData)
+        }
     }
 
     private func saveItem() {
@@ -480,6 +465,14 @@ struct CreateItemSheet: View {
             existing.location = location.isEmpty ? nil : location
             existing.lastModifiedLocal = Date()
             existing.setSyncStatus(.pending)
+
+            // Persist recurrence data
+            if let recurrenceData = createRecurrenceData() {
+                existing.recurrenceRuleData = recurrenceData
+            } else {
+                existing.recurrenceRuleData = nil
+            }
+
             syncableEvent = existing
         } else {
             // Create new
@@ -496,17 +489,102 @@ struct CreateItemSheet: View {
                 priority: selectedPriority.rawValue,
                 location: location.isEmpty ? nil : location
             )
+
+            // Persist recurrence data
+            if let recurrenceData = createRecurrenceData() {
+                syncableEvent.recurrenceRuleData = recurrenceData
+            }
+
             modelContext.insert(syncableEvent)
         }
 
         do {
             try modelContext.save()
+
+            // Notify calendar to refresh
+            NotificationCenter.default.post(name: .calendarDataDidChange, object: nil)
         } catch {
             print("Error saving item: \(error)")
         }
 
         onSave(syncableEvent)
         dismiss()
+    }
+
+    // MARK: - Recurrence Persistence Helpers
+
+    /// Create serialized recurrence data from selected recurrence type or lunar rule
+    private func createRecurrenceData() -> Data? {
+        if let lunarRule = lunarRecurrenceRule {
+            // Encode lunar recurrence rule
+            return try? JSONEncoder().encode(RecurrenceRuleContainer.lunar(lunarRule))
+        } else if selectedRecurrence != .none && !selectedRecurrence.isLunar {
+            // Create and encode solar recurrence rule
+            let solarRule = createSolarRecurrenceRule(from: selectedRecurrence)
+            return try? JSONEncoder().encode(RecurrenceRuleContainer.solar(solarRule))
+        }
+        return nil
+    }
+
+    /// Create a SerializableRecurrenceRule from a RecurrenceType
+    private func createSolarRecurrenceRule(from recurrence: RecurrenceType) -> SerializableRecurrenceRule {
+        let frequency: Int
+        switch recurrence {
+        case .daily:
+            frequency = 0  // EKRecurrenceFrequency.daily
+        case .weekly:
+            frequency = 1
+        case .monthly:
+            frequency = 2
+        case .yearly:
+            frequency = 3
+        default:
+            frequency = 0
+        }
+
+        return SerializableRecurrenceRule(
+            frequency: frequency,
+            interval: 1
+        )
+    }
+
+    /// Decode recurrence from persisted data and populate state
+    private func decodeRecurrence(from data: Data) {
+        guard let container = try? JSONDecoder().decode(RecurrenceRuleContainer.self, from: data) else {
+            return
+        }
+
+        switch container {
+        case .solar(let rule):
+            // Convert serialized rule back to RecurrenceType
+            selectedRecurrence = convertToRecurrenceType(from: rule)
+            lunarRecurrenceRule = nil
+
+        case .lunar(let rule):
+            // Set lunar rule and appropriate recurrence type
+            lunarRecurrenceRule = rule
+            selectedRecurrence = rule.frequency == .monthly ? .lunarMonthly : .lunarYearly
+
+        case .none:
+            selectedRecurrence = .none
+            lunarRecurrenceRule = nil
+        }
+    }
+
+    /// Convert a SerializableRecurrenceRule to RecurrenceType
+    private func convertToRecurrenceType(from rule: SerializableRecurrenceRule) -> RecurrenceType {
+        switch rule.frequency {
+        case 0:
+            return .daily
+        case 1:
+            return .weekly
+        case 2:
+            return .monthly
+        case 3:
+            return .yearly
+        default:
+            return .none
+        }
     }
 }
 

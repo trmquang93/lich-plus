@@ -136,8 +136,15 @@ enum RecurrenceType: String, CaseIterable, Identifiable {
     case weekly = "Weekly"
     case monthly = "Monthly"
     case yearly = "Yearly"
+    case lunarMonthly = "LunarMonthly"
+    case lunarYearly = "LunarYearly"
 
     var id: String { rawValue }
+
+    /// Whether this recurrence type uses the lunar calendar
+    var isLunar: Bool {
+        self == .lunarMonthly || self == .lunarYearly
+    }
 
     var displayName: String {
         switch self {
@@ -151,6 +158,10 @@ enum RecurrenceType: String, CaseIterable, Identifiable {
             return String(localized: "recurrence.monthly")
         case .yearly:
             return String(localized: "recurrence.yearly")
+        case .lunarMonthly:
+            return String(localized: "recurrence.lunarMonthly")
+        case .lunarYearly:
+            return String(localized: "recurrence.lunarYearly")
         }
     }
 }
@@ -286,12 +297,58 @@ struct TaskItem: Identifiable, Equatable {
         self.notes = syncable.notes
         self.isCompleted = syncable.isCompleted
         self.reminderMinutes = syncable.reminderMinutes
-        self.recurrence = .none  // TODO: decode from recurrenceRuleData
+        self.recurrence = Self.decodeRecurrenceType(from: syncable.recurrenceRuleData)
         self.createdAt = syncable.createdAt
         self.updatedAt = syncable.lastModifiedLocal
         self.itemType = ItemType(rawValue: syncable.itemType) ?? .task
         self.priority = Priority(rawValue: syncable.priority) ?? .none
         self.location = syncable.location
+    }
+
+    /// Decode RecurrenceType from serialized recurrence rule data
+    /// - Parameter data: The serialized recurrence rule data
+    /// - Returns: The decoded RecurrenceType, or .none if data is invalid
+    private static func decodeRecurrenceType(from data: Data?) -> RecurrenceType {
+        guard let data = data, !data.isEmpty else {
+            return .none
+        }
+
+        do {
+            let container = try JSONDecoder().decode(RecurrenceRuleContainer.self, from: data)
+
+            switch container {
+            case .solar(let rule):
+                // Convert solar frequency to RecurrenceType
+                switch rule.frequency {
+                case 0:
+                    return .daily
+                case 1:
+                    return .weekly
+                case 2:
+                    return .monthly
+                case 3:
+                    return .yearly
+                default:
+                    return .none
+                }
+
+            case .lunar(let rule):
+                // Convert lunar frequency to RecurrenceType
+                switch rule.frequency {
+                case .monthly:
+                    return .lunarMonthly
+                case .yearly:
+                    return .lunarYearly
+                }
+
+            case .none:
+                return .none
+            }
+        } catch {
+            // Log error for debugging, but return .none gracefully
+            print("Failed to decode recurrence rule: \(error)")
+            return .none
+        }
     }
 
     /// Convert TaskItem to SyncableEvent for persistence

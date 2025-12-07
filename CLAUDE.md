@@ -122,6 +122,14 @@ pod update
 
 Note: All git operations must be run from this directory (`lich-plus/`) or parent git worktree folders, not from the container directory above.
 
+### Backlog Management
+
+**Backlog Location:**
+Feature planning documents and implementation backlogs are stored in:
+```
+../.claude/backlogs/
+```
+
 ## Architecture & Code Organization
 
 ### High-Level Architecture
@@ -199,7 +207,14 @@ lich-plus/
 │   │   ├── lich_plusApp.swift      # App entry point
 │   │   └── ContentView.swift       # Tab navigation container
 │   ├── Core/                       # Shared design system and utilities
-│   │   └── Theme.swift             # Design system (colors, spacing, typography)
+│   │   ├── Theme.swift             # Design system (colors, spacing, typography)
+│   │   ├── Services/               # Shared business logic services
+│   │   │   ├── LunarOccurrenceGenerator.swift  # Lunar recurrence occurrence generation
+│   │   │   ├── RecurrenceMatcher.swift         # Fast recurring event date matching
+│   │   │   ├── RecurrenceRuleContainer.swift   # Solar/lunar recurrence rule container
+│   │   │   └── SerializableLunarRecurrenceRule.swift  # Lunar recurrence serialization
+│   │   └── Extensions/             # Swift extensions
+│   │       └── Notification+Calendar.swift  # Calendar change notifications
 │   ├── Features/                   # Feature-specific code organized by domain
 │   │   ├── Calendar/               # Calendar feature
 │   │   │   ├── Components/
@@ -232,7 +247,10 @@ lich-plus/
 │   │   │   │   ├── TaskListHeader.swift    # Header with search and add button
 │   │   │   │   ├── TaskCard.swift          # Individual task display
 │   │   │   │   ├── TaskSection.swift       # Date-grouped task section
-│   │   │   │   └── FilterBar.swift         # Date filter options
+│   │   │   │   ├── FilterBar.swift         # Date filter options
+│   │   │   │   ├── CreateItemSheet.swift   # Event/task creation with lunar recurrence support
+│   │   │   │   ├── RecurrencePickerSheet.swift  # Solar/lunar recurrence selection
+│   │   │   │   └── LunarDatePickerView.swift    # Lunar date picker with solar preview
 │   │   │   └── TasksView.swift        # Main tasks view with search, filtering, and management
 │   │   ├── AI/                     # AI assistant feature
 │   │   │   └── AIView.swift
