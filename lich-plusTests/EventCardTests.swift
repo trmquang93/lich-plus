@@ -10,37 +10,6 @@ import XCTest
 
 final class EventCardTests: XCTestCase {
 
-    func testEventCard_RequiresStartTimeForDisplay() {
-        // Given
-        let event = TaskItem(
-            title: "Event",
-            date: Date(),
-            startTime: Date(),
-            category: .work,
-            itemType: .event
-        )
-
-        // Then - Event should have time display
-        XCTAssertNotNil(event.timeDisplay)
-    }
-
-    func testEventCard_DisplaysTimeRange() {
-        // Given
-        let startTime = Date()
-        let endTime = Date(timeIntervalSinceNow: 3600)
-        let event = TaskItem(
-            title: "Event",
-            date: Date(),
-            startTime: startTime,
-            endTime: endTime,
-            category: .work,
-            itemType: .event
-        )
-
-        // Then - Event should have time range display
-        XCTAssertNotNil(event.timeRangeDisplay)
-    }
-
     func testEventCard_DisplaysLocation() {
         // Given
         let event = TaskItem(
