@@ -121,7 +121,12 @@ struct AppColors {
 
     // MARK: - Badge Colors
 
+    /// Badge background color (light gray)
+    /// RGB: (243, 244, 246)
     static let badgeBackground = Color(red: 243/255, green: 244/255, blue: 246/255)  // #F3F4F6
+
+    /// Badge text color (medium gray)
+    /// RGB: (107, 114, 128)
     static let badgeText = Color(red: 107/255, green: 114/255, blue: 128/255)        // #6B7280
 }
 
@@ -198,6 +203,7 @@ struct AppTheme {
     static let fontTitle3: CGFloat = 18
     static let fontTitle2: CGFloat = 22
     static let fontTitle1: CGFloat = 28
+    static let fontLargeTitle: CGFloat = 34
 
     // MARK: - Opacity Values
 

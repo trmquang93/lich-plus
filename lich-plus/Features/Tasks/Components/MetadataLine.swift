@@ -23,11 +23,15 @@ struct MetadataLine: View {
         isCompleted ? AppColors.textDisabled : AppColors.textSecondary
     }
 
-    private var formattedTime: String? {
-        guard let startTime = item.startTime else { return nil }
+    private static let timeFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "h:mm a"
-        return formatter.string(from: startTime)
+        return formatter
+    }()
+
+    private var formattedTime: String? {
+        guard let startTime = item.startTime else { return nil }
+        return Self.timeFormatter.string(from: startTime)
     }
 
     var body: some View {
@@ -35,35 +39,48 @@ struct MetadataLine: View {
             // MARK: - Date with Calendar Icon
 
             Image(systemName: "calendar")
-                .font(.system(size: AppTheme.fontCaption, weight: .regular))
-                .foregroundColor(textColor)
+                .metadataStyle(color: textColor)
 
             Text(item.dateDisplay)
-                .font(.system(size: AppTheme.fontCaption, weight: .regular))
-                .foregroundColor(textColor)
+                .metadataStyle(color: textColor)
 
             // MARK: - Time (if available)
 
             if let timeString = formattedTime {
                 Text("·")
-                    .font(.system(size: AppTheme.fontCaption, weight: .regular))
-                    .foregroundColor(textColor)
+                    .metadataStyle(color: textColor)
 
                 Text(timeString)
-                    .font(.system(size: AppTheme.fontCaption, weight: .regular))
-                    .foregroundColor(textColor)
+                    .metadataStyle(color: textColor)
             }
 
             // MARK: - Category Color Dot
 
             Text("·")
-                .font(.system(size: AppTheme.fontCaption, weight: .regular))
-                .foregroundColor(textColor)
+                .metadataStyle(color: textColor)
 
             Circle()
                 .fill(item.category.colorValue)
                 .frame(width: AppTheme.categoryDotSize, height: AppTheme.categoryDotSize)
         }
+    }
+}
+
+// MARK: - Custom View Modifier
+
+private struct MetadataTextStyle: ViewModifier {
+    let color: Color
+
+    func body(content: Content) -> some View {
+        content
+            .font(.system(size: AppTheme.fontCaption, weight: .regular))
+            .foregroundColor(color)
+    }
+}
+
+extension View {
+    fileprivate func metadataStyle(color: Color) -> some View {
+        modifier(MetadataTextStyle(color: color))
     }
 }
 

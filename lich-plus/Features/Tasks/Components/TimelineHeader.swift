@@ -7,6 +7,10 @@
 
 import SwiftUI
 
+/// Header component for the timeline view with title, search, and add actions.
+///
+/// Displays a large title "Timeline" with action buttons for adding items and searching.
+/// The search bar expands/collapses with animation when the search button is tapped.
 struct TimelineHeader: View {
     @Binding var searchText: String
     @Binding var isSearchActive: Bool
@@ -14,10 +18,10 @@ struct TimelineHeader: View {
 
     var body: some View {
         VStack(spacing: AppTheme.spacing12) {
-            // Title and Action Buttons Row
+            // MARK: - Title and Action Buttons Row
             HStack {
                 Text("timeline.title")
-                    .font(.system(size: 34, weight: .bold))
+                    .font(.system(size: AppTheme.fontLargeTitle, weight: .bold))
                     .foregroundStyle(AppColors.textPrimary)
 
                 Spacer()
@@ -44,7 +48,7 @@ struct TimelineHeader: View {
             }
             .padding(.horizontal, AppTheme.spacing16)
 
-            // Expandable Search Bar
+            // MARK: - Expandable Search Bar
             if isSearchActive {
                 HStack(spacing: AppTheme.spacing8) {
                     Image(systemName: "magnifyingglass")

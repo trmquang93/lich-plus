@@ -93,23 +93,6 @@ enum TaskCategory: String, CaseIterable, Identifiable {
         }
     }
 
-    var color: String {
-        switch self {
-        case .work:
-            return "eventBlue"
-        case .personal:
-            return "primary"
-        case .birthday:
-            return "eventPink"
-        case .holiday:
-            return "eventOrange"
-        case .meeting:
-            return "eventYellow"
-        case .other:
-            return "secondary"
-        }
-    }
-
     var colorValue: Color {
         switch self {
         case .work:
@@ -208,20 +191,30 @@ struct TaskItem: Identifiable, Equatable {
         self.location = location
     }
 
+    // MARK: - Date Formatters (Cached)
+
+    private static let timeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm"
+        return formatter
+    }()
+
+    private static let dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d, yyyy"
+        return formatter
+    }()
+
     // MARK: - Computed Properties
 
     var timeDisplay: String? {
         guard let startTime = startTime else { return nil }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return formatter.string(from: startTime)
+        return Self.timeFormatter.string(from: startTime)
     }
 
     var timeRangeDisplay: String? {
         guard let startTime = startTime, let endTime = endTime else { return timeDisplay }
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return "\(formatter.string(from: startTime)) - \(formatter.string(from: endTime))"
+        return "\(Self.timeFormatter.string(from: startTime)) - \(Self.timeFormatter.string(from: endTime))"
     }
 
     var isToday: Bool {
@@ -241,14 +234,12 @@ struct TaskItem: Identifiable, Equatable {
     }
 
     var dateDisplay: String {
-        let formatter = DateFormatter()
         if isToday {
             return String(localized: "task.today")
         } else if isTomorrow {
             return String(localized: "task.tomorrow")
         } else {
-            formatter.dateFormat = "MMM d, yyyy"
-            return formatter.string(from: date)
+            return Self.dateFormatter.string(from: date)
         }
     }
 
