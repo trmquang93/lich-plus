@@ -37,8 +37,8 @@ struct ItemIndicator: View {
                     .foregroundColor(AppColors.primary)
             } else {
                 Circle()
-                    .strokeBorder(AppColors.borderLight, lineWidth: 2)
-                    .background(Circle().fill(AppColors.white))
+                    .fill(AppColors.white)
+                    .overlay(Circle().strokeBorder(AppColors.borderLight, lineWidth: 2))
                     .frame(width: 24, height: 24)
             }
         }

@@ -193,12 +193,6 @@ struct TaskItem: Identifiable, Equatable {
 
     // MARK: - Date Formatters (Cached)
 
-    private static let timeFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm"
-        return formatter
-    }()
-
     private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM d, yyyy"
@@ -206,16 +200,6 @@ struct TaskItem: Identifiable, Equatable {
     }()
 
     // MARK: - Computed Properties
-
-    var timeDisplay: String? {
-        guard let startTime = startTime else { return nil }
-        return Self.timeFormatter.string(from: startTime)
-    }
-
-    var timeRangeDisplay: String? {
-        guard let startTime = startTime, let endTime = endTime else { return timeDisplay }
-        return "\(Self.timeFormatter.string(from: startTime)) - \(Self.timeFormatter.string(from: endTime))"
-    }
 
     var isToday: Bool {
         Calendar.current.isDateInToday(date)
