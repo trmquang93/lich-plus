@@ -120,7 +120,7 @@ struct DayDetailView: View {
             }
         }
         .sheet(isPresented: $showAddEventSheet) {
-            AddEditTaskSheet(
+            CreateItemSheet(
                 initialItemType: .event,
                 onSave: { _ in showAddEventSheet = false }
             )
