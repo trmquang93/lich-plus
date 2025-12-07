@@ -120,6 +120,24 @@ struct AppColors {
     static let clear = Color.clear
 }
 
+// MARK: - UIKit Appearance Configuration
+
+extension AppColors {
+    /// Configure global segmented control appearance
+    static func configureSegmentedControlAppearance() {
+        UISegmentedControl.appearance().selectedSegmentTintColor = primary.uiColor
+        UISegmentedControl.appearance().backgroundColor = segmentedControlBackground.uiColor
+
+        UISegmentedControl.appearance().setTitleTextAttributes([
+            .foregroundColor: UIColor.white
+        ], for: .selected)
+
+        UISegmentedControl.appearance().setTitleTextAttributes([
+            .foregroundColor: textSecondary.uiColor
+        ], for: .normal)
+    }
+}
+
 // MARK: - Color Extensions for convenient access
 
 extension Color {

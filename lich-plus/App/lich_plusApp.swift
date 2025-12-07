@@ -10,6 +10,10 @@ import SwiftData
 
 @main
 struct lich_plusApp: App {
+    init() {
+        AppColors.configureSegmentedControlAppearance()
+    }
+
     var body: some Scene {
         WindowGroup {
             MainTabView()
