@@ -42,7 +42,7 @@ struct MainTabView: View {
 
             TasksView()
                 .tabItem {
-                    Label("tab.tasks", systemImage: "list.bullet")
+                    Label("tab.timeline", systemImage: "list.bullet")
                 }
                 .tag(1)
 

@@ -118,6 +118,11 @@ struct AppColors {
     static let white = Color.white
     static let black = Color.black
     static let clear = Color.clear
+
+    // MARK: - Badge Colors
+
+    static let badgeBackground = Color(red: 243/255, green: 244/255, blue: 246/255)  // #F3F4F6
+    static let badgeText = Color(red: 107/255, green: 114/255, blue: 128/255)        // #6B7280
 }
 
 // MARK: - UIKit Appearance Configuration
@@ -173,6 +178,10 @@ struct AppTheme {
 
     /// Default event duration in seconds (1 hour)
     static let defaultEventDuration: TimeInterval = 3600
+
+    // MARK: - Size Constants
+
+    static let categoryDotSize: CGFloat = 10
 
     // MARK: - Corner Radius
 
