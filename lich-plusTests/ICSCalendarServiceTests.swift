@@ -38,7 +38,8 @@ final class ICSCalendarServiceTests: XCTestCase {
             endDate: nil,
             isAllDay: false,
             location: "Test Location",
-            recurrenceRule: nil
+            recurrenceRule: nil,
+            exDates: []
         )
 
         let syncableEvent = sut.convertToSyncableEvent(
@@ -68,7 +69,8 @@ final class ICSCalendarServiceTests: XCTestCase {
             endDate: nil,
             isAllDay: true,
             location: nil,
-            recurrenceRule: nil
+            recurrenceRule: nil,
+            exDates: []
         )
 
         let syncableEvent = sut.convertToSyncableEvent(
@@ -94,7 +96,8 @@ final class ICSCalendarServiceTests: XCTestCase {
             endDate: endDate,
             isAllDay: false,
             location: nil,
-            recurrenceRule: nil
+            recurrenceRule: nil,
+            exDates: []
         )
 
         let syncableEvent = sut.convertToSyncableEvent(
@@ -117,7 +120,8 @@ final class ICSCalendarServiceTests: XCTestCase {
             endDate: nil,
             isAllDay: false,
             location: nil,
-            recurrenceRule: nil
+            recurrenceRule: nil,
+            exDates: []
         )
 
         let syncableEvent = sut.convertToSyncableEvent(
@@ -144,7 +148,8 @@ final class ICSCalendarServiceTests: XCTestCase {
             endDate: nil,
             isAllDay: false,
             location: nil,
-            recurrenceRule: nil
+            recurrenceRule: nil,
+            exDates: []
         )
 
         let syncableEvent = sut.convertToSyncableEvent(
@@ -167,7 +172,8 @@ final class ICSCalendarServiceTests: XCTestCase {
             endDate: nil,
             isAllDay: false,
             location: nil,
-            recurrenceRule: nil
+            recurrenceRule: nil,
+            exDates: []
         )
 
         let syncableEvent = sut.convertToSyncableEvent(

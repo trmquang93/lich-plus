@@ -91,6 +91,9 @@ struct TasksView: View {
     // MARK: - Methods
 
     private func toggleTaskCompletion(_ task: TaskItem) {
+        // Prevent toggling completion for ICS subscription events (read-only)
+        guard task.isEditable else { return }
+
         if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
             syncableEvent.isCompleted.toggle()
             syncableEvent.setSyncStatus(.pending)
@@ -98,6 +101,9 @@ struct TasksView: View {
     }
 
     private func deleteTask(_ task: TaskItem) {
+        // Prevent deleting ICS subscription events (read-only)
+        guard task.isEditable else { return }
+
         if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
             syncableEvent.isDeleted = true
             syncableEvent.setSyncStatus(.pending)
@@ -105,6 +111,9 @@ struct TasksView: View {
     }
 
     private func startEditingTask(_ task: TaskItem) {
+        // Prevent editing ICS subscription events (read-only)
+        guard task.isEditable else { return }
+
         editingEventId = task.id
         showEditSheet = true
     }

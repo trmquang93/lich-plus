@@ -326,4 +326,148 @@ final class ICSParserTests: XCTestCase {
         XCTAssertEqual(events[0].uid, "valid-event-1")
         XCTAssertEqual(events[1].uid, "valid-event-2")
     }
+
+    // MARK: - EXDATE Tests
+
+    func testParseEventWithSingleExdate() throws {
+        let icsContent = """
+        BEGIN:VCALENDAR
+        BEGIN:VEVENT
+        UID:event-with-exdate
+        DTSTART:20231225T100000Z
+        SUMMARY:Event with EXDATE
+        EXDATE:20231226T100000Z
+        END:VEVENT
+        END:VCALENDAR
+        """
+
+        let events = try sut.parse(icsContent)
+
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events[0].exDates.count, 1)
+        XCTAssertEqual(events[0].exDates[0], "20231226T100000Z")
+    }
+
+    func testParseEventWithMultipleExdateLines() throws {
+        let icsContent = """
+        BEGIN:VCALENDAR
+        BEGIN:VEVENT
+        UID:event-with-multiple-exdate
+        DTSTART:20231225T100000Z
+        SUMMARY:Event with Multiple EXDATE Lines
+        EXDATE:20231226T100000Z
+        EXDATE:20231227T100000Z
+        EXDATE:20231228T100000Z
+        END:VEVENT
+        END:VCALENDAR
+        """
+
+        let events = try sut.parse(icsContent)
+
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events[0].exDates.count, 3)
+        XCTAssertEqual(events[0].exDates[0], "20231226T100000Z")
+        XCTAssertEqual(events[0].exDates[1], "20231227T100000Z")
+        XCTAssertEqual(events[0].exDates[2], "20231228T100000Z")
+    }
+
+    func testParseEventWithMultipleDatesInSingleExdate() throws {
+        let icsContent = """
+        BEGIN:VCALENDAR
+        BEGIN:VEVENT
+        UID:event-with-comma-exdate
+        DTSTART:20231225T100000Z
+        SUMMARY:Event with Multiple Dates in EXDATE
+        EXDATE:20231226T100000Z,20231227T100000Z,20231228T100000Z
+        END:VEVENT
+        END:VCALENDAR
+        """
+
+        let events = try sut.parse(icsContent)
+
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events[0].exDates.count, 3)
+        XCTAssertEqual(events[0].exDates[0], "20231226T100000Z")
+        XCTAssertEqual(events[0].exDates[1], "20231227T100000Z")
+        XCTAssertEqual(events[0].exDates[2], "20231228T100000Z")
+    }
+
+    func testParseEventWithExdateDateOnlyFormat() throws {
+        let icsContent = """
+        BEGIN:VCALENDAR
+        BEGIN:VEVENT
+        UID:event-exdate-date-only
+        DTSTART:20231225
+        SUMMARY:Event with EXDATE Date Only
+        EXDATE:20231226
+        END:VEVENT
+        END:VCALENDAR
+        """
+
+        let events = try sut.parse(icsContent)
+
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events[0].exDates.count, 1)
+        XCTAssertEqual(events[0].exDates[0], "20231226")
+    }
+
+    func testParseEventWithExdateLocalDatetimeFormat() throws {
+        let icsContent = """
+        BEGIN:VCALENDAR
+        BEGIN:VEVENT
+        UID:event-exdate-local
+        DTSTART:20231225T100000
+        SUMMARY:Event with EXDATE Local Datetime
+        EXDATE:20231226T100000
+        END:VEVENT
+        END:VCALENDAR
+        """
+
+        let events = try sut.parse(icsContent)
+
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events[0].exDates.count, 1)
+        XCTAssertEqual(events[0].exDates[0], "20231226T100000")
+    }
+
+    func testParseEventWithoutExdate() throws {
+        let icsContent = """
+        BEGIN:VCALENDAR
+        BEGIN:VEVENT
+        UID:event-no-exdate
+        DTSTART:20231225T100000Z
+        SUMMARY:Event Without EXDATE
+        END:VEVENT
+        END:VCALENDAR
+        """
+
+        let events = try sut.parse(icsContent)
+
+        XCTAssertEqual(events.count, 1)
+        XCTAssertTrue(events[0].exDates.isEmpty)
+    }
+
+    func testParseEventWithMixedExdateFormats() throws {
+        let icsContent = """
+        BEGIN:VCALENDAR
+        BEGIN:VEVENT
+        UID:event-mixed-exdate
+        DTSTART:20231225T100000Z
+        SUMMARY:Event with Mixed EXDATE Formats
+        EXDATE:20231226T100000Z,20231227
+        EXDATE:20231228T100000
+        END:VEVENT
+        END:VCALENDAR
+        """
+
+        let events = try sut.parse(icsContent)
+
+        XCTAssertEqual(events.count, 1)
+        XCTAssertEqual(events[0].exDates.count, 3)
+        // First EXDATE line with two dates
+        XCTAssertEqual(events[0].exDates[0], "20231226T100000Z")
+        XCTAssertEqual(events[0].exDates[1], "20231227")
+        // Second EXDATE line
+        XCTAssertEqual(events[0].exDates[2], "20231228T100000")
+    }
 }

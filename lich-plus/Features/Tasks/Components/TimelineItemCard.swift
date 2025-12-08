@@ -58,20 +58,35 @@ struct TimelineItemCard: View {
 
             // MARK: - Metadata Line
 
-            MetadataLine(item: task, isCompleted: task.isCompleted)
+            HStack(spacing: AppTheme.spacing8) {
+                MetadataLine(item: task, isCompleted: task.isCompleted)
+
+                // Read-only indicator for ICS subscription events
+                if !task.isEditable {
+                    Image(systemName: "lock.fill")
+                        .font(.system(size: 12))
+                        .foregroundColor(AppColors.textSecondary)
+                }
+            }
         }
         .padding(AppTheme.spacing16)
         .background(AppColors.background)
         .cornerRadius(AppTheme.cornerRadiusMedium)
         .shadow(color: Color.black.opacity(0.08), radius: 2, x: 0, y: 1)
         .onTapGesture {
-            onEdit(task)
+            // Only allow editing if task is editable
+            if task.isEditable {
+                onEdit(task)
+            }
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-            Button(role: .destructive) {
-                onDelete(task)
-            } label: {
-                Label("Delete", systemImage: "trash")
+            // Only show delete action if task is editable
+            if task.isEditable {
+                Button(role: .destructive) {
+                    onDelete(task)
+                } label: {
+                    Label("Delete", systemImage: "trash")
+                }
             }
         }
     }

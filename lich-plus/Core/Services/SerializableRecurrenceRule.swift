@@ -135,13 +135,23 @@ struct SerializableDayOfWeek: Codable {
 
     // MARK: - Initialization
 
+    /// Initialize with day of week and optional week number
+    ///
+    /// - Parameters:
+    ///   - dayOfWeek: The day of the week (1=Sunday, 2=Monday, ..., 7=Saturday)
+    ///   - week: Optional week number (-5 to 5, nil = any week)
+    init(dayOfWeek: Int, week: Int? = nil) {
+        self.dayOfWeek = dayOfWeek
+        self.week = week
+    }
+
     /// Initialize from an EKRecurrenceDayOfWeek
     ///
-    /// - Parameter dayOfWeek: The EKRecurrenceDayOfWeek to convert
-    init(from dayOfWeek: EKRecurrenceDayOfWeek) {
-        self.dayOfWeek = dayOfWeek.dayOfTheWeek.rawValue
+    /// - Parameter ekDayOfWeek: The EKRecurrenceDayOfWeek to convert
+    init(from ekDayOfWeek: EKRecurrenceDayOfWeek) {
+        self.dayOfWeek = ekDayOfWeek.dayOfTheWeek.rawValue
         // weekNumber of 0 means no specific week, so treat as nil
-        self.week = dayOfWeek.weekNumber == 0 ? nil : dayOfWeek.weekNumber
+        self.week = ekDayOfWeek.weekNumber == 0 ? nil : ekDayOfWeek.weekNumber
     }
 
     // MARK: - Conversion

@@ -167,6 +167,13 @@ struct TaskItem: Identifiable, Equatable {
     var itemType: ItemType
     var priority: Priority
     var location: String?
+    var source: EventSource
+
+    /// Whether this item can be edited locally
+    /// ICS subscription events are read-only and cannot be edited
+    var isEditable: Bool {
+        source != .icsSubscription
+    }
 
     init(
         id: UUID = UUID(),
@@ -183,7 +190,8 @@ struct TaskItem: Identifiable, Equatable {
         updatedAt: Date = Date(),
         itemType: ItemType = .task,
         priority: Priority = .none,
-        location: String? = nil
+        location: String? = nil,
+        source: EventSource = .local
     ) {
         self.id = id
         self.title = title
@@ -200,6 +208,7 @@ struct TaskItem: Identifiable, Equatable {
         self.itemType = itemType
         self.priority = priority
         self.location = location
+        self.source = source
     }
 
     // MARK: - Date Formatters (Cached)
@@ -278,6 +287,7 @@ struct TaskItem: Identifiable, Equatable {
         self.itemType = ItemType(rawValue: syncable.itemType) ?? .task
         self.priority = Priority(rawValue: syncable.priority) ?? .none
         self.location = syncable.location
+        self.source = syncable.sourceEnum
     }
 
     /// Decode RecurrenceType from serialized recurrence rule data
