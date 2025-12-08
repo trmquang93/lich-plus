@@ -2,7 +2,7 @@
 //  RecurrencePickerSheetTests.swift
 //  lich-plusTests
 //
-//  Tests for RecurrencePickerSheet with solar/lunar calendar support
+//  Tests for RecurrencePickerSheet with flat-list recurrence selection
 //
 
 import XCTest
@@ -10,145 +10,53 @@ import XCTest
 
 final class RecurrencePickerSheetTests: XCTestCase {
 
-    // MARK: - Test: Calendar Mode Filtering
+    // MARK: - Test: Flat List Shows All Recurrence Types
 
-    func testSolarModeShowsSolarRecurrenceTypes() {
-        let solarRecurrences = filterRecurrencesByMode(.solar)
+    func testFlatListShowsAllRecurrenceTypes() {
+        let allRecurrences = RecurrenceType.allCases
 
-        // Solar mode should show: none, daily, weekly, monthly, yearly
-        XCTAssertTrue(solarRecurrences.contains(.none))
-        XCTAssertTrue(solarRecurrences.contains(.daily))
-        XCTAssertTrue(solarRecurrences.contains(.weekly))
-        XCTAssertTrue(solarRecurrences.contains(.monthly))
-        XCTAssertTrue(solarRecurrences.contains(.yearly))
-
-        // Should NOT show lunar types
-        XCTAssertFalse(solarRecurrences.contains(.lunarMonthly))
-        XCTAssertFalse(solarRecurrences.contains(.lunarYearly))
+        // Should show all 7 recurrence types
+        XCTAssertEqual(allRecurrences.count, 7)
+        XCTAssertTrue(allRecurrences.contains(.none))
+        XCTAssertTrue(allRecurrences.contains(.daily))
+        XCTAssertTrue(allRecurrences.contains(.weekly))
+        XCTAssertTrue(allRecurrences.contains(.monthly))
+        XCTAssertTrue(allRecurrences.contains(.yearly))
+        XCTAssertTrue(allRecurrences.contains(.lunarMonthly))
+        XCTAssertTrue(allRecurrences.contains(.lunarYearly))
     }
 
-    func testLunarModeShowsLunarRecurrenceTypes() {
-        let lunarRecurrences = filterRecurrencesByMode(.lunar)
+    func testFlatListIncludesSolarRecurrenceTypes() {
+        let allRecurrences = RecurrenceType.allCases
+        let solarTypes: [RecurrenceType] = [.none, .daily, .weekly, .monthly, .yearly]
 
-        // Lunar mode should show: none, lunarMonthly, lunarYearly
-        XCTAssertTrue(lunarRecurrences.contains(.none))
-        XCTAssertTrue(lunarRecurrences.contains(.lunarMonthly))
-        XCTAssertTrue(lunarRecurrences.contains(.lunarYearly))
-
-        // Should NOT show solar types (except none)
-        XCTAssertFalse(lunarRecurrences.contains(.daily))
-        XCTAssertFalse(lunarRecurrences.contains(.weekly))
-        XCTAssertFalse(lunarRecurrences.contains(.monthly))
-        XCTAssertFalse(lunarRecurrences.contains(.yearly))
-    }
-
-    func testSolarModeDoesNotContainLunarTypes() {
-        let solarRecurrences = filterRecurrencesByMode(.solar)
-
-        for recurrence in solarRecurrences {
-            XCTAssertFalse(recurrence.isLunar, "\(recurrence.displayName) should not be lunar in solar mode")
+        for solarType in solarTypes {
+            XCTAssertTrue(allRecurrences.contains(solarType), "\(solarType.displayName) should be in flat list")
         }
     }
 
-    func testLunarModeDoesNotContainSolarTypes() {
-        let lunarRecurrences = filterRecurrencesByMode(.lunar)
+    func testFlatListIncludesLunarRecurrenceTypes() {
+        let allRecurrences = RecurrenceType.allCases
+        let lunarTypes: [RecurrenceType] = [.lunarMonthly, .lunarYearly]
 
-        let solarOnlyTypes: [RecurrenceType] = [.daily, .weekly, .monthly, .yearly]
-
-        for recurrence in lunarRecurrences {
-            if recurrence != .none {
-                XCTAssertTrue(recurrence.isLunar, "\(recurrence.displayName) should be lunar in lunar mode")
-            }
+        for lunarType in lunarTypes {
+            XCTAssertTrue(allRecurrences.contains(lunarType), "\(lunarType.displayName) should be in flat list")
         }
     }
 
-    // MARK: - Test: Calendar Mode Toggle
+    // MARK: - Test: RecurrenceType Properties
 
-    func testToggleBetweenSolarAndLunar() {
-        var mode = CalendarMode.solar
-
-        // Toggle to lunar
-        mode = .lunar
-        XCTAssertEqual(mode, .lunar)
-
-        // Toggle back to solar
-        mode = .solar
-        XCTAssertEqual(mode, .solar)
+    func testLunarRecurrenceTypesIdentified() {
+        XCTAssertTrue(RecurrenceType.lunarMonthly.isLunar)
+        XCTAssertTrue(RecurrenceType.lunarYearly.isLunar)
     }
 
-    func testToggleResetsSelection() {
-        var selectedRecurrence = RecurrenceType.weekly
-        var mode = CalendarMode.solar
-
-        // Switch to lunar mode
-        mode = .lunar
-
-        // When switching to lunar, weekly should be reset to none (since weekly is not valid in lunar mode)
-        if !selectedRecurrence.isLunar {
-            selectedRecurrence = .none
-        }
-
-        XCTAssertEqual(selectedRecurrence, .none)
-    }
-
-    // MARK: - Test: Lunar Date Picker Visibility
-
-    func testLunarDatePickerVisibleOnlyForLunarYearly() {
-        let recurrence = RecurrenceType.lunarYearly
-        let shouldShowPicker = recurrence == .lunarYearly
-
-        XCTAssertTrue(shouldShowPicker)
-    }
-
-    func testLunarDatePickerHiddenForLunarMonthly() {
-        let recurrence = RecurrenceType.lunarMonthly
-        let shouldShowPicker = recurrence == .lunarYearly
-
-        XCTAssertFalse(shouldShowPicker)
-    }
-
-    func testLunarDatePickerHiddenForSolarRecurrences() {
-        let solarRecurrences: [RecurrenceType] = [.daily, .weekly, .monthly, .yearly, .none]
-
-        for recurrence in solarRecurrences {
-            let shouldShowPicker = recurrence == .lunarYearly
-            XCTAssertFalse(shouldShowPicker, "\(recurrence.displayName) should not show lunar date picker")
-        }
-    }
-
-    // MARK: - Test: Default Selection in Each Mode
-
-    func testDefaultSolarSelection() {
-        let defaultSelection = getDefaultSelection(for: .solar)
-        XCTAssertEqual(defaultSelection, .none)
-    }
-
-    func testDefaultLunarSelection() {
-        let defaultSelection = getDefaultSelection(for: .lunar)
-        XCTAssertEqual(defaultSelection, .none)
-    }
-
-    // MARK: - Test: Valid Selection for Mode
-
-    func testDailyIsValidInSolarMode() {
-        XCTAssertTrue(isValidSelection(.daily, for: .solar))
-    }
-
-    func testDailyIsInvalidInLunarMode() {
-        XCTAssertFalse(isValidSelection(.daily, for: .lunar))
-    }
-
-    func testLunarMonthlyIsValidInLunarMode() {
-        XCTAssertTrue(isValidSelection(.lunarMonthly, for: .lunar))
-    }
-
-    func testLunarMonthlyIsInvalidInSolarMode() {
-        XCTAssertFalse(isValidSelection(.lunarMonthly, for: .solar))
-    }
-
-    func testNoneIsValidInBothModes() {
-        XCTAssertTrue(isValidSelection(.none, for: .solar))
-        XCTAssertTrue(isValidSelection(.none, for: .lunar))
+    func testSolarRecurrenceTypesIdentified() {
+        XCTAssertFalse(RecurrenceType.none.isLunar)
+        XCTAssertFalse(RecurrenceType.daily.isLunar)
+        XCTAssertFalse(RecurrenceType.weekly.isLunar)
+        XCTAssertFalse(RecurrenceType.monthly.isLunar)
+        XCTAssertFalse(RecurrenceType.yearly.isLunar)
     }
 
     // MARK: - Test: Lunar Recurrence Rule Creation
@@ -185,28 +93,4 @@ final class RecurrencePickerSheetTests: XCTestCase {
         XCTAssertEqual(rule.leapMonthBehavior, .skipLeap)
     }
 
-    // MARK: - Helper Functions (Mimicking RecurrencePickerSheet behavior)
-
-    enum CalendarMode {
-        case solar
-        case lunar
-    }
-
-    private func filterRecurrencesByMode(_ mode: CalendarMode) -> [RecurrenceType] {
-        switch mode {
-        case .solar:
-            return RecurrenceType.allCases.filter { !$0.isLunar }
-        case .lunar:
-            return RecurrenceType.allCases.filter { $0 == .none || $0.isLunar }
-        }
-    }
-
-    private func getDefaultSelection(for mode: CalendarMode) -> RecurrenceType {
-        .none
-    }
-
-    private func isValidSelection(_ recurrence: RecurrenceType, for mode: CalendarMode) -> Bool {
-        let validTypes = filterRecurrencesByMode(mode)
-        return validTypes.contains(recurrence)
-    }
 }
