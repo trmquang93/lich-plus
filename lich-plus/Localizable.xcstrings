@@ -3300,6 +3300,57 @@
         }
       }
     },
+    "datePicker.lunarMonthYear" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month %1$d, Year %2$@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng %1$d năm %2$@"
+          }
+        }
+      }
+    },
+    "datePicker.monthYear" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month %1$d, %2$d"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng %1$d, %2$d"
+          }
+        }
+      }
+    },
+    "datePicker.selectTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Time"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chọn giờ"
+          }
+        }
+      }
+    },
     "recurrence.lunar" : {
       "extractionState" : "manual",
       "localizations" : {

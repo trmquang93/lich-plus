@@ -69,7 +69,15 @@ struct CalendarGridView: View {
 struct CalendarDayCell: View {
     let day: CalendarDay
     let isSelected: Bool
+    let showEvents: Bool
     let onTap: () -> Void
+
+    init(day: CalendarDay, isSelected: Bool, showEvents: Bool = true, onTap: @escaping () -> Void) {
+        self.day = day
+        self.isSelected = isSelected
+        self.showEvents = showEvents
+        self.onTap = onTap
+    }
 
     var backgroundColor: Color {
         switch day.dayType {
@@ -123,7 +131,7 @@ struct CalendarDayCell: View {
                 .lineLimit(1)
 
             // Event indicator dots
-            if day.hasEvents {
+            if showEvents && day.hasEvents {
                 HStack(spacing: 2) {
                     ForEach(Array(day.events.prefix(3)), id: \.id) { event in
                         Circle()
@@ -140,8 +148,11 @@ struct CalendarDayCell: View {
         .frame(maxWidth: .infinity)
         .padding(AppTheme.spacing4)
         .background(backgroundColor)
-        .border(borderColor, width: borderWidth)
         .cornerRadius(AppTheme.cornerRadiusSmall)
+        .overlay(
+            RoundedRectangle(cornerRadius: AppTheme.cornerRadiusSmall)
+                .stroke(borderColor, lineWidth: borderWidth)
+        )
         .contentShape(Rectangle())
         .onTapGesture {
             if day.isCurrentMonth {

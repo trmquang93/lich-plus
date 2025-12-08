@@ -211,6 +211,9 @@ enum CalendarDisplayMode: Equatable {
     static let rowHeight: CGFloat = 46
     static let spacingBetweenItems: CGFloat = 2
 
+    /// Weekday headers for calendar grids (Monday to Sunday)
+    static let weekdayHeaders = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"]
+
     var gridHeight: CGFloat {
         switch self {
         case .expanded: return Self.maxHeight
