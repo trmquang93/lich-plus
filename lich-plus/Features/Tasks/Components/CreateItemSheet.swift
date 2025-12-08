@@ -105,7 +105,7 @@ struct CreateItemSheet: View {
             }
         }
         .sheet(isPresented: $showStartDatePicker) {
-            DatePickerSheet(
+            CalendarDatePickerSheet(
                 title: String(localized: "createItem.starts"),
                 selectedDate: $startDate,
                 onDone: {
@@ -116,15 +116,15 @@ struct CreateItemSheet: View {
                     }
                 }
             )
-            .presentationDetents([.medium])
+            .presentationDetents([.large])
         }
         .sheet(isPresented: $showEndDatePicker) {
-            DatePickerSheet(
+            CalendarDatePickerSheet(
                 title: String(localized: "createItem.ends"),
                 selectedDate: $endDate,
                 onDone: { showEndDatePicker = false }
             )
-            .presentationDetents([.medium])
+            .presentationDetents([.large])
         }
         .sheet(isPresented: $showRecurrencePicker) {
             RecurrencePickerSheet(
