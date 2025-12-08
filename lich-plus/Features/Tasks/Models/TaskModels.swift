@@ -314,22 +314,20 @@ struct TaskItem: Identifiable, Equatable {
         occurrence.occurrenceDate = occurrenceDate
         occurrence.date = occurrenceDate
 
-        // Adjust start/end times to occurrence date if present
-        if let startTime = occurrence.startTime {
-            let timeComponents = Calendar.current.dateComponents([.hour, .minute, .second], from: startTime)
-            occurrence.startTime = Calendar.current.date(bySettingHour: timeComponents.hour ?? 0,
-                                                          minute: timeComponents.minute ?? 0,
-                                                          second: timeComponents.second ?? 0,
-                                                          of: occurrenceDate)
+        // Helper to adjust time components to a new date
+        func adjustTime(of date: Date?, to newDate: Date) -> Date? {
+            guard let date = date else { return nil }
+            let calendar = Calendar.current
+            let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: date)
+            return calendar.date(bySettingHour: timeComponents.hour ?? 0,
+                                 minute: timeComponents.minute ?? 0,
+                                 second: timeComponents.second ?? 0,
+                                 of: newDate)
         }
 
-        if let endTime = occurrence.endTime {
-            let timeComponents = Calendar.current.dateComponents([.hour, .minute, .second], from: endTime)
-            occurrence.endTime = Calendar.current.date(bySettingHour: timeComponents.hour ?? 0,
-                                                        minute: timeComponents.minute ?? 0,
-                                                        second: timeComponents.second ?? 0,
-                                                        of: occurrenceDate)
-        }
+        // Adjust start/end times to occurrence date if present
+        occurrence.startTime = adjustTime(of: occurrence.startTime, to: occurrenceDate)
+        occurrence.endTime = adjustTime(of: occurrence.endTime, to: occurrenceDate)
 
         return occurrence
     }

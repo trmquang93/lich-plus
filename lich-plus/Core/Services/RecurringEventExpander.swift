@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoKit
 
 /// Service for expanding recurring SyncableEvent instances into individual TaskItem occurrences
 ///
@@ -38,36 +39,13 @@ struct RecurringEventExpander {
 
         // Create deterministic seed string from master ID and date
         let seed = "\(masterID.uuidString)-\(components.year ?? 0)-\(components.month ?? 0)-\(components.day ?? 0)"
+        let seedData = Data(seed.utf8)
 
-        // Use consistent hashing to create deterministic UUID
-        var hasher = Hasher()
-        hasher.combine(seed)
-        let hash = hasher.finalize()
+        // Use MD5 hash (128-bit) to generate deterministic UUID
+        let digest = Insecure.MD5.hash(data: seedData)
 
-        // Create UUID from hash components
-        let hashInt = UInt64(bitPattern: Int64(hash))
-        let uuid = UUID(
-            uuid: (
-                UInt8((hashInt >> 56) & 0xFF),
-                UInt8((hashInt >> 48) & 0xFF),
-                UInt8((hashInt >> 40) & 0xFF),
-                UInt8((hashInt >> 32) & 0xFF),
-                UInt8((hashInt >> 24) & 0xFF),
-                UInt8((hashInt >> 16) & 0xFF),
-                UInt8((hashInt >> 8) & 0xFF),
-                UInt8(hashInt & 0xFF),
-                UInt8((hash >> 24) & 0xFF),
-                UInt8((hash >> 16) & 0xFF),
-                UInt8((hash >> 8) & 0xFF),
-                UInt8(hash & 0xFF),
-                UInt8((hash >> 24) & 0xFF),
-                UInt8((hash >> 16) & 0xFF),
-                UInt8((hash >> 8) & 0xFF),
-                UInt8(hash & 0xFF)
-            )
-        )
-
-        return uuid
+        // Create UUID from the 16-byte digest
+        return UUID(uuid: digest.withUnsafeBytes { $0.load(as: uuid_t.self) })
     }
 
     /// Expand all recurring events into individual TaskItem occurrences
@@ -176,6 +154,13 @@ struct RecurringEventExpander {
         var occurrences: [TaskItem] = []
         let calendar = Calendar.current
         let masterStartDate = event.startDate
+
+        // NOTE: Current implementation supports simple recurrence rules (daily, weekly, monthly, yearly
+        // with intervals). Complex rules using daysOfTheWeek, daysOfTheMonth, or setPositions
+        // (e.g., "every Monday and Wednesday" or "2nd Friday of each month") are not yet fully supported
+        // by RecurrenceMatcher.solarRuleMatchesDate. This limitation exists in the current codebase
+        // and is not introduced by this PR. Future enhancement: extend RecurrenceMatcher to handle
+        // complex recurrence patterns.
 
         // Determine iteration by iterating through each day and checking if it matches
         var currentDate = max(masterStartDate, rangeStart)
