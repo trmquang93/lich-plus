@@ -112,7 +112,7 @@ struct ICSRecurrenceExpander {
         let calendar = Calendar.current
 
         // Check frequency and interval constraints
-        if !matchesFrequencyAndInterval(candidateDate: candidateDate, masterStartDate: masterStartDate, frequency: rule.frequency, interval: rule.interval, daysOfWeek: rule.daysOfTheWeek, calendar: calendar) {
+        if !matchesFrequencyAndInterval(candidateDate: candidateDate, masterStartDate: masterStartDate, rule: rule, calendar: calendar) {
             return false
         }
 
@@ -152,51 +152,72 @@ struct ICSRecurrenceExpander {
     /// - Parameters:
     ///   - candidateDate: The date to check
     ///   - masterStartDate: The original recurrence start date
-    ///   - frequency: Recurrence frequency (0=daily, 1=weekly, 2=monthly, 3=yearly)
-    ///   - interval: How many frequency units between occurrences
-    ///   - daysOfWeek: BYDAY filter (if specified, overrides default weekday matching)
+    ///   - rule: The recurrence rule containing frequency, interval, and BY... filters
     ///   - calendar: The calendar to use for calculations
     /// - Returns: true if candidate matches the frequency and interval constraints
     private static func matchesFrequencyAndInterval(
         candidateDate: Date,
         masterStartDate: Date,
-        frequency: Int,
-        interval: Int,
-        daysOfWeek: [SerializableDayOfWeek]?,
+        rule: SerializableRecurrenceRule,
         calendar: Calendar
     ) -> Bool {
-        switch frequency {
+        let interval = rule.interval
+
+        switch rule.frequency {
         case 0:  // Daily
             let daysBetween = calendar.dateComponents([.day], from: masterStartDate, to: candidateDate).day ?? 0
             return daysBetween >= 0 && daysBetween % interval == 0
 
         case 1:  // Weekly
             let weeksBetween = calendar.dateComponents([.weekOfYear], from: masterStartDate, to: candidateDate).weekOfYear ?? 0
-
-            // Special handling for BYDAY: When specified, it overrides default weekday matching.
-            // We only check week alignment here; the matchesWeekday filter handles day selection.
-            if let daysOfWeek = daysOfWeek, !daysOfWeek.isEmpty {
-                return weeksBetween >= 0 && weeksBetween % interval == 0
+            if weeksBetween < 0 || weeksBetween % interval != 0 {
+                return false
             }
 
-            // Default behavior: must match master's weekday and interval
+            // If BYDAY is specified, it overrides default weekday matching.
+            // The specific day check happens in matchesWeekday filter.
+            if let daysOfWeek = rule.daysOfTheWeek, !daysOfWeek.isEmpty {
+                return true
+            }
+
+            // Default behavior: must match master's weekday
             let masterWeekday = calendar.component(.weekday, from: masterStartDate)
             let candidateWeekday = calendar.component(.weekday, from: candidateDate)
-            return weeksBetween >= 0 && weeksBetween % interval == 0 && masterWeekday == candidateWeekday
+            return masterWeekday == candidateWeekday
 
         case 2:  // Monthly
             let monthsBetween = calendar.dateComponents([.month], from: masterStartDate, to: candidateDate).month ?? 0
+            if monthsBetween < 0 || monthsBetween % interval != 0 {
+                return false
+            }
+
+            // If BYDAY or BYMONTHDAY is specified, day matching is handled by other filters
+            if rule.daysOfTheWeek != nil || rule.daysOfTheMonth != nil {
+                return true
+            }
+
+            // Default behavior: match master's day of month
             let masterDay = calendar.component(.day, from: masterStartDate)
             let candidateDay = calendar.component(.day, from: candidateDate)
-            return monthsBetween >= 0 && monthsBetween % interval == 0 && masterDay == candidateDay
+            return masterDay == candidateDay
 
         case 3:  // Yearly
             let yearsBetween = calendar.dateComponents([.year], from: masterStartDate, to: candidateDate).year ?? 0
+            if yearsBetween < 0 || yearsBetween % interval != 0 {
+                return false
+            }
+
+            // If any BY... rule is specified, month/day matching is handled by other filters
+            if rule.monthsOfTheYear != nil || rule.daysOfTheYear != nil || rule.daysOfTheMonth != nil || rule.daysOfTheWeek != nil {
+                return true
+            }
+
+            // Default behavior: match master's month and day
             let masterMonth = calendar.component(.month, from: masterStartDate)
             let candidateMonth = calendar.component(.month, from: candidateDate)
             let masterDay = calendar.component(.day, from: masterStartDate)
             let candidateDay = calendar.component(.day, from: candidateDate)
-            return yearsBetween >= 0 && yearsBetween % interval == 0 && masterMonth == candidateMonth && masterDay == candidateDay
+            return masterMonth == candidateMonth && masterDay == candidateDay
 
         default:
             return false

@@ -58,6 +58,40 @@ enum ICSRRuleParserError: Error, LocalizedError {
 /// ```
 struct ICSRRuleParser {
 
+    // MARK: - Static DateFormatter Instances (Performance Optimization)
+
+    /// Reusable DateFormatter for UTC datetime (YYYYMMDDThhmmssZ)
+    private static let utcDateTimeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd'T'HHmmss'Z'"
+        formatter.timeZone = TimeZone(abbreviation: "UTC")
+        return formatter
+    }()
+
+    /// Reusable DateFormatter for local datetime (YYYYMMDDThhmmss)
+    private static let localDateTimeFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd'T'HHmmss"
+        formatter.timeZone = TimeZone.current
+        return formatter
+    }()
+
+    /// Reusable DateFormatter for date with trailing T (YYYYMMDDT)
+    private static let trailingTDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd'T'"
+        formatter.timeZone = TimeZone.current
+        return formatter
+    }()
+
+    /// Reusable DateFormatter for date only (YYYYMMDD)
+    private static let dateOnlyFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd"
+        formatter.timeZone = TimeZone.current
+        return formatter
+    }()
+
     // MARK: - Public API
 
     /// Parse an RRULE string into a SerializableRecurrenceRule
@@ -191,7 +225,7 @@ struct ICSRRuleParser {
         for dayString in dayStrings {
             let trimmed = dayString.trimmingCharacters(in: .whitespaces)
             let (dayOfWeek, week) = try parseDayOfWeekWithOptionalWeek(trimmed)
-            var dayOfWeekObj = SerializableDayOfWeek(dayOfWeek: dayOfWeek, week: week)
+            let dayOfWeekObj = SerializableDayOfWeek(dayOfWeek: dayOfWeek, week: week)
             days.append(dayOfWeekObj)
         }
 
@@ -328,37 +362,23 @@ struct ICSRRuleParser {
     private static func parseUntilDate(_ value: String) throws -> Date {
         let trimmed = value.trimmingCharacters(in: .whitespaces)
 
-        var formatter: DateFormatter
-
         // Try UTC format first (with Z suffix)
         if trimmed.hasSuffix("Z") {
-            formatter = DateFormatter()
-            formatter.dateFormat = "yyyyMMdd'T'HHmmss'Z'"
-            formatter.timeZone = TimeZone(abbreviation: "UTC")
-
-            if let date = formatter.date(from: trimmed) {
+            if let date = utcDateTimeFormatter.date(from: trimmed) {
                 return date
             }
         }
 
         // Try datetime format (without Z)
         if trimmed.count >= 15 && trimmed.contains("T") {
-            formatter = DateFormatter()
-            formatter.dateFormat = "yyyyMMdd'T'HHmmss"
-            formatter.timeZone = TimeZone.current
-
-            if let date = formatter.date(from: trimmed) {
+            if let date = localDateTimeFormatter.date(from: trimmed) {
                 return date
             }
         }
 
         // Try date-only format
         if trimmed.count == 8 {
-            formatter = DateFormatter()
-            formatter.dateFormat = "yyyyMMdd"
-            formatter.timeZone = TimeZone.current
-
-            if let date = formatter.date(from: trimmed) {
+            if let date = dateOnlyFormatter.date(from: trimmed) {
                 return date
             }
         }
@@ -374,48 +394,30 @@ struct ICSRRuleParser {
     private static func parseExDate(_ value: String) throws -> Date {
         let trimmed = value.trimmingCharacters(in: .whitespaces)
 
-        var formatter: DateFormatter
-
         // Try UTC format first (with Z suffix)
         if trimmed.hasSuffix("Z") {
-            formatter = DateFormatter()
-            formatter.dateFormat = "yyyyMMdd'T'HHmmss'Z'"
-            formatter.timeZone = TimeZone(abbreviation: "UTC")
-
-            if let date = formatter.date(from: trimmed) {
+            if let date = utcDateTimeFormatter.date(from: trimmed) {
                 return date
             }
         }
 
         // Try datetime format (without Z)
         if trimmed.count >= 15 && trimmed.contains("T") {
-            formatter = DateFormatter()
-            formatter.dateFormat = "yyyyMMdd'T'HHmmss"
-            formatter.timeZone = TimeZone.current
-
-            if let date = formatter.date(from: trimmed) {
+            if let date = localDateTimeFormatter.date(from: trimmed) {
                 return date
             }
         }
 
         // Try date with trailing T format (e.g., "20251009T")
         if trimmed.count == 9 && trimmed.hasSuffix("T") {
-            formatter = DateFormatter()
-            formatter.dateFormat = "yyyyMMdd'T'"
-            formatter.timeZone = TimeZone.current
-
-            if let date = formatter.date(from: trimmed) {
+            if let date = trailingTDateFormatter.date(from: trimmed) {
                 return date
             }
         }
 
         // Try date-only format
         if trimmed.count == 8 {
-            formatter = DateFormatter()
-            formatter.dateFormat = "yyyyMMdd"
-            formatter.timeZone = TimeZone.current
-
-            if let date = formatter.date(from: trimmed) {
+            if let date = dateOnlyFormatter.date(from: trimmed) {
                 return date
             }
         }

@@ -94,14 +94,13 @@ class ICSCalendarService {
 
         // If no recurrence rule, return single event
         guard let rruleString = icsEvent.recurrenceRule else {
-            let event = convertToSyncableEvent(
-                icsEvent,
+            return createFallbackSingleEvent(
+                from: icsEvent,
                 subscriptionId: subscriptionId,
                 subscriptionName: subscriptionName,
                 colorHex: colorHex,
                 defaultCategory: defaultCategory
             )
-            return [event]
         }
 
         // Parse RRULE string into SerializableRecurrenceRule
@@ -111,14 +110,13 @@ class ICSCalendarService {
         } catch {
             // If parsing fails, log and return single event
             print("⚠️ Failed to parse RRULE '\(rruleString)': \(error)")
-            let event = convertToSyncableEvent(
-                icsEvent,
+            return createFallbackSingleEvent(
+                from: icsEvent,
                 subscriptionId: subscriptionId,
                 subscriptionName: subscriptionName,
                 colorHex: colorHex,
                 defaultCategory: defaultCategory
             )
-            return [event]
         }
 
         // Parse EXDATE strings into Date array
@@ -142,14 +140,13 @@ class ICSCalendarService {
         // If expansion produces no occurrences, return single event at master date
         guard !occurrences.isEmpty else {
             print("⚠️ Recurrence expansion produced 0 occurrences for event '\(icsEvent.summary)'")
-            let event = convertToSyncableEvent(
-                icsEvent,
+            return createFallbackSingleEvent(
+                from: icsEvent,
                 subscriptionId: subscriptionId,
                 subscriptionName: subscriptionName,
                 colorHex: colorHex,
                 defaultCategory: defaultCategory
             )
-            return [event]
         }
 
         // Create SyncableEvent for each occurrence
@@ -220,6 +217,37 @@ class ICSCalendarService {
     }
 
     // MARK: - Private Helpers
+
+    /// Create a fallback single event (non-recurring) from an ICS event
+    ///
+    /// Used when:
+    /// - No recurrence rule is present
+    /// - RRULE parsing fails
+    /// - Recurrence expansion produces no occurrences
+    ///
+    /// - Parameters:
+    ///   - icsEvent: The ICS event to convert
+    ///   - subscriptionId: The subscription ID
+    ///   - subscriptionName: The subscription name
+    ///   - colorHex: The color hex code
+    ///   - defaultCategory: The default category
+    /// - Returns: Array containing a single SyncableEvent
+    private func createFallbackSingleEvent(
+        from icsEvent: ICSEvent,
+        subscriptionId: String,
+        subscriptionName: String,
+        colorHex: String,
+        defaultCategory: String
+    ) -> [SyncableEvent] {
+        let event = convertToSyncableEvent(
+            icsEvent,
+            subscriptionId: subscriptionId,
+            subscriptionName: subscriptionName,
+            colorHex: colorHex,
+            defaultCategory: defaultCategory
+        )
+        return [event]
+    }
 
     private func validateResponse(_ response: URLResponse, data: Data) throws {
         guard let httpResponse = response as? HTTPURLResponse else {
