@@ -27,7 +27,6 @@ struct CreateItemSheet: View {
     @State private var selectedRecurrence: RecurrenceType = .none
     @State private var selectedPriority: Priority = .medium
     @State private var selectedReminder: Int? = nil
-    @State private var lunarRecurrenceRule: SerializableLunarRecurrenceRule? = nil
 
     // Date picker states
     @State private var showStartDatePicker = false
@@ -105,7 +104,7 @@ struct CreateItemSheet: View {
             }
         }
         .sheet(isPresented: $showStartDatePicker) {
-            DatePickerSheet(
+            CalendarDatePickerSheet(
                 title: String(localized: "createItem.starts"),
                 selectedDate: $startDate,
                 onDone: {
@@ -116,23 +115,22 @@ struct CreateItemSheet: View {
                     }
                 }
             )
-            .presentationDetents([.medium])
+            .presentationDetents([.large])
         }
         .sheet(isPresented: $showEndDatePicker) {
-            DatePickerSheet(
+            CalendarDatePickerSheet(
                 title: String(localized: "createItem.ends"),
                 selectedDate: $endDate,
                 onDone: { showEndDatePicker = false }
             )
-            .presentationDetents([.medium])
+            .presentationDetents([.large])
         }
         .sheet(isPresented: $showRecurrencePicker) {
             RecurrencePickerSheet(
                 selectedRecurrence: $selectedRecurrence,
-                lunarRecurrenceRule: $lunarRecurrenceRule,
                 onDone: { showRecurrencePicker = false }
             )
-            .presentationDetents([.medium, .large])
+            .presentationDetents([.medium])
         }
     }
 
@@ -511,19 +509,38 @@ struct CreateItemSheet: View {
         dismiss()
     }
 
+    // MARK: - Lunar Date Derivation
+
+    /// Derive lunar date from the event's start date
+    private func deriveLunarDate() -> (day: Int, month: Int, year: Int) {
+        return LunarCalendar.solarToLunar(startDate)
+    }
+
     // MARK: - Recurrence Persistence Helpers
 
-    /// Create serialized recurrence data from selected recurrence type or lunar rule
+    /// Create serialized recurrence data from selected recurrence type
     private func createRecurrenceData() -> Data? {
-        if let lunarRule = lunarRecurrenceRule {
-            // Encode lunar recurrence rule
+        guard selectedRecurrence != .none else { return nil }
+
+        if selectedRecurrence.isLunar {
+            // Auto-derive lunar date from startDate
+            let lunar = deriveLunarDate()
+            let frequency: LunarFrequency = selectedRecurrence == .lunarMonthly ? .monthly : .yearly
+
+            let lunarRule = SerializableLunarRecurrenceRule(
+                frequency: frequency,
+                lunarDay: lunar.day,
+                lunarMonth: selectedRecurrence == .lunarYearly ? lunar.month : nil,
+                leapMonthBehavior: .includeLeap,
+                interval: 1,
+                recurrenceEnd: nil
+            )
             return try? JSONEncoder().encode(RecurrenceRuleContainer.lunar(lunarRule))
-        } else if selectedRecurrence != .none && !selectedRecurrence.isLunar {
-            // Create and encode solar recurrence rule
+        } else {
+            // Create solar recurrence rule
             let solarRule = createSolarRecurrenceRule(from: selectedRecurrence)
             return try? JSONEncoder().encode(RecurrenceRuleContainer.solar(solarRule))
         }
-        return nil
     }
 
     /// Create a SerializableRecurrenceRule from a RecurrenceType
@@ -558,16 +575,13 @@ struct CreateItemSheet: View {
         case .solar(let rule):
             // Convert serialized rule back to RecurrenceType
             selectedRecurrence = convertToRecurrenceType(from: rule)
-            lunarRecurrenceRule = nil
 
         case .lunar(let rule):
-            // Set lunar rule and appropriate recurrence type
-            lunarRecurrenceRule = rule
+            // Set appropriate recurrence type based on lunar frequency
             selectedRecurrence = rule.frequency == .monthly ? .lunarMonthly : .lunarYearly
 
         case .none:
             selectedRecurrence = .none
-            lunarRecurrenceRule = nil
         }
     }
 

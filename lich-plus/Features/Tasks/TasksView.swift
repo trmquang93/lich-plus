@@ -29,7 +29,7 @@ struct TasksView: View {
     // MARK: - Computed Properties
 
     private var tasks: [TaskItem] {
-        syncableEvents.map { TaskItem(from: $0) }
+        RecurringEventExpander.expandRecurringEvents(syncableEvents)
     }
 
     private var filteredTasks: [TaskItem] {
@@ -94,6 +94,9 @@ struct TasksView: View {
         // Prevent toggling completion for ICS subscription events (read-only)
         guard task.isEditable else { return }
 
+		// Resolve to master event ID (occurrence or master)
+        let targetId = task.masterEventId ?? task.id
+
         if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
             syncableEvent.isCompleted.toggle()
             syncableEvent.setSyncStatus(.pending)
@@ -103,6 +106,10 @@ struct TasksView: View {
     private func deleteTask(_ task: TaskItem) {
         // Prevent deleting ICS subscription events (read-only)
         guard task.isEditable else { return }
+
+        // Resolve to master event ID (occurrence or master)
+        let targetId = task.masterEventId ?? task.id
+
 
         if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
             syncableEvent.isDeleted = true
@@ -114,7 +121,9 @@ struct TasksView: View {
         // Prevent editing ICS subscription events (read-only)
         guard task.isEditable else { return }
 
-        editingEventId = task.id
+         // Resolve to master event ID (occurrence or master)
+        editingEventId = task.masterEventId ?? task.id
+
         showEditSheet = true
     }
 }
