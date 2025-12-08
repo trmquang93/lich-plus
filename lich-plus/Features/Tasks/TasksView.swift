@@ -29,7 +29,7 @@ struct TasksView: View {
     // MARK: - Computed Properties
 
     private var tasks: [TaskItem] {
-        syncableEvents.map { TaskItem(from: $0) }
+        RecurringEventExpander.expandRecurringEvents(syncableEvents)
     }
 
     private var filteredTasks: [TaskItem] {
@@ -91,21 +91,28 @@ struct TasksView: View {
     // MARK: - Methods
 
     private func toggleTaskCompletion(_ task: TaskItem) {
-        if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
+        // Resolve to master event ID (occurrence or master)
+        let targetId = task.masterEventId ?? task.id
+
+        if let syncableEvent = syncableEvents.first(where: { $0.id == targetId }) {
             syncableEvent.isCompleted.toggle()
             syncableEvent.setSyncStatus(.pending)
         }
     }
 
     private func deleteTask(_ task: TaskItem) {
-        if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
+        // Resolve to master event ID (occurrence or master)
+        let targetId = task.masterEventId ?? task.id
+
+        if let syncableEvent = syncableEvents.first(where: { $0.id == targetId }) {
             syncableEvent.isDeleted = true
             syncableEvent.setSyncStatus(.pending)
         }
     }
 
     private func startEditingTask(_ task: TaskItem) {
-        editingEventId = task.id
+        // Resolve to master event ID (occurrence or master)
+        editingEventId = task.masterEventId ?? task.id
         showEditSheet = true
     }
 }
