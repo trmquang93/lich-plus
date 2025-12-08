@@ -18,6 +18,7 @@ struct CalendarView: View {
     @State private var displayedWeekOffset: Int = 0
     @EnvironmentObject var syncService: CalendarSyncService
     @State private var collapseProgress: CGFloat = 0
+    @State private var refreshCounter: Int = 0
 
     private var displayedDate: Date {
         Calendar.current.date(byAdding: .month, value: displayedMonthOffset, to: Date()) ?? Date()
@@ -172,6 +173,7 @@ struct CalendarView: View {
                                     InfinitePageView(
                                         initialIndex: dataManager.selectedDate,
                                         currentValue: dataManager.selectedDate,
+                                        refreshTrigger: AnyHashable(refreshCounter),
                                         content: { date in
                                             let day = dataManager.createCalendarDay(
                                                 from: date,
@@ -227,6 +229,7 @@ struct CalendarView: View {
             }
             .onReceive(NotificationCenter.default.publisher(for: .calendarDataDidChange)) { _ in
                 dataManager.refreshCurrentMonth()
+                refreshCounter += 1
             }
         }
     }
