@@ -197,7 +197,7 @@ struct TaskItem: Identifiable, Equatable {
         itemType: ItemType = .task,
         priority: Priority = .none,
         location: String? = nil,
-        source: EventSource = .local
+        source: EventSource = .local,
         masterEventId: UUID? = nil,
         occurrenceDate: Date? = nil
     ) {
