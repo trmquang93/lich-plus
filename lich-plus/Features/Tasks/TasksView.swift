@@ -91,28 +91,39 @@ struct TasksView: View {
     // MARK: - Methods
 
     private func toggleTaskCompletion(_ task: TaskItem) {
-        // Resolve to master event ID (occurrence or master)
+        // Prevent toggling completion for ICS subscription events (read-only)
+        guard task.isEditable else { return }
+
+		// Resolve to master event ID (occurrence or master)
         let targetId = task.masterEventId ?? task.id
 
-        if let syncableEvent = syncableEvents.first(where: { $0.id == targetId }) {
+        if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
             syncableEvent.isCompleted.toggle()
             syncableEvent.setSyncStatus(.pending)
         }
     }
 
     private func deleteTask(_ task: TaskItem) {
+        // Prevent deleting ICS subscription events (read-only)
+        guard task.isEditable else { return }
+
         // Resolve to master event ID (occurrence or master)
         let targetId = task.masterEventId ?? task.id
 
-        if let syncableEvent = syncableEvents.first(where: { $0.id == targetId }) {
+
+        if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
             syncableEvent.isDeleted = true
             syncableEvent.setSyncStatus(.pending)
         }
     }
 
     private func startEditingTask(_ task: TaskItem) {
-        // Resolve to master event ID (occurrence or master)
+        // Prevent editing ICS subscription events (read-only)
+        guard task.isEditable else { return }
+
+         // Resolve to master event ID (occurrence or master)
         editingEventId = task.masterEventId ?? task.id
+
         showEditSheet = true
     }
 }

@@ -167,6 +167,13 @@ struct TaskItem: Identifiable, Equatable {
     var itemType: ItemType
     var priority: Priority
     var location: String?
+    var source: EventSource
+
+    /// Whether this item can be edited locally
+    /// ICS subscription events are read-only and cannot be edited
+    var isEditable: Bool {
+        source != .icsSubscription
+    }
 
     /// ID of the master event if this is an occurrence, nil if this is a master event
     var masterEventId: UUID?
@@ -190,6 +197,7 @@ struct TaskItem: Identifiable, Equatable {
         itemType: ItemType = .task,
         priority: Priority = .none,
         location: String? = nil,
+        source: EventSource = .local,
         masterEventId: UUID? = nil,
         occurrenceDate: Date? = nil
     ) {
@@ -208,6 +216,7 @@ struct TaskItem: Identifiable, Equatable {
         self.itemType = itemType
         self.priority = priority
         self.location = location
+        self.source = source
         self.masterEventId = masterEventId
         self.occurrenceDate = occurrenceDate
     }
@@ -293,6 +302,7 @@ struct TaskItem: Identifiable, Equatable {
         self.itemType = ItemType(rawValue: syncable.itemType) ?? .task
         self.priority = Priority(rawValue: syncable.priority) ?? .none
         self.location = syncable.location
+        self.source = syncable.sourceEnum
         self.masterEventId = nil
         self.occurrenceDate = nil
     }

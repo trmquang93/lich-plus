@@ -7,15 +7,36 @@
 
 import Foundation
 
+/// Represents a parsed ICS event with all extracted properties
 struct ICSEvent {
+    /// Unique identifier for the event
     let uid: String
+
+    /// Event title
     let summary: String
+
+    /// Event description or notes
     let description: String?
+
+    /// Event start date and time
     let startDate: Date
+
+    /// Event end date and time (optional)
     let endDate: Date?
+
+    /// Whether this is an all-day event
     let isAllDay: Bool
+
+    /// Event location
     let location: String?
+
+    /// Recurrence rule string (e.g., "FREQ=WEEKLY;BYDAY=MO,WE,FR")
     let recurrenceRule: String?
+
+    /// Exception dates - dates when the recurring event should not occur
+    /// Stored as raw strings in ICS format (e.g., "20231225T100000Z")
+    /// Use ICSRRuleParser.parseExDates() to convert to Date objects
+    let exDates: [String]
 }
 
 enum ICSParserError: LocalizedError, Equatable {
@@ -120,6 +141,7 @@ class ICSParser {
         var isAllDay = false
         var location: String?
         var recurrenceRule: String?
+        var exDateLines: [String] = []
 
         for line in lines {
             // Handle line folding (continuation lines)
@@ -141,6 +163,13 @@ class ICSParser {
                 location = extractValue(from: cleanLine, prefix: "LOCATION:")
             } else if cleanLine.starts(with: "RRULE:") {
                 recurrenceRule = extractValue(from: cleanLine, prefix: "RRULE:")
+            } else if cleanLine.hasPrefix("EXDATE") {
+                // Extract EXDATE value (may contain multiple dates separated by commas)
+                let exdateValue = extractValueWithParams(from: cleanLine)
+                // Split by comma to handle multiple dates in a single EXDATE line
+                let dateStrings = exdateValue.split(separator: ",")
+                    .map { String($0).trimmingCharacters(in: .whitespaces) }
+                exDateLines.append(contentsOf: dateStrings)
             }
         }
 
@@ -164,7 +193,8 @@ class ICSParser {
             endDate: endDate,
             isAllDay: isAllDay,
             location: location,
-            recurrenceRule: recurrenceRule
+            recurrenceRule: recurrenceRule,
+            exDates: exDateLines
         )
     }
 

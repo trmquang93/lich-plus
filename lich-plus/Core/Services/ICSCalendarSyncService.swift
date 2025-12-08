@@ -143,19 +143,16 @@ class ICSCalendarSyncService: ObservableObject {
         // Fetch events from ICS
         let icsEvents = try await calendarService.fetchEvents(from: url)
 
-        // Track ICS event UIDs for this subscription
-        var seenEventUids = Set<String>()
+        // Delete all existing events for this subscription (full replace strategy)
+        try deleteAllEventsForSubscription(subscriptionId: subscription.id.uuidString)
 
+        // Expand each ICS event (handles both recurring and non-recurring)
         for icsEvent in icsEvents {
-            seenEventUids.insert(icsEvent.uid)
-
-            // Check if event already exists
-            let existingEvent = findExistingEvent(icsEventUid: icsEvent.uid, subscriptionId: subscription.id.uuidString)
-
             // Determine default category based on subscription type
             let defaultCategory = subscription.isBuiltIn ? "holiday" : "other"
 
-            let syncableEvent = calendarService.convertToSyncableEvent(
+            // Expand recurring event (or get single event if not recurring)
+            let syncableEvents = calendarService.expandRecurringEvent(
                 icsEvent,
                 subscriptionId: subscription.id.uuidString,
                 subscriptionName: subscription.name,
@@ -163,17 +160,11 @@ class ICSCalendarSyncService: ObservableObject {
                 defaultCategory: defaultCategory
             )
 
-            if let existing = existingEvent {
-                // Update existing event
-                updateExistingEvent(existing, with: syncableEvent)
-            } else {
-                // Insert new event
-                modelContext.insert(syncableEvent)
+            // Insert all occurrences
+            for event in syncableEvents {
+                modelContext.insert(event)
             }
         }
-
-        // Mark events as deleted if they no longer exist in the ICS
-        try markDeletedICSEvents(subscriptionId: subscription.id.uuidString, seenUids: seenEventUids)
 
         // Save changes
         try modelContext.save()
@@ -183,39 +174,22 @@ class ICSCalendarSyncService: ObservableObject {
         try modelContext.save()
     }
 
-    private func findExistingEvent(icsEventUid: String, subscriptionId: String) -> SyncableEvent? {
+    /// Delete all events for a subscription
+    ///
+    /// Used by the full replace sync strategy to remove all existing events
+    /// before inserting fresh data from the ICS feed.
+    ///
+    /// - Parameter subscriptionId: The subscription ID
+    private func deleteAllEventsForSubscription(subscriptionId: String) throws {
         let predicate = #Predicate<SyncableEvent> { event in
-            event.icsEventUid == icsEventUid && event.icsSubscriptionId == subscriptionId
+            event.icsSubscriptionId == subscriptionId
         }
 
         let descriptor = FetchDescriptor(predicate: predicate)
-        return try? modelContext.fetch(descriptor).first
-    }
+        let eventsToDelete = try modelContext.fetch(descriptor)
 
-    private func updateExistingEvent(_ existing: SyncableEvent, with new: SyncableEvent) {
-        existing.title = new.title
-        existing.startDate = new.startDate
-        existing.endDate = new.endDate
-        existing.isAllDay = new.isAllDay
-        existing.notes = new.notes
-        existing.location = new.location
-        existing.lastModifiedRemote = new.lastModifiedRemote
-        existing.lastModifiedLocal = Date()
-    }
-
-    private func markDeletedICSEvents(subscriptionId: String, seenUids: Set<String>) throws {
-        let predicate = #Predicate<SyncableEvent> { event in
-            event.icsSubscriptionId == subscriptionId && !event.isDeleted
-        }
-
-        let descriptor = FetchDescriptor(predicate: predicate)
-        let allEvents = try modelContext.fetch(descriptor)
-
-        for event in allEvents {
-            if let uid = event.icsEventUid, !seenUids.contains(uid) {
-                event.isDeleted = true
-                event.lastModifiedLocal = Date()
-            }
+        for event in eventsToDelete {
+            modelContext.delete(event)
         }
     }
 
