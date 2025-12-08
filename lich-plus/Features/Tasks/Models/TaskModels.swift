@@ -152,7 +152,7 @@ enum RecurrenceType: String, CaseIterable, Identifiable {
 // MARK: - Task Model
 
 struct TaskItem: Identifiable, Equatable {
-    let id: UUID
+    var id: UUID
     var title: String
     var date: Date
     var startTime: Date?
@@ -167,6 +167,12 @@ struct TaskItem: Identifiable, Equatable {
     var itemType: ItemType
     var priority: Priority
     var location: String?
+
+    /// ID of the master event if this is an occurrence, nil if this is a master event
+    var masterEventId: UUID?
+
+    /// Occurrence date for recurring events (distinct from master start date)
+    var occurrenceDate: Date?
 
     init(
         id: UUID = UUID(),
@@ -183,7 +189,9 @@ struct TaskItem: Identifiable, Equatable {
         updatedAt: Date = Date(),
         itemType: ItemType = .task,
         priority: Priority = .none,
-        location: String? = nil
+        location: String? = nil,
+        masterEventId: UUID? = nil,
+        occurrenceDate: Date? = nil
     ) {
         self.id = id
         self.title = title
@@ -200,6 +208,8 @@ struct TaskItem: Identifiable, Equatable {
         self.itemType = itemType
         self.priority = priority
         self.location = location
+        self.masterEventId = masterEventId
+        self.occurrenceDate = occurrenceDate
     }
 
     // MARK: - Date Formatters (Cached)
@@ -252,6 +262,11 @@ struct TaskItem: Identifiable, Equatable {
         }
     }
 
+    /// Returns true if this is an occurrence instance, false if this is a master event
+    var isOccurrence: Bool {
+        masterEventId != nil
+    }
+
     static func == (lhs: TaskItem, rhs: TaskItem) -> Bool {
         lhs.id == rhs.id
     }
@@ -278,6 +293,43 @@ struct TaskItem: Identifiable, Equatable {
         self.itemType = ItemType(rawValue: syncable.itemType) ?? .task
         self.priority = Priority(rawValue: syncable.priority) ?? .none
         self.location = syncable.location
+        self.masterEventId = nil
+        self.occurrenceDate = nil
+    }
+
+    /// Create an occurrence instance from a master SyncableEvent
+    /// - Parameters:
+    ///   - master: The master SyncableEvent
+    ///   - occurrenceDate: The date this occurrence happens
+    ///   - virtualID: Deterministic ID for this occurrence
+    /// - Returns: TaskItem configured as an occurrence
+    static func createOccurrence(
+        from master: SyncableEvent,
+        occurrenceDate: Date,
+        virtualID: UUID
+    ) -> TaskItem {
+        var occurrence = TaskItem(from: master)
+        occurrence.id = virtualID
+        occurrence.masterEventId = master.id
+        occurrence.occurrenceDate = occurrenceDate
+        occurrence.date = occurrenceDate
+
+        // Helper to adjust time components to a new date
+        func adjustTime(of date: Date?, to newDate: Date) -> Date? {
+            guard let date = date else { return nil }
+            let calendar = Calendar.current
+            let timeComponents = calendar.dateComponents([.hour, .minute, .second], from: date)
+            return calendar.date(bySettingHour: timeComponents.hour ?? 0,
+                                 minute: timeComponents.minute ?? 0,
+                                 second: timeComponents.second ?? 0,
+                                 of: newDate)
+        }
+
+        // Adjust start/end times to occurrence date if present
+        occurrence.startTime = adjustTime(of: occurrence.startTime, to: occurrenceDate)
+        occurrence.endTime = adjustTime(of: occurrence.endTime, to: occurrenceDate)
+
+        return occurrence
     }
 
     /// Decode RecurrenceType from serialized recurrence rule data
