@@ -114,24 +114,22 @@ struct CalendarDatePickerSheet: View {
 
     // MARK: - Month Navigation
 
-    private func previousMonth() {
-        if displayMonth == 1 {
-            displayMonth = 12
-            displayYear -= 1
-        } else {
-            displayMonth -= 1
-        }
+    private func changeMonth(by offset: Int) {
+        let calendar = Calendar.current
+        let currentDate = calendar.date(from: DateComponents(year: displayYear, month: displayMonth, day: 1)) ?? Date()
+        guard let newDate = calendar.date(byAdding: .month, value: offset, to: currentDate) else { return }
+        let components = calendar.dateComponents([.year, .month], from: newDate)
+        displayMonth = components.month ?? displayMonth
+        displayYear = components.year ?? displayYear
         updateCalendarMonth()
     }
 
+    private func previousMonth() {
+        changeMonth(by: -1)
+    }
+
     private func nextMonth() {
-        if displayMonth == 12 {
-            displayMonth = 1
-            displayYear += 1
-        } else {
-            displayMonth += 1
-        }
-        updateCalendarMonth()
+        changeMonth(by: 1)
     }
 
     private func updateCalendarMonth() {
