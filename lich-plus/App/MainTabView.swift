@@ -66,8 +66,6 @@ struct MainTabView: View {
         .environmentObject(microsoftSyncService ?? createMicrosoftSyncService())
         // ICS Calendar environment objects
         .environmentObject(icsSyncService ?? createICSSyncService())
-        // Auto-sync coordinator environment object
-        .environmentObject(autoSyncCoordinator ?? createAutoSyncCoordinator())
         .tint(AppColors.primary)
         // Handle Google Sign-In URL callback
         .onOpenURL { url in
@@ -213,21 +211,17 @@ struct MainTabView: View {
 
     // MARK: - Auto-Sync Initialization
 
-    /// Create AutoSyncCoordinator with proper dependencies
-    private func createAutoSyncCoordinator() -> AutoSyncCoordinator {
-        let sync = syncService ?? CalendarSyncService(eventKitService: eventKitService, modelContext: modelContext)
-        return AutoSyncCoordinator(
+    /// Initialize auto-sync coordinator on app appearance
+    ///
+    /// Must be called after syncService is initialized.
+    private func initializeAutoSync() {
+        guard autoSyncCoordinator == nil, let sync = syncService else { return }
+
+        autoSyncCoordinator = AutoSyncCoordinator(
             syncService: sync,
             eventKitService: eventKitService,
             modelContext: modelContext
         )
-    }
-
-    /// Initialize auto-sync coordinator on app appearance
-    private func initializeAutoSync() {
-        guard autoSyncCoordinator == nil else { return }
-
-        autoSyncCoordinator = createAutoSyncCoordinator()
         autoSyncCoordinator?.startObserving()
     }
 }
