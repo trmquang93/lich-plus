@@ -430,8 +430,8 @@ final class InfinitePageViewTests: XCTestCase {
         // Given
         var currentController = coordinator.makeHostingController(for: 0)
 
-        // When & Then - iterate multiple times
-        for expectedIndex in (-1)...(-100) {
+        // When & Then - iterate multiple times (use stride for descending sequence)
+        for expectedIndex in stride(from: -1, through: -100, by: -1) {
             let prevController = coordinator.pageViewController(
                 UIPageViewController(),
                 viewControllerBefore: currentController
