@@ -23,8 +23,9 @@ struct TasksView: View {
     @State private var searchText: String = ""
     @State private var isSearchActive: Bool = false
     @State private var showAddSheet: Bool = false
-    @State private var editingEventId: UUID? = nil
+    @State private var editingEvent: SyncableEvent? = nil
     @State private var showEditSheet: Bool = false
+    @State private var showEventNotFoundAlert: Bool = false
 
     // MARK: - Computed Properties
 
@@ -67,23 +68,27 @@ struct TasksView: View {
             .background(AppColors.background)
             .sheet(isPresented: $showAddSheet) {
                 CreateItemSheet(
-                    editingEventId: nil,
+                    editingEvent: nil,
                     onSave: { _ in
                         showAddSheet = false
                     }
                 )
                 .environmentObject(syncService)
+                .modelContext(modelContext)
             }
             .sheet(isPresented: $showEditSheet) {
-                if let editingEventId = editingEventId {
-                    CreateItemSheet(
-                        editingEventId: editingEventId,
-                        onSave: { _ in
-                            showEditSheet = false
-                        }
-                    )
-                    .environmentObject(syncService)
-                }
+                CreateItemSheet(
+                    editingEvent: editingEvent,
+                    onSave: { _ in
+                        editingEvent = nil
+                        showEditSheet = false
+                    }
+                )
+                .environmentObject(syncService)
+                .modelContext(modelContext)
+            }
+            .alert(String(localized: "Event not found"), isPresented: $showEventNotFoundAlert) {
+                Button(String(localized: "OK"), role: .cancel) { }
             }
         }
     }
@@ -121,10 +126,15 @@ struct TasksView: View {
         // Prevent editing ICS subscription events (read-only)
         guard task.isEditable else { return }
 
-         // Resolve to master event ID (occurrence or master)
-        editingEventId = task.masterEventId ?? task.id
+        // Resolve to master event (occurrence or master)
+        let targetId = task.masterEventId ?? task.id
+        editingEvent = syncableEvents.first(where: { $0.id == targetId })
 
-        showEditSheet = true
+        if editingEvent != nil {
+            showEditSheet = true
+        } else {
+            showEventNotFoundAlert = true
+        }
     }
 }
 

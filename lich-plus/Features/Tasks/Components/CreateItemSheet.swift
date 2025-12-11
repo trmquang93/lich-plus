@@ -13,9 +13,6 @@ struct CreateItemSheet: View {
     @Environment(\.modelContext) var modelContext
     @EnvironmentObject var syncService: CalendarSyncService
 
-    // MARK: - Constants
-    private static let sentinelUUID = UUID(uuidString: "00000000-0000-0000-0000-000000000000")!
-
     // MARK: - State
     @State private var selectedItemType: ItemType = .event
     @State private var title: String = ""
@@ -33,19 +30,12 @@ struct CreateItemSheet: View {
     @State private var showEndDatePicker = false
     @State private var showRecurrencePicker = false
 
-    // SwiftData support
-    @Query private var editingEvents: [SyncableEvent]
-
-    let editingEventId: UUID?
+    let editingEvent: SyncableEvent?
     let initialItemType: ItemType?
     let onSave: (SyncableEvent) -> Void
 
     var isEditMode: Bool {
-        editingEventId != nil
-    }
-
-    var editingEvent: SyncableEvent? {
-        editingEvents.first
+        editingEvent != nil
     }
 
     var isValid: Bool {
@@ -53,20 +43,13 @@ struct CreateItemSheet: View {
     }
 
     init(
-        editingEventId: UUID? = nil,
+        editingEvent: SyncableEvent? = nil,
         initialItemType: ItemType? = nil,
         onSave: @escaping (SyncableEvent) -> Void
     ) {
-        self.editingEventId = editingEventId
+        self.editingEvent = editingEvent
         self.initialItemType = initialItemType
         self.onSave = onSave
-
-        // Filter query to fetch only the event being edited
-        // Use sentinel UUID that will never match any real event when creating new items
-        let targetId = editingEventId ?? Self.sentinelUUID
-        _editingEvents = Query(filter: #Predicate { event in
-            event.id == targetId
-        })
     }
 
     var body: some View {
@@ -450,6 +433,11 @@ struct CreateItemSheet: View {
         let syncableEvent: SyncableEvent
 
         if let existing = editingEvent {
+            // Prevent updating deleted events
+            guard !existing.isDeleted else {
+                dismiss()
+                return
+            }
             // Update existing
             existing.title = title
             existing.startDate = startDate
@@ -615,7 +603,7 @@ struct CreateItemSheet: View {
     )
 
     CreateItemSheet(
-        editingEventId: nil,
+        editingEvent: nil,
         initialItemType: nil,
         onSave: { _ in }
     )
