@@ -25,6 +25,7 @@ struct TasksView: View {
     @State private var showAddSheet: Bool = false
     @State private var editingEventId: UUID? = nil
     @State private var showEditSheet: Bool = false
+    @State private var refreshCounter: Int = 0
 
     // MARK: - Computed Properties
 
@@ -63,8 +64,12 @@ struct TasksView: View {
                     onEdit: startEditingTask,
                     onAddNew: { showAddSheet = true }
                 )
+                .id(refreshCounter)
             }
             .background(AppColors.background)
+            .onReceive(NotificationCenter.default.publisher(for: .calendarDataDidChange)) { _ in
+                refreshCounter += 1
+            }
             .sheet(isPresented: $showAddSheet) {
                 CreateItemSheet(
                     editingEventId: nil,
@@ -94,12 +99,15 @@ struct TasksView: View {
         // Prevent toggling completion for ICS subscription events (read-only)
         guard task.isEditable else { return }
 
-		// Resolve to master event ID (occurrence or master)
+        // Resolve to master event ID (occurrence or master)
         let targetId = task.masterEventId ?? task.id
 
-        if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
+        if let syncableEvent = syncableEvents.first(where: { $0.id == targetId }) {
             syncableEvent.isCompleted.toggle()
             syncableEvent.setSyncStatus(.pending)
+            try? modelContext.save()
+
+            NotificationCenter.default.post(name: .calendarDataDidChange, object: nil)
         }
     }
 
@@ -110,10 +118,12 @@ struct TasksView: View {
         // Resolve to master event ID (occurrence or master)
         let targetId = task.masterEventId ?? task.id
 
-
-        if let syncableEvent = syncableEvents.first(where: { $0.id == task.id }) {
+        if let syncableEvent = syncableEvents.first(where: { $0.id == targetId }) {
             syncableEvent.isDeleted = true
             syncableEvent.setSyncStatus(.pending)
+            try? modelContext.save()
+
+            NotificationCenter.default.post(name: .calendarDataDidChange, object: nil)
         }
     }
 
