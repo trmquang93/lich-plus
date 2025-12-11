@@ -734,14 +734,14 @@ final class MockEventKitService: EventKitService {
         from startDate: Date,
         to endDate: Date,
         calendars: [EKCalendar]
-    ) -> [EKEvent] {
+    ) async -> [EKEvent] {
         mockEvents
     }
 
     override func fetchAllEvents(
         from calendars: [EKCalendar],
         progressHandler: ((Int) -> Void)? = nil
-    ) -> [EKEvent] {
+    ) async -> [EKEvent] {
         mockEvents
     }
 

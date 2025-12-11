@@ -152,7 +152,7 @@ final class CalendarSyncService: ObservableObject {
             }
 
             // Fetch all events from Apple Calendar with progress tracking
-            let remoteEvents = eventKitService.fetchAllEvents(from: enabledCalendars) { _ in
+            let remoteEvents = await eventKitService.fetchAllEvents(from: enabledCalendars) { _ in
                 // Progress handler - can be used for UI updates if needed
             }
 
