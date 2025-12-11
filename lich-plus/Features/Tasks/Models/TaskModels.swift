@@ -271,6 +271,11 @@ struct TaskItem: Identifiable, Equatable {
         }
     }
 
+    /// Returns true if this is an all-day event, false if it has a specific start time
+    var isAllDay: Bool {
+        startTime == nil
+    }
+
     /// Returns true if this is an occurrence instance, false if this is a master event
     var isOccurrence: Bool {
         masterEventId != nil

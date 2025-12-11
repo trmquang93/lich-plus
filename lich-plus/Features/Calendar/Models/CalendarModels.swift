@@ -76,7 +76,8 @@ struct CalendarDay: Identifiable, Equatable {
 struct Event: Identifiable, Equatable {
     let id = UUID()
     let title: String
-    let time: String
+    let time: String?
+    let isAllDay: Bool
     let category: EventCategory
     let description: String?
 

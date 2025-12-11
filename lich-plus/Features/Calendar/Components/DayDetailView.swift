@@ -265,7 +265,7 @@ struct DayDetailView: View {
                 Text(event.title)
                     .font(.system(size: AppTheme.fontBody, weight: .bold))
                     .foregroundStyle(AppColors.textPrimary)
-                Text(event.time)
+                Text(event.isAllDay ? String(localized: "event.allDay") : (event.time ?? ""))
                     .font(.system(size: AppTheme.fontCaption))
                     .foregroundStyle(AppColors.textSecondary)
                 if let description = event.description {
@@ -483,18 +483,21 @@ struct DayDetailView: View {
             Event(
                 title: "Weekly Team Sync",
                 time: "10:00",
+                isAllDay: false,
                 category: .meeting,
                 description: "Online - Google Meet"
             ),
             Event(
                 title: "Design Review",
                 time: "14:00",
+                isAllDay: false,
                 category: .work,
                 description: "Meeting Room 4B"
             ),
             Event(
                 title: "Dinner with Family",
                 time: "19:00",
+                isAllDay: false,
                 category: .personal,
                 description: "Pizza 4P's Restaurant"
             ),
@@ -502,7 +505,7 @@ struct DayDetailView: View {
         isWeekend: false
     )
 
-    return NavigationStack {
+    NavigationStack {
         DayDetailView(day: mockDay)
     }
     .environmentObject(syncService)

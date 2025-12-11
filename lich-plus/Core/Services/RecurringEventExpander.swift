@@ -96,6 +96,27 @@ struct RecurringEventExpander {
         rangeStart: Date,
         rangeEnd: Date
     ) -> [TaskItem] {
+        // Handle multi-day all-day events (non-recurring)
+        if event.isAllDay,
+           let eventEndDate = event.endDate,
+           event.recurrenceRuleData == nil || event.recurrenceRuleData?.isEmpty == true {
+
+            let calendar = Calendar.current
+            let eventStartDay = calendar.startOfDay(for: event.startDate)
+            let eventEndDay = calendar.startOfDay(for: eventEndDate)
+
+            // Check if this is actually a multi-day event (spans more than one day)
+            if eventStartDay < eventEndDay {
+                return expandMultiDayEvent(
+                    event: event,
+                    eventStartDay: eventStartDay,
+                    eventEndDay: eventEndDay,
+                    rangeStart: rangeStart,
+                    rangeEnd: rangeEnd
+                )
+            }
+        }
+
         // Check if event has recurrence data
         guard let recurrenceData = event.recurrenceRuleData,
               !recurrenceData.isEmpty else {
@@ -225,5 +246,49 @@ struct RecurringEventExpander {
                 virtualID: virtualID
             )
         }
+    }
+
+    // MARK: - Multi-Day Event Expansion
+
+    /// Expand a multi-day all-day event into individual day occurrences
+    ///
+    /// - Parameters:
+    ///   - event: The multi-day event to expand
+    ///   - eventStartDay: Start of the event (normalized to midnight)
+    ///   - eventEndDay: End of the event (normalized to midnight)
+    ///   - rangeStart: Start of the date range
+    ///   - rangeEnd: End of the date range
+    /// - Returns: Array of TaskItem occurrences, one for each day
+    private static func expandMultiDayEvent(
+        event: SyncableEvent,
+        eventStartDay: Date,
+        eventEndDay: Date,
+        rangeStart: Date,
+        rangeEnd: Date
+    ) -> [TaskItem] {
+        var occurrences: [TaskItem] = []
+        let calendar = Calendar.current
+
+        // Find the overlap between event range and query range
+        let effectiveStart = max(eventStartDay, calendar.startOfDay(for: rangeStart))
+        let effectiveEnd = min(eventEndDay, calendar.startOfDay(for: rangeEnd))
+
+        var currentDate = effectiveStart
+        while currentDate <= effectiveEnd {
+            let virtualID = virtualUUID(masterID: event.id, occurrenceDate: currentDate)
+            var occurrence = TaskItem(from: event)
+            occurrence.id = virtualID
+            occurrence.masterEventId = event.id
+            occurrence.occurrenceDate = currentDate
+            occurrence.date = currentDate
+            // startTime stays nil for all-day events
+
+            occurrences.append(occurrence)
+
+            guard let nextDate = calendar.date(byAdding: .day, value: 1, to: currentDate) else { break }
+            currentDate = nextDate
+        }
+
+        return occurrences
     }
 }
