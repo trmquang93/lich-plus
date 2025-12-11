@@ -125,6 +125,15 @@ class EventKitService: NSObject, ObservableObject {
         EKEventStore.authorizationStatus(for: .event)
     }
 
+    /// Check if the app has full calendar access
+    ///
+    /// Convenience method to check authorization status without requesting permissions.
+    ///
+    /// - Returns: `true` if full access is granted, `false` otherwise
+    func hasFullAccess() -> Bool {
+        return authorizationStatus == .fullAccess
+    }
+
     // MARK: - Calendar Operations
 
     /// Fetch all user's calendars (event type only)

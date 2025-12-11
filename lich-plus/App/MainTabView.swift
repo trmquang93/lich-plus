@@ -32,6 +32,9 @@ struct MainTabView: View {
     // Built-in Calendar services
     @State private var builtInCalendarManager: BuiltInCalendarManager?
 
+    // Auto-sync coordinator for Apple Calendar
+    @State private var autoSyncCoordinator: AutoSyncCoordinator?
+
     var body: some View {
         TabView(selection: $selectedTab) {
             CalendarView()
@@ -63,6 +66,8 @@ struct MainTabView: View {
         .environmentObject(microsoftSyncService ?? createMicrosoftSyncService())
         // ICS Calendar environment objects
         .environmentObject(icsSyncService ?? createICSSyncService())
+        // Auto-sync coordinator environment object
+        .environmentObject(autoSyncCoordinator ?? createAutoSyncCoordinator())
         .tint(AppColors.primary)
         // Handle Google Sign-In URL callback
         .onOpenURL { url in
@@ -81,6 +86,8 @@ struct MainTabView: View {
             initializeICSServices()
             // Initialize built-in calendars (first launch only)
             initializeBuiltInCalendars()
+            // Initialize auto-sync coordinator
+            initializeAutoSync()
         }
         .task {
             // Configure tab bar appearance
@@ -202,6 +209,26 @@ struct MainTabView: View {
             }
         }
         builtInCalendarManager = manager
+    }
+
+    // MARK: - Auto-Sync Initialization
+
+    /// Create AutoSyncCoordinator with proper dependencies
+    private func createAutoSyncCoordinator() -> AutoSyncCoordinator {
+        let sync = syncService ?? CalendarSyncService(eventKitService: eventKitService, modelContext: modelContext)
+        return AutoSyncCoordinator(
+            syncService: sync,
+            eventKitService: eventKitService,
+            modelContext: modelContext
+        )
+    }
+
+    /// Initialize auto-sync coordinator on app appearance
+    private func initializeAutoSync() {
+        guard autoSyncCoordinator == nil else { return }
+
+        autoSyncCoordinator = createAutoSyncCoordinator()
+        autoSyncCoordinator?.startObserving()
     }
 }
 
