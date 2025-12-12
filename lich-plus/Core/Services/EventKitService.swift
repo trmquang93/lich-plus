@@ -125,6 +125,15 @@ class EventKitService: NSObject, ObservableObject {
         EKEventStore.authorizationStatus(for: .event)
     }
 
+    /// Check if the app has full calendar access
+    ///
+    /// Convenience method to check authorization status without requesting permissions.
+    ///
+    /// - Returns: `true` if full access is granted, `false` otherwise
+    func hasFullAccess() -> Bool {
+        return authorizationStatus == .fullAccess
+    }
+
     // MARK: - Calendar Operations
 
     /// Fetch all user's calendars (event type only)
@@ -240,6 +249,46 @@ class EventKitService: NSObject, ObservableObject {
 
     // MARK: - Event Fetch Operations
 
+    /// Refresh event store sources and wait for completion
+    ///
+    /// Calls `refreshSourcesIfNecessary()` and waits for the `EKEventStoreChanged`
+    /// notification with a timeout. This ensures the cache is refreshed before
+    /// fetching events.
+    ///
+    /// - Parameter timeout: Maximum time to wait for refresh (default: 5 seconds)
+    private func refreshSourcesAndWait(timeout: TimeInterval = 5.0) async {
+        eventStore.refreshSourcesIfNecessary()
+
+        // Wait for EKEventStoreChanged notification or timeout
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            var observer: NSObjectProtocol?
+            var timeoutTask: Task<Void, Never>?
+
+            observer = NotificationCenter.default.addObserver(
+                forName: .EKEventStoreChanged,
+                object: eventStore,
+                queue: .main
+            ) { _ in
+                timeoutTask?.cancel()
+                if let obs = observer {
+                    NotificationCenter.default.removeObserver(obs)
+                }
+                continuation.resume()
+            }
+
+            // Timeout fallback - proceed anyway if notification doesn't arrive
+            timeoutTask = Task {
+                try? await Task.sleep(nanoseconds: UInt64(timeout * 1_000_000_000))
+                if !Task.isCancelled {
+                    if let obs = observer {
+                        NotificationCenter.default.removeObserver(obs)
+                    }
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
     /// Fetch events in date range from specific calendars
     ///
     /// Returns all events occurring between the specified start and end dates
@@ -251,7 +300,10 @@ class EventKitService: NSObject, ObservableObject {
     ///   - endDate: The end of the date range (must be >= startDate)
     ///   - calendars: Array of calendars to search in
     /// - Returns: Array of `EKEvent` objects sorted by start date
-    func fetchEvents(from startDate: Date, to endDate: Date, calendars: [EKCalendar]) -> [EKEvent] {
+    func fetchEvents(from startDate: Date, to endDate: Date, calendars: [EKCalendar]) async -> [EKEvent] {
+        // Refresh the event store and wait for completion
+        await refreshSourcesAndWait()
+
         guard startDate <= endDate else {
             return []
         }
@@ -291,7 +343,10 @@ class EventKitService: NSObject, ObservableObject {
     func fetchAllEvents(
         from calendars: [EKCalendar],
         progressHandler: ((Int) -> Void)? = nil
-    ) -> [EKEvent] {
+    ) async -> [EKEvent] {
+        // Refresh the event store and wait for completion
+        await refreshSourcesAndWait()
+
         guard !calendars.isEmpty else {
             print("[EventKitService] fetchAllEvents: No calendars provided")
             return []
