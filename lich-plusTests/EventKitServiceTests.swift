@@ -97,30 +97,30 @@ final class EventKitServiceTests: XCTestCase {
 
     // MARK: - Event Fetch Tests
 
-    func testFetchEventsInDateRangeReturnsArray() async {
+    func testFetchEventsInDateRangeReturnsArray() {
         let calendars = sut.fetchAllCalendars()
         let startDate = Date()
         let endDate = Calendar.current.date(byAdding: .day, value: 30, to: startDate)!
 
-        let events = await sut.fetchEvents(from: startDate, to: endDate, calendars: calendars)
+        let events = sut.fetchEvents(from: startDate, to: endDate, calendars: calendars)
         XCTAssertNotNil(events)
         XCTAssert(events is [EKEvent], "Should return array of EKEvent")
     }
 
-    func testFetchEventsEmptyCalendarArrayReturnsEmpty() async {
+    func testFetchEventsEmptyCalendarArrayReturnsEmpty() {
         let startDate = Date()
         let endDate = Calendar.current.date(byAdding: .day, value: 30, to: startDate)!
 
-        let events = await sut.fetchEvents(from: startDate, to: endDate, calendars: [])
+        let events = sut.fetchEvents(from: startDate, to: endDate, calendars: [])
         XCTAssertEqual(events.count, 0, "Empty calendar array should return no events")
     }
 
-    func testFetchEventsWithInvalidDateRangeReturnsEmpty() async {
+    func testFetchEventsWithInvalidDateRangeReturnsEmpty() {
         let calendars = sut.fetchAllCalendars()
         let endDate = Date()
         let startDate = Calendar.current.date(byAdding: .day, value: 30, to: endDate)! // startDate after endDate
 
-        let events = await sut.fetchEvents(from: startDate, to: endDate, calendars: calendars)
+        let events = sut.fetchEvents(from: startDate, to: endDate, calendars: calendars)
         XCTAssertEqual(events.count, 0, "Invalid date range should return no events")
     }
 
@@ -493,7 +493,7 @@ final class EventKitServiceTests: XCTestCase {
         }
     }
 
-    func testFetchEventsDateOrdering() async {
+    func testFetchEventsDateOrdering() {
         let calendars = sut.fetchAllCalendars()
         guard !calendars.isEmpty else {
             XCTSkip("No calendars available for testing")
@@ -503,7 +503,7 @@ final class EventKitServiceTests: XCTestCase {
         let startDate = Calendar.current.date(byAdding: .day, value: -30, to: Date())!
         let endDate = Calendar.current.date(byAdding: .day, value: 30, to: Date())!
 
-        let events = await sut.fetchEvents(from: startDate, to: endDate, calendars: calendars)
+        let events = sut.fetchEvents(from: startDate, to: endDate, calendars: calendars)
 
         // Verify all events are within the date range
         for event in events {
