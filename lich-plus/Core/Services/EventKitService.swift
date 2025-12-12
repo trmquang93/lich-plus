@@ -125,6 +125,15 @@ class EventKitService: NSObject, ObservableObject {
         EKEventStore.authorizationStatus(for: .event)
     }
 
+    /// Check if the app has full calendar access
+    ///
+    /// Convenience method to check authorization status without requesting permissions.
+    ///
+    /// - Returns: `true` if full access is granted, `false` otherwise
+    func hasFullAccess() -> Bool {
+        return authorizationStatus == .fullAccess
+    }
+
     // MARK: - Calendar Operations
 
     /// Fetch all user's calendars (event type only)
@@ -144,6 +153,98 @@ class EventKitService: NSObject, ObservableObject {
     /// - Returns: The `EKCalendar` if found, `nil` otherwise
     func fetchCalendar(identifier: String) -> EKCalendar? {
         eventStore.calendar(withIdentifier: identifier)
+    }
+
+    // MARK: - Event Store Refresh
+
+    /// Force refresh event store cache
+    ///
+    /// Calls `reset()` to clear the internal cache, then allows a brief
+    /// moment for EventKit to repopulate from sources.
+    /// This ensures fresh data is fetched on subsequent calls.
+    ///
+    /// **Important:** Call this BEFORE fetching calendars or events to ensure
+    /// you get valid object references. After `reset()`, any previously fetched
+    /// EKCalendar or EKEvent objects may become invalid.
+    ///
+    /// Note: `refreshSourcesIfNecessary()` is unreliable - it only refreshes
+    /// "if needed" and EventKit may decide no refresh is necessary even when
+    /// new events exist externally. `reset()` forces a complete cache clear.
+    func refreshEventStore() async {
+        print("[EventKitService] Refreshing event store cache...")
+        // reset() clears EventKit's internal cache completely
+        eventStore.reset()
+
+        // Brief delay to allow EventKit to repopulate from sources
+        try? await Task.sleep(nanoseconds: 500_000_000)  // 500ms - increased from 100ms
+        print("[EventKitService] Event store cache refreshed")
+    }
+
+    /// Fetch all events using a fresh EKEventStore to bypass cache issues
+    ///
+    /// Creates a new EKEventStore instance to guarantee fresh data from Apple Calendar.
+    /// Use this when you need to detect newly added events that may not be in the cached store.
+    ///
+    /// - Parameter calendarIdentifiers: Array of calendar identifiers to fetch from
+    /// - Returns: Array of `EKEvent` objects sorted by start date
+    func fetchAllEventsWithFreshStore(calendarIdentifiers: [String]) -> [EKEvent] {
+        print("[EventKitService] fetchAllEventsWithFreshStore: Using fresh EKEventStore")
+
+        // Check authorization status
+        let authStatus = EKEventStore.authorizationStatus(for: .event)
+        print("[EventKitService] Authorization status: \(authStatus.rawValue) (0=notDetermined, 1=restricted, 2=denied, 3=authorized, 4=fullAccess)")
+
+        // Create a fresh event store to bypass any caching issues
+        let freshStore = EKEventStore()
+
+        // First, let's see ALL calendars in the fresh store
+        let allCalendars = freshStore.calendars(for: .event)
+        print("[EventKitService] Fresh store has \(allCalendars.count) total calendars:")
+        for cal in allCalendars {
+            print("[EventKitService]   - '\(cal.title)' type=\(cal.type.rawValue) source=\(cal.source?.title ?? "none") id=\(cal.calendarIdentifier.prefix(8))...")
+        }
+
+        // Get calendars from the fresh store using identifiers
+        let calendars = calendarIdentifiers.compactMap { id -> EKCalendar? in
+            let cal = freshStore.calendar(withIdentifier: id)
+            if cal == nil {
+                print("[EventKitService] WARNING: Calendar not found for id: \(id.prefix(8))...")
+            }
+            return cal
+        }
+        print("[EventKitService] Fresh store matched \(calendars.count) calendars from \(calendarIdentifiers.count) identifiers")
+
+        guard !calendars.isEmpty else {
+            print("[EventKitService] No valid calendars found in fresh store")
+            return []
+        }
+
+        // Use a more reasonable date range for testing (1 year back, 1 year forward)
+        let now = Date()
+        let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: now)!
+        let oneYearAhead = Calendar.current.date(byAdding: .year, value: 1, to: now)!
+
+        print("[EventKitService] Date range: \(oneYearAgo) to \(oneYearAhead)")
+
+        // Create predicate and fetch events
+        let predicate = freshStore.predicateForEvents(withStart: oneYearAgo, end: oneYearAhead, calendars: calendars)
+        let events = freshStore.events(matching: predicate)
+        print("[EventKitService] Fresh store returned \(events.count) events")
+
+        // If no events, try fetching from ALL calendars to see if any events exist
+        if events.isEmpty && !allCalendars.isEmpty {
+            let allPredicate = freshStore.predicateForEvents(withStart: oneYearAgo, end: oneYearAhead, calendars: allCalendars)
+            let allEvents = freshStore.events(matching: allPredicate)
+            print("[EventKitService] DEBUG: Fetching from ALL calendars returned \(allEvents.count) events")
+            if !allEvents.isEmpty {
+                print("[EventKitService] DEBUG: First 5 events from all calendars:")
+                for event in allEvents.prefix(5) {
+                    print("[EventKitService]   - '\(event.title ?? "nil")' cal='\(event.calendar?.title ?? "nil")' date=\(event.startDate ?? Date())")
+                }
+            }
+        }
+
+        return events.sorted { $0.startDate < $1.startDate }
     }
 
     // MARK: - Event Fetch Operations
@@ -247,8 +348,11 @@ class EventKitService: NSObject, ObservableObject {
         await refreshSourcesAndWait()
 
         guard !calendars.isEmpty else {
+            print("[EventKitService] fetchAllEvents: No calendars provided")
             return []
         }
+
+        print("[EventKitService] fetchAllEvents: Fetching from \(calendars.count) calendars")
 
         // Create date components for January 1, 1900
         var startComponents = DateComponents()
@@ -270,8 +374,10 @@ class EventKitService: NSObject, ObservableObject {
         }
 
         // Create predicate for the extended date range
+        print("[EventKitService] Creating predicate: \(startDate) to \(endDate)")
         let predicate = eventStore.predicateForEvents(withStart: startDate, end: endDate, calendars: calendars)
         let events = eventStore.events(matching: predicate)
+        print("[EventKitService] Predicate returned \(events.count) events")
 
         // Return events sorted by start date
         return events.sorted { $0.startDate < $1.startDate }

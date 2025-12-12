@@ -32,6 +32,9 @@ struct MainTabView: View {
     // Built-in Calendar services
     @State private var builtInCalendarManager: BuiltInCalendarManager?
 
+    // Auto-sync coordinator for Apple Calendar
+    @State private var autoSyncCoordinator: AutoSyncCoordinator?
+
     var body: some View {
         TabView(selection: $selectedTab) {
             CalendarView()
@@ -81,6 +84,8 @@ struct MainTabView: View {
             initializeICSServices()
             // Initialize built-in calendars (first launch only)
             initializeBuiltInCalendars()
+            // Initialize auto-sync coordinator
+            initializeAutoSync()
         }
         .task {
             // Configure tab bar appearance
@@ -202,6 +207,22 @@ struct MainTabView: View {
             }
         }
         builtInCalendarManager = manager
+    }
+
+    // MARK: - Auto-Sync Initialization
+
+    /// Initialize auto-sync coordinator on app appearance
+    ///
+    /// Must be called after syncService is initialized.
+    private func initializeAutoSync() {
+        guard autoSyncCoordinator == nil, let sync = syncService else { return }
+
+        autoSyncCoordinator = AutoSyncCoordinator(
+            syncService: sync,
+            eventKitService: eventKitService,
+            modelContext: modelContext
+        )
+        autoSyncCoordinator?.startObserving()
     }
 }
 

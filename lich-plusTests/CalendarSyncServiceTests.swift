@@ -745,6 +745,11 @@ final class MockEventKitService: EventKitService {
         mockEvents
     }
 
+    override func fetchAllEventsWithFreshStore(calendarIdentifiers: [String]) -> [EKEvent] {
+        // Return mock events regardless of calendar identifiers
+        mockEvents
+    }
+
     override func createEvent(from syncable: SyncableEvent, in calendar: EKCalendar) throws -> String {
         createEventCalled = true
         guard let identifier = createdEventIdentifier else {
