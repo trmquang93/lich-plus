@@ -129,6 +129,7 @@ final class CalendarSyncService: ObservableObject {
             }
 
             try modelContext.save()
+            NotificationCenter.default.post(name: .calendarDataDidChange, object: nil)
         } catch {
             await setSync(state: .error, error: mapError(error))
             throw error
@@ -224,6 +225,7 @@ final class CalendarSyncService: ObservableObject {
 
             // Always save to ensure changes are persisted
             try modelContext.save()
+            NotificationCenter.default.post(name: .calendarDataDidChange, object: nil)
         } catch let error as SyncError {
             throw error
         } catch {
