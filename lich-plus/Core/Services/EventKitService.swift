@@ -148,17 +148,61 @@ class EventKitService: NSObject, ObservableObject {
 
     // MARK: - Event Fetch Operations
 
+    /// Refresh event store sources and wait for completion
+    ///
+    /// Calls `refreshSourcesIfNecessary()` and waits for the `EKEventStoreChanged`
+    /// notification with a timeout. This ensures the cache is refreshed before
+    /// fetching events.
+    ///
+    /// - Parameter timeout: Maximum time to wait for refresh (default: 5 seconds)
+    private func refreshSourcesAndWait(timeout: TimeInterval = 5.0) async {
+        eventStore.refreshSourcesIfNecessary()
+
+        // Wait for EKEventStoreChanged notification or timeout
+        await withCheckedContinuation { (continuation: CheckedContinuation<Void, Never>) in
+            var observer: NSObjectProtocol?
+            var timeoutTask: Task<Void, Never>?
+
+            observer = NotificationCenter.default.addObserver(
+                forName: .EKEventStoreChanged,
+                object: eventStore,
+                queue: .main
+            ) { _ in
+                timeoutTask?.cancel()
+                if let obs = observer {
+                    NotificationCenter.default.removeObserver(obs)
+                }
+                continuation.resume()
+            }
+
+            // Timeout fallback - proceed anyway if notification doesn't arrive
+            timeoutTask = Task {
+                try? await Task.sleep(nanoseconds: UInt64(timeout * 1_000_000_000))
+                if !Task.isCancelled {
+                    if let obs = observer {
+                        NotificationCenter.default.removeObserver(obs)
+                    }
+                    continuation.resume()
+                }
+            }
+        }
+    }
+
     /// Fetch events in date range from specific calendars
     ///
     /// Returns all events occurring between the specified start and end dates
     /// from the given calendars, sorted chronologically by start date.
+    /// Refreshes the event store cache before fetching to pick up external changes.
     ///
     /// - Parameters:
     ///   - startDate: The beginning of the date range
     ///   - endDate: The end of the date range (must be >= startDate)
     ///   - calendars: Array of calendars to search in
     /// - Returns: Array of `EKEvent` objects sorted by start date
-    func fetchEvents(from startDate: Date, to endDate: Date, calendars: [EKCalendar]) -> [EKEvent] {
+    func fetchEvents(from startDate: Date, to endDate: Date, calendars: [EKCalendar]) async -> [EKEvent] {
+        // Refresh the event store and wait for completion
+        await refreshSourcesAndWait()
+
         guard startDate <= endDate else {
             return []
         }
@@ -186,6 +230,7 @@ class EventKitService: NSObject, ObservableObject {
     /// EventKit requires date predicates for fetching events - you cannot fetch without
     /// specifying dates. This method uses the widest practical range (1900-2100) to fetch
     /// effectively all events from a user's calendars.
+    /// Refreshes the event store cache before fetching to pick up external changes.
     ///
     /// Note: EventKit does not support pagination. This method returns all events matching
     /// the predicate in a single call, sorted by start date.
@@ -197,7 +242,10 @@ class EventKitService: NSObject, ObservableObject {
     func fetchAllEvents(
         from calendars: [EKCalendar],
         progressHandler: ((Int) -> Void)? = nil
-    ) -> [EKEvent] {
+    ) async -> [EKEvent] {
+        // Refresh the event store and wait for completion
+        await refreshSourcesAndWait()
+
         guard !calendars.isEmpty else {
             return []
         }
