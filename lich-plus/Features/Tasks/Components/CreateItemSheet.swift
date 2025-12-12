@@ -24,6 +24,7 @@ struct CreateItemSheet: View {
     @State private var selectedRecurrence: RecurrenceType = .none
     @State private var selectedPriority: Priority = .medium
     @State private var selectedReminder: Int? = nil
+    @State private var isAllDay: Bool = false
 
     // Date picker states
     @State private var showStartDatePicker = false
@@ -40,6 +41,16 @@ struct CreateItemSheet: View {
 
     var isValid: Bool {
         !title.trimmingCharacters(in: .whitespaces).isEmpty
+    }
+
+    /// Validates that endDate >= startDate for all-day events (comparing just days),
+    /// or endDate > startDate for timed events (comparing exact times)
+    private var isDateRangeValid: Bool {
+        if isAllDay {
+            let calendar = Calendar.current
+            return calendar.startOfDay(for: endDate) >= calendar.startOfDay(for: startDate)
+        }
+        return endDate > startDate
     }
 
     init(
@@ -85,6 +96,12 @@ struct CreateItemSheet: View {
             } else if let initialType = initialItemType {
                 selectedItemType = initialType
             }
+        }
+        .onChange(of: startDate) { oldValue, newValue in
+            handleStartDateChange(from: oldValue, to: newValue)
+        }
+        .onChange(of: isAllDay) { oldValue, newValue in
+            handleAllDayModeChange(from: oldValue, to: newValue)
         }
         .sheet(isPresented: $showStartDatePicker) {
             CalendarDatePickerSheet(
@@ -178,17 +195,39 @@ struct CreateItemSheet: View {
                 categoryPills
             }
 
+            // All-day toggle
+            FormSection(title: String(localized: "createItem.allDay")) {
+                Toggle(isOn: $isAllDay) {
+                    Text(String(localized: "createItem.allDayToggle"))
+                }
+                .tint(AppColors.primary)
+            }
+
             // Start/End Time
             HStack(spacing: AppTheme.spacing16) {
-                FormSection(title: String(localized: "createItem.starts")) {
-                    DateButton(date: startDate) {
-                        showStartDatePicker = true
+                if isAllDay {
+                    FormSection(title: String(localized: "createItem.startDate")) {
+                        DateButton(date: startDate) {
+                            showStartDatePicker = true
+                        }
                     }
-                }
 
-                FormSection(title: String(localized: "createItem.ends")) {
-                    DateButton(date: endDate) {
-                        showEndDatePicker = true
+                    FormSection(title: String(localized: "createItem.endDate")) {
+                        DateButton(date: endDate) {
+                            showEndDatePicker = true
+                        }
+                    }
+                } else {
+                    FormSection(title: String(localized: "createItem.starts")) {
+                        DateButton(date: startDate) {
+                            showStartDatePicker = true
+                        }
+                    }
+
+                    FormSection(title: String(localized: "createItem.ends")) {
+                        DateButton(date: endDate) {
+                            showEndDatePicker = true
+                        }
                     }
                 }
             }
@@ -393,11 +432,15 @@ struct CreateItemSheet: View {
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, AppTheme.spacing12)
-                    .background(isValid ? AppColors.primary : AppColors.primary.opacity(0.5))
+                    .background(
+                        (isValid && isDateRangeValid)
+                        ? AppColors.primary
+                        : AppColors.primary.opacity(0.5)
+                    )
                     .cornerRadius(AppTheme.cornerRadiusLarge)
                     .shadow(color: AppColors.primary.opacity(0.3), radius: 8, y: 4)
             }
-            .disabled(!isValid)
+            .disabled(!(isValid && isDateRangeValid))
             .buttonStyle(.plain)
         }
         .padding(.horizontal, AppTheme.spacing16)
@@ -418,6 +461,7 @@ struct CreateItemSheet: View {
         selectedItemType = syncableEvent.itemTypeEnum
         selectedPriority = syncableEvent.priorityEnum
         location = syncableEvent.location ?? ""
+        isAllDay = syncableEvent.isAllDay
 
         if let endDate = syncableEvent.endDate {
             self.endDate = endDate
@@ -431,6 +475,18 @@ struct CreateItemSheet: View {
 
     private func saveItem() {
         let syncableEvent: SyncableEvent
+        let calendar = Calendar.current
+
+        // Normalize dates if all-day event
+        var normalizedStartDate = startDate
+        var normalizedEndDate: Date? = selectedItemType == .event ? endDate : nil
+
+        if selectedItemType == .event && isAllDay {
+            normalizedStartDate = calendar.startOfDay(for: startDate)
+            if let endDate = normalizedEndDate {
+                normalizedEndDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: calendar.startOfDay(for: endDate))
+            }
+        }
 
         if let existing = editingEvent {
             // Prevent updating deleted events
@@ -440,9 +496,9 @@ struct CreateItemSheet: View {
             }
             // Update existing
             existing.title = title
-            existing.startDate = startDate
-            existing.endDate = selectedItemType == .event ? endDate : nil
-            existing.isAllDay = false
+            existing.startDate = normalizedStartDate
+            existing.endDate = selectedItemType == .event ? normalizedEndDate : nil
+            existing.isAllDay = selectedItemType == .event && isAllDay
             existing.category = selectedCategory.rawValue
             existing.notes = notes.isEmpty ? nil : notes
             existing.reminderMinutes = selectedReminder
@@ -464,9 +520,9 @@ struct CreateItemSheet: View {
             // Create new
             syncableEvent = SyncableEvent(
                 title: title,
-                startDate: startDate,
-                endDate: selectedItemType == .event ? endDate : nil,
-                isAllDay: false,
+                startDate: normalizedStartDate,
+                endDate: selectedItemType == .event ? normalizedEndDate : nil,
+                isAllDay: selectedItemType == .event && isAllDay,
                 notes: notes.isEmpty ? nil : notes,
                 category: selectedCategory.rawValue,
                 reminderMinutes: selectedReminder,
@@ -586,6 +642,48 @@ struct CreateItemSheet: View {
             return .yearly
         default:
             return .none
+        }
+    }
+
+    // MARK: - Phase 4: Polish & Edge Cases Handlers
+
+    /// Handles startDate changes and auto-adjusts endDate if necessary
+    private func handleStartDateChange(from oldValue: Date, to newValue: Date) {
+        guard selectedItemType == .event else { return }
+
+        let calendar = Calendar.current
+
+        if isAllDay {
+            // For all-day events: if startDate > endDate, adjust endDate to startDate
+            let newStartDay = calendar.startOfDay(for: newValue)
+            let currentEndDay = calendar.startOfDay(for: endDate)
+
+            if newStartDay > currentEndDay {
+                // Set endDate to same day as startDate (end of day: 23:59:59)
+                endDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: newValue) ?? newValue
+            }
+        } else {
+            // For timed events: if endDate <= startDate, adjust to startDate + 1 hour
+            if endDate <= newValue {
+                endDate = newValue.addingTimeInterval(3600)
+            }
+        }
+    }
+
+    /// Handles mode switching between all-day and timed
+    private func handleAllDayModeChange(from oldValue: Bool, to newValue: Bool) {
+        guard selectedItemType == .event else { return }
+
+        let calendar = Calendar.current
+
+        if newValue {
+            // Switching TO all-day mode: normalize dates to full days
+            startDate = calendar.startOfDay(for: startDate)
+            endDate = calendar.date(bySettingHour: 23, minute: 59, second: 59, of: endDate) ?? endDate
+        } else {
+            // Switching FROM all-day TO timed mode: set default times (9 AM - 10 AM)
+            startDate = calendar.date(bySettingHour: 9, minute: 0, second: 0, of: startDate) ?? startDate
+            endDate = calendar.date(bySettingHour: 10, minute: 0, second: 0, of: startDate) ?? startDate
         }
     }
 }

@@ -219,47 +219,11 @@ class CalendarDataManager: ObservableObject {
         isCurrentMonth: Bool,
         isToday: Bool = false
     ) -> CalendarDay {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.year, .month, .day, .weekday], from: date)
-
-        guard let day = components.day,
-              let month = components.month,
-              let year = components.year,
-              let weekday = components.weekday else {
-            return CalendarDay(
-                date: date,
-                solarDay: 0,
-                solarMonth: 0,
-                solarYear: 0,
-                lunarDay: 0,
-                lunarMonth: 0,
-                lunarYear: 0,
-                dayType: .neutral,
-                isCurrentMonth: false,
-                isToday: false,
-                events: [],
-                isWeekend: false
-            )
-        }
-
-        let (lunarDay, lunarMonth, lunarYear) = LunarCalendar.solarToLunar(date)
-        let dayType = DayTypeCalculator.determineDayType(for: date)
-        let isWeekend = weekday == 1 || weekday == 7
-        let events = fetchEvents(for: date)
-
-        return CalendarDay(
-            date: date,
-            solarDay: day,
-            solarMonth: month,
-            solarYear: year,
-            lunarDay: lunarDay,
-            lunarMonth: lunarMonth,
-            lunarYear: lunarYear,
-            dayType: dayType,
+        Self.createCalendarDayCore(
+            from: date,
             isCurrentMonth: isCurrentMonth,
             isToday: isToday,
-            events: events,
-            isWeekend: isWeekend
+            eventsFetcher: fetchEvents
         )
     }
 
@@ -301,13 +265,51 @@ class CalendarDataManager: ObservableObject {
             let recurring = try context.fetch(recurringDescriptor)
 
             // 3. Check each recurring event against target date
+            // NOTE: Use startOfDay for consistent date comparison in RecurrenceMatcher
             for event in recurring {
-                if RecurrenceMatcher.occursOnDate(event, targetDate: date) {
+                if RecurrenceMatcher.occursOnDate(event, targetDate: startOfDay) {
                     results.append(convertToEvent(event))
                 }
             }
 
-            return results.sorted { $0.time < $1.time }
+            // 4. Fetch multi-day all-day events that span the target date
+            // An event spans the target date if: startDate < endOfDay AND endDate >= startOfDay
+            // NOTE: Cannot use force-unwrap (!) in SwiftData predicates, so we fetch and filter
+            let multiDayBaselinePredicate = #Predicate<SyncableEvent> { event in
+                !event.isDeleted &&
+                event.isAllDay &&
+                event.endDate != nil &&
+                event.recurrenceRuleData == nil &&
+                event.startDate < endOfDay
+            }
+
+            let multiDayDescriptor = FetchDescriptor<SyncableEvent>(predicate: multiDayBaselinePredicate)
+            let multiDayRaw = try context.fetch(multiDayDescriptor)
+
+            // Post-fetch filtering to check endDate >= startOfDay (avoids force-unwrap in predicate)
+            let multiDay = multiDayRaw.filter { event in
+                guard let endDate = event.endDate else { return false }
+                return endDate >= startOfDay
+            }
+
+            // Filter out events already in results (single-day all-day events caught by non-recurring query)
+            let multiDayOnly = multiDay.filter { multiDayEvent in
+                !nonRecurring.contains(where: { $0.id == multiDayEvent.id })
+            }
+            results.append(contentsOf: multiDayOnly.map { convertToEvent($0) })
+
+            return results.sorted { event1, event2 in
+                // All-day events (nil time) should come first
+                if event1.time == nil && event2.time == nil {
+                    return event1.title < event2.title  // Both all-day, sort by title
+                } else if event1.time == nil {
+                    return true  // event1 is all-day, comes first
+                } else if event2.time == nil {
+                    return false  // event2 is all-day, comes first
+                } else {
+                    return event1.time! < event2.time!  // Both have times, sort by time
+                }
+            }
         } catch {
             print("Error fetching events for date \(date): \(error)")
             return []
@@ -317,14 +319,20 @@ class CalendarDataManager: ObservableObject {
     /// Convert a SyncableEvent to an Event for display
     /// - Parameter syncable: The SyncableEvent to convert
     /// - Returns: An Event object
-    private func convertToEvent(_ syncable: SyncableEvent) -> Event {
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "HH:mm"
-        let timeString = timeFormatter.string(from: syncable.startDate)
+    func convertToEvent(_ syncable: SyncableEvent) -> Event {
+        let timeString: String?
+        if syncable.isAllDay {
+            timeString = nil
+        } else {
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH:mm"
+            timeString = timeFormatter.string(from: syncable.startDate)
+        }
 
         return Event(
             title: syncable.title,
             time: timeString,
+            isAllDay: syncable.isAllDay,
             category: parseEventCategory(from: syncable.category),
             description: syncable.notes
         )
@@ -358,6 +366,27 @@ class CalendarDataManager: ObservableObject {
         isCurrentMonth: Bool,
         isToday: Bool = false
     ) -> CalendarDay {
+        createCalendarDayCore(
+            from: date,
+            isCurrentMonth: isCurrentMonth,
+            isToday: isToday,
+            eventsFetcher: { _ in [] }
+        )
+    }
+
+    /// Core calendar day creation logic shared by instance and static methods
+    /// - Parameters:
+    ///   - date: The date for the calendar day
+    ///   - isCurrentMonth: Whether the day belongs to the currently displayed month
+    ///   - isToday: Whether this day is today
+    ///   - eventsFetcher: Closure to fetch events for this date
+    /// - Returns: A CalendarDay instance
+    private static func createCalendarDayCore(
+        from date: Date,
+        isCurrentMonth: Bool,
+        isToday: Bool,
+        eventsFetcher: (Date) -> [Event]
+    ) -> CalendarDay {
         let calendar = Calendar.current
         let components = calendar.dateComponents([.year, .month, .day, .weekday], from: date)
 
@@ -384,6 +413,7 @@ class CalendarDataManager: ObservableObject {
         let (lunarDay, lunarMonth, lunarYear) = LunarCalendar.solarToLunar(date)
         let dayType = DayTypeCalculator.determineDayType(for: date)
         let isWeekend = weekday == 1 || weekday == 7
+        let events = eventsFetcher(date)
 
         return CalendarDay(
             date: date,
@@ -396,7 +426,7 @@ class CalendarDataManager: ObservableObject {
             dayType: dayType,
             isCurrentMonth: isCurrentMonth,
             isToday: isToday,
-            events: [],  // No events in static version
+            events: events,
             isWeekend: isWeekend
         )
     }

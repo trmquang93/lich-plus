@@ -46,7 +46,13 @@ struct MetadataLine: View {
 
             // MARK: - Time (if available)
 
-            if let timeString = formattedTime {
+            if item.isAllDay {
+                Text("·")
+                    .metadataStyle(color: textColor)
+
+                Text(String(localized: "event.allDay"))
+                    .metadataStyle(color: textColor)
+            } else if let timeString = formattedTime {
                 Text("·")
                     .metadataStyle(color: textColor)
 
@@ -105,10 +111,10 @@ extension View {
             )
         }
 
-        // MARK: - Without Time
+        // MARK: - Without Time (Regular Task)
 
         VStack(alignment: .leading, spacing: AppTheme.spacing8) {
-            Text("Without Time")
+            Text("Without Time (Regular Task)")
                 .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
                 .foregroundColor(AppColors.textPrimary)
 
@@ -118,6 +124,24 @@ extension View {
                     date: Date(),
                     category: .work,
                     itemType: .task
+                ),
+                isCompleted: false
+            )
+        }
+
+        // MARK: - All Day Event
+
+        VStack(alignment: .leading, spacing: AppTheme.spacing8) {
+            Text("All Day Event")
+                .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
+                .foregroundColor(AppColors.textPrimary)
+
+            MetadataLine(
+                item: TaskItem(
+                    title: "Holiday celebration",
+                    date: Date(),
+                    category: .holiday,
+                    itemType: .event
                 ),
                 isCompleted: false
             )

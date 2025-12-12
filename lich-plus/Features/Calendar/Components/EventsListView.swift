@@ -95,10 +95,17 @@ struct EventRow: View {
         HStack(spacing: AppTheme.spacing12) {
             VStack(alignment: .leading, spacing: AppTheme.spacing4) {
                 HStack(spacing: AppTheme.spacing8) {
-                    Text(event.time)
-                        .font(.system(size: AppTheme.fontCaption, weight: .semibold))
-                        .foregroundStyle(AppColors.textSecondary)
-                        .frame(width: 40)
+                    if event.isAllDay {
+                        Text(String(localized: "event.allDay"))
+                            .font(.system(size: AppTheme.fontCaption, weight: .semibold))
+                            .foregroundStyle(AppColors.primary)
+                            .frame(width: 60, alignment: .leading)
+                    } else {
+                        Text(event.time ?? "")
+                            .font(.system(size: AppTheme.fontCaption, weight: .semibold))
+                            .foregroundStyle(AppColors.textSecondary)
+                            .frame(width: 40, alignment: .leading)
+                    }
 
                     Text(event.title)
                         .font(.system(size: AppTheme.fontBody, weight: .semibold))
@@ -120,7 +127,7 @@ struct EventRow: View {
                         .font(.system(size: AppTheme.fontCaption, weight: .regular))
                         .foregroundStyle(AppColors.textSecondary)
                         .lineLimit(2)
-                        .padding(.leading, 40)
+                        .padding(.leading, event.isAllDay ? 68 : 40)
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -204,24 +211,34 @@ struct EmptyEventsView: View {
     )
 
     VStack(spacing: 20) {
-        // With events
+        // With events (including all-day)
         EventsListView(
             events: [
                 Event(
+                    title: "Holiday",
+                    time: nil,
+                    isAllDay: true,
+                    category: .holiday,
+                    description: "Tet Holiday"
+                ),
+                Event(
                     title: "Morning Standup",
                     time: "09:00",
+                    isAllDay: false,
                     category: .meeting,
                     description: "Team sync meeting"
                 ),
                 Event(
                     title: "Client Call",
                     time: "14:00",
+                    isAllDay: false,
                     category: .work,
                     description: "Quarterly review"
                 ),
                 Event(
                     title: "Dinner",
                     time: "19:00",
+                    isAllDay: false,
                     category: .personal,
                     description: nil
                 ),
