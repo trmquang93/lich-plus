@@ -118,8 +118,7 @@ struct CalendarView: View {
                             return InfinitePageView(
                                 initialIndex: currentNavigationOffset,
                                 currentValue: currentNavigationOffset,
-                                refreshTrigger: AnyHashable(
-                                    "\(dataManager.selectedDate)_\(progress)"),
+                                refreshTrigger: AnyHashable(dataManager.selectedDate),
                                 content: { offset in
                                     let month =
                                         navigationUnit == .month
@@ -155,10 +154,14 @@ struct CalendarView: View {
                                 }
                             )
                             .onChange(of: progress) { _, newProgress in
-                                collapseProgress = newProgress
-                                if newProgress >= 0.9 {
+                                // Only update state at thresholds, not continuously during scroll
+                                // This prevents unnecessary SwiftUI re-renders during scroll
+                                if newProgress >= 0.9 && collapseProgress < 0.9 {
+                                    collapseProgress = 1.0
                                     displayedWeekOffset = calculateWeekOffsetForDate(
                                         dataManager.selectedDate)
+                                } else if newProgress < 0.1 && collapseProgress >= 0.1 {
+                                    collapseProgress = 0.0
                                 }
                             }
                         },

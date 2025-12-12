@@ -83,13 +83,15 @@ struct InfinitePageView<Index: PageIndex, Content: View>: UIViewControllerRepres
         // Update parent reference to get latest values from SwiftUI
         context.coordinator.parent = self
 
-        // Check if refreshTrigger changed - refresh current page to update content
+        // Check if refreshTrigger changed - only for major content changes (e.g., date selection)
         let triggerChanged = context.coordinator.lastRefreshTrigger != refreshTrigger
+
+        // Only update rootView when refresh trigger changed or page changed
+        // This prevents expensive SwiftUI updates during scroll
         if triggerChanged {
             context.coordinator.lastRefreshTrigger = refreshTrigger
             if let currentVC = pageVC.viewControllers?.first as? IndexedHostingController<Index, Content> {
-                let newVC = context.coordinator.makeHostingController(for: currentVC.pageIndex)
-                pageVC.setViewControllers([newVC], direction: .forward, animated: false)
+                currentVC.rootView = content(currentVC.pageIndex)
             }
         }
 

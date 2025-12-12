@@ -15,6 +15,14 @@ struct CalendarGridView: View {
     let onDaySelected: (CalendarDay) -> Void
     let collapseProgress: CGFloat
 
+    // Observe progress holder for efficient scroll updates
+    @EnvironmentObject var progressHolder: ScrollProgressHolder
+
+    /// Use progress from holder (updated during scroll) or fallback to prop
+    private var effectiveProgress: CGFloat {
+        progressHolder.progress
+    }
+
     private var selectedWeekIndex: Int {
         let weeks = month.weeksOfDays
         for (index, week) in weeks.enumerated() {
@@ -30,11 +38,11 @@ struct CalendarGridView: View {
         var maxTranslation = CGFloat(selectedWeekIndex) * CalendarDisplayMode.rowHeight
         maxTranslation =
             maxTranslation + CalendarDisplayMode.spacingBetweenItems * CGFloat(selectedWeekIndex)
-        return -maxTranslation * collapseProgress
+        return -maxTranslation * effectiveProgress
     }
 
     private var progressOffset: CGFloat {
-        return (CalendarDisplayMode.maxHeight - CalendarDisplayMode.rowHeight) * collapseProgress
+        return (CalendarDisplayMode.maxHeight - CalendarDisplayMode.rowHeight) * effectiveProgress
     }
 
     var body: some View {
@@ -60,7 +68,6 @@ struct CalendarGridView: View {
         .padding(.horizontal, AppTheme.spacing16)
         .frame(height: CalendarDisplayMode.maxHeight, alignment: .top)
         .clipped()
-        .animation(.spring(response: 0.3, dampingFraction: 0.8), value: collapseProgress)
     }
 }
 
@@ -207,6 +214,8 @@ struct CalendarDayCell: View {
         lunarYear: 2024
     )
 
+    let progressHolder = ScrollProgressHolder()
+
     VStack {
         CalendarGridView(
             month: month,
@@ -214,6 +223,7 @@ struct CalendarDayCell: View {
             onDaySelected: { _ in },
             collapseProgress: 0
         )
+        .environmentObject(progressHolder)
 
         Spacer()
     }
