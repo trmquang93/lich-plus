@@ -395,6 +395,18 @@ final class CalendarSyncService: ObservableObject {
         return identifiers
     }
 
+    /// Checks if any calendars are enabled for sync
+    ///
+    /// - Returns: `true` if at least one calendar is enabled, `false` otherwise
+    /// - Throws: If the fetch fails
+    func hasEnabledCalendars() throws -> Bool {
+        let descriptor = FetchDescriptor<SyncedCalendar>(
+            predicate: #Predicate { $0.isEnabled }
+        )
+        let syncedCalendars = try modelContext.fetch(descriptor)
+        return !syncedCalendars.isEmpty
+    }
+
     /// Finds an existing event by ekEventIdentifier
     ///
     /// - Parameter ekEventIdentifier: The EventKit event identifier
