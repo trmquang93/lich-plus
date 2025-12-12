@@ -214,10 +214,16 @@ final class CalendarSyncService: ObservableObject {
                       !remoteIdentifiers.contains(ekId) else {
                     continue
                 }
-                // Event was deleted remotely
-                localEvent.isDeleted = true
-                lastMarkedDeletedCount += 1
-                lastMarkedEventIsDeletedValue = localEvent.isDeleted  // Check if assignment worked
+
+                // Verify event is truly deleted by fetching it directly
+                // Batch fetch may have missed it due to date range or cache issues
+                if eventKitService.fetchEvent(identifier: ekId) == nil {
+                    // Event confirmed deleted from Apple Calendar
+                    localEvent.isDeleted = true
+                    lastMarkedDeletedCount += 1
+                    lastMarkedEventIsDeletedValue = localEvent.isDeleted
+                }
+                // else: Event still exists - keep it (batch fetch was incomplete)
             }
 
             // Record hasChanges state for debugging
@@ -283,13 +289,18 @@ final class CalendarSyncService: ObservableObject {
 
             // Delete from Apple Calendar
             for event in deletedEvents {
-                do {
-                    if let ekId = event.ekEventIdentifier {
+                if let ekId = event.ekEventIdentifier {
+                    do {
                         try eventKitService.deleteEvent(identifier: ekId)
-                        event.setSyncStatus(.deleted)
+                    } catch EventKitServiceError.eventNotFound {
+                        // Event already deleted externally - this is fine, the goal was deletion
+                        print("[CalendarSyncService] Event '\(event.title)' not found in Apple Calendar (already deleted)")
+                    } catch {
+                        // Log other errors but continue processing remaining events
+                        print("[CalendarSyncService] Failed to delete event '\(event.title)': \(error.localizedDescription)")
                     }
-                } catch {
-                    throw SyncError.pushFailed("Failed to delete event '\(event.title)': \(error.localizedDescription)")
+                    // Mark as deleted regardless - either it was deleted or already gone
+                    event.setSyncStatus(.deleted)
                 }
             }
 

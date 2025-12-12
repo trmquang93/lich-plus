@@ -573,7 +573,9 @@ class EventKitService: NSObject, ObservableObject {
             category: "other",
             reminderMinutes: reminderMinutes,
             recurrenceRuleData: recurrenceRuleData,
-            source: EventSource.appleCalendar.rawValue
+            source: EventSource.appleCalendar.rawValue,
+            itemType: "event",
+            location: ekEvent.location
         )
 
         // Set the EventKit identifiers for later syncing
