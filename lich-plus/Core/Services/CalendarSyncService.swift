@@ -146,15 +146,20 @@ final class CalendarSyncService: ObservableObject {
     /// - Throws: `SyncError` if the operation fails
     func pullRemoteChanges() async throws {
         do {
-            let enabledCalendars = try getEnabledCalendars()
-            guard !enabledCalendars.isEmpty else {
+            print("[CalendarSyncService] Starting pullRemoteChanges...")
+
+            // Get enabled calendar identifiers from SwiftData
+            let calendarIdentifiers = try getEnabledCalendarIdentifiers()
+            print("[CalendarSyncService] Enabled calendar identifiers: \(calendarIdentifiers.count)")
+
+            guard !calendarIdentifiers.isEmpty else {
                 throw SyncError.noEnabledCalendars
             }
 
-            // Fetch all events from Apple Calendar with progress tracking
-            let remoteEvents = await eventKitService.fetchAllEvents(from: enabledCalendars) { _ in
-                // Progress handler - can be used for UI updates if needed
-            }
+            // Fetch all events using a FRESH EKEventStore to bypass cache issues
+            // This guarantees we get the latest events from Apple Calendar
+            let remoteEvents = eventKitService.fetchAllEventsWithFreshStore(calendarIdentifiers: calendarIdentifiers)
+            print("[CalendarSyncService] Fetched \(remoteEvents.count) events from Apple Calendar")
 
             // Process events in batches to prevent memory issues
             for (index, ekEvent) in remoteEvents.enumerated() {
@@ -367,18 +372,25 @@ final class CalendarSyncService: ObservableObject {
         return enabledCalendars
     }
 
-    /// Check if any calendars are enabled for sync
+    /// Gets enabled calendar identifiers from SwiftData
     ///
-    /// Quick check without creating EKCalendar objects.
+    /// Returns just the calendar identifier strings, which can be used with
+    /// a fresh EKEventStore to fetch calendars and events.
     ///
-    /// - Returns: `true` if at least one calendar is enabled
-    /// - Throws: Fetch error from SwiftData
-    func hasEnabledCalendars() throws -> Bool {
+    /// - Returns: Array of enabled calendar identifier strings
+    /// - Throws: `SyncError` if fetch fails
+    func getEnabledCalendarIdentifiers() throws -> [String] {
         let descriptor = FetchDescriptor<SyncedCalendar>(
             predicate: #Predicate { $0.isEnabled }
         )
         let syncedCalendars = try modelContext.fetch(descriptor)
-        return !syncedCalendars.isEmpty
+
+        let identifiers = syncedCalendars.map { $0.calendarIdentifier }
+        for syncedCal in syncedCalendars {
+            print("[CalendarSyncService]   - \(syncedCal.title) (id: \(syncedCal.calendarIdentifier.prefix(8))...)")
+        }
+
+        return identifiers
     }
 
     /// Finds an existing event by ekEventIdentifier
