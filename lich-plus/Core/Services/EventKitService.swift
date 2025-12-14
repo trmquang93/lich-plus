@@ -523,7 +523,6 @@ class EventKitService: NSObject, ObservableObject {
                 let rules = try serializableRules.map { try $0.toEKRecurrenceRule() }
                 ekEvent.recurrenceRules = rules.isEmpty ? nil : rules
             } catch {
-                print("Failed to decode recurrence rules: \(error)")
                 ekEvent.recurrenceRules = nil
             }
         } else {

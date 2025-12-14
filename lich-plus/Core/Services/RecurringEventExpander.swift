@@ -150,7 +150,6 @@ struct RecurringEventExpander {
                 return [TaskItem(from: event)]
             }
         } catch {
-            print("RecurringEventExpander: Failed to decode recurrence rule: \(error)")
             // On error, return master event only
             return [TaskItem(from: event)]
         }

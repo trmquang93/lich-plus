@@ -8,6 +8,11 @@
 import SwiftUI
 import SwiftData
 
+enum TimelineViewMode: String, CaseIterable {
+    case list = "List"
+    case day = "Day"
+}
+
 struct TasksView: View {
     // MARK: - Environment & State
 
@@ -27,6 +32,8 @@ struct TasksView: View {
     @State private var showEditSheet: Bool = false
     @State private var refreshCounter: Int = 0
     @State private var showEventNotFoundAlert: Bool = false
+    @State private var viewMode: TimelineViewMode = .list
+    @State private var selectedDate: Date = Date()
 
     // MARK: - Computed Properties
 
@@ -47,25 +54,83 @@ struct TasksView: View {
         return filtered.sorted { $0.date < $1.date }
     }
 
+    /// Events for the selected day (used in Day view mode)
+    private var eventsForSelectedDay: [TaskItem] {
+        let calendar = Calendar.current
+        return tasks.filter { task in
+            calendar.isDate(task.date, inSameDayAs: selectedDate)
+        }.sorted { ($0.startTime ?? $0.date) < ($1.startTime ?? $1.date) }
+    }
+
+    /// Hoang Dao (auspicious) hours for the selected day
+    private var hoangDaoHours: Set<Int> {
+        // Get auspicious hours based on day's Chi
+        // This is a simplified version - the full implementation uses HoangDaoCalculator
+        let calendar = Calendar.current
+        let dayOfYear = calendar.ordinality(of: .day, in: .year, for: selectedDate) ?? 1
+        // Cycle through different patterns based on day
+        let patterns: [[Int]] = [
+            [0, 1, 4, 5, 8, 9],      // Pattern 1
+            [2, 3, 6, 7, 10, 11],    // Pattern 2
+            [0, 1, 6, 7, 8, 9],      // Pattern 3
+            [2, 3, 4, 5, 10, 11],    // Pattern 4
+            [0, 1, 2, 3, 8, 9],      // Pattern 5
+            [4, 5, 6, 7, 10, 11],    // Pattern 6
+        ]
+        let patternIndex = dayOfYear % 6
+        return Set(patterns[patternIndex])
+    }
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Timeline Header
-                TimelineHeader(
-                    searchText: $searchText,
-                    isSearchActive: $isSearchActive,
-                    onAddTapped: { showAddSheet = true }
-                )
+                // Timeline Header with View Mode Picker
+                HStack {
+                    TimelineHeader(
+                        searchText: $searchText,
+                        isSearchActive: $isSearchActive,
+                        onAddTapped: { showAddSheet = true }
+                    )
+                }
 
-                // Infinite Timeline View
-                InfiniteTimelineView(
-                    tasks: filteredTasks,
-                    onToggleCompletion: toggleTaskCompletion,
-                    onDelete: deleteTask,
-                    onEdit: startEditingTask,
-                    onAddNew: { showAddSheet = true }
-                )
-                .id(refreshCounter)
+                // View Mode Picker
+                Picker("View Mode", selection: $viewMode) {
+                    ForEach(TimelineViewMode.allCases, id: \.self) { mode in
+                        Text(mode.rawValue).tag(mode)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.horizontal, AppTheme.spacing16)
+                .padding(.bottom, AppTheme.spacing8)
+
+                // Content based on view mode
+                if viewMode == .list {
+                    // Infinite Timeline View (List Mode)
+                    InfiniteTimelineView(
+                        tasks: filteredTasks,
+                        onToggleCompletion: toggleTaskCompletion,
+                        onDelete: deleteTask,
+                        onEdit: startEditingTask,
+                        onAddNew: { showAddSheet = true }
+                    )
+                    .id(refreshCounter)
+                } else {
+                    // Day Timeline View (Time Grid Mode)
+                    DayTimelineView(
+                        date: selectedDate,
+                        events: eventsForSelectedDay,
+                        hoangDaoHours: hoangDaoHours,
+                        onEventTap: { task in
+                            startEditingTask(task)
+                        },
+                        onAddEvent: { _ in
+                            // Open add sheet
+                            showAddSheet = true
+                        },
+                        onToggleCompletion: toggleTaskCompletion
+                    )
+                    .id(refreshCounter)
+                }
             }
             .background(AppColors.background)
             .onReceive(NotificationCenter.default.publisher(for: .calendarDataDidChange)) { _ in

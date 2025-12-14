@@ -128,6 +128,33 @@ struct AppColors {
     /// Badge text color (medium gray)
     /// RGB: (107, 114, 128)
     static let badgeText = Color(red: 107/255, green: 114/255, blue: 128/255)        // #6B7280
+
+    // MARK: - Timeline & Astrology Colors
+
+    /// Hoang Dao (Auspicious hour) indicator gold color
+    /// RGB: (212, 175, 55)
+    static let hoangDaoGold = Color(red: 212/255, green: 175/255, blue: 55/255)
+
+    /// Lunar accent brown color for Chi names
+    /// RGB: (139, 69, 19)
+    static let lunarAccent = Color(red: 139/255, green: 69/255, blue: 19/255)
+
+    /// Timeline grid line color
+    /// RGB: (230, 230, 230)
+    static let timelineGridLine = Color(red: 230/255, green: 230/255, blue: 230/255)
+
+    // MARK: - Day Quality Colors
+
+    /// Good day (Ngày tốt) indicator color - forest green
+    /// RGB: (34, 139, 34)
+    static let dayQualityGood = Color(red: 34/255, green: 139/255, blue: 34/255)
+
+    /// Bad day (Ngày xấu) indicator color - fire brick red
+    /// RGB: (178, 34, 34)
+    static let dayQualityBad = Color(red: 178/255, green: 34/255, blue: 34/255)
+
+    /// Neutral day (Ngày thường) indicator color - uses textSecondary
+    static let dayQualityNeutral = Color(red: 117/255, green: 117/255, blue: 117/255)
 }
 
 // MARK: - UIKit Appearance Configuration
