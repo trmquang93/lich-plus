@@ -12,6 +12,7 @@ struct CreateItemSheet: View {
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var modelContext
     @EnvironmentObject var syncService: CalendarSyncService
+    @EnvironmentObject var notificationService: NotificationService
 
     // MARK: - State
     @State private var selectedItemType: ItemType = .event
@@ -62,6 +63,13 @@ struct CreateItemSheet: View {
         self.initialItemType = initialItemType
         self.onSave = onSave
     }
+    
+    /// Get default reminder minutes from notification service
+    private func getDefaultReminderMinutes() -> Int {
+        // This will be set when @EnvironmentObject is available
+        // For now, return the hardcoded default
+        return 15
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -95,6 +103,13 @@ struct CreateItemSheet: View {
                 populateForm(with: editingEvent)
             } else if let initialType = initialItemType {
                 selectedItemType = initialType
+                // Pre-fill default reminder when creating new event
+                if initialType == .event {
+                    selectedReminder = notificationService.getSettings().defaultReminderMinutes
+                }
+            } else {
+                // Pre-fill default reminder if creating new event (default type is determined later)
+                selectedReminder = notificationService.getSettings().defaultReminderMinutes
             }
         }
         .onChange(of: startDate) { oldValue, newValue in
@@ -546,6 +561,18 @@ struct CreateItemSheet: View {
 
             // Notify calendar to refresh
             NotificationCenter.default.post(name: .calendarDataDidChange, object: nil)
+            
+            // Schedule notification if event has a reminder
+            if selectedItemType == .event {
+                // If editing, cancel old notification first
+                if let existingEvent = editingEvent {
+                    notificationService.cancelEventNotification(eventId: existingEvent.id)
+                }
+                // Schedule new notification
+                Task {
+                    notificationService.scheduleEventNotification(for: syncableEvent)
+                }
+            }
         } catch {
             print("Error saving item: \(error)")
         }

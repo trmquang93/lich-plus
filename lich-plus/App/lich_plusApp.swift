@@ -10,8 +10,21 @@ import SwiftData
 
 @main
 struct lich_plusApp: App {
+    // Set up AppDelegate for notification handling
+    @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
+    
+    // Create notification service
+    @StateObject private var notificationService: NotificationService
+    
     init() {
         AppColors.configureSegmentedControlAppearance()
+        
+        // Initialize notification service with model context
+        let persistenceController = PersistenceController.shared
+        let modelContext = ModelContext(persistenceController.container)
+        _notificationService = StateObject(
+            wrappedValue: NotificationService(modelContext: modelContext)
+        )
     }
 
     var body: some Scene {
@@ -19,6 +32,13 @@ struct lich_plusApp: App {
             MainTabView()
                 .preferredColorScheme(.light)
                 .modelContainer(PersistenceController.shared.container)
+                .environmentObject(notificationService)
+                .onAppear {
+                    // Reschedule notifications on app launch
+                    Task {
+                        await notificationService.rescheduleAllNotifications()
+                    }
+                }
         }
     }
 }
