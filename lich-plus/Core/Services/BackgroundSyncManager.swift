@@ -48,7 +48,14 @@ final class BackgroundSyncManager: ObservableObject {
         
         // Register background task handler
         BGTaskScheduler.shared.register(forTaskWithIdentifier: taskIdentifier, using: nil) { [weak self] task in
-            Task { await self?.handleBackgroundSync(task: task as! BGAppRefreshTask) }
+            Task { [weak self] in
+                guard let appRefreshTask = task as? BGAppRefreshTask else {
+                    print("[BackgroundSync] Error: Received task of unexpected type.")
+                    task.setTaskCompleted(success: false)
+                    return
+                }
+                await self?.handleBackgroundSync(task: appRefreshTask)
+            }
         }
     }
     

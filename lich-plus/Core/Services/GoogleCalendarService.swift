@@ -303,13 +303,14 @@ class GoogleCalendarService {
             let startStr = formatter.string(from: event.startDate)
             let endStr = formatter.string(from: event.endDate ?? event.startDate.addingTimeInterval(3600))
             
+            let eventTimeZone = event.timeZone ?? TimeZone.current.identifier
             payload["start"] = [
                 "dateTime": startStr,
-                "timeZone": TimeZone.current.identifier
+                "timeZone": eventTimeZone
             ]
             payload["end"] = [
                 "dateTime": endStr,
-                "timeZone": TimeZone.current.identifier
+                "timeZone": eventTimeZone
             ]
         }
 
@@ -350,6 +351,14 @@ class GoogleCalendarService {
             let formatter = ISO8601DateFormatter()
             formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
             event.lastModifiedRemote = formatter.date(from: updated)
+        }
+
+        // Extract and store timezone from event
+        if let startTimeZone = googleEvent.start?.timeZone {
+            event.timeZone = startTimeZone
+        } else {
+            // Fall back to current timezone
+            event.timeZone = TimeZone.current.identifier
         }
 
         return event

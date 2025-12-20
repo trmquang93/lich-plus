@@ -262,16 +262,18 @@ class MicrosoftCalendarService {
                 endDateStr = dateFormatter.string(from: nextDay)
             }
             
-            payload["start"] = ["dateTime": startDateStr + "T00:00:00", "timeZone": timeZone]
-            payload["end"] = ["dateTime": endDateStr + "T00:00:00", "timeZone": timeZone]
+            // All-day events must use UTC timezone for Microsoft Graph API
+            payload["start"] = ["dateTime": startDateStr + "T00:00:00", "timeZone": "UTC"]
+            payload["end"] = ["dateTime": endDateStr + "T00:00:00", "timeZone": "UTC"]
             payload["isAllDay"] = true
         } else {
-            // Timed events
+            // Timed events - use stored timezone or fall back to current
             let startStr = formatter.string(from: event.startDate)
             let endStr = formatter.string(from: event.endDate ?? event.startDate.addingTimeInterval(3600))
+            let eventTimeZone = event.timeZone ?? TimeZone.current.identifier
             
-            payload["start"] = ["dateTime": startStr, "timeZone": timeZone]
-            payload["end"] = ["dateTime": endStr, "timeZone": timeZone]
+            payload["start"] = ["dateTime": startStr, "timeZone": eventTimeZone]
+            payload["end"] = ["dateTime": endStr, "timeZone": eventTimeZone]
             payload["isAllDay"] = false
         }
 
@@ -331,6 +333,14 @@ class MicrosoftCalendarService {
                 formatter.formatOptions = [.withInternetDateTime]
                 event.lastModifiedRemote = formatter.date(from: modified)
             }
+        }
+
+        // Extract and store timezone from event
+        if let startTimeZone = microsoftEvent.start?.timeZone {
+            event.timeZone = startTimeZone
+        } else {
+            // Fall back to current timezone
+            event.timeZone = TimeZone.current.identifier
         }
 
         return event

@@ -80,10 +80,14 @@ class GoogleCalendarSyncService: ObservableObject {
                         event.googleCalendarId = targetCalendar.calendarIdentifier
                         print("[GoogleSync] Created new event: \(event.title) (id: \(googleEventId))")
                     } else {
-                        // Update existing event
+                        // Update existing event - use stored calendar ID
+                        guard let calendarId = event.googleCalendarId else {
+                            print("[GoogleSync] Skipping update for '\(event.title)': missing googleCalendarId")
+                            continue
+                        }
                         try await calendarService.updateEvent(
                             event,
-                            calendarId: targetCalendar.calendarIdentifier,
+                            calendarId: calendarId,
                             eventId: event.googleEventId!
                         )
                         print("[GoogleSync] Updated event: \(event.title)")
