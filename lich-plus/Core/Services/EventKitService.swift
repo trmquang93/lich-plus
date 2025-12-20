@@ -581,6 +581,14 @@ class EventKitService: NSObject, ObservableObject {
         syncable.ekEventIdentifier = ekEvent.eventIdentifier
         syncable.calendarIdentifier = ekEvent.calendar?.calendarIdentifier
 
+        // Extract and store timezone from EKEvent if available
+        if let timeZone = ekEvent.timeZone {
+            syncable.timeZone = timeZone.identifier
+        } else {
+            // Fall back to current timezone
+            syncable.timeZone = TimeZone.current.identifier
+        }
+
         return syncable
     }
 

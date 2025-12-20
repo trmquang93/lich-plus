@@ -36,6 +36,97 @@ class MicrosoftCalendarSyncService: ObservableObject {
 
     // MARK: - Public Methods
 
+    /// Push pending local changes to Microsoft Calendar
+    ///
+    /// Processes pending local changes:
+    /// - Creates new events in Microsoft Calendar for pending events without microsoftEventId
+    /// - Updates existing events in Microsoft Calendar
+    /// - Deletes events from Microsoft Calendar that are marked as deleted
+    func pushLocalChanges() async throws {
+        guard authService.isSignedIn else {
+            throw MicrosoftSyncError.notSignedIn
+        }
+
+        syncState = .syncing
+        syncError = nil
+
+        do {
+            let enabledCalendars = try getEnabledMicrosoftCalendars()
+
+            if enabledCalendars.isEmpty {
+                // No calendars enabled - still a successful sync
+                syncState = .idle
+                return
+            }
+
+            // Get target calendar for creating new events (prefer first enabled)
+            guard let targetCalendar = enabledCalendars.first else {
+                throw MicrosoftSyncError.noEnabledCalendars
+            }
+
+            // Query pending events (needs sync)
+            let pendingDescriptor = FetchDescriptor<SyncableEvent>(
+                predicate: #Predicate { $0.source == "microsoftExchange" && $0.syncStatus == "pending" && !$0.isDeleted }
+            )
+            let pendingEvents = try modelContext.fetch(pendingDescriptor)
+
+            // Push pending events
+            for event in pendingEvents {
+                do {
+                    if event.microsoftEventId == nil {
+                        // Create new event in Microsoft Calendar
+                        let microsoftEventId = try await calendarService.createEvent(event, calendarId: targetCalendar.calendarIdentifier)
+                        event.microsoftEventId = microsoftEventId
+                        event.microsoftCalendarId = targetCalendar.calendarIdentifier
+                        print("[MicrosoftSync] Created new event: \(event.title) (id: \(microsoftEventId))")
+                    } else {
+                        // Update existing event
+                        try await calendarService.updateEvent(event, eventId: event.microsoftEventId!)
+                        print("[MicrosoftSync] Updated event: \(event.title)")
+                    }
+                    event.syncStatus = SyncStatus.synced.rawValue
+                    event.lastModifiedLocal = Date()
+                } catch {
+                    print("[MicrosoftSync] Failed to push event '\(event.title)': \(error)")
+                    // Continue with next event
+                }
+            }
+
+            // Query deleted events that need cleanup
+            let deletedDescriptor = FetchDescriptor<SyncableEvent>(
+                predicate: #Predicate { $0.source == "microsoftExchange" && $0.isDeleted && $0.microsoftEventId != nil && $0.syncStatus != "deleted" }
+            )
+            let deletedEvents = try modelContext.fetch(deletedDescriptor)
+
+            // Delete from Microsoft Calendar
+            for event in deletedEvents {
+                if let microsoftEventId = event.microsoftEventId {
+                    do {
+                        try await calendarService.deleteEvent(eventId: microsoftEventId)
+                        print("[MicrosoftSync] Deleted event: \(event.title)")
+                        event.syncStatus = SyncStatus.deleted.rawValue
+                    } catch MicrosoftCalendarError.notFound {
+                        // Event already deleted externally - this is fine
+                        print("[MicrosoftSync] Event '\(event.title)' not found in Microsoft Calendar (already deleted)")
+                        event.syncStatus = SyncStatus.deleted.rawValue
+                    } catch {
+                        // Log other errors but continue processing remaining events
+                        print("[MicrosoftSync] Failed to delete event '\(event.title)': \(error)")
+                    }
+                }
+            }
+
+            try modelContext.save()
+            syncState = .idle
+
+        } catch {
+            syncState = .error
+            syncError = error
+            print("[MicrosoftSync] Push sync failed: \(error)")
+            throw error
+        }
+    }
+
     /// Pull all events from enabled Microsoft calendars
     func pullRemoteChanges() async throws {
         guard authService.isSignedIn else {

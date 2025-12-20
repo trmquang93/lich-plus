@@ -35,37 +35,38 @@ class ICSCalendarService {
         return try parser.parse(icsContent)
     }
 
-    /// Convert ICSEvent to SyncableEvent for local storage
-    func convertToSyncableEvent(
-        _ icsEvent: ICSEvent,
-        subscriptionId: String,
-        subscriptionName: String,
-        colorHex: String,
-        defaultCategory: String = "other"
-    ) -> SyncableEvent {
-        let event = SyncableEvent(
-            icsEventUid: icsEvent.uid,
-            icsSubscriptionId: subscriptionId,
-            title: icsEvent.summary,
-            startDate: icsEvent.startDate,
-            endDate: icsEvent.endDate,
-            isAllDay: icsEvent.isAllDay,
-            notes: icsEvent.description,
-            isCompleted: false,
-            category: defaultCategory,
-            reminderMinutes: nil,
-            recurrenceRuleData: nil,
-            source: EventSource.icsSubscription.rawValue,
-            itemType: "event",
-            priority: "none",
-            location: icsEvent.location
-        )
+     /// Convert ICSEvent to SyncableEvent for local storage
+     func convertToSyncableEvent(
+         _ icsEvent: ICSEvent,
+         subscriptionId: String,
+         subscriptionName: String,
+         colorHex: String,
+         defaultCategory: String = "other"
+     ) -> SyncableEvent {
+         let event = SyncableEvent(
+             icsEventUid: icsEvent.uid,
+             icsSubscriptionId: subscriptionId,
+             title: icsEvent.summary,
+             startDate: icsEvent.startDate,
+             endDate: icsEvent.endDate,
+             isAllDay: icsEvent.isAllDay,
+             notes: icsEvent.description,
+             isCompleted: false,
+             category: defaultCategory,
+             reminderMinutes: nil,
+             recurrenceRuleData: nil,
+             source: EventSource.icsSubscription.rawValue,
+             itemType: "event",
+             priority: "none",
+             location: icsEvent.location,
+             timeZone: TimeZone.current.identifier
+         )
 
-        event.syncStatus = SyncStatus.synced.rawValue
-        event.lastModifiedRemote = Date()
+         event.syncStatus = SyncStatus.synced.rawValue
+         event.lastModifiedRemote = Date()
 
-        return event
-    }
+         return event
+     }
 
     /// Expand a recurring ICS event into individual occurrence events
     ///
@@ -178,43 +179,44 @@ class ICSCalendarService {
     ///   - colorHex: The color hex code
     ///   - defaultCategory: The default category
     /// - Returns: A SyncableEvent for this occurrence
-    private func createOccurrenceEvent(
-        from icsEvent: ICSEvent,
-        occurrenceIndex: Int,
-        startDate: Date,
-        endDate: Date?,
-        subscriptionId: String,
-        subscriptionName: String,
-        colorHex: String,
-        defaultCategory: String
-    ) -> SyncableEvent {
+     private func createOccurrenceEvent(
+         from icsEvent: ICSEvent,
+         occurrenceIndex: Int,
+         startDate: Date,
+         endDate: Date?,
+         subscriptionId: String,
+         subscriptionName: String,
+         colorHex: String,
+         defaultCategory: String
+     ) -> SyncableEvent {
 
-        // Generate unique UID for this occurrence
-        let occurrenceUID = "\(icsEvent.uid)_occ_\(occurrenceIndex)"
+         // Generate unique UID for this occurrence
+         let occurrenceUID = "\(icsEvent.uid)_occ_\(occurrenceIndex)"
 
-        let event = SyncableEvent(
-            icsEventUid: occurrenceUID,
-            icsSubscriptionId: subscriptionId,
-            title: icsEvent.summary,
-            startDate: startDate,
-            endDate: endDate,
-            isAllDay: icsEvent.isAllDay,
-            notes: icsEvent.description,
-            isCompleted: false,
-            category: defaultCategory,
-            reminderMinutes: nil,
-            recurrenceRuleData: nil,  // Each occurrence is stored as individual event
-            source: EventSource.icsSubscription.rawValue,
-            itemType: "event",
-            priority: "none",
-            location: icsEvent.location
-        )
+         let event = SyncableEvent(
+             icsEventUid: occurrenceUID,
+             icsSubscriptionId: subscriptionId,
+             title: icsEvent.summary,
+             startDate: startDate,
+             endDate: endDate,
+             isAllDay: icsEvent.isAllDay,
+             notes: icsEvent.description,
+             isCompleted: false,
+             category: defaultCategory,
+             reminderMinutes: nil,
+             recurrenceRuleData: nil,  // Each occurrence is stored as individual event
+             source: EventSource.icsSubscription.rawValue,
+             itemType: "event",
+             priority: "none",
+             location: icsEvent.location,
+             timeZone: TimeZone.current.identifier
+         )
 
-        event.syncStatus = SyncStatus.synced.rawValue
-        event.lastModifiedRemote = Date()
+         event.syncStatus = SyncStatus.synced.rawValue
+         event.lastModifiedRemote = Date()
 
-        return event
-    }
+         return event
+     }
 
     // MARK: - Private Helpers
 

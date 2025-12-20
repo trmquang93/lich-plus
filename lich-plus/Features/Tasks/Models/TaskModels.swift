@@ -444,7 +444,8 @@ struct TaskItem: Identifiable, Equatable {
                 createdAt: self.createdAt,
                 itemType: self.itemType.rawValue,
                 priority: self.priority.rawValue,
-                location: self.location
+                location: self.location,
+                timeZone: TimeZone.current.identifier
             )
         }
     }

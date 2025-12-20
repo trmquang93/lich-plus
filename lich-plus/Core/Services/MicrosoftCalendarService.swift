@@ -132,6 +132,154 @@ class MicrosoftCalendarService {
         return allEvents
     }
 
+    // MARK: - Push Operations (Create/Update/Delete)
+
+    /// Create event in Microsoft Calendar
+    ///
+    /// - Parameters:
+    ///   - event: The SyncableEvent to create
+    ///   - calendarId: The calendar ID to create in
+    /// - Returns: The newly created event's Microsoft event ID
+    /// - Throws: MicrosoftCalendarError if the operation fails
+    func createEvent(_ event: SyncableEvent, calendarId: String) async throws -> String {
+        let accessToken = try await authService.getAccessToken()
+
+        let payload = convertToMicrosoftEventPayload(event)
+        let jsonData = try JSONSerialization.data(withJSONObject: payload)
+
+        let urlString = "\(baseURL)/me/calendars/\(calendarId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? calendarId)/events"
+        guard let url = URL(string: urlString) else {
+            throw MicrosoftCalendarError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+
+        let (data, response) = try await RetryUtility.withExponentialBackoff {
+            try await session.data(for: request)
+        }
+
+        try validateResponse(response, data: data)
+
+        let eventResponse = try JSONDecoder().decode(MicrosoftEvent.self, from: data)
+        return eventResponse.id
+    }
+
+    /// Update event in Microsoft Calendar
+    ///
+    /// - Parameters:
+    ///   - event: The SyncableEvent with updated values
+    ///   - eventId: The Microsoft event ID to update
+    /// - Throws: MicrosoftCalendarError if the operation fails
+    func updateEvent(_ event: SyncableEvent, eventId: String) async throws {
+        let accessToken = try await authService.getAccessToken()
+
+        let payload = convertToMicrosoftEventPayload(event)
+        let jsonData = try JSONSerialization.data(withJSONObject: payload)
+
+        let urlString = "\(baseURL)/me/events/\(eventId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? eventId)"
+        guard let url = URL(string: urlString) else {
+            throw MicrosoftCalendarError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+
+        let (data, response) = try await RetryUtility.withExponentialBackoff {
+            try await session.data(for: request)
+        }
+
+        try validateResponse(response, data: data)
+    }
+
+    /// Delete event from Microsoft Calendar
+    ///
+    /// - Parameter eventId: The Microsoft event ID to delete
+    /// - Throws: MicrosoftCalendarError if the operation fails
+    func deleteEvent(eventId: String) async throws {
+        let accessToken = try await authService.getAccessToken()
+
+        let urlString = "\(baseURL)/me/events/\(eventId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? eventId)"
+        guard let url = URL(string: urlString) else {
+            throw MicrosoftCalendarError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+        let (_, response) = try await RetryUtility.withExponentialBackoff {
+            try await session.data(for: request)
+        }
+
+        try validateResponse(response, data: Data())
+    }
+
+    // MARK: - Payload Conversion
+
+    /// Convert SyncableEvent to Microsoft Graph event payload
+    private func convertToMicrosoftEventPayload(_ event: SyncableEvent) -> [String: Any] {
+        var payload: [String: Any] = [:]
+
+        // Required fields
+        payload["subject"] = event.title
+
+        // Optional fields
+        if let notes = event.notes, !notes.isEmpty {
+            payload["bodyPreview"] = notes
+            payload["body"] = ["contentType": "text", "content": notes]
+        }
+
+        if let location = event.location, !location.isEmpty {
+            payload["locations"] = [["displayName": location]]
+        }
+
+        // DateTime handling
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+
+        let timeZone = TimeZone.current.identifier
+
+        if event.isAllDay {
+            // All-day events
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            
+            let startDateStr = dateFormatter.string(from: event.startDate)
+            var endDateStr = dateFormatter.string(from: event.endDate ?? event.startDate)
+            
+            // Microsoft requires end date to be exclusive for all-day events
+            // If end date is same as start, add 1 day
+            if event.startDate.timeIntervalSince1970 == event.endDate?.timeIntervalSince1970 {
+                let calendar = Calendar.current
+                let nextDay = calendar.date(byAdding: .day, value: 1, to: event.startDate)!
+                endDateStr = dateFormatter.string(from: nextDay)
+            }
+            
+            // All-day events must use UTC timezone for Microsoft Graph API
+            payload["start"] = ["dateTime": startDateStr + "T00:00:00", "timeZone": "UTC"]
+            payload["end"] = ["dateTime": endDateStr + "T00:00:00", "timeZone": "UTC"]
+            payload["isAllDay"] = true
+        } else {
+            // Timed events - use stored timezone or fall back to current
+            let startStr = formatter.string(from: event.startDate)
+            let endStr = formatter.string(from: event.endDate ?? event.startDate.addingTimeInterval(3600))
+            let eventTimeZone = event.timeZone ?? TimeZone.current.identifier
+            
+            payload["start"] = ["dateTime": startStr, "timeZone": eventTimeZone]
+            payload["end"] = ["dateTime": endStr, "timeZone": eventTimeZone]
+            payload["isAllDay"] = false
+        }
+
+        return payload
+    }
+
     // MARK: - Convert to SyncableEvent
 
     /// Convert a MicrosoftEvent to SyncableEvent for local storage
@@ -185,6 +333,14 @@ class MicrosoftCalendarService {
                 formatter.formatOptions = [.withInternetDateTime]
                 event.lastModifiedRemote = formatter.date(from: modified)
             }
+        }
+
+        // Extract and store timezone from event
+        if let startTimeZone = microsoftEvent.start?.timeZone {
+            event.timeZone = startTimeZone
+        } else {
+            // Fall back to current timezone
+            event.timeZone = TimeZone.current.identifier
         }
 
         return event

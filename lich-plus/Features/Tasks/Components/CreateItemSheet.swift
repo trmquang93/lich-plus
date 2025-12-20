@@ -529,7 +529,8 @@ struct CreateItemSheet: View {
                 syncStatus: SyncStatus.pending.rawValue,
                 itemType: selectedItemType.rawValue,
                 priority: selectedPriority.rawValue,
-                location: location.isEmpty ? nil : location
+                location: location.isEmpty ? nil : location,
+                timeZone: TimeZone.current.identifier
             )
 
             // Persist recurrence data

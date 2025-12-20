@@ -36,6 +36,105 @@ class GoogleCalendarSyncService: ObservableObject {
 
     // MARK: - Public Methods
 
+    /// Push pending local changes to Google Calendar
+    ///
+    /// Processes pending local changes:
+    /// - Creates new events in Google Calendar for pending events without googleEventId
+    /// - Updates existing events in Google Calendar
+    /// - Deletes events from Google Calendar that are marked as deleted
+    func pushLocalChanges() async throws {
+        guard authService.isSignedIn else {
+            throw GoogleSyncError.notSignedIn
+        }
+
+        syncState = .syncing
+        syncError = nil
+
+        do {
+            let enabledCalendars = try getEnabledGoogleCalendars()
+
+            if enabledCalendars.isEmpty {
+                // No calendars enabled - still a successful sync
+                syncState = .idle
+                return
+            }
+
+            // Get target calendar for creating new events (prefer first enabled)
+            guard let targetCalendar = enabledCalendars.first else {
+                throw GoogleSyncError.noEnabledCalendars
+            }
+
+            // Query pending events (needs sync)
+            let pendingDescriptor = FetchDescriptor<SyncableEvent>(
+                predicate: #Predicate { $0.source == "googleCalendar" && $0.syncStatus == "pending" && !$0.isDeleted }
+            )
+            let pendingEvents = try modelContext.fetch(pendingDescriptor)
+
+            // Push pending events
+            for event in pendingEvents {
+                do {
+                    if event.googleEventId == nil {
+                        // Create new event in Google Calendar
+                        let googleEventId = try await calendarService.createEvent(event, calendarId: targetCalendar.calendarIdentifier)
+                        event.googleEventId = googleEventId
+                        event.googleCalendarId = targetCalendar.calendarIdentifier
+                        print("[GoogleSync] Created new event: \(event.title) (id: \(googleEventId))")
+                    } else {
+                        // Update existing event - use stored calendar ID
+                        guard let calendarId = event.googleCalendarId else {
+                            print("[GoogleSync] Skipping update for '\(event.title)': missing googleCalendarId")
+                            continue
+                        }
+                        try await calendarService.updateEvent(
+                            event,
+                            calendarId: calendarId,
+                            eventId: event.googleEventId!
+                        )
+                        print("[GoogleSync] Updated event: \(event.title)")
+                    }
+                    event.syncStatus = SyncStatus.synced.rawValue
+                    event.lastModifiedLocal = Date()
+                } catch {
+                    print("[GoogleSync] Failed to push event '\(event.title)': \(error)")
+                    // Continue with next event
+                }
+            }
+
+            // Query deleted events that need cleanup
+            let deletedDescriptor = FetchDescriptor<SyncableEvent>(
+                predicate: #Predicate { $0.source == "googleCalendar" && $0.isDeleted && $0.googleEventId != nil && $0.syncStatus != "deleted" }
+            )
+            let deletedEvents = try modelContext.fetch(deletedDescriptor)
+
+            // Delete from Google Calendar
+            for event in deletedEvents {
+                if let googleCalendarId = event.googleCalendarId, let googleEventId = event.googleEventId {
+                    do {
+                        try await calendarService.deleteEvent(calendarId: googleCalendarId, eventId: googleEventId)
+                        print("[GoogleSync] Deleted event: \(event.title)")
+                        event.syncStatus = SyncStatus.deleted.rawValue
+                    } catch GoogleCalendarError.notFound {
+                        // Event already deleted externally - this is fine
+                        print("[GoogleSync] Event '\(event.title)' not found in Google Calendar (already deleted)")
+                        event.syncStatus = SyncStatus.deleted.rawValue
+                    } catch {
+                        // Log other errors but continue processing remaining events
+                        print("[GoogleSync] Failed to delete event '\(event.title)': \(error)")
+                    }
+                }
+            }
+
+            try modelContext.save()
+            syncState = .idle
+
+        } catch {
+            syncState = .error
+            syncError = error
+            print("[GoogleSync] Push sync failed: \(error)")
+            throw error
+        }
+    }
+
     /// Pull all events from enabled Google calendars
     func pullRemoteChanges() async throws {
         guard authService.isSignedIn else {
