@@ -18,6 +18,7 @@ struct DayTimelineView: View {
 
     @State private var configuration = TimelineConfiguration()
     @State private var hasScrolledToNow = false
+    @State private var currentTime = Date()
 
     private let calendar = Calendar.current
 
@@ -25,6 +26,11 @@ struct DayTimelineView: View {
         VStack(spacing: 0) {
             // Header (placeholder)
             TimelineDayHeaderPlaceholder(date: date)
+            .onAppear {
+                // Initialize currentTime and set up periodic updates
+                currentTime = Date()
+                scheduleTimeUpdates()
+            }
 
             // All-day strip (placeholder)
             AllDayStripPlaceholder(events: allDayEvents)
@@ -37,7 +43,7 @@ struct DayTimelineView: View {
                         TimeRulerView(
                             hourHeight: configuration.hourHeight,
                             auspiciousHours: hoangDaoHours,
-                            currentHour: calendar.component(.hour, from: Date())
+                            currentHour: calendar.component(.hour, from: currentTime)
                         )
                         .frame(width: TimelineConfiguration.rulerWidth)
 
@@ -62,10 +68,13 @@ struct DayTimelineView: View {
                 }
                 .onAppear {
                     if !hasScrolledToNow && isNowIndicatorVisible {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            proxy.scrollTo("nowIndicator", anchor: .center)
+                        // Use async dispatch to break the synchronous loop and allow layout to settle
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                proxy.scrollTo("nowIndicator", anchor: .center)
+                            }
+                            hasScrolledToNow = true
                         }
-                        hasScrolledToNow = true
                     }
                 }
             }
@@ -83,7 +92,7 @@ struct DayTimelineView: View {
             isPast: positionedEvent.isPast,
             isCurrent: positionedEvent.isCurrent
         )
-        .frame(width: .infinity)
+        .frame(maxWidth: .infinity)
         .offset(
             x: availableEventWidth * positionedEvent.xOffset,
             y: positionedEvent.yStart
@@ -110,11 +119,10 @@ struct DayTimelineView: View {
     }
 
     private var positionedEventsWithState: [PositionedEventWithState] {
-        let now = Date()
         return positionedEvents.map { positioned in
-            let isPast = (positioned.event.endTime ?? positioned.event.date) < now
-            let isCurrent = (positioned.event.startTime ?? positioned.event.date) <= now &&
-                           now < (positioned.event.endTime ?? positioned.event.date)
+            let isPast = (positioned.event.endTime ?? positioned.event.date) < currentTime
+            let isCurrent = (positioned.event.startTime ?? positioned.event.date) <= currentTime &&
+                           currentTime < (positioned.event.endTime ?? positioned.event.date)
 
             return PositionedEventWithState(
                 event: positioned.event,
@@ -132,18 +140,26 @@ struct DayTimelineView: View {
 
     private var nowIndicatorY: CGFloat {
         let converter = TimeToPixelConverter(hourHeight: configuration.hourHeight)
-        return converter.yPosition(for: Date())
+        return converter.yPosition(for: currentTime)
     }
 
     private var isNowIndicatorVisible: Bool {
-        let now = Date()
-        let calendar = Calendar.current
-        return calendar.isDateInToday(now)
+        Calendar.current.isDate(date, inSameDayAs: currentTime)
     }
 
     private var availableEventWidth: CGFloat {
         // Available width = screen width - ruler width
         UIScreen.main.bounds.width - TimelineConfiguration.rulerWidth
+    }
+
+    // MARK: - Methods
+
+    private func scheduleTimeUpdates() {
+        // Update current time every 60 seconds to reflect minute changes
+        DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+            currentTime = Date()
+            scheduleTimeUpdates()
+        }
     }
 }
 
