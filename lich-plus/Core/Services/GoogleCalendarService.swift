@@ -166,6 +166,156 @@ class GoogleCalendarService {
         return allEvents
     }
 
+    // MARK: - Push Operations (Create/Update/Delete)
+
+    /// Create event in Google Calendar
+    ///
+    /// - Parameters:
+    ///   - event: The SyncableEvent to create
+    ///   - calendarId: The calendar ID to create in
+    /// - Returns: The newly created event's Google event ID
+    /// - Throws: GoogleCalendarError if the operation fails
+    func createEvent(_ event: SyncableEvent, calendarId: String) async throws -> String {
+        let accessToken = try await authService.getAccessToken()
+
+        let payload = convertToGoogleEventPayload(event)
+        let jsonData = try JSONSerialization.data(withJSONObject: payload)
+
+        let urlString = "\(baseURL)/calendars/\(calendarId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? calendarId)/events"
+        guard let url = URL(string: urlString) else {
+            throw GoogleCalendarError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+
+        let (data, response) = try await RetryUtility.withExponentialBackoff {
+            try await session.data(for: request)
+        }
+
+        try validateResponse(response, data: data)
+
+        let eventResponse = try JSONDecoder().decode(GoogleEvent.self, from: data)
+        return eventResponse.id
+    }
+
+    /// Update event in Google Calendar
+    ///
+    /// - Parameters:
+    ///   - event: The SyncableEvent with updated values
+    ///   - calendarId: The calendar ID
+    ///   - eventId: The Google event ID to update
+    /// - Throws: GoogleCalendarError if the operation fails
+    func updateEvent(_ event: SyncableEvent, calendarId: String, eventId: String) async throws {
+        let accessToken = try await authService.getAccessToken()
+
+        let payload = convertToGoogleEventPayload(event)
+        let jsonData = try JSONSerialization.data(withJSONObject: payload)
+
+        let urlString = "\(baseURL)/calendars/\(calendarId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? calendarId)/events/\(eventId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? eventId)"
+        guard let url = URL(string: urlString) else {
+            throw GoogleCalendarError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+
+        let (data, response) = try await RetryUtility.withExponentialBackoff {
+            try await session.data(for: request)
+        }
+
+        try validateResponse(response, data: data)
+    }
+
+    /// Delete event from Google Calendar
+    ///
+    /// - Parameters:
+    ///   - calendarId: The calendar ID
+    ///   - eventId: The Google event ID to delete
+    /// - Throws: GoogleCalendarError if the operation fails
+    func deleteEvent(calendarId: String, eventId: String) async throws {
+        let accessToken = try await authService.getAccessToken()
+
+        let urlString = "\(baseURL)/calendars/\(calendarId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? calendarId)/events/\(eventId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? eventId)"
+        guard let url = URL(string: urlString) else {
+            throw GoogleCalendarError.invalidURL
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+        let (_, response) = try await RetryUtility.withExponentialBackoff {
+            try await session.data(for: request)
+        }
+
+        try validateResponse(response, data: Data())
+    }
+
+    // MARK: - Payload Conversion
+
+    /// Convert SyncableEvent to Google Calendar event payload
+    private func convertToGoogleEventPayload(_ event: SyncableEvent) -> [String: Any] {
+        var payload: [String: Any] = [:]
+
+        // Required fields
+        payload["summary"] = event.title
+
+        // Optional fields
+        if let notes = event.notes, !notes.isEmpty {
+            payload["description"] = notes
+        }
+
+        if let location = event.location, !location.isEmpty {
+            payload["location"] = location
+        }
+
+        // DateTime handling
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+
+        if event.isAllDay {
+            // All-day events use "date" format (YYYY-MM-DD)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            
+            let startDateStr = dateFormatter.string(from: event.startDate)
+            var endDateStr = dateFormatter.string(from: event.endDate ?? event.startDate)
+            
+            // Google Calendar requires end date to be exclusive for all-day events
+            // If end date is same as start, add 1 day
+            if event.startDate.timeIntervalSince1970 == event.endDate?.timeIntervalSince1970 {
+                let calendar = Calendar.current
+                let nextDay = calendar.date(byAdding: .day, value: 1, to: event.startDate)!
+                endDateStr = dateFormatter.string(from: nextDay)
+            }
+            
+            payload["start"] = ["date": startDateStr]
+            payload["end"] = ["date": endDateStr]
+        } else {
+            // Timed events use "dateTime" format with timezone
+            let startStr = formatter.string(from: event.startDate)
+            let endStr = formatter.string(from: event.endDate ?? event.startDate.addingTimeInterval(3600))
+            
+            payload["start"] = [
+                "dateTime": startStr,
+                "timeZone": TimeZone.current.identifier
+            ]
+            payload["end"] = [
+                "dateTime": endStr,
+                "timeZone": TimeZone.current.identifier
+            ]
+        }
+
+        return payload
+    }
+
     // MARK: - Convert to SyncableEvent
 
     /// Convert a GoogleEvent to SyncableEvent for local storage

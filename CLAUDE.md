@@ -208,6 +208,54 @@ final class MyService {
 
 **Reference:** See commit `c8c7076` for the original fix pattern.
 
+### Autosync System Architecture
+
+The app implements bidirectional event synchronization across multiple calendar sources using a two-tier approach:
+
+**Tier 1: Real-Time Sync (Apple Calendar)**
+- `AutoSyncCoordinator` in `Core/Services/AutoSyncCoordinator.swift`
+- **Outbound**: Observes local `.calendarDataDidChange` notifications and debounces (0.3s) pushes to Apple Calendar
+- **Inbound**: Observes `EKEventStoreChanged` notifications from Apple Calendar and pulls changes immediately
+- **Lifecycle**: Started on app foreground, stopped on app background to conserve resources
+- Provides immediate sync without network delays or API rate limiting
+
+**Tier 2: Periodic Sync (All Sources)**
+- `BackgroundSyncManager` in `Core/Services/BackgroundSyncManager.swift`
+- Syncs all enabled sources (Apple, Google, Microsoft, ICS) every 15 minutes
+- Runs as iOS background task (`BGAppRefresh`) when app is backgrounded
+- Implements push and pull for Google/Microsoft; pull-only for ICS
+- Silent error handling with debug logging via `print()`
+
+**Push Implementation Details:**
+- **Google Calendar**: `GoogleCalendarService` + `GoogleCalendarSyncService.pushLocalChanges()`
+  - `POST /calendars/{calendarId}/events` for creation
+  - `PATCH /calendars/{calendarId}/events/{eventId}` for updates
+  - `DELETE /calendars/{calendarId}/events/{eventId}` for deletion
+  - Uses `RetryUtility.withExponentialBackoff` for rate limit handling (429 errors)
+- **Microsoft Calendar**: `MicrosoftCalendarService` + `MicrosoftCalendarSyncService.pushLocalChanges()`
+  - Similar REST operations via Microsoft Graph API (`/me/events` endpoints)
+  - Identical error handling and retry strategy
+
+**Conflict Resolution:**
+- **Strategy**: Last-write-wins based on timestamp comparison
+- **Logic**: `lastModifiedRemote` vs `lastModifiedLocal` - whichever is newer wins
+- **Applied during**: Pull operations in both real-time and periodic sync
+
+**Database Fields Used:**
+- `syncStatus`: "pending", "synced", "deleted" - tracks sync state
+- `lastModifiedLocal`: When event was last modified locally
+- `lastModifiedRemote`: When event was last modified on external source
+- Source-specific IDs: `googleEventId`, `microsoftEventId`, `icsEventUid`, `ekEventIdentifier`
+
+**Testing:**
+- `AutoSyncCoordinatorTests.swift` - Real-time sync behavior, observer lifecycle, error handling
+- Additional tests for push operations to be added (GoogleCalendarServicePushTests, MicrosoftCalendarServicePushTests)
+
+**Entitlements & Configuration:**
+- Background fetch enabled via `UIBackgroundModes` array in Info.plist
+- Task identifier: `com.lichplus.sync.background` in entitlements
+- 15-minute sync interval hardcoded (future: user-configurable)
+
 ## File Structure
 
 ```
@@ -219,9 +267,19 @@ lich-plus/
 │   ├── Core/                       # Shared design system and utilities
 │   │   ├── Theme.swift             # Design system (colors, spacing, typography)
 │   │   ├── Services/               # Shared business logic services
-│   │   │   ├── LunarOccurrenceGenerator.swift  # Lunar recurrence occurrence generation
-│   │   │   ├── RecurrenceMatcher.swift         # Fast recurring event date matching
-│   │   │   ├── RecurrenceRuleContainer.swift   # Solar/lunar recurrence rule container
+│   │   │   ├── AutoSyncCoordinator.swift              # Orchestrates real-time Apple Calendar sync
+│   │   │   ├── BackgroundSyncManager.swift            # Manages 15-minute periodic sync across all sources
+│   │   │   ├── CalendarSyncService.swift              # Apple Calendar bidirectional sync
+│   │   │   ├── EventKitService.swift                  # EventKit abstraction layer
+│   │   │   ├── GoogleCalendarService.swift            # Google Calendar API operations
+│   │   │   ├── GoogleCalendarSyncService.swift        # Google Calendar pull/push coordination
+│   │   │   ├── MicrosoftCalendarService.swift         # Microsoft Graph API operations
+│   │   │   ├── MicrosoftCalendarSyncService.swift     # Microsoft Calendar pull/push coordination
+│   │   │   ├── ICSCalendarService.swift               # ICS feed fetching and parsing
+│   │   │   ├── ICSCalendarSyncService.swift           # ICS sync coordination
+│   │   │   ├── LunarOccurrenceGenerator.swift         # Lunar recurrence occurrence generation
+│   │   │   ├── RecurrenceMatcher.swift                # Fast recurring event date matching
+│   │   │   ├── RecurrenceRuleContainer.swift          # Solar/lunar recurrence rule container
 │   │   │   └── SerializableLunarRecurrenceRule.swift  # Lunar recurrence serialization
 │   │   └── Extensions/             # Swift extensions
 │   │       └── Notification+Calendar.swift  # Calendar change notifications
