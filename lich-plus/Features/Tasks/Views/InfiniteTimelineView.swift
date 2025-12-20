@@ -13,6 +13,7 @@ struct InfiniteTimelineView: View {
     let onDelete: (TaskItem) -> Void
     let onEdit: (TaskItem) -> Void
     let onAddNew: () -> Void
+    let onDateTap: (Date) -> Void
 
     @State private var hasInitialScrolled: Bool = false
     @State private var isAnchorSectionVisible: Bool = false
@@ -85,10 +86,14 @@ struct InfiniteTimelineView: View {
                                     }
                                     .padding(AppTheme.spacing16)
                                 } header: {
-                                    DateSectionHeader(
-                                        date: group.date,
-                                        showTodayBadge: calendar.isDateInToday(group.date)
-                                    )
+                                    Button(action: {
+                                        onDateTap(group.date)
+                                    }) {
+                                        DateSectionHeader(
+                                            date: group.date,
+                                            showTodayBadge: calendar.isDateInToday(group.date)
+                                        )
+                                    }
                                     .background(AppColors.backgroundLightGray)
                                     .onAppear {
                                         if dateID(group.date) == anchorSectionID {
@@ -172,7 +177,8 @@ struct InfiniteTimelineView: View {
                 onToggleCompletion: { _ in },
                 onDelete: { _ in },
                 onEdit: { _ in },
-                onAddNew: {}
+                onAddNew: {},
+                onDateTap: { _ in }
             )
         }
     }

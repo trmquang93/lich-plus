@@ -8,11 +8,6 @@
 import SwiftUI
 import SwiftData
 
-enum TimelineViewMode: String, CaseIterable {
-    case list = "List"
-    case day = "Day"
-}
-
 struct TasksView: View {
     // MARK: - Environment & State
 
@@ -32,8 +27,7 @@ struct TasksView: View {
     @State private var showEditSheet: Bool = false
     @State private var refreshCounter: Int = 0
     @State private var showEventNotFoundAlert: Bool = false
-    @State private var viewMode: TimelineViewMode = .list
-    @State private var selectedDate: Date = Date()
+    @State private var navigateToDate: Date? = nil
 
     // MARK: - Computed Properties
 
@@ -54,21 +48,18 @@ struct TasksView: View {
         return filtered.sorted { $0.date < $1.date }
     }
 
-    /// Events for the selected day (used in Day view mode)
-    private var eventsForSelectedDay: [TaskItem] {
+    /// Events for a given date (used when navigating to Day view)
+    private func eventsForDate(_ date: Date) -> [TaskItem] {
         let calendar = Calendar.current
         return tasks.filter { task in
-            calendar.isDate(task.date, inSameDayAs: selectedDate)
+            calendar.isDate(task.date, inSameDayAs: date)
         }.sorted { ($0.startTime ?? $0.date) < ($1.startTime ?? $1.date) }
     }
 
-    /// Hoang Dao (auspicious) hours for the selected day
-    private var hoangDaoHours: Set<Int> {
-        // Get auspicious hours based on day's Chi
-        // This is a simplified version - the full implementation uses HoangDaoCalculator
+    /// Hoang Dao (auspicious) hours for a given date
+    private func hoangDaoHoursForDate(_ date: Date) -> Set<Int> {
         let calendar = Calendar.current
-        let dayOfYear = calendar.ordinality(of: .day, in: .year, for: selectedDate) ?? 1
-        // Cycle through different patterns based on day
+        let dayOfYear = calendar.ordinality(of: .day, in: .year, for: date) ?? 1
         let patterns: [[Int]] = [
             [0, 1, 4, 5, 8, 9],      // Pattern 1
             [2, 3, 6, 7, 10, 11],    // Pattern 2
@@ -84,7 +75,7 @@ struct TasksView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-                // Timeline Header with View Mode Picker
+                // Timeline Header
                 HStack {
                     TimelineHeader(
                         searchText: $searchText,
@@ -93,46 +84,34 @@ struct TasksView: View {
                     )
                 }
 
-                // View Mode Picker
-                Picker("View Mode", selection: $viewMode) {
-                    ForEach(TimelineViewMode.allCases, id: \.self) { mode in
-                        Text(mode.rawValue).tag(mode)
+                // List View - Infinite Timeline
+                InfiniteTimelineView(
+                    tasks: filteredTasks,
+                    onToggleCompletion: toggleTaskCompletion,
+                    onDelete: deleteTask,
+                    onEdit: startEditingTask,
+                    onAddNew: { showAddSheet = true },
+                    onDateTap: { date in
+                        navigateToDate = date
                     }
-                }
-                .pickerStyle(.segmented)
-                .padding(.horizontal, AppTheme.spacing16)
-                .padding(.bottom, AppTheme.spacing8)
-
-                // Content based on view mode
-                if viewMode == .list {
-                    // Infinite Timeline View (List Mode)
-                    InfiniteTimelineView(
-                        tasks: filteredTasks,
-                        onToggleCompletion: toggleTaskCompletion,
-                        onDelete: deleteTask,
-                        onEdit: startEditingTask,
-                        onAddNew: { showAddSheet = true }
-                    )
-                    .id(refreshCounter)
-                } else {
-                    // Day Timeline View (Time Grid Mode)
-                    DayTimelineView(
-                        date: selectedDate,
-                        events: eventsForSelectedDay,
-                        hoangDaoHours: hoangDaoHours,
-                        onEventTap: { task in
-                            startEditingTask(task)
-                        },
-                        onAddEvent: { _ in
-                            // Open add sheet
-                            showAddSheet = true
-                        },
-                        onToggleCompletion: toggleTaskCompletion
-                    )
-                    .id(refreshCounter)
-                }
+                )
+                .id(refreshCounter)
             }
             .background(AppColors.background)
+            .navigationDestination(item: $navigateToDate) { date in
+                DayTimelineView(
+                    date: date,
+                    events: eventsForDate(date),
+                    hoangDaoHours: hoangDaoHoursForDate(date),
+                    onEventTap: { task in
+                        startEditingTask(task)
+                    },
+                    onAddEvent: { _ in
+                        showAddSheet = true
+                    },
+                    onToggleCompletion: toggleTaskCompletion
+                )
+            }
             .onReceive(NotificationCenter.default.publisher(for: .calendarDataDidChange)) { _ in
                 refreshCounter += 1
             }

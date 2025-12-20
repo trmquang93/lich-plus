@@ -1,16 +1,19 @@
 #!/bin/bash
 
 # Script to build iOS app and check for build errors
-# Usage: ./build-app.sh [--clean] [-h|--help]
+# Usage: ./build-app.sh [--clean] [-v|--verbose] [-h|--help]
 #
 # Device Selection Priority:
-#   1. Booted simulator (auto-selected)
-#   2. Connected physical device (fallback)
-#   3. Interactive selection from available simulators (if neither above)
+#   1. TEST_DEVICE_ID from .env file (if set)
+#   2. Booted simulator (auto-selected)
+#   3. Connected physical device (fallback)
+#   4. Interactive selection from available simulators (if neither above)
 #
 # Examples:
-#   ./build-app.sh                    # Build the app
+#   ./build-app.sh                    # Build the app (quiet mode)
+#   ./build-app.sh --verbose          # Build with full output
 #   ./build-app.sh --clean            # Clean build folder first
+#   ./build-app.sh --clean --verbose  # Clean and build verbosely
 #   ./build-app.sh -h                 # Show help
 
 set -eo pipefail
@@ -21,6 +24,7 @@ SCHEME="lich-plus"
 
 # Flags
 CLEAN_BUILD=false
+VERBOSE_MODE=false
 
 # Load environment file if it exists
 ENV_FILE=".env"
@@ -39,19 +43,25 @@ Usage: ./build-app.sh [OPTIONS]
 
 OPTIONS:
     --clean             Clean build folder before building
+    -v, --verbose       Verbose mode: show full build output
     -h, --help          Display this help message
 
 DEVICE SELECTION:
     The script automatically selects a build destination in this order:
-    1. Booted simulator (if any simulator is currently running)
-    2. Connected physical device (if a device is plugged in)
-    3. Interactive menu (choose from available simulators)
+    1. TEST_DEVICE_ID from .env file (if set)
+    2. Booted simulator (if any simulator is currently running)
+    3. Connected physical device (if a device is plugged in)
+    4. Interactive menu (choose from available simulators)
 
 EXAMPLES:
-    ./build-app.sh                  # Build the app
-    ./build-app.sh --clean          # Clean and build
+    ./build-app.sh                      # Build the app (quiet mode)
+    ./build-app.sh --verbose            # Build with full output
+    ./build-app.sh --clean              # Clean and build
+    ./build-app.sh --clean --verbose    # Clean and build verbosely
 
 NOTES:
+    - Quiet mode (default) shows only BUILD SUCCEEDED or errors
+    - Verbose mode shows full build output with all compilation steps
     - Output is piped through xcbeautify for clean formatting
     - Requires Xcode and CocoaPods to be installed
     - The workspace file must exist: $WORKSPACE
@@ -64,6 +74,10 @@ while [ $# -gt 0 ]; do
     case "$1" in
         --clean)
             CLEAN_BUILD=true
+            shift
+            ;;
+        -v|--verbose)
+            VERBOSE_MODE=true
             shift
             ;;
         -h|--help)
@@ -181,7 +195,9 @@ find_build_device() {
             DEVICE_TYPE="device"
             DEVICE_NAME="Physical Device"
         fi
-        echo "Using device from .env: $DEVICE_NAME ($DEVICE_TYPE)"
+        if [ "$VERBOSE_MODE" = true ]; then
+            echo "Using device from .env: $DEVICE_NAME ($DEVICE_TYPE)"
+        fi
         return 0
     fi
 
@@ -193,7 +209,9 @@ find_build_device() {
         DEVICE_ID="${booted%%|*}"
         DEVICE_NAME="${booted#*|}"
         DEVICE_TYPE="simulator"
-        echo "Found booted simulator: $DEVICE_NAME"
+        if [ "$VERBOSE_MODE" = true ]; then
+            echo "Found booted simulator: $DEVICE_NAME"
+        fi
         return 0
     fi
 
@@ -205,7 +223,9 @@ find_build_device() {
         DEVICE_ID="${connected%%|*}"
         DEVICE_NAME="${connected#*|}"
         DEVICE_TYPE="device"
-        echo "Found connected device: $DEVICE_NAME"
+        if [ "$VERBOSE_MODE" = true ]; then
+            echo "Found connected device: $DEVICE_NAME"
+        fi
         return 0
     fi
 
@@ -214,7 +234,9 @@ find_build_device() {
 }
 
 # Find the build device
-echo "=== DEVICE DETECTION ==="
+if [ "$VERBOSE_MODE" = true ]; then
+    echo "=== DEVICE DETECTION ==="
+fi
 find_build_device
 
 # Build destination string based on device type
@@ -238,47 +260,93 @@ fi
 
 # Clean build if requested
 if [ "$CLEAN_BUILD" = true ]; then
-    echo ""
-    echo "=== CLEANING BUILD FOLDER ==="
+    if [ "$VERBOSE_MODE" = true ]; then
+        echo ""
+        echo "=== CLEANING BUILD FOLDER ==="
+    fi
     xcodebuild \
         -workspace "$WORKSPACE" \
         -scheme "$SCHEME" \
         clean \
-        2>&1 | grep -v "^$" | head -5
-    echo "Clean completed."
+        2>&1 | grep -v "^$" > /dev/null
+    if [ "$VERBOSE_MODE" = true ]; then
+        echo "Clean completed."
+    fi
 fi
 
 # Build the app
-echo ""
-echo "=== BUILDING APP ==="
-echo "Workspace: $WORKSPACE"
-echo "Scheme: $SCHEME"
-echo "Device: $DEVICE_NAME ($DEVICE_TYPE)"
-echo "Device ID: $DEVICE_ID"
-echo ""
-
-BUILD_EXIT_CODE=0
-
-if [ "$USE_XCBEAUTIFY" = true ]; then
-    xcodebuild \
-        -workspace "$WORKSPACE" \
-        -scheme "$SCHEME" \
-        -destination "$DESTINATION" \
-        build \
-        2>&1 | xcbeautify || BUILD_EXIT_CODE=$?
-else
-    xcodebuild \
-        -workspace "$WORKSPACE" \
-        -scheme "$SCHEME" \
-        -destination "$DESTINATION" \
-        build \
-        2>&1 || BUILD_EXIT_CODE=$?
+if [ "$VERBOSE_MODE" = true ]; then
+    echo ""
+    echo "=== BUILDING APP ==="
+    echo "Workspace: $WORKSPACE"
+    echo "Scheme: $SCHEME"
+    echo "Device: $DEVICE_NAME ($DEVICE_TYPE)"
+    echo "Device ID: $DEVICE_ID"
+    echo ""
 fi
 
-echo ""
-if [ $BUILD_EXIT_CODE -eq 0 ]; then
-    echo "=== BUILD SUCCEEDED ==="
+BUILD_EXIT_CODE=0
+TEMP_OUTPUT=""
+
+if [ "$VERBOSE_MODE" = true ]; then
+    # Verbose mode - show all output through xcbeautify
+    if [ "$USE_XCBEAUTIFY" = true ]; then
+        xcodebuild \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -destination "$DESTINATION" \
+            build \
+            2>&1 | xcbeautify || BUILD_EXIT_CODE=$?
+    else
+        xcodebuild \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -destination "$DESTINATION" \
+            build \
+            2>&1 || BUILD_EXIT_CODE=$?
+    fi
 else
-    echo "=== BUILD FAILED ==="
-    exit $BUILD_EXIT_CODE
+    # Quiet mode - capture output, show only result or errors
+    TEMP_OUTPUT=$(mktemp)
+    trap "rm -f $TEMP_OUTPUT" EXIT
+    
+    if [ "$USE_XCBEAUTIFY" = true ]; then
+        xcodebuild \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -destination "$DESTINATION" \
+            build \
+            2>&1 | xcbeautify > "$TEMP_OUTPUT" 2>&1 || BUILD_EXIT_CODE=$?
+    else
+        xcodebuild \
+            -workspace "$WORKSPACE" \
+            -scheme "$SCHEME" \
+            -destination "$DESTINATION" \
+            build \
+            > "$TEMP_OUTPUT" 2>&1 || BUILD_EXIT_CODE=$?
+    fi
+fi
+
+# Output results
+if [ "$VERBOSE_MODE" = true ]; then
+    echo ""
+    if [ $BUILD_EXIT_CODE -eq 0 ]; then
+        echo "=== BUILD SUCCEEDED ==="
+    else
+        echo "=== BUILD FAILED ==="
+        exit $BUILD_EXIT_CODE
+    fi
+else
+    # Quiet mode output
+    if [ $BUILD_EXIT_CODE -eq 0 ]; then
+        echo "BUILD SUCCEEDED"
+    else
+        # Show errors from temp file
+        if [ -n "$TEMP_OUTPUT" ] && [ -f "$TEMP_OUTPUT" ]; then
+            grep -E "(❌|error:|fatal error:)" "$TEMP_OUTPUT" 2>/dev/null || cat "$TEMP_OUTPUT"
+        fi
+        echo ""
+        echo "BUILD FAILED"
+        exit $BUILD_EXIT_CODE
+    fi
 fi
