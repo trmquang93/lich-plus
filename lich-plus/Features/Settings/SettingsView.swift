@@ -38,6 +38,30 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
+                // Notifications
+                NavigationLink {
+                    NotificationSettingsView()
+                } label: {
+                    HStack(spacing: AppTheme.spacing12) {
+                        Image(systemName: "bell.badge")
+                            .font(.title2)
+                            .foregroundStyle(AppColors.primary)
+                            .frame(width: 32)
+
+                        VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                            Text(String(localized: "notification.settings.title"))
+                                .font(.body)
+                                .foregroundStyle(AppColors.textPrimary)
+
+                            Text("Manage reminders and alerts")
+                                .font(.caption)
+                                .foregroundStyle(AppColors.textSecondary)
+                        }
+
+                        Spacer()
+                    }
+                }
+                
                 // Sync Section
                 Section {
                     NavigationLink {

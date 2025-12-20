@@ -19,6 +19,7 @@ struct PersistenceController {
             SyncableEvent.self,
             SyncedCalendar.self,
             ICSSubscription.self,
+            NotificationSettings.self,
         ])
 
         let modelConfiguration = ModelConfiguration(
@@ -42,6 +43,7 @@ struct PersistenceController {
             SyncableEvent.self,
             SyncedCalendar.self,
             ICSSubscription.self,
+            NotificationSettings.self,
         ])
 
         let modelConfiguration = ModelConfiguration(
