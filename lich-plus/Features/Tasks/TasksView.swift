@@ -27,6 +27,7 @@ struct TasksView: View {
     @State private var showEditSheet: Bool = false
     @State private var refreshCounter: Int = 0
     @State private var showEventNotFoundAlert: Bool = false
+    @State private var navigateToDate: Date? = nil
 
     // MARK: - Computed Properties
 
@@ -47,27 +48,65 @@ struct TasksView: View {
         return filtered.sorted { $0.date < $1.date }
     }
 
+    /// Events for a given date (used when navigating to Day view)
+    private func eventsForDate(_ date: Date) -> [TaskItem] {
+        let calendar = Calendar.current
+        return tasks.filter { task in
+            calendar.isDate(task.date, inSameDayAs: date)
+        }.sorted { ($0.startTime ?? $0.date) < ($1.startTime ?? $1.date) }
+    }
+
+    /// Hoang Dao (auspicious) hours for a given date
+    /// Uses HoangDaoCalculator service for consistent auspicious hour calculation
+    /// based on traditional Vietnamese astrology (12 Trực system)
+    private func hoangDaoHoursForDate(_ date: Date) -> Set<Int> {
+        let hourlyZodiacs = HoangDaoCalculator.getHourlyZodiacs(for: date)
+        let auspiciousIndices = hourlyZodiacs
+            .filter { $0.isAuspicious }
+            .map { $0.hour }
+        return Set(auspiciousIndices)
+    }
+
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
                 // Timeline Header
-                TimelineHeader(
-                    searchText: $searchText,
-                    isSearchActive: $isSearchActive,
-                    onAddTapped: { showAddSheet = true }
-                )
+                HStack {
+                    TimelineHeader(
+                        searchText: $searchText,
+                        isSearchActive: $isSearchActive,
+                        onAddTapped: { showAddSheet = true }
+                    )
+                }
 
-                // Infinite Timeline View
+                // List View - Infinite Timeline
                 InfiniteTimelineView(
                     tasks: filteredTasks,
                     onToggleCompletion: toggleTaskCompletion,
                     onDelete: deleteTask,
                     onEdit: startEditingTask,
-                    onAddNew: { showAddSheet = true }
+                    onAddNew: { showAddSheet = true },
+                    onDateTap: { date in
+                        navigateToDate = date
+                    }
                 )
                 .id(refreshCounter)
             }
             .background(AppColors.background)
+            .navigationDestination(item: $navigateToDate) { date in
+                DayTimelineView(
+                    date: date,
+                    events: eventsForDate(date),
+                    hoangDaoHours: hoangDaoHoursForDate(date),
+                    onEventTap: { task in
+                        startEditingTask(task)
+                    },
+                    onAddEvent: { _ in
+                        showAddSheet = true
+                    },
+                    onToggleCompletion: toggleTaskCompletion
+                )
+            }
             .onReceive(NotificationCenter.default.publisher(for: .calendarDataDidChange)) { _ in
                 refreshCounter += 1
             }

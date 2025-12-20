@@ -45,7 +45,6 @@ struct RecurrenceMatcher {
                 return false
             }
         } catch {
-            print("Failed to decode recurrence rule: \(error)")
             return false
         }
     }

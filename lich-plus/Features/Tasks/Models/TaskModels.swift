@@ -109,6 +109,24 @@ enum TaskCategory: String, CaseIterable, Identifiable {
             return AppColors.secondary
         }
     }
+
+    /// SF Symbol icon for visual representation of the category
+    var icon: String {
+        switch self {
+        case .birthday:
+            return "gift"
+        case .holiday:
+            return "star.fill"
+        case .meeting:
+            return "person.3"
+        case .work:
+            return "briefcase"
+        case .personal:
+            return "person"
+        case .other:
+            return "calendar"
+        }
+    }
 }
 
 // MARK: - Recurrence Type
@@ -387,8 +405,6 @@ struct TaskItem: Identifiable, Equatable {
                 return .none
             }
         } catch {
-            // Log error for debugging, but return .none gracefully
-            print("Failed to decode recurrence rule: \(error)")
             return .none
         }
     }

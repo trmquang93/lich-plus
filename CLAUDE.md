@@ -57,15 +57,25 @@ Before committing changes that modify the project:
 
 **Building:**
 ```bash
-# Build the app and check for compile errors
+# Build the app (quiet mode - shows only BUILD SUCCEEDED or errors)
 ./build-app.sh
+
+# Build with full output showing all compilation steps
+./build-app.sh --verbose
 
 # Clean build folder first, then build
 ./build-app.sh --clean
 
+# Clean and build with verbose output
+./build-app.sh --clean --verbose
+
 # View build script help
 ./build-app.sh --help
 ```
+
+**Build Output Modes:**
+- **Quiet mode (default)**: Shows only `BUILD SUCCEEDED` on success, or error details on failure
+- **Verbose mode (`--verbose`)**: Shows full build output with all compilation steps and warnings
 
 **Testing:**
 Use the script with `grep -E "✖"` to filter for failed tests.
@@ -452,7 +462,10 @@ The Tasks feature implements a complete task and event management system with th
 - `RecurrenceType` enum: none, daily, weekly, monthly, yearly
 
 **Key Features:**
+- **List View (Default)**: Shows all tasks grouped by date in an infinite scrollable list
 - **Task Grouping**: Automatically groups tasks by date (Today, Tomorrow, Upcoming)
+- **Date Navigation**: Tapping on a date header navigates to Day view showing events for that specific date
+- **Day View Navigation**: Displays events on a time grid for the selected date (accessible via date header tap)
 - **Search**: Full-text search across task titles and notes
 - **Filtering**: Filter by time period (All, This Week, This Month)
 - **Quick Actions**: One-click task completion toggle without opening edit form
@@ -460,12 +473,19 @@ The Tasks feature implements a complete task and event management system with th
 - **Form Validation**: Title is required for new tasks
 - **Responsive Design**: Adapts to different screen sizes using Theme.swift spacing
 
+**Navigation Flow:**
+- **TasksView**: Main entry point, displays list view by default
+- **InfiniteTimelineView**: Infinite scrollable list grouped by date with tap handlers
+- **DateSectionHeader**: Tappable date headers that trigger navigation to Day view
+- **DayTimelineView**: Shows time-grid view for selected date (pushed via NavigationStack)
+
 **Components Architecture:**
 - `TaskListHeader`: Search bar and add button
-- `TaskCard`: Displays individual task with checkbox and metadata
-- `TaskSection`: Groups tasks by date range
-- `FilterBar`: Horizontal scrollable filter options
-- `TasksView`: Main container managing state and interactions
+- `TimelineItemCard`: Unified card for tasks and events with metadata
+- `DateSectionHeader`: Tappable date header (navigates to Day view on tap)
+- `InfiniteTimelineView`: Main list view with date grouping and navigation handling
+- `DayTimelineView`: Time-grid view for individual day with concurrent event handling
+- `TasksView`: Main container managing state, navigation, and interactions
 
 **Localization Keys** (all keys use `task.` prefix):
 - UI labels: `myTasks`, `search`, `add`, `addNew`, `edit`, `delete`, `done`, `cancel`
