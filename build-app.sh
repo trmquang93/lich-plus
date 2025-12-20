@@ -267,8 +267,7 @@ if [ "$CLEAN_BUILD" = true ]; then
     xcodebuild \
         -workspace "$WORKSPACE" \
         -scheme "$SCHEME" \
-        clean \
-        2>&1 | grep -v "^$" > /dev/null
+        clean >/dev/null 2>&1
     if [ "$VERBOSE_MODE" = true ]; then
         echo "Clean completed."
     fi

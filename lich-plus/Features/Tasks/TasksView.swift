@@ -57,19 +57,14 @@ struct TasksView: View {
     }
 
     /// Hoang Dao (auspicious) hours for a given date
+    /// Uses HoangDaoCalculator service for consistent auspicious hour calculation
+    /// based on traditional Vietnamese astrology (12 Trực system)
     private func hoangDaoHoursForDate(_ date: Date) -> Set<Int> {
-        let calendar = Calendar.current
-        let dayOfYear = calendar.ordinality(of: .day, in: .year, for: date) ?? 1
-        let patterns: [[Int]] = [
-            [0, 1, 4, 5, 8, 9],      // Pattern 1
-            [2, 3, 6, 7, 10, 11],    // Pattern 2
-            [0, 1, 6, 7, 8, 9],      // Pattern 3
-            [2, 3, 4, 5, 10, 11],    // Pattern 4
-            [0, 1, 2, 3, 8, 9],      // Pattern 5
-            [4, 5, 6, 7, 10, 11],    // Pattern 6
-        ]
-        let patternIndex = dayOfYear % 6
-        return Set(patterns[patternIndex])
+        let hourlyZodiacs = HoangDaoCalculator.getHourlyZodiacs(for: date)
+        let auspiciousIndices = hourlyZodiacs
+            .filter { $0.isAuspicious }
+            .map { $0.hour }
+        return Set(auspiciousIndices)
     }
 
     var body: some View {

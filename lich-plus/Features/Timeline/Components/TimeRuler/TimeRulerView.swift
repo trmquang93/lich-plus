@@ -63,9 +63,13 @@ struct TimeRulerView: View {
         ]
 
         // Map hour to Chi index (0-11)
-        // Each Chi covers 2 hours, but we need to handle the mapping correctly
-        // Hour 0 = Tý, Hour 1 = Tý, Hour 2 = Sửu, Hour 3 = Sửu, etc.
-        let chiIndex = hour / 2
+        // Each Chi covers 2 hours, with wrap-around at midnight
+        // Tý (23:00-01:00) is at index 0, so we adjust the formula to handle this
+        // Formula: (hour + 1) / 2 % 12 correctly maps:
+        // Hour 0 (00:00) → 0 → Tý
+        // Hour 1 (01:00) → 1 → Sửu
+        // Hour 23 (23:00) → 0 → Tý
+        let chiIndex = (hour + 1) / 2 % 12
         return chiNames[chiIndex]
     }
 
@@ -78,9 +82,9 @@ struct TimeRulerView: View {
     /// - Parameter hour: Hour in 24-hour format (0-23)
     /// - Returns: Level (0 = not auspicious, 1-2 = auspicious with stars)
     private func hoangDaoLevelForHour(_ hour: Int) -> Int {
-        // Get the Chi index (0-11) for this hour
-        // Each Chi covers 2 hours
-        let chiIndex = hour / 2
+        // Get the Chi index (0-11) for this hour using the same corrected formula
+        // as chiForHour to ensure consistency
+        let chiIndex = (hour + 1) / 2 % 12
 
         // Check if this Chi period is auspicious
         if auspiciousHours.contains(chiIndex) {

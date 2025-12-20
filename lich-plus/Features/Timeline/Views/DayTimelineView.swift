@@ -92,7 +92,7 @@ struct DayTimelineView: View {
             isPast: positionedEvent.isPast,
             isCurrent: positionedEvent.isCurrent
         )
-        .frame(maxWidth: .infinity)
+        .frame(width: availableEventWidth * positionedEvent.widthFraction)
         .offset(
             x: availableEventWidth * positionedEvent.xOffset,
             y: positionedEvent.yStart
