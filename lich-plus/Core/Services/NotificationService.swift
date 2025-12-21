@@ -61,9 +61,7 @@ final class NotificationService: ObservableObject {
     /// Check current authorization status
     func checkAuthorizationStatus() async {
         let settings = await center.notificationSettings()
-        DispatchQueue.main.async {
-            self.authorizationStatus = settings.authorizationStatus
-        }
+        self.authorizationStatus = settings.authorizationStatus
     }
     
     // MARK: - Settings Management
@@ -150,12 +148,14 @@ final class NotificationService: ObservableObject {
         center.removePendingNotificationRequests(withIdentifiers: [identifier])
     }
     
-    // MARK: - Rằm Notifications
+    // MARK: - Lunar Date Helpers
     
-    /// Get upcoming Rằm (15th lunar day) dates
-    /// - Parameter months: Number of months to look ahead
-    /// - Returns: Array of solar dates for Rằm, including leap months
-    func getUpcomingRamDates(months: Int) -> [Date] {
+    /// Get upcoming lunar dates for a specific day of the month
+    /// - Parameters:
+    ///   - day: The lunar day (1 for Mùng 1, 15 for Rằm)
+    ///   - months: Number of months to look ahead
+    /// - Returns: Array of solar dates for the specified lunar day
+    private func getUpcomingLunarDates(day: Int, months: Int) -> [Date] {
         var dates: [Date] = []
         let today = Date()
         let calendar = Calendar.current
@@ -164,29 +164,28 @@ final class NotificationService: ObservableObject {
         for _ in 0..<months {
             let lunar = LunarCalendar.solarToLunar(currentDate)
             
-            // Schedule for regular month occurrence
-            let ramSolarDate = LunarCalendar.lunarToSolar(
-                day: 15,
+            let solarDate = LunarCalendar.lunarToSolar(
+                day: day,
                 month: lunar.month,
                 year: lunar.year
             )
             
-            if ramSolarDate >= today {
-                dates.append(ramSolarDate)
+            if solarDate >= today {
+                dates.append(solarDate)
             }
             
-            // Check for leap month and schedule if exists
+            // Check for leap month
             let leapInfo = LunarCalendar.getLeapMonthInfo(forSolarYear: calendar.component(.year, from: currentDate))
             if leapInfo.hasLeapMonth, leapInfo.leapMonth == lunar.month {
-                let ramLeapSolarDate = LunarCalendar.lunarToSolar(
-                    day: 15,
+                let leapSolarDate = LunarCalendar.lunarToSolar(
+                    day: day,
                     month: lunar.month,
                     year: lunar.year,
                     isLeapMonth: true
                 )
                 
-                if ramLeapSolarDate >= today {
-                    dates.append(ramLeapSolarDate)
+                if leapSolarDate >= today {
+                    dates.append(leapSolarDate)
                 }
             }
             
@@ -197,15 +196,24 @@ final class NotificationService: ObservableObject {
         return dates.sorted()
     }
     
+    // MARK: - Rằm Notifications
+    
+    /// Get upcoming Rằm (15th lunar day) dates
+    /// - Parameter months: Number of months to look ahead
+    /// - Returns: Array of solar dates for Rằm, including leap months
+    func getUpcomingRamDates(months: Int) -> [Date] {
+        return getUpcomingLunarDates(day: 15, months: months)
+    }
+    
     /// Schedule Rằm notifications for the next N months
-    func scheduleRamNotifications() {
+    func scheduleRamNotifications() async {
         let settings = getSettings()
         guard settings.isEnabled && settings.ramNotificationsEnabled else {
             return
         }
         
         // Remove existing Rằm notifications
-        removeAllRamNotifications()
+        await removeAllRamNotifications()
         
         let ramDates = getUpcomingRamDates(months: settings.schedulingHorizonMonths)
         
@@ -250,12 +258,13 @@ final class NotificationService: ObservableObject {
     }
     
     /// Remove all Rằm notifications
-    private func removeAllRamNotifications() {
-        center.getPendingNotificationRequests { requests in
-            let ramIdentifiers = requests
-                .filter { $0.identifier.hasPrefix(Self.ramIdentifierPrefix) }
-                .map { $0.identifier }
-            self.center.removePendingNotificationRequests(withIdentifiers: ramIdentifiers)
+    func removeAllRamNotifications() async {
+        let requests = await center.pendingNotificationRequests()
+        let ramIdentifiers = requests
+            .filter { $0.identifier.hasPrefix(Self.ramIdentifierPrefix) }
+            .map { $0.identifier }
+        if !ramIdentifiers.isEmpty {
+            center.removePendingNotificationRequests(withIdentifiers: ramIdentifiers)
         }
     }
     
@@ -265,56 +274,18 @@ final class NotificationService: ObservableObject {
     /// - Parameter months: Number of months to look ahead
     /// - Returns: Array of solar dates for Mùng 1, including leap months
     func getUpcomingMung1Dates(months: Int) -> [Date] {
-        var dates: [Date] = []
-        let today = Date()
-        let calendar = Calendar.current
-        var currentDate = today
-        
-        for _ in 0..<months {
-            let lunar = LunarCalendar.solarToLunar(currentDate)
-            
-            // Schedule for regular month occurrence
-            let mung1SolarDate = LunarCalendar.lunarToSolar(
-                day: 1,
-                month: lunar.month,
-                year: lunar.year
-            )
-            
-            if mung1SolarDate >= today {
-                dates.append(mung1SolarDate)
-            }
-            
-            // Check for leap month and schedule if exists
-            let leapInfo = LunarCalendar.getLeapMonthInfo(forSolarYear: calendar.component(.year, from: currentDate))
-            if leapInfo.hasLeapMonth, leapInfo.leapMonth == lunar.month {
-                let mung1LeapSolarDate = LunarCalendar.lunarToSolar(
-                    day: 1,
-                    month: lunar.month,
-                    year: lunar.year,
-                    isLeapMonth: true
-                )
-                
-                if mung1LeapSolarDate >= today {
-                    dates.append(mung1LeapSolarDate)
-                }
-            }
-            
-            // Move to next month
-            currentDate = calendar.date(byAdding: .month, value: 1, to: currentDate) ?? currentDate
-        }
-        
-        return dates.sorted()
+        return getUpcomingLunarDates(day: 1, months: months)
     }
     
     /// Schedule Mùng 1 notifications for the next N months
-    func scheduleMung1Notifications() {
+    func scheduleMung1Notifications() async {
         let settings = getSettings()
         guard settings.isEnabled && settings.mung1NotificationsEnabled else {
             return
         }
         
         // Remove existing Mùng 1 notifications
-        removeAllMung1Notifications()
+        await removeAllMung1Notifications()
         
         let mung1Dates = getUpcomingMung1Dates(months: settings.schedulingHorizonMonths)
         
@@ -359,12 +330,13 @@ final class NotificationService: ObservableObject {
     }
     
     /// Remove all Mùng 1 notifications
-    private func removeAllMung1Notifications() {
-        center.getPendingNotificationRequests { requests in
-            let mung1Identifiers = requests
-                .filter { $0.identifier.hasPrefix(Self.mung1IdentifierPrefix) }
-                .map { $0.identifier }
-            self.center.removePendingNotificationRequests(withIdentifiers: mung1Identifiers)
+    func removeAllMung1Notifications() async {
+        let requests = await center.pendingNotificationRequests()
+        let mung1Identifiers = requests
+            .filter { $0.identifier.hasPrefix(Self.mung1IdentifierPrefix) }
+            .map { $0.identifier }
+        if !mung1Identifiers.isEmpty {
+            center.removePendingNotificationRequests(withIdentifiers: mung1Identifiers)
         }
     }
     
@@ -382,24 +354,35 @@ final class NotificationService: ObservableObject {
     ]
     
     /// Schedule Vietnamese holiday notifications
-    func scheduleFixedEventNotifications() {
+    func scheduleFixedEventNotifications() async {
         let settings = getSettings()
         guard settings.isEnabled && settings.fixedEventNotificationsEnabled else {
             return
         }
         
         // Remove existing fixed event notifications
-        removeAllFixedEventNotifications()
+        await removeAllFixedEventNotifications()
         
-        let lunar = LunarCalendar.solarToLunar(Date())
         let today = Date()
+        let currentLunar = LunarCalendar.solarToLunar(today)
         
         for holiday in vietnameseHolidays {
-            let solarDate = LunarCalendar.lunarToSolar(
+            var holidayLunarYear = currentLunar.year
+            var solarDate = LunarCalendar.lunarToSolar(
                 day: holiday.day,
                 month: holiday.month,
-                year: lunar.year
+                year: holidayLunarYear
             )
+            
+            // If the holiday has already passed this year, schedule for next year
+            if solarDate < today {
+                holidayLunarYear += 1
+                solarDate = LunarCalendar.lunarToSolar(
+                    day: holiday.day,
+                    month: holiday.month,
+                    year: holidayLunarYear
+                )
+            }
             
             // Calculate reminder date
             let reminderDate = Calendar.current.date(
@@ -456,12 +439,13 @@ final class NotificationService: ObservableObject {
     }
     
     /// Remove all fixed event notifications
-    private func removeAllFixedEventNotifications() {
-        center.getPendingNotificationRequests { requests in
-            let fixedEventIdentifiers = requests
-                .filter { $0.identifier.hasPrefix(Self.fixedEventIdentifierPrefix) }
-                .map { $0.identifier }
-            self.center.removePendingNotificationRequests(withIdentifiers: fixedEventIdentifiers)
+    func removeAllFixedEventNotifications() async {
+        let requests = await center.pendingNotificationRequests()
+        let fixedEventIdentifiers = requests
+            .filter { $0.identifier.hasPrefix(Self.fixedEventIdentifierPrefix) }
+            .map { $0.identifier }
+        if !fixedEventIdentifiers.isEmpty {
+            center.removePendingNotificationRequests(withIdentifiers: fixedEventIdentifiers)
         }
     }
     
@@ -469,10 +453,10 @@ final class NotificationService: ObservableObject {
     
     /// Reschedule all notifications
     /// Called on app launch to ensure notifications are up to date
-    func rescheduleAllNotifications() {
-        scheduleRamNotifications()
-        scheduleMung1Notifications()
-        scheduleFixedEventNotifications()
+    func rescheduleAllNotifications() async {
+        await scheduleRamNotifications()
+        await scheduleMung1Notifications()
+        await scheduleFixedEventNotifications()
         
         // Update last scheduled date
         let settings = getSettings()

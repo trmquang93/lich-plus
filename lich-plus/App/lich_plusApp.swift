@@ -19,11 +19,10 @@ struct lich_plusApp: App {
     init() {
         AppColors.configureSegmentedControlAppearance()
         
-        // Initialize notification service with model context
+        // Initialize notification service with container's main context for data consistency
         let persistenceController = PersistenceController.shared
-        let modelContext = ModelContext(persistenceController.container)
         _notificationService = StateObject(
-            wrappedValue: NotificationService(modelContext: modelContext)
+            wrappedValue: NotificationService(modelContext: persistenceController.container.mainContext)
         )
     }
 

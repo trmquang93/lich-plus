@@ -3414,6 +3414,23 @@
         }
       }
     },
+    "notification.settings.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manage reminders and alerts"
+          }
+        },
+        "vi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quản lý nhắc nhở và thông báo"
+          }
+        }
+      }
+    },
     "notification.enable": {
       "extractionState": "manual",
       "localizations": {
