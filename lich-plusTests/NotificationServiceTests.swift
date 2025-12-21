@@ -134,20 +134,74 @@ final class NotificationServiceTests: XCTestCase {
         }
     }
     
-    func testLunarToSolarRoundTrip() {
-        // Test that lunar->solar->lunar conversion is consistent
-        let testLunarDate = (day: 15, month: 1, year: 2025)
-        
-        let solarDate = LunarCalendar.lunarToSolar(
-            day: testLunarDate.day,
-            month: testLunarDate.month,
-            year: testLunarDate.year
-        )
-        
-        let backToLunar = LunarCalendar.solarToLunar(solarDate)
-        
-        XCTAssertEqual(backToLunar.day, testLunarDate.day)
-        XCTAssertEqual(backToLunar.month, testLunarDate.month)
-        XCTAssertEqual(backToLunar.year, testLunarDate.year)
-    }
-}
+     func testLunarToSolarRoundTrip() {
+         // Test that lunar->solar->lunar conversion is consistent
+         let testLunarDate = (day: 15, month: 1, year: 2025)
+         
+         let solarDate = LunarCalendar.lunarToSolar(
+             day: testLunarDate.day,
+             month: testLunarDate.month,
+             year: testLunarDate.year
+         )
+         
+         let backToLunar = LunarCalendar.solarToLunar(solarDate)
+         
+         XCTAssertEqual(backToLunar.day, testLunarDate.day)
+         XCTAssertEqual(backToLunar.month, testLunarDate.month)
+         XCTAssertEqual(backToLunar.year, testLunarDate.year)
+     }
+     
+     // MARK: - Deterministic Lunar Date Tests
+     
+     func testGetUpcomingRamDates_returnsCorrectDates() {
+         // Test with a fixed number of months
+         let ramDates = service.getUpcomingRamDates(months: 12)
+         
+         // Verify dates are sorted if we get any
+         if ramDates.count > 1 {
+             for i in 0..<(ramDates.count - 1) {
+                 XCTAssertLessThan(ramDates[i], ramDates[i + 1])
+             }
+         }
+         
+         // Verify all dates returned are Rằm (15th lunar day)
+         for date in ramDates {
+             let lunar = LunarCalendar.solarToLunar(date)
+             XCTAssertEqual(lunar.day, 15, "Expected lunar day 15 for Rằm, got \(lunar.day)")
+         }
+     }
+     
+     func testGetUpcomingMung1Dates_returnsCorrectDates() {
+         // Test with a fixed number of months
+         let mung1Dates = service.getUpcomingMung1Dates(months: 12)
+         
+         // Verify dates are sorted if we get any
+         if mung1Dates.count > 1 {
+             for i in 0..<(mung1Dates.count - 1) {
+                 XCTAssertLessThan(mung1Dates[i], mung1Dates[i + 1])
+             }
+         }
+         
+         // Verify all dates returned are Mùng 1 (1st lunar day)
+         for date in mung1Dates {
+             let lunar = LunarCalendar.solarToLunar(date)
+             XCTAssertEqual(lunar.day, 1, "Expected lunar day 1 for Mùng 1, got \(lunar.day)")
+         }
+     }
+     
+     func testGetUpcomingRamDates_noDuplicates() {
+         // Verify there are no duplicate dates in the schedule
+         let ramDates = service.getUpcomingRamDates(months: 6)
+         let uniqueDates = Set(ramDates.map { Int($0.timeIntervalSince1970) })
+         
+         XCTAssertEqual(ramDates.count, uniqueDates.count, "Found duplicate dates in Rằm schedule")
+     }
+     
+     func testGetUpcomingMung1Dates_noDuplicates() {
+         // Verify there are no duplicate dates in the schedule
+         let mung1Dates = service.getUpcomingMung1Dates(months: 6)
+         let uniqueDates = Set(mung1Dates.map { Int($0.timeIntervalSince1970) })
+         
+         XCTAssertEqual(mung1Dates.count, uniqueDates.count, "Found duplicate dates in Mùng 1 schedule")
+     }
+ }

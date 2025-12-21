@@ -53,7 +53,7 @@ struct SettingsView: View {
                                 .font(.body)
                                 .foregroundStyle(AppColors.textPrimary)
 
-                            Text("Manage reminders and alerts")
+                            Text(String(localized: "notification.settings.subtitle"))
                                 .font(.caption)
                                 .foregroundStyle(AppColors.textSecondary)
                         }

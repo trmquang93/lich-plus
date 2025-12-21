@@ -63,13 +63,6 @@ struct CreateItemSheet: View {
         self.initialItemType = initialItemType
         self.onSave = onSave
     }
-    
-    /// Get default reminder minutes from notification service
-    private func getDefaultReminderMinutes() -> Int {
-        // This will be set when @EnvironmentObject is available
-        // For now, return the hardcoded default
-        return 15
-    }
 
     var body: some View {
         VStack(spacing: 0) {

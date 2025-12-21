@@ -62,11 +62,8 @@ struct NotificationSettingsView: View {
                         isOn: Binding(
                             get: { settingsValue.eventNotificationsEnabled },
                             set: { newValue in
-                                if var updatedSettings = settings {
-                                    updatedSettings.eventNotificationsEnabled = newValue
-                                    settings = updatedSettings
-                                    saveSettings()
-                                }
+                                settingsValue.eventNotificationsEnabled = newValue
+                                saveSettings()
                             }
                         )
                     )
@@ -77,11 +74,8 @@ struct NotificationSettingsView: View {
                         Picker("", selection: Binding(
                             get: { settingsValue.defaultReminderMinutes },
                             set: { newValue in
-                                if var updatedSettings = settings {
-                                    updatedSettings.defaultReminderMinutes = newValue
-                                    settings = updatedSettings
-                                    saveSettings()
-                                }
+                                settingsValue.defaultReminderMinutes = newValue
+                                saveSettings()
                             }
                         )) {
                             ForEach([5, 10, 15, 30, 60], id: \.self) { minutes in
@@ -102,15 +96,14 @@ struct NotificationSettingsView: View {
                         isOn: Binding(
                             get: { settingsValue.ramNotificationsEnabled },
                             set: { newValue in
-                                if var updatedSettings = settings {
-                                    updatedSettings.ramNotificationsEnabled = newValue
-                                    settings = updatedSettings
-                                    saveSettings()
-                                    if newValue {
-                                        notificationService.scheduleRamNotifications()
-                                    } else {
-                                        removeRamNotifications()
+                                settingsValue.ramNotificationsEnabled = newValue
+                                saveSettings()
+                                if newValue {
+                                    Task {
+                                        await notificationService.scheduleRamNotifications()
                                     }
+                                } else {
+                                    removeRamNotifications()
                                 }
                             }
                         )
@@ -140,15 +133,14 @@ struct NotificationSettingsView: View {
                         isOn: Binding(
                             get: { settingsValue.mung1NotificationsEnabled },
                             set: { newValue in
-                                if var updatedSettings = settings {
-                                    updatedSettings.mung1NotificationsEnabled = newValue
-                                    settings = updatedSettings
-                                    saveSettings()
-                                    if newValue {
-                                        notificationService.scheduleMung1Notifications()
-                                    } else {
-                                        removeMung1Notifications()
+                                settingsValue.mung1NotificationsEnabled = newValue
+                                saveSettings()
+                                if newValue {
+                                    Task {
+                                        await notificationService.scheduleMung1Notifications()
                                     }
+                                } else {
+                                    removeMung1Notifications()
                                 }
                             }
                         )
@@ -178,15 +170,14 @@ struct NotificationSettingsView: View {
                         isOn: Binding(
                             get: { settingsValue.fixedEventNotificationsEnabled },
                             set: { newValue in
-                                if var updatedSettings = settings {
-                                    updatedSettings.fixedEventNotificationsEnabled = newValue
-                                    settings = updatedSettings
-                                    saveSettings()
-                                    if newValue {
-                                        notificationService.scheduleFixedEventNotifications()
-                                    } else {
-                                        removeFixedEventNotifications()
+                                settingsValue.fixedEventNotificationsEnabled = newValue
+                                saveSettings()
+                                if newValue {
+                                    Task {
+                                        await notificationService.scheduleFixedEventNotifications()
                                     }
+                                } else {
+                                    removeFixedEventNotifications()
                                 }
                             }
                         )
@@ -198,11 +189,10 @@ struct NotificationSettingsView: View {
                             selection: Binding(
                                 get: { settingsValue.fixedEventReminderDays },
                                 set: { newValue in
-                                    if var updatedSettings = settings {
-                                        updatedSettings.fixedEventReminderDays = newValue
-                                        settings = updatedSettings
-                                        saveSettings()
-                                        notificationService.scheduleFixedEventNotifications()
+                                    settingsValue.fixedEventReminderDays = newValue
+                                    saveSettings()
+                                    Task {
+                                        await notificationService.scheduleFixedEventNotifications()
                                     }
                                 }
                             )
@@ -243,12 +233,13 @@ struct NotificationSettingsView: View {
         Binding(
             get: { settings?.isEnabled ?? false },
             set: { newValue in
-                if var settingsValue = settings {
+                if let settingsValue = settings {
                     settingsValue.isEnabled = newValue
-                    settings = settingsValue
                     saveSettings()
                     if newValue {
-                        notificationService.rescheduleAllNotifications()
+                        Task {
+                            await notificationService.rescheduleAllNotifications()
+                        }
                     }
                 }
             }
@@ -287,36 +278,37 @@ struct NotificationSettingsView: View {
         Task {
             let granted = await notificationService.requestAuthorization()
             if granted {
-                if var settingsValue = settings {
+                if let settingsValue = settings {
                     settingsValue.isEnabled = true
-                    settings = settingsValue
                     saveSettings()
-                    notificationService.rescheduleAllNotifications()
+                    await notificationService.rescheduleAllNotifications()
                 }
             }
         }
     }
     
     private func updateRamTime() {
-        guard var settingsValue = settings else { return }
+        guard let settingsValue = settings else { return }
         let calendar = Calendar.current
         let components = calendar.dateComponents([.hour, .minute], from: ramTimeBinding.wrappedValue)
         settingsValue.ramNotificationHour = components.hour ?? 6
         settingsValue.ramNotificationMinute = components.minute ?? 0
-        settings = settingsValue
         saveSettings()
-        notificationService.scheduleRamNotifications()
+        Task {
+            await notificationService.scheduleRamNotifications()
+        }
     }
     
     private func updateMung1Time() {
-        guard var settingsValue = settings else { return }
+        guard let settingsValue = settings else { return }
         let calendar = Calendar.current
         let components = calendar.dateComponents([.hour, .minute], from: mung1TimeBinding.wrappedValue)
         settingsValue.mung1NotificationHour = components.hour ?? 6
         settingsValue.mung1NotificationMinute = components.minute ?? 0
-        settings = settingsValue
         saveSettings()
-        notificationService.scheduleMung1Notifications()
+        Task {
+            await notificationService.scheduleMung1Notifications()
+        }
     }
     
     private func saveSettings() {
@@ -326,18 +318,21 @@ struct NotificationSettingsView: View {
     }
     
     private func removeRamNotifications() {
-        // NotificationService will remove them when scheduleRamNotifications is not called
-        // For now, we just need to update the UI
+        Task {
+            await notificationService.removeAllRamNotifications()
+        }
     }
     
     private func removeMung1Notifications() {
-        // NotificationService will remove them when scheduleMung1Notifications is not called
-        // For now, we just need to update the UI
+        Task {
+            await notificationService.removeAllMung1Notifications()
+        }
     }
     
     private func removeFixedEventNotifications() {
-        // NotificationService will remove them when scheduleFixedEventNotifications is not called
-        // For now, we just need to update the UI
+        Task {
+            await notificationService.removeAllFixedEventNotifications()
+        }
     }
     
     private func openAppSettings() {
