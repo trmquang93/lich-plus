@@ -19,6 +19,7 @@ struct CalendarView: View {
     @EnvironmentObject var syncService: CalendarSyncService
     @State private var collapseProgress: CGFloat = 0
     @State private var refreshCounter: Int = 0
+    @State private var headerHeight: CGFloat = 0
 
     private var displayedDate: Date {
         Calendar.current.date(byAdding: .month, value: displayedMonthOffset, to: Date()) ?? Date()
@@ -108,6 +109,17 @@ struct CalendarView: View {
                             displayedMonthOffset = monthDiff
                         }
                     )
+                    .background(
+                        GeometryReader { headerGeo in
+                            Color.clear
+                                .onAppear {
+                                    headerHeight = headerGeo.size.height
+                                }
+                                .onChange(of: headerGeo.size.height) { _, newHeight in
+                                    headerHeight = newHeight
+                                }
+                        }
+                    )
 
                     // Parallax scroll container
                     ParallaxScrollView(
@@ -141,11 +153,12 @@ struct CalendarView: View {
                                         // Calculate week delta and update selected date
                                         let weekDelta = newOffset - displayedWeekOffset
                                         if weekDelta != 0,
-                                           let newDate = Calendar.current.date(
-                                               byAdding: .weekOfYear,
-                                               value: weekDelta,
-                                               to: dataManager.selectedDate
-                                           ) {
+                                            let newDate = Calendar.current.date(
+                                                byAdding: .weekOfYear,
+                                                value: weekDelta,
+                                                to: dataManager.selectedDate
+                                            )
+                                        {
                                             dataManager.selectedDate = newDate
                                         }
                                         displayedWeekOffset = newOffset
@@ -199,9 +212,9 @@ struct CalendarView: View {
                                                     events: day.events,
                                                     day: day
                                                 )
-
-                                                Spacer(minLength: AppTheme.spacing16)
                                             }
+                                            .frame(maxHeight: .infinity, alignment: .top)
+                                            .padding(.bottom, AppTheme.spacing16)
                                             .background(AppColors.background)
                                         },
                                         onPageChanged: { newDate in
@@ -215,7 +228,9 @@ struct CalendarView: View {
                                             }
                                         }
                                     )
-                                    .frame(height: geometry.size.height - 60)
+                                    .frame(
+                                        height: geometry.size.height - 81
+                                            - CalendarDisplayMode.minHeight)
                                 }
                             }
                         }
