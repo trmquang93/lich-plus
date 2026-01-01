@@ -37,6 +37,7 @@ final class SyncableEvent {
     var itemType: String        // "task" or "event" - default: "task"
     var priority: String        // "none", "low", "medium", "high" - default: "none"
     var location: String?       // For events (meeting room, address)
+    var timeZone: String?       // For storing timezone (e.g., "America/New_York", "UTC")
 
     init(
         id: UUID = UUID(),
@@ -65,7 +66,8 @@ final class SyncableEvent {
         createdAt: Date = Date(),
         itemType: String = "task",
         priority: String = "none",
-        location: String? = nil
+        location: String? = nil,
+        timeZone: String? = nil
     ) {
         self.id = id
         self.ekEventIdentifier = ekEventIdentifier
@@ -94,6 +96,7 @@ final class SyncableEvent {
         self.itemType = itemType
         self.priority = priority
         self.location = location
+        self.timeZone = timeZone
     }
 
     // Computed properties for type-safe enum access

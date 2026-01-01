@@ -7,9 +7,11 @@
 
 import SwiftUI
 import SwiftData
+import EventKit
 
 struct MainTabView: View {
     @Environment(\.modelContext) var modelContext
+    @Environment(\.scenePhase) var scenePhase
     @State private var selectedTab: Int = 0
 
     // Apple Calendar services
@@ -34,6 +36,9 @@ struct MainTabView: View {
 
     // Auto-sync coordinator for Apple Calendar
     @State private var autoSyncCoordinator: AutoSyncCoordinator?
+    
+    // Background sync manager for periodic sync
+    @State private var backgroundSyncManager: BackgroundSyncManager?
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -67,6 +72,10 @@ struct MainTabView: View {
         // ICS Calendar environment objects
         .environmentObject(icsSyncService ?? createICSSyncService())
         .tint(AppColors.primary)
+        // Handle app lifecycle for sync management
+        .onChange(of: scenePhase) { oldPhase, newPhase in
+            handleScenePhaseChange(from: oldPhase, to: newPhase)
+        }
         // Handle Google Sign-In URL callback
         .onOpenURL { url in
             _ = googleAuthService.handle(url)
@@ -86,6 +95,8 @@ struct MainTabView: View {
             initializeBuiltInCalendars()
             // Initialize auto-sync coordinator
             initializeAutoSync()
+            // Initialize background sync manager
+            initializeBackgroundSync()
         }
         .task {
             // Configure tab bar appearance
@@ -209,11 +220,41 @@ struct MainTabView: View {
         builtInCalendarManager = manager
     }
 
+    // MARK: - Scene Phase Management
+
+    /// Handle app lifecycle transitions for sync coordination
+    private func handleScenePhaseChange(from oldPhase: ScenePhase, to newPhase: ScenePhase) {
+        switch newPhase {
+        case .active:
+            // App became active - resume observing changes
+            autoSyncCoordinator?.startObserving()
+            autoSyncCoordinator?.startObservingExternalChanges()
+            // Start background sync scheduling when app is active
+            backgroundSyncManager?.startScheduling()
+        case .inactive:
+            // App transitioning to background - nothing special needed
+            break
+        case .background:
+            // App went to background - stop observing to save resources
+            // Changes will be synced on next foreground activation
+            autoSyncCoordinator?.stopObserving()
+            autoSyncCoordinator?.stopObservingExternalChanges()
+            // Stop background sync scheduling in background (will resume on active)
+            backgroundSyncManager?.stopScheduling()
+        @unknown default:
+            break
+        }
+    }
+
     // MARK: - Auto-Sync Initialization
 
     /// Initialize auto-sync coordinator on app appearance
     ///
     /// Must be called after syncService is initialized.
+    /// Sets up:
+    /// - Outbound sync (local changes → Apple Calendar)
+    /// - Inbound sync (Apple Calendar changes → local)
+    /// - Initial full sync on app launch
     private func initializeAutoSync() {
         guard autoSyncCoordinator == nil, let sync = syncService else { return }
 
@@ -222,7 +263,37 @@ struct MainTabView: View {
             eventKitService: eventKitService,
             modelContext: modelContext
         )
+        
+        // Start observing local changes (outbound)
         autoSyncCoordinator?.startObserving()
+        
+        // Start observing external changes (inbound from Apple Calendar)
+        autoSyncCoordinator?.startObservingExternalChanges()
+        
+        // Trigger initial full sync on app launch
+        Task {
+            await autoSyncCoordinator?.performSync()
+        }
+    }
+    
+    // MARK: - Background Sync Initialization
+    
+    /// Initialize background sync manager
+    ///
+    /// Sets up periodic background sync for all enabled calendar sources.
+    /// Sync interval: 15 minutes
+    private func initializeBackgroundSync() {
+        guard backgroundSyncManager == nil else { return }
+        
+        backgroundSyncManager = BackgroundSyncManager(
+            appleSyncService: syncService,
+            googleSyncService: googleSyncService,
+            microsoftSyncService: microsoftSyncService,
+            icsSyncService: icsSyncService
+        )
+        
+        // Start scheduling background sync
+        backgroundSyncManager?.startScheduling()
     }
 }
 

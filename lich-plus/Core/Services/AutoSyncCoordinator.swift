@@ -33,8 +33,14 @@ final class AutoSyncCoordinator: ObservableObject {
     @Published var isSyncing: Bool = false
     @Published var lastSyncError: Error?
 
+    // Outbound sync (local changes → Apple Calendar)
     private var notificationObserver: NSObjectProtocol?
     private var syncTask: Task<Void, Never>?
+    
+    // Inbound sync (Apple Calendar changes → local)
+    private var externalChangeObserver: NSObjectProtocol?
+    private var pullSyncTask: Task<Void, Never>?
+    
     private let debounceInterval: TimeInterval = 0.3
 
     init(syncService: CalendarSyncService, eventKitService: EventKitService, modelContext: ModelContext) {
@@ -44,19 +50,24 @@ final class AutoSyncCoordinator: ObservableObject {
     }
 
     deinit {
-        // Clean up observer in a nonisolated context
+        // Clean up observers in a nonisolated context
         if let observer = notificationObserver {
             NotificationCenter.default.removeObserver(observer)
         }
+        if let observer = externalChangeObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
         syncTask?.cancel()
+        pullSyncTask?.cancel()
     }
 
-    // MARK: - Observation
+    // MARK: - Observation (Outbound: Local Changes → Apple Calendar)
 
-    /// Start observing calendar data changes
+    /// Start observing local calendar data changes
     ///
     /// Registers a notification observer for `.calendarDataDidChange` notifications.
-    /// When changes are detected, schedules a debounced sync operation.
+    /// When changes are detected, schedules a debounced sync operation to push
+    /// local changes to Apple Calendar.
     func startObserving() {
         notificationObserver = NotificationCenter.default.addObserver(
             forName: .calendarDataDidChange,
@@ -70,7 +81,7 @@ final class AutoSyncCoordinator: ObservableObject {
         }
     }
 
-    /// Stop observing calendar data changes
+    /// Stop observing local calendar data changes
     ///
     /// Removes the notification observer and cancels any pending sync tasks.
     func stopObserving() {
@@ -81,12 +92,43 @@ final class AutoSyncCoordinator: ObservableObject {
         syncTask?.cancel()
     }
 
+    // MARK: - Observation (Inbound: Apple Calendar Changes → Local)
+
+    /// Start observing Apple Calendar external changes
+    ///
+    /// Registers a notification observer for `.EKEventStoreChanged` notifications.
+    /// When Apple Calendar changes externally (e.g., synced from iCloud, edited on another device),
+    /// schedules a debounced pull operation to fetch the changes.
+    func startObservingExternalChanges() {
+        externalChangeObserver = NotificationCenter.default.addObserver(
+            forName: .EKEventStoreChanged,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            MainActor.assumeIsolated {
+                self?.schedulePullRemoteChanges()
+            }
+        }
+    }
+
+    /// Stop observing Apple Calendar external changes
+    ///
+    /// Removes the external change observer and cancels any pending pull sync tasks.
+    func stopObservingExternalChanges() {
+        if let observer = externalChangeObserver {
+            NotificationCenter.default.removeObserver(observer)
+            externalChangeObserver = nil
+        }
+        pullSyncTask?.cancel()
+    }
+
     // MARK: - Sync Orchestration
 
-    /// Schedule a debounced sync operation
+    /// Schedule a debounced outbound sync operation
     ///
     /// Cancels any pending sync and schedules a new one after the debounce interval.
-    /// This prevents rapid sync operations when multiple changes occur quickly.
+    /// This prevents rapid sync operations when multiple local changes occur quickly.
+    /// Used for pushing local changes to Apple Calendar.
     private func scheduleSync() {
         syncTask?.cancel()
 
@@ -101,7 +143,26 @@ final class AutoSyncCoordinator: ObservableObject {
         }
     }
 
-    /// Perform the actual sync operation
+    /// Schedule a debounced inbound sync operation
+    ///
+    /// Cancels any pending pull and schedules a new one after the debounce interval.
+    /// This prevents rapid sync operations when multiple external changes occur quickly.
+    /// Used for pulling remote changes from Apple Calendar.
+    private func schedulePullRemoteChanges() {
+        pullSyncTask?.cancel()
+
+        pullSyncTask = Task { [weak self] in
+            guard let self = self else { return }
+            let interval = self.debounceInterval
+
+            try? await Task.sleep(nanoseconds: UInt64(interval * 1_000_000_000))
+
+            guard !Task.isCancelled else { return }
+            await self.performPullSync()
+        }
+    }
+
+    /// Perform the actual outbound sync operation
     ///
     /// Ensures permissions are granted and a calendar is enabled before
     /// pushing local changes to Apple Calendar.
@@ -122,6 +183,29 @@ final class AutoSyncCoordinator: ObservableObject {
         } catch {
             lastSyncError = error
             print("Auto-sync failed: \(error)")
+        }
+    }
+
+    /// Perform the actual inbound sync operation
+    ///
+    /// Pulls remote changes from Apple Calendar into local storage.
+    /// Called when external changes are detected via EKEventStoreChanged notification.
+    private func performPullSync() async {
+        guard !isSyncing else { return }
+
+        isSyncing = true
+        lastSyncError = nil
+
+        defer {
+            isSyncing = false
+        }
+
+        do {
+            guard try await ensurePermissions() else { return }
+            try await syncService.pullRemoteChanges()
+        } catch {
+            lastSyncError = error
+            print("Pull sync failed: \(error)")
         }
     }
 
