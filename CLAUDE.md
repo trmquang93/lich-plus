@@ -77,8 +77,10 @@ Before committing changes that modify the project:
 - **Quiet mode (default)**: Shows only `BUILD SUCCEEDED` on success, or error details on failure
 - **Verbose mode (`--verbose`)**: Shows full build output with all compilation steps and warnings
 
+**Important:** Do not pipe `build-app.sh` or `run-tests.sh` with grep. Both scripts are optimized for clean output handling and include proper error detection internally.
+
 **Testing:**
-Use the script with `grep -E "✖"` to filter for failed tests.
+The test runner script is already optimized for output handling. Do not pipe with grep.
 ```bash
 # Run all tests (unit and UI) using the test runner script
 ./run-tests.sh
@@ -88,6 +90,9 @@ Use the script with `grep -E "✖"` to filter for failed tests.
 
 # Run only UI tests
 ./run-tests.sh --ui
+
+# Run with verbose output for debugging
+./run-tests.sh --verbose
 
 # View test runner help
 ./run-tests.sh --help
