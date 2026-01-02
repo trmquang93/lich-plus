@@ -54,6 +54,34 @@ struct CreateItemSheet: View {
         return endDate > startDate
     }
 
+    /// Returns the appropriate header title based on edit mode
+    private var headerTitle: String {
+        if isEditMode {
+            switch selectedItemType {
+            case .event:
+                return String(localized: "createItem.editEvent")
+            case .task:
+                return String(localized: "createItem.editTask")
+            }
+        } else {
+            return String(localized: "createItem.title")
+        }
+    }
+
+    /// Returns the appropriate save button title based on edit mode
+    private var saveButtonTitle: String {
+        if isEditMode {
+            return String(localized: "createItem.save")
+        } else {
+            switch selectedItemType {
+            case .event:
+                return String(localized: "createItem.createEvent")
+            case .task:
+                return String(localized: "createItem.createTask")
+            }
+        }
+    }
+
     init(
         editingEvent: SyncableEvent? = nil,
         initialItemType: ItemType? = nil,
@@ -151,7 +179,7 @@ struct CreateItemSheet: View {
 
             Spacer()
 
-            Text(String(localized: "createItem.title"))
+            Text(headerTitle)
                 .font(.system(size: AppTheme.fontTitle3, weight: .bold))
                 .foregroundStyle(AppColors.textPrimary)
 
@@ -433,9 +461,7 @@ struct CreateItemSheet: View {
             Button {
                 saveItem()
             } label: {
-                Text(selectedItemType == .event
-                     ? String(localized: "createItem.createEvent")
-                     : String(localized: "createItem.createTask"))
+                Text(saveButtonTitle)
                     .font(.system(size: AppTheme.fontSubheading, weight: .bold))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
