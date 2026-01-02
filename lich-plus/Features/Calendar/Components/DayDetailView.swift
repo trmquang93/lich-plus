@@ -481,6 +481,7 @@ struct DayDetailView: View {
         isToday: true,
         events: [
             Event(
+                syncableEventId: nil,
                 title: "Weekly Team Sync",
                 time: "10:00",
                 isAllDay: false,
@@ -488,6 +489,7 @@ struct DayDetailView: View {
                 description: "Online - Google Meet"
             ),
             Event(
+                syncableEventId: nil,
                 title: "Design Review",
                 time: "14:00",
                 isAllDay: false,
@@ -495,6 +497,7 @@ struct DayDetailView: View {
                 description: "Meeting Room 4B"
             ),
             Event(
+                syncableEventId: nil,
                 title: "Dinner with Family",
                 time: "19:00",
                 isAllDay: false,

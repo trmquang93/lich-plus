@@ -200,7 +200,7 @@ struct CalendarDayCell: View {
             isCurrentMonth: true,
             isToday: dayNum == 23,
             events: hasEvents
-                ? [Event(title: "Sample Event", time: "10:00", isAllDay: false, category: .work, description: nil)]
+                ? [Event(syncableEventId: nil, title: "Sample Event", time: "10:00", isAllDay: false, category: .work, description: nil)]
                 : [],
             isWeekend: isWeekend
         )

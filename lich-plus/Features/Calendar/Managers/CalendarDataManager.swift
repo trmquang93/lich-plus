@@ -330,6 +330,7 @@ class CalendarDataManager: ObservableObject {
         }
 
         return Event(
+            syncableEventId: syncable.id,
             title: syncable.title,
             time: timeString,
             isAllDay: syncable.isAllDay,

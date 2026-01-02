@@ -20,6 +20,8 @@ struct CalendarView: View {
     @State private var collapseProgress: CGFloat = 0
     @State private var refreshCounter: Int = 0
     @State private var headerHeight: CGFloat = 0
+    @State private var editingEvent: SyncableEvent?
+    @State private var showEditSheet = false
 
     private var displayedDate: Date {
         Calendar.current.date(byAdding: .month, value: displayedMonthOffset, to: Date()) ?? Date()
@@ -210,7 +212,10 @@ struct CalendarView: View {
 
                                                 EventsListView(
                                                     events: day.events,
-                                                    day: day
+                                                    day: day,
+                                                    onEventTap: { event in
+                                                        startEditingEvent(event)
+                                                    }
                                                 )
                                             }
                                             .frame(maxHeight: .infinity, alignment: .top)
@@ -249,6 +254,34 @@ struct CalendarView: View {
                 dataManager.refreshCurrentMonth()
                 refreshCounter += 1
             }
+            .sheet(isPresented: $showEditSheet) {
+                if let event = editingEvent {
+                    CreateItemSheet(
+                        editingEvent: event,
+                        onSave: { _ in
+                            editingEvent = nil
+                            showEditSheet = false
+                        }
+                    )
+                    .environmentObject(syncService)
+                    .modelContext(modelContext)
+                }
+            }
+        }
+    }
+
+    // MARK: - Event Editing
+
+    private func startEditingEvent(_ event: Event) {
+        guard let syncableEventId = event.syncableEventId else { return }
+
+        let descriptor = FetchDescriptor<SyncableEvent>(
+            predicate: #Predicate { $0.id == syncableEventId }
+        )
+
+        if let syncable = try? modelContext.fetch(descriptor).first {
+            editingEvent = syncable
+            showEditSheet = true
         }
     }
 

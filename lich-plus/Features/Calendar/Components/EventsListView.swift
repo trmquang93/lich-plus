@@ -13,11 +13,18 @@ import SwiftData
 struct EventsListView: View {
     let events: [Event]
     let day: CalendarDay?
+    let onEventTap: ((Event) -> Void)?
 
     @Environment(\.modelContext) var modelContext
     @EnvironmentObject var syncService: CalendarSyncService
 
     @State private var showAddEventSheet: Bool = false
+
+    init(events: [Event], day: CalendarDay?, onEventTap: ((Event) -> Void)? = nil) {
+        self.events = events
+        self.day = day
+        self.onEventTap = onEventTap
+    }
 
     private var sectionTitle: String {
         if day?.isToday == true {
@@ -64,6 +71,9 @@ struct EventsListView: View {
                 VStack(spacing: AppTheme.spacing8) {
                     ForEach(events) { event in
                         EventRow(event: event)
+                            .onTapGesture {
+                                onEventTap?(event)
+                            }
                     }
                 }
             }
@@ -215,6 +225,7 @@ struct EmptyEventsView: View {
         EventsListView(
             events: [
                 Event(
+                    syncableEventId: nil,
                     title: "Holiday",
                     time: nil,
                     isAllDay: true,
@@ -222,6 +233,7 @@ struct EmptyEventsView: View {
                     description: "Tet Holiday"
                 ),
                 Event(
+                    syncableEventId: nil,
                     title: "Morning Standup",
                     time: "09:00",
                     isAllDay: false,
@@ -229,6 +241,7 @@ struct EmptyEventsView: View {
                     description: "Team sync meeting"
                 ),
                 Event(
+                    syncableEventId: nil,
                     title: "Client Call",
                     time: "14:00",
                     isAllDay: false,
@@ -236,6 +249,7 @@ struct EmptyEventsView: View {
                     description: "Quarterly review"
                 ),
                 Event(
+                    syncableEventId: nil,
                     title: "Dinner",
                     time: "19:00",
                     isAllDay: false,
