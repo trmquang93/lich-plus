@@ -314,7 +314,7 @@ run_tests() {
                 -workspace "$WORKSPACE" \
                 -scheme "$SCHEME" \
                 -destination "$DESTINATION" \
-                -only-testing "$test_target" \
+                -only-testing:"$test_target" \
                 test \
                 2>&1 | tee "$temp_output" | xcbeautify | grep -v "Compiling"
             test_exit_code=${PIPESTATUS[0]}
@@ -323,7 +323,7 @@ run_tests() {
                 -workspace "$WORKSPACE" \
                 -scheme "$SCHEME" \
                 -destination "$DESTINATION" \
-                -only-testing "$test_target" \
+                -only-testing:"$test_target" \
                 test \
                 2>&1 | tee "$temp_output"
             test_exit_code=${PIPESTATUS[0]}
@@ -336,7 +336,7 @@ run_tests() {
             -workspace "$WORKSPACE" \
             -scheme "$SCHEME" \
             -destination "$DESTINATION" \
-            -only-testing "$test_target" \
+            -only-testing:"$test_target" \
             test \
             > "$temp_output" 2>&1
         test_exit_code=$?

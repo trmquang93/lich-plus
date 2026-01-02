@@ -32,6 +32,7 @@ final class AllDayEventDisplayTests: XCTestCase {
     func testEvent_CanBeCreatedWithOptionalTime() {
         // Given
         let event = Event(
+            syncableEventId: nil,
             title: "All day meeting",
             time: nil,
             isAllDay: true,
@@ -49,6 +50,7 @@ final class AllDayEventDisplayTests: XCTestCase {
     func testEvent_CanBeCreatedWithTime() {
         // Given
         let event = Event(
+            syncableEventId: nil,
             title: "Team standup",
             time: "09:00",
             isAllDay: false,
@@ -100,6 +102,7 @@ final class AllDayEventDisplayTests: XCTestCase {
     func testEventSorting_AllDayEventsBeforeTimed() {
         // Given
         let allDayEvent = Event(
+            syncableEventId: nil,
             title: "All day event",
             time: nil,
             isAllDay: true,
@@ -108,6 +111,7 @@ final class AllDayEventDisplayTests: XCTestCase {
         )
 
         let timedEvent = Event(
+            syncableEventId: nil,
             title: "2 PM meeting",
             time: "14:00",
             isAllDay: false,
@@ -144,6 +148,7 @@ final class AllDayEventDisplayTests: XCTestCase {
     func testEvent_EquatableComparisonWithSameId() {
         // Given - Store the ID from event1 to use in event2
         let event1 = Event(
+            syncableEventId: nil,
             title: "Meeting",
             time: nil,
             isAllDay: true,
@@ -152,7 +157,8 @@ final class AllDayEventDisplayTests: XCTestCase {
         )
 
         // Create event2 with same ID by accessing the same ID (since events with same content but different IDs won't be equal)
-        var event2 = Event(
+        let event2 = Event(
+            syncableEventId: nil,
             title: "Meeting",
             time: nil,
             isAllDay: true,

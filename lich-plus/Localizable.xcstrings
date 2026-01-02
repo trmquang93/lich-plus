@@ -1,17 +1,27 @@
 {
-  "sourceLanguage": "en",
-  "strings": {
-    "": {},
-    "-": {},
-    "·": {},
-    "(%lld)": {},
-    "%lld": {},
-    "%lld calendar%@ selected": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "%1$lld calendar%2$@ selected"
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    "-" : {
+
+    },
+    "·" : {
+
+    },
+    "(%lld)" : {
+
+    },
+    "%lld" : {
+
+    },
+    "%lld calendar%@ selected" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld calendar%2$@ selected"
           }
         }
       }
@@ -44,237 +54,249 @@
             "value" : "1.0.0"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1.0.0"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1.0.0"
           }
         }
       }
     },
-    "12 Trực": {},
-    "About": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "About"
+    "12 Trực" : {
+
+    },
+    "About" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "About"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Giới thiệu"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giới thiệu"
           }
         }
       }
     },
-    "Account": {},
-    "Add an ICS calendar URL to get started": {},
-    "Add Calendar": {},
-    "Add ICS Calendar": {},
-    "Add new item": {},
-    "Add Time": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Time"
+    "Account" : {
+
+    },
+    "Add an ICS calendar URL to get started" : {
+
+    },
+    "Add Calendar" : {
+
+    },
+    "Add ICS Calendar" : {
+
+    },
+    "Add new item" : {
+
+    },
+    "Add Time" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Time"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thêm giờ"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm giờ"
           }
         }
       }
     },
-    "addSheet.typeEvent": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Event"
+    "addSheet.typeEvent" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sự kiện"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sự kiện"
           }
         }
       }
     },
-    "addSheet.typeTask": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Task"
+    "addSheet.typeTask" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Task"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Việc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Việc"
           }
         }
       }
     },
-    "ai.error.dateFormat": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Could not parse date format"
+    "ai.error.dateFormat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Could not parse date format"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không thể phân tích định dạng ngày"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không thể phân tích định dạng ngày"
           }
         }
       }
     },
-    "ai.error.emptyInput": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Please enter a description"
+    "ai.error.emptyInput" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please enter a description"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vui lòng nhập mô tả"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vui lòng nhập mô tả"
           }
         }
       }
     },
-    "ai.error.network": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Network error"
+    "ai.error.network" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Network error"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lỗi kết nối mạng"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lỗi kết nối mạng"
           }
         }
       }
     },
-    "ai.input.hint": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Try: \"Meeting with John tomorrow at 3pm at the office\""
+    "ai.input.hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try: \"Meeting with John tomorrow at 3pm at the office\""
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thử: \"Cuộc họp với John ngày mai lúc 3 giờ chiều tại văn phòng\""
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thử: \"Cuộc họp với John ngày mai lúc 3 giờ chiều tại văn phòng\""
           }
         }
       }
     },
-    "ai.input.parse": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Parse"
+    "ai.input.parse" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parse"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Phân tích"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phân tích"
           }
         }
       }
     },
-    "ai.input.placeholder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Describe your task or event..."
+    "ai.input.placeholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Describe your task or event..."
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mô tả công việc hoặc sự kiện của bạn..."
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mô tả công việc hoặc sự kiện của bạn..."
           }
         }
       }
     },
-    "ai.input.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Smart Input"
+    "ai.input.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Smart Input"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nhập thông minh"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhập thông minh"
           }
         }
       }
     },
-    "all.empty.message": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add tasks or events to see them here"
+    "all.empty.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add tasks or events to see them here"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thêm việc hoặc sự kiện để xem tại đây"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm việc hoặc sự kiện để xem tại đây"
           }
         }
       }
     },
-    "all.empty.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No items"
+    "all.empty.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No items"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không có mục nào"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không có mục nào"
           }
         }
       }
@@ -291,338 +313,348 @@
             "value" : "Lunar:"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Âm lịch:"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Âm lịch:"
           }
         }
       }
     },
-    "Are you sure you want to delete this task?": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Are you sure you want to delete this task?"
+    "Are you sure you want to delete this task?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete this task?"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bạn có chắc chắn muốn xóa việc này?"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có chắc chắn muốn xóa việc này?"
           }
         }
       }
     },
-    "Automatically sync calendar changes": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatically sync calendar changes"
+    "Automatically sync calendar changes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically sync calendar changes"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tự động đồng bộ thay đổi lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tự động đồng bộ thay đổi lịch"
           }
         }
       }
     },
-    "Available Calendars": {},
-    "Background Sync": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Background Sync"
+    "Available Calendars" : {
+
+    },
+    "Background Sync" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background Sync"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Đồng bộ nền"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đồng bộ nền"
           }
         }
       }
     },
-    "Background sync feature coming soon": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Background sync feature coming soon"
+    "Background sync feature coming soon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Background sync feature coming soon"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tính năng đồng bộ nền sắp ra mắt"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tính năng đồng bộ nền sắp ra mắt"
           }
         }
       }
     },
-    "Calendar Access Required": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calendar Access Required"
+    "Calendar Access Required" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar Access Required"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cần quyền truy cập Lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cần quyền truy cập Lịch"
           }
         }
       }
     },
-    "Calendar Name": {},
-    "Calendar Sync": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calendar Sync"
+    "Calendar Name" : {
+
+    },
+    "Calendar Sync" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar Sync"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Đồng bộ Lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đồng bộ Lịch"
           }
         }
       }
     },
-    "Calendar URL": {},
-    "calendar_selected": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$lld calendar%2$@ selected"
+    "Calendar URL" : {
+
+    },
+    "calendar_selected" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$lld calendar%2$@ selected"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Đã chọn %1$lld lịch%2$@"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã chọn %1$lld lịch%2$@"
           }
         }
       }
     },
-    "calendar.empty.message": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tap + to add a task or event"
+    "calendar.empty.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap + to add a task or event"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nhấn + để thêm việc hoặc sự kiện"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhấn + để thêm việc hoặc sự kiện"
           }
         }
       }
     },
-    "calendar.empty.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nothing on this day"
+    "calendar.empty.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing on this day"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không có gì trong ngày này"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không có gì trong ngày này"
           }
         }
       }
     },
-    "Calendars": {},
-    "Calendars to Sync": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calendars to Sync"
+    "Calendars" : {
+
+    },
+    "Calendars to Sync" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendars to Sync"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lịch để đồng bộ"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lịch để đồng bộ"
           }
         }
       }
     },
-    "Can-Chi:": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stem-Branch:"
+    "Can-Chi:" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stem-Branch:"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Can-Chi:"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can-Chi:"
           }
         }
       }
     },
-    "Cancel": {},
-    "category.birthday": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Birthday"
+    "Cancel" : {
+
+    },
+    "category.birthday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birthday"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sinh nhật"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sinh nhật"
           }
         }
       }
     },
-    "category.holiday": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Holiday"
+    "category.holiday" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Holiday"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ngày lễ"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày lễ"
           }
         }
       }
     },
-    "category.meeting": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Meeting"
+    "category.meeting" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meeting"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cuộc họp"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuộc họp"
           }
         }
       }
     },
-    "category.other": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Other"
+    "category.other" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Other"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Khác"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khác"
           }
         }
       }
     },
-    "category.personal": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Personal"
+    "category.personal" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personal"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cá nhân"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cá nhân"
           }
         }
       }
     },
-    "category.work": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Work"
+    "category.work" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Work"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Công việc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Công việc"
           }
         }
       }
     },
-    "Chất lượng ngày": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Day Quality"
+    "Chất lượng ngày" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day Quality"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chất lượng ngày"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chất lượng ngày"
           }
         }
       }
     },
-    "Chi tiết ngày": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Day Details"
+    "Chi tiết ngày" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day Details"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chi tiết ngày"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chi tiết ngày"
           }
         }
       }
@@ -691,78 +723,78 @@
             "value" : "Category"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Danh mục"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danh mục"
           }
         }
       }
     },
-    "createItem.createEvent": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Create event"
+    "createItem.createEvent" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create event"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tạo sự kiện"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tạo sự kiện"
           }
         }
       }
     },
-    "createItem.createTask": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Create task"
+    "createItem.createTask" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create task"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tạo việc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tạo việc"
           }
         }
       }
     },
-    "createItem.description": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Description"
+    "createItem.description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Description"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mô tả"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mô tả"
           }
         }
       }
     },
-    "createItem.dueDate": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Due date"
+    "createItem.dueDate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Due date"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hạn hoàn thành"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hạn hoàn thành"
           }
         }
       }
@@ -793,248 +825,248 @@
             "value" : "Ends"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kết thúc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kết thúc"
           }
         }
       }
     },
-    "createItem.event": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Event"
+    "createItem.event" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sự kiện"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sự kiện"
           }
         }
       }
     },
-    "createItem.eventCategory": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Event Category"
+    "createItem.eventCategory" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event Category"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Loại sự kiện"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Loại sự kiện"
           }
         }
       }
     },
-    "createItem.eventTitle": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Event title"
+    "createItem.eventTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event title"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tiêu đề sự kiện"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiêu đề sự kiện"
           }
         }
       }
     },
-    "createItem.eventTitlePlaceholder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e.g. Team meeting"
+    "createItem.eventTitlePlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. Team meeting"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "VD: Họp nhóm"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VD: Họp nhóm"
           }
         }
       }
     },
-    "createItem.includeLeapMonth": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Include leap month"
+    "createItem.includeLeapMonth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Include leap month"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bao gồm tháng nhuận"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bao gồm tháng nhuận"
           }
         }
       }
     },
-    "createItem.leapMonthDescription": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Event will occur in both regular and leap months"
+    "createItem.leapMonthDescription" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event will occur in both regular and leap months"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sự kiện sẽ xảy ra ở cả tháng thường và tháng nhuận"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sự kiện sẽ xảy ra ở cả tháng thường và tháng nhuận"
           }
         }
       }
     },
-    "createItem.location": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Location"
+    "createItem.location" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Địa điểm"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Địa điểm"
           }
         }
       }
     },
-    "createItem.locationPlaceholder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add a location"
+    "createItem.locationPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a location"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thêm địa điểm"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm địa điểm"
           }
         }
       }
     },
-    "createItem.lunarDate": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lunar Date"
+    "createItem.lunarDate" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunar Date"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ngày âm lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày âm lịch"
           }
         }
       }
     },
-    "createItem.lunarDay": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lunar Day"
+    "createItem.lunarDay" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunar Day"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ngày (âm lịch)"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày (âm lịch)"
           }
         }
       }
     },
-    "createItem.lunarMonth": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lunar Month"
+    "createItem.lunarMonth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunar Month"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng (âm lịch)"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng (âm lịch)"
           }
         }
       }
     },
-    "createItem.priority": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Priority"
+    "createItem.priority" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Priority"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mức độ ưu tiên"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mức độ ưu tiên"
           }
         }
       }
     },
-    "createItem.recurrence": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recurrence"
+    "createItem.recurrence" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurrence"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lặp lại"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lặp lại"
           }
         }
       }
     },
-    "createItem.solarDatePreview": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Solar Date"
+    "createItem.solarDatePreview" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solar Date"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dương lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dương lịch"
           }
         }
       }
@@ -1065,309 +1097,309 @@
             "value" : "Starts"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bắt đầu"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bắt đầu"
           }
         }
       }
     },
-    "createItem.task": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Task"
+    "createItem.task" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Task"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Việc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Việc"
           }
         }
       }
     },
-    "createItem.taskTitle": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Task title"
+    "createItem.taskTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Task title"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tiêu đề việc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiêu đề việc"
           }
         }
       }
     },
-    "createItem.taskTitlePlaceholder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e.g. Finish project report"
+    "createItem.taskTitlePlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "e.g. Finish project report"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "VD: Hoàn thành báo cáo"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "VD: Hoàn thành báo cáo"
           }
         }
       }
     },
-    "createItem.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Create new"
+    "createItem.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Create new"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tạo mới"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tạo mới"
           }
         }
       }
     },
-    "D": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "12 Zodiac Officers"
+    "D" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 Zodiac Officers"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "12 Trực"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 Trực"
           }
         }
       }
     },
-    "date.lunarFormat": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Day %@ month %@ year %@"
+    "date.lunarFormat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day %@ month %@ year %@"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ngày %@ tháng %@ năm %@"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày %@ tháng %@ năm %@"
           }
         }
       }
     },
-    "date.lunarFormat %lld %lld %@": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "new",
-            "value": "date.lunarFormat %1$lld %2$lld %3$@"
+    "date.lunarFormat %lld %lld %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "date.lunarFormat %1$lld %2$lld %3$@"
           }
         }
       }
     },
-    "date.today": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "TODAY"
+    "date.today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TODAY"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "HÔM NAY"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "HÔM NAY"
           }
         }
       }
     },
-    "datePicker.lunarMonthYear": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month %1$d, Year %2$@"
+    "datePicker.lunarMonthYear" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month %1$d, Year %2$@"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng %1$d năm %2$@"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng %1$d năm %2$@"
           }
         }
       }
     },
-    "datePicker.monthYear": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month %1$d, %2$d"
+    "datePicker.monthYear" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month %1$d, %2$d"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng %1$d, %2$d"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng %1$d, %2$d"
           }
         }
       }
     },
-    "datePicker.selectTime": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select Time"
+    "datePicker.selectTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Time"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chọn giờ"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chọn giờ"
           }
         }
       }
     },
-    "day.fri": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fri"
+    "day.fri" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fri"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "T6"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "T6"
           }
         }
       }
     },
-    "day.mon": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mon"
+    "day.mon" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mon"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "T2"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "T2"
           }
         }
       }
     },
-    "day.sat": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sat"
+    "day.sat" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sat"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "T7"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "T7"
           }
         }
       }
     },
-    "day.sun": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sun"
+    "day.sun" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sun"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "CN"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "CN"
           }
         }
       }
     },
-    "day.thu": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thu"
+    "day.thu" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thu"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "T5"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "T5"
           }
         }
       }
     },
-    "day.tue": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tue"
+    "day.tue" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tue"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "T3"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "T3"
           }
         }
       }
     },
-    "day.wed": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Wed"
+    "day.wed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wed"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "T4"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "T4"
           }
         }
       }
@@ -1396,10 +1428,10 @@
             "value" : "Solar:"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dương lịch:"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dương lịch:"
           }
         }
       }
@@ -1416,10 +1448,10 @@
             "value" : "Add New"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thêm mới"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm mới"
           }
         }
       }
@@ -1442,10 +1474,10 @@
             "value" : "New Event"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sự kiện mới"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sự kiện mới"
           }
         }
       }
@@ -1476,427 +1508,445 @@
             "value" : "Are you sure you want to delete this event?"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bạn có chắc chắn muốn xóa sự kiện này?"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có chắc chắn muốn xóa sự kiện này?"
           }
         }
       }
     },
-    "event.edit": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit Event"
+    "event.edit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Event"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chỉnh sửa sự kiện"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chỉnh sửa sự kiện"
           }
         }
       }
     },
-    "Giờ Hoàng Đạo": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Auspicious Hours"
+    "Giờ Hoàng Đạo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auspicious Hours"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Giờ Hoàng Đạo"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giờ Hoàng Đạo"
           }
         }
       }
     },
-    "Google Calendar": {},
-    "Google Calendars": {},
-    "Grant Access": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Grant Access"
+    "Google Calendar" : {
+
+    },
+    "Google Calendars" : {
+
+    },
+    "Grant Access" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grant Access"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cấp quyền"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cấp quyền"
           }
         }
       }
     },
-    "Hom nay": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Today"
+    "Hom nay" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hôm nay"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôm nay"
           }
         }
       }
     },
-    "Hôm nay là một ngày trống rỗi. Thêm sự kiện mới?": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Today is empty. Add a new event?"
+    "Hôm nay là một ngày trống rỗi. Thêm sự kiện mới?" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today is empty. Add a new event?"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hôm nay là một ngày trống rỗi. Thêm sự kiện mới?"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôm nay là một ngày trống rỗi. Thêm sự kiện mới?"
           }
         }
       }
     },
-    "Hướng may mắn": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lucky Direction"
+    "Hướng may mắn" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lucky Direction"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hướng may mắn"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hướng may mắn"
           }
         }
       }
     },
-    "ICS Calendar": {},
-    "ICS Calendar subscriptions are read-only. Events are automatically synced with your calendar app.": {},
-    "Import from Apple Calendar": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import from Apple Calendar"
+    "ICS Calendar" : {
+
+    },
+    "ICS Calendar subscriptions are read-only. Events are automatically synced with your calendar app." : {
+
+    },
+    "Import from Apple Calendar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import from Apple Calendar"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nhập từ Lịch Apple"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhập từ Lịch Apple"
           }
         }
       }
     },
-    "Information": {},
-    "Intelligent calendar and task recommendations": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Intelligent calendar and task recommendations"
+    "Information" : {
+
+    },
+    "Intelligent calendar and task recommendations" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intelligent calendar and task recommendations"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gợi ý lịch và việc thông minh"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gợi ý lịch và việc thông minh"
           }
         }
       }
     },
-    "item.event": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Event"
+    "item.event" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Event"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sự kiện"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sự kiện"
           }
         }
       }
     },
-    "item.task": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Task"
+    "item.task" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Task"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Việc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Việc"
           }
         }
       }
     },
-    "Không có giờ Hoàng Đạo trong ngày này": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No auspicious hours on this day"
+    "Không có giờ Hoàng Đạo trong ngày này" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No auspicious hours on this day"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không có giờ Hoàng Đạo trong ngày này"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không có giờ Hoàng Đạo trong ngày này"
           }
         }
       }
     },
-    "Không có sự kiện nào": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No events"
+    "Không có sự kiện nào" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No events"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không có sự kiện nào"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không có sự kiện nào"
           }
         }
       }
     },
-    "Last sync: %@": {},
-    "Last synced": {},
-    "Last synced: %@": {},
-    "Loading...": {},
-    "lunar.month.1": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 1"
+    "Last sync: %@" : {
+
+    },
+    "Last synced" : {
+
+    },
+    "Last synced: %@" : {
+
+    },
+    "Loading..." : {
+
+    },
+    "lunar.month.1" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 1"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng Giêng"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng Giêng"
           }
         }
       }
     },
-    "lunar.month.2": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 2"
+    "lunar.month.2" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 2"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng 2"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng 2"
           }
         }
       }
     },
-    "lunar.month.3": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 3"
+    "lunar.month.3" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 3"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng 3"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng 3"
           }
         }
       }
     },
-    "lunar.month.4": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 4"
+    "lunar.month.4" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 4"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng 4"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng 4"
           }
         }
       }
     },
-    "lunar.month.5": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 5"
+    "lunar.month.5" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 5"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng 5"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng 5"
           }
         }
       }
     },
-    "lunar.month.6": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 6"
+    "lunar.month.6" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 6"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng 6"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng 6"
           }
         }
       }
     },
-    "lunar.month.7": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 7"
+    "lunar.month.7" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 7"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng 7"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng 7"
           }
         }
       }
     },
-    "lunar.month.8": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 8"
+    "lunar.month.8" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 8"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng 8"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng 8"
           }
         }
       }
     },
-    "lunar.month.9": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 9"
+    "lunar.month.9" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 9"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng 9"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng 9"
           }
         }
       }
     },
-    "lunar.month.10": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 10"
+    "lunar.month.10" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 10"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng 10"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng 10"
           }
         }
       }
     },
-    "lunar.month.11": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 11"
+    "lunar.month.11" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 11"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng 11"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng 11"
           }
         }
       }
     },
-    "lunar.month.12": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Month 12"
+    "lunar.month.12" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Month 12"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng Chạp"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng Chạp"
           }
         }
       }
@@ -1916,68 +1966,156 @@
             "value" : "Lucky Color"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Màu may mắn"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Màu may mắn"
           }
         }
       }
     },
-    "No Calendar Subscriptions": {},
-    "No calendars found": {},
-    "No Calendars Found": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Calendars Found"
+    "No Calendar Subscriptions" : {
+
+    },
+    "No calendars found" : {
+
+    },
+    "No Calendars Found" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Calendars Found"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không tìm thấy Lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không tìm thấy Lịch"
           }
         }
       }
     },
-    "No tasks": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No tasks"
+    "No tasks" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tasks"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không có việc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không có việc"
           }
         }
       }
     },
-    "No tasks found": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No tasks found"
+    "No tasks found" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No tasks found"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không tìm thấy việc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không tìm thấy việc"
           }
         }
       }
     },
     "Not connected" : {
+
+    },
+    "notification.cancel" : {
+
+    },
+    "notification.daysBefore" : {
+      "comment" : "Days before event"
+    },
+    "notification.defaultReminder" : {
+
+    },
+    "notification.enable" : {
+
+    },
+    "notification.event.startsIn" : {
+      "comment" : "Event notification body"
+    },
+    "notification.events.enable" : {
+
+    },
+    "notification.events.section" : {
+
+    },
+    "notification.fixed.enable" : {
+
+    },
+    "notification.fixed.reminderDays" : {
+
+    },
+    "notification.fixed.section" : {
+
+    },
+    "notification.holiday.inDays" : {
+      "comment" : "Holiday reminder body"
+    },
+    "notification.minutesBefore" : {
+      "comment" : "Minutes before event"
+    },
+    "notification.mung1.body" : {
+      "comment" : "Mùng 1 notification body"
+    },
+    "notification.mung1.enable" : {
+
+    },
+    "notification.mung1.section" : {
+
+    },
+    "notification.mung1.title" : {
+      "comment" : "Mùng 1 notification title"
+    },
+    "notification.onDay" : {
+
+    },
+    "notification.openSettings" : {
+
+    },
+    "notification.permissionDenied.footer" : {
+
+    },
+    "notification.permissionRequired.message" : {
+
+    },
+    "notification.permissionRequired.title" : {
+
+    },
+    "notification.ram.body" : {
+      "comment" : "Rằm notification body"
+    },
+    "notification.ram.enable" : {
+
+    },
+    "notification.ram.section" : {
+
+    },
+    "notification.ram.title" : {
+      "comment" : "Rằm notification title"
+    },
+    "notification.settings.subtitle" : {
+
+    },
+    "notification.settings.title" : {
+
+    },
+    "notification.time" : {
 
     },
     "Now" : {
@@ -1995,302 +2133,308 @@
             "value" : "Open Settings"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mở Cài đặt"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mở Cài đặt"
           }
         }
       }
     },
-    "Outlook Calendar": {},
-    "Outlook Calendars": {},
-    "priority.high": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "High"
+    "Outlook Calendar" : {
+
+    },
+    "Outlook Calendars" : {
+
+    },
+    "priority.high" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "High"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cao"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cao"
           }
         }
       }
     },
-    "priority.low": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Low"
+    "priority.low" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Low"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thấp"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thấp"
           }
         }
       }
     },
-    "priority.medium": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Medium"
+    "priority.medium" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medium"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trung bình"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trung bình"
           }
         }
       }
     },
-    "priority.none": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "None"
+    "priority.none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không"
           }
         }
       }
     },
-    "recurrence.daily": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Daily"
+    "recurrence.daily" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daily"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hàng ngày"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hàng ngày"
           }
         }
       }
     },
-    "recurrence.lunar": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lunar Calendar"
+    "recurrence.lunar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunar Calendar"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Âm lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Âm lịch"
           }
         }
       }
     },
-    "recurrence.lunarMonthly": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every lunar month"
+    "recurrence.lunarMonthly" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every lunar month"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hàng tháng âm lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hàng tháng âm lịch"
           }
         }
       }
     },
-    "recurrence.lunarYearly": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Every lunar year"
+    "recurrence.lunarYearly" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Every lunar year"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hàng năm âm lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hàng năm âm lịch"
           }
         }
       }
     },
-    "recurrence.monthly": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Monthly"
+    "recurrence.monthly" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monthly"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hàng tháng"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hàng tháng"
           }
         }
       }
     },
-    "recurrence.none": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "None"
+    "recurrence.none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "None"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không lặp"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không lặp"
           }
         }
       }
     },
-    "recurrence.solar": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Solar Calendar"
+    "recurrence.solar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solar Calendar"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dương lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dương lịch"
           }
         }
       }
     },
-    "recurrence.weekly": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weekly"
+    "recurrence.weekly" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Weekly"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hàng tuần"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hàng tuần"
           }
         }
       }
     },
-    "recurrence.yearly": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Yearly"
+    "recurrence.yearly" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Yearly"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hàng năm"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hàng năm"
           }
         }
       }
     },
-    "Refresh Calendars": {},
-    "reminder.1hr": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 hour"
+    "Refresh Calendars" : {
+
+    },
+    "reminder.1hr" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 hour"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1 giờ"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 giờ"
           }
         }
       }
     },
-    "reminder.15min": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "15 minutes"
+    "reminder.15min" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 minutes"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "15 phút"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15 phút"
           }
         }
       }
     },
-    "reminder.30min": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "30 minutes"
+    "reminder.30min" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 minutes"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "30 phút"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "30 phút"
           }
         }
       }
     },
-    "reminder.none": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No Reminder"
+    "reminder.none" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Reminder"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không nhắc nhở"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không nhắc nhở"
           }
         }
       }
@@ -2310,684 +2454,851 @@
             "value" : "Search Mode"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chế độ tìm kiếm"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chế độ tìm kiếm"
           }
         }
       }
     },
-    "search.mode.ai": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "AI"
+    "search.mode.ai" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "AI"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "AI"
           }
         }
       }
     },
-    "search.mode.text": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Text"
+    "search.mode.text" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Text"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Văn bản"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Văn bản"
           }
         }
       }
     },
-    "Select Calendars": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select Calendars"
+    "Select Calendars" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Select Calendars"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chọn Lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chọn Lịch"
           }
         }
       }
     },
-    "Settings": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
+    "Settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cài đặt"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cài đặt"
           }
         }
       }
     },
-    "settings.builtInCalendars": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Built-in Calendars"
+    "settings.builtInCalendars" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Built-in Calendars"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lịch tích hợp"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lịch tích hợp"
           }
         }
       }
     },
-    "settings.myCalendars": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "My Calendars"
+    "settings.myCalendars" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Calendars"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lịch của tôi"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lịch của tôi"
           }
         }
       }
     },
-    "settings.systemCalendar": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "System calendar"
+    "settings.systemCalendar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "System calendar"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lịch hệ thống"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lịch hệ thống"
           }
         }
       }
     },
-    "Sign in with Microsoft": {},
-    "Signed in as": {},
-    "Signing in...": {},
-    "Status": {},
-    "Sự kiện": {},
-    "Sự kiện hôm nay": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Today's Events"
+    "Sign in with Microsoft" : {
+
+    },
+    "Signed in as" : {
+
+    },
+    "Signing in..." : {
+
+    },
+    "Status" : {
+
+    },
+    "Sự kiện" : {
+
+    },
+    "Sự kiện hôm nay" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's Events"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sự kiện hôm nay"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sự kiện hôm nay"
           }
         }
       }
     },
-    "Subscribe to calendars": {},
-    "Supported URL formats:": {},
-    "Sync": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sync"
+    "Subscribe to calendars" : {
+
+    },
+    "Supported URL formats:" : {
+
+    },
+    "Sync" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Đồng bộ"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đồng bộ"
           }
         }
       }
     },
-    "Sync Error": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sync Error"
+    "Sync Error" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync Error"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lỗi đồng bộ"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lỗi đồng bộ"
           }
         }
       }
     },
-    "Sync Now": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sync Now"
+    "Sync Now" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync Now"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Đồng bộ ngay"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đồng bộ ngay"
           }
         }
       }
     },
-    "Sync Status": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sync Status"
+    "Sync Status" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync Status"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trạng thái đồng bộ"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trạng thái đồng bộ"
           }
         }
       }
     },
-    "Sync with Apple Calendar": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sync with Apple Calendar"
+    "Sync with Apple Calendar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sync with Apple Calendar"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Đồng bộ với Lịch Apple"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đồng bộ với Lịch Apple"
           }
         }
       }
     },
-    "Synced": {},
-    "Syncing...": {},
-    "tab.calendar": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Calendar"
+    "Synced" : {
+
+    },
+    "Syncing..." : {
+
+    },
+    "tab.calendar" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lịch"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lịch"
           }
         }
       }
     },
-    "tab.settings": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Settings"
+    "tab.settings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Settings"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cài đặt"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cài đặt"
           }
         }
       }
     },
-    "tab.tasks": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tasks"
+    "tab.tasks" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tasks"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Việc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Việc"
           }
         }
       }
     },
-    "tab.timeline": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Timeline"
+    "tab.timeline" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timeline"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dong thoi gian"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dong thoi gian"
           }
         }
       }
     },
-    "Tap the refresh button to fetch your Google calendars.": {},
-    "Tap the refresh button to fetch your Outlook calendars.": {},
-    "task.add": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add"
+    "Tap the refresh button to fetch your Google calendars." : {
+
+    },
+    "Tap the refresh button to fetch your Outlook calendars." : {
+
+    },
+    "task.add" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thêm"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm"
           }
         }
       }
     },
-    "task.addNew": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add New Task"
+    "task.addNew" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add New Task"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thêm việc mới"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm việc mới"
           }
         }
       }
     },
-    "task.addTime": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Time"
+    "task.addTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Time"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thêm giờ"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm giờ"
           }
         }
       }
     },
-    "task.all": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "All"
+    "task.all" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "All"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tất cả"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tất cả"
           }
         }
       }
     },
-    "task.cancel": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancel"
+    "task.cancel" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hủy"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hủy"
           }
         }
       }
     },
-    "task.category": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Category"
+    "task.category" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Category"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Danh mục"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danh mục"
           }
         }
       }
     },
-    "task.completed": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Completed"
+    "task.completed" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Completed"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hoàn thành"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoàn thành"
           }
         }
       }
     },
-    "task.date": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Date"
+    "task.date" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ngày"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày"
           }
         }
       }
     },
-    "task.delete": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete"
+    "task.delete" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Delete"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Xóa"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xóa"
           }
         }
       }
     },
-    "task.deleteConfirmMessage": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Are you sure you want to delete this task?"
+    "task.deleteConfirmMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Are you sure you want to delete this task?"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bạn có chắc chắn muốn xóa việc này?"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có chắc chắn muốn xóa việc này?"
           }
         }
       }
     },
-    "task.done": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Done"
+    "task.done" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Done"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Xong"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xong"
           }
         }
       }
     },
-    "task.edit": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Edit Task"
+    "task.edit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Task"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chỉnh sửa việc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chỉnh sửa việc"
           }
         }
       }
     },
-    "task.endTime": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "End Time"
+    "task.endTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "End Time"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thời gian kết thúc"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thời gian kết thúc"
           }
         }
       }
     },
-    "task.location": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Location"
+    "task.location" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Location"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Địa điểm"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Địa điểm"
           }
         }
       }
     },
-    "task.locationPlaceholder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter location"
+    "task.locationPlaceholder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter location"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nhập địa điểm"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhập địa điểm"
           }
         }
       }
     },
-    "task.myTasks": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "My Tasks"
+    "task.myTasks" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "My Tasks"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Việc của tôi"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Việc của tôi"
           }
         }
       }
     },
-    "task.notCompleted": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Not Completed"
+    "task.notCompleted" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not Completed"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Chưa hoàn thành"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chưa hoàn thành"
           }
         }
       }
     },
-    "task.notes": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Notes"
+    "task.notes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notes"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ghi chú"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ghi chú"
           }
         }
       }
     },
-    "task.priority": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Priority"
+    "task.priority" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Priority"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mức độ ưu tiên"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mức độ ưu tiên"
           }
         }
       }
     },
-    "task.recurrence": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recurrence"
+    "task.recurrence" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recurrence"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lặp lại"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lặp lại"
           }
         }
       }
     },
-    "task.reminder": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reminder"
+    "task.reminder" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminder"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nhắc nhở"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhắc nhở"
           }
         }
       }
     },
-    "task.reminderMinutes": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%lld minutes before"
+    "task.reminderMinutes" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld minutes before"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trước %lld phút"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trước %lld phút"
+          }
+        }
+      }
+    },
+    "task.startTime" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Time"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thời gian bắt đầu"
+          }
+        }
+      }
+    },
+    "task.thisMonth" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Month"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng này"
+          }
+        }
+      }
+    },
+    "task.thisWeek" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This Week"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuần này"
+          }
+        }
+      }
+    },
+    "task.time" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Time"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thời gian"
+          }
+        }
+      }
+    },
+    "task.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Title"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiêu đề"
+          }
+        }
+      }
+    },
+    "task.today" : {
+
+    },
+    "task.tomorrow" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tomorrow"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày mai"
+          }
+        }
+      }
+    },
+    "task.upcoming" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upcoming"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sắp tới"
+          }
+        }
+      }
+    },
+    "This will remove all synced Google Calendar events from this app." : {
+
+    },
+    "This will remove all synced Outlook calendar events from this app." : {
+
+    },
+    "Thông tin may mắn" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lucky Information"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thông tin may mắn"
           }
         }
       }
@@ -3007,95 +3318,95 @@
             "value" : "Search tasks and events"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tìm kiếm..."
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tìm kiếm..."
           }
         }
       }
     },
-    "task.startTime": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start Time"
+    "timeline.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timeline"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thời gian bắt đầu"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dong thoi gian"
           }
         }
       }
     },
-    "task.thisMonth": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This Month"
+    "timeline.today" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tháng này"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôm nay"
           }
         }
       }
     },
-    "task.thisWeek": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This Week"
+    "To sync events with Apple Calendar, we need permission to access your calendars." : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To sync events with Apple Calendar, we need permission to access your calendars."
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tuần này"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Để đồng bộ sự kiện với Lịch Apple, chúng tôi cần quyền truy cập lịch của bạn."
           }
         }
       }
     },
-    "task.time": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Time"
+    "today.empty.message" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add a task or event to get started"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thời gian"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm việc hoặc sự kiện để bắt đầu"
           }
         }
       }
     },
-    "task.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Title"
+    "today.empty.title" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nothing for today"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tiêu đề"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không có gì hôm nay"
           }
         }
       }
@@ -3119,203 +3430,40 @@
             "value" : "Version"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hôm nay"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôm nay"
           }
         }
       }
     },
-    "task.tomorrow": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tomorrow"
+    "Việc nên làm" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suitable Activities"
           }
         },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ngày mai"
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Việc nên làm"
           }
         }
       }
     },
-    "task.upcoming": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Upcoming"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sắp tới"
-          }
-        }
-      }
+    "Việc nên tránh" : {
+
     },
-    "This will remove all synced Google Calendar events from this app.": {},
-    "This will remove all synced Outlook calendar events from this app.": {},
-    "Thông tin may mắn": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lucky Information"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thông tin may mắn"
-          }
-        }
-      }
+    "You don't have any calendars available for syncing." : {
+
     },
-    "timeline.search": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search tasks and events"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tim kiem cong viec va su kien"
-          }
-        }
-      }
-    },
-    "timeline.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Timeline"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dong thoi gian"
-          }
-        }
-      }
-    },
-    "timeline.today": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Today"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hôm nay"
-          }
-        }
-      }
-    },
-    "To sync events with Apple Calendar, we need permission to access your calendars.": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "To sync events with Apple Calendar, we need permission to access your calendars."
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Để đồng bộ sự kiện với Lịch Apple, chúng tôi cần quyền truy cập lịch của bạn."
-          }
-        }
-      }
-    },
-    "today.empty.message": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add a task or event to get started"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Thêm việc hoặc sự kiện để bắt đầu"
-          }
-        }
-      }
-    },
-    "today.empty.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nothing for today"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Không có gì hôm nay"
-          }
-        }
-      }
-    },
-    "Version": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Version"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Phiên bản"
-          }
-        }
-      }
-    },
-    "Việc nên làm": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Suitable Activities"
-          }
-        },
-        "vi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Việc nên làm"
-          }
-        }
-      }
+    "You previously denied calendar access. Please enable it in Settings." : {
+
     }
   },
-  "version": "1.1"
+  "version" : "1.1"
 }
