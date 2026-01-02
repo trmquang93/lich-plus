@@ -34,6 +34,7 @@ struct CreateItemSheet: View {
 
     let editingEvent: SyncableEvent?
     let initialItemType: ItemType?
+    let initialStartDate: Date?
     let onSave: (SyncableEvent) -> Void
 
     var isEditMode: Bool {
@@ -85,10 +86,12 @@ struct CreateItemSheet: View {
     init(
         editingEvent: SyncableEvent? = nil,
         initialItemType: ItemType? = nil,
+        initialStartDate: Date? = nil,
         onSave: @escaping (SyncableEvent) -> Void
     ) {
         self.editingEvent = editingEvent
         self.initialItemType = initialItemType
+        self.initialStartDate = initialStartDate
         self.onSave = onSave
     }
 
@@ -122,15 +125,23 @@ struct CreateItemSheet: View {
         .onAppear {
             if let editingEvent = editingEvent {
                 populateForm(with: editingEvent)
-            } else if let initialType = initialItemType {
-                selectedItemType = initialType
-                // Pre-fill default reminder when creating new event
-                if initialType == .event {
+            } else {
+                // Use initial start date if provided (e.g., from calendar selection)
+                if let initialDate = initialStartDate {
+                    startDate = initialDate
+                    endDate = initialDate.addingTimeInterval(AppTheme.defaultEventDuration)
+                }
+
+                if let initialType = initialItemType {
+                    selectedItemType = initialType
+                }
+
+                // Pre-fill default reminder if creating a new event. This applies if the
+                // initial type is explicitly .event, or if it's nil (in which case the
+                // sheet defaults to creating an event).
+                if initialItemType != .task {
                     selectedReminder = notificationService.getSettings().defaultReminderMinutes
                 }
-            } else {
-                // Pre-fill default reminder if creating new event (default type is determined later)
-                selectedReminder = notificationService.getSettings().defaultReminderMinutes
             }
         }
         .onChange(of: startDate) { oldValue, newValue in

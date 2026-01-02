@@ -25,7 +25,7 @@ struct DayTimelineView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Header (placeholder)
-            TimelineDayHeaderPlaceholder(date: date)
+            TimelineDayHeaderPlaceholder(date: date, onAddEvent: onAddEvent)
             .onAppear {
                 // Initialize currentTime and set up periodic updates
                 currentTime = Date()
@@ -198,6 +198,7 @@ struct TimelineGridLines: View {
 
 struct TimelineDayHeaderPlaceholder: View {
     let date: Date
+    let onAddEvent: (Date) -> Void
 
     var body: some View {
         VStack(spacing: AppTheme.spacing8) {
@@ -208,7 +209,7 @@ struct TimelineDayHeaderPlaceholder: View {
 
                 Spacer()
 
-                Button(action: {}) {
+                Button(action: { onAddEvent(date) }) {
                     Image(systemName: "plus.circle.fill")
                         .font(.system(size: AppTheme.fontTitle2))
                         .foregroundColor(AppColors.primary)
