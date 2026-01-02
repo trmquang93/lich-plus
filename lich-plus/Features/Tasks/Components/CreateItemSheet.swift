@@ -106,12 +106,12 @@ struct CreateItemSheet: View {
 
                 if let initialType = initialItemType {
                     selectedItemType = initialType
-                    // Pre-fill default reminder when creating new event
-                    if initialType == .event {
-                        selectedReminder = notificationService.getSettings().defaultReminderMinutes
-                    }
-                } else {
-                    // Pre-fill default reminder if creating new event (default type is determined later)
+                }
+
+                // Pre-fill default reminder if creating a new event. This applies if the
+                // initial type is explicitly .event, or if it's nil (in which case the
+                // sheet defaults to creating an event).
+                if initialItemType != .task {
                     selectedReminder = notificationService.getSettings().defaultReminderMinutes
                 }
             }
