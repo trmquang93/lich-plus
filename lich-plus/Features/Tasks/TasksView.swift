@@ -13,6 +13,7 @@ struct TasksView: View {
 
     @Environment(\.modelContext) var modelContext
     @EnvironmentObject var syncService: CalendarSyncService
+    @EnvironmentObject var notificationService: NotificationService
 
     @Query(
         filter: #Predicate<SyncableEvent> { !$0.isDeleted },
@@ -23,6 +24,7 @@ struct TasksView: View {
     @State private var searchText: String = ""
     @State private var isSearchActive: Bool = false
     @State private var showAddSheet: Bool = false
+    @State private var addEventDate: Date? = nil
     @State private var editingEvent: SyncableEvent? = nil
     @State private var showEditSheet: Bool = false
     @State private var refreshCounter: Int = 0
@@ -101,7 +103,8 @@ struct TasksView: View {
                     onEventTap: { task in
                         startEditingTask(task)
                     },
-                    onAddEvent: { _ in
+                    onAddEvent: { date in
+                        addEventDate = date
                         showAddSheet = true
                     },
                     onToggleCompletion: toggleTaskCompletion
@@ -113,11 +116,14 @@ struct TasksView: View {
             .sheet(isPresented: $showAddSheet) {
                 CreateItemSheet(
                     editingEvent: nil,
+                    initialStartDate: addEventDate,
                     onSave: { _ in
+                        addEventDate = nil
                         showAddSheet = false
                     }
                 )
                 .environmentObject(syncService)
+                .environmentObject(notificationService)
                 .modelContext(modelContext)
             }
             .sheet(isPresented: $showEditSheet) {
@@ -129,6 +135,7 @@ struct TasksView: View {
                     }
                 )
                 .environmentObject(syncService)
+                .environmentObject(notificationService)
                 .modelContext(modelContext)
             }
             .alert(String(localized: "Event not found"), isPresented: $showEventNotFoundAlert) {

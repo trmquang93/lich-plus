@@ -17,6 +17,7 @@ struct EventsListView: View {
 
     @Environment(\.modelContext) var modelContext
     @EnvironmentObject var syncService: CalendarSyncService
+    @EnvironmentObject var notificationService: NotificationService
 
     @State private var showAddEventSheet: Bool = false
 
@@ -86,11 +87,13 @@ struct EventsListView: View {
         .sheet(isPresented: $showAddEventSheet) {
             CreateItemSheet(
                 initialItemType: .event,
+                initialStartDate: day?.date,
                 onSave: { _ in
                     showAddEventSheet = false
                 }
             )
             .environmentObject(syncService)
+            .environmentObject(notificationService)
             .modelContext(modelContext)
         }
     }
