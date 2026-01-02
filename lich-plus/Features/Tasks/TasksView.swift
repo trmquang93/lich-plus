@@ -24,7 +24,6 @@ struct TasksView: View {
     @State private var isSearchActive: Bool = false
     @State private var showAddSheet: Bool = false
     @State private var editingEvent: SyncableEvent? = nil
-    @State private var showEditSheet: Bool = false
     @State private var refreshCounter: Int = 0
     @State private var showEventNotFoundAlert: Bool = false
     @State private var navigateToDate: Date? = nil
@@ -120,12 +119,11 @@ struct TasksView: View {
                 .environmentObject(syncService)
                 .modelContext(modelContext)
             }
-            .sheet(isPresented: $showEditSheet) {
+            .sheet(item: $editingEvent) { event in
                 CreateItemSheet(
-                    editingEvent: editingEvent,
+                    editingEvent: event,
                     onSave: { _ in
                         editingEvent = nil
-                        showEditSheet = false
                     }
                 )
                 .environmentObject(syncService)
@@ -177,10 +175,10 @@ struct TasksView: View {
 
         // Resolve to master event (occurrence or master)
         let targetId = task.masterEventId ?? task.id
-        editingEvent = syncableEvents.first(where: { $0.id == targetId })
+        let foundEvent = syncableEvents.first(where: { $0.id == targetId })
 
-        if editingEvent != nil {
-            showEditSheet = true
+        if foundEvent != nil {
+            editingEvent = foundEvent
         } else {
             showEventNotFoundAlert = true
         }

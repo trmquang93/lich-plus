@@ -21,7 +21,6 @@ struct CalendarView: View {
     @State private var refreshCounter: Int = 0
     @State private var headerHeight: CGFloat = 0
     @State private var editingEvent: SyncableEvent?
-    @State private var showEditSheet = false
 
     private var displayedDate: Date {
         Calendar.current.date(byAdding: .month, value: displayedMonthOffset, to: Date()) ?? Date()
@@ -254,18 +253,15 @@ struct CalendarView: View {
                 dataManager.refreshCurrentMonth()
                 refreshCounter += 1
             }
-            .sheet(isPresented: $showEditSheet) {
-                if let event = editingEvent {
-                    CreateItemSheet(
-                        editingEvent: event,
-                        onSave: { _ in
-                            editingEvent = nil
-                            showEditSheet = false
-                        }
-                    )
-                    .environmentObject(syncService)
-                    .modelContext(modelContext)
-                }
+            .sheet(item: $editingEvent) { event in
+                CreateItemSheet(
+                    editingEvent: event,
+                    onSave: { _ in
+                        editingEvent = nil
+                    }
+                )
+                .environmentObject(syncService)
+                .modelContext(modelContext)
             }
         }
     }
@@ -281,7 +277,6 @@ struct CalendarView: View {
 
         if let syncable = try? modelContext.fetch(descriptor).first {
             editingEvent = syncable
-            showEditSheet = true
         }
     }
 
