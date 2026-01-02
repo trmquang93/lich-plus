@@ -158,7 +158,7 @@ struct CalendarDayCell: View {
         .cornerRadius(AppTheme.cornerRadiusSmall)
         .overlay(
             RoundedRectangle(cornerRadius: AppTheme.cornerRadiusSmall)
-                .stroke(borderColor, lineWidth: borderWidth)
+                .strokeBorder(borderColor, lineWidth: borderWidth)
         )
         .contentShape(Rectangle())
         .onTapGesture {
@@ -200,7 +200,11 @@ struct CalendarDayCell: View {
             isCurrentMonth: true,
             isToday: dayNum == 23,
             events: hasEvents
-                ? [Event(syncableEventId: nil, title: "Sample Event", time: "10:00", isAllDay: false, category: .work, description: nil)]
+                ? [
+                    Event(
+                        syncableEventId: nil, title: "Sample Event", time: "10:00", isAllDay: false,
+                        category: .work, description: nil)
+                ]
                 : [],
             isWeekend: isWeekend
         )
