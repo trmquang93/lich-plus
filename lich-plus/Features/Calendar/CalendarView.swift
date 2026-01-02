@@ -267,6 +267,11 @@ struct CalendarView: View {
                     .modelContext(modelContext)
                 }
             }
+            .onChange(of: editingEvent) { _, newValue in
+                if newValue != nil {
+                    showEditSheet = true
+                }
+            }
         }
     }
 
@@ -281,7 +286,6 @@ struct CalendarView: View {
 
         if let syncable = try? modelContext.fetch(descriptor).first {
             editingEvent = syncable
-            showEditSheet = true
         }
     }
 

@@ -131,6 +131,11 @@ struct TasksView: View {
                 .environmentObject(syncService)
                 .modelContext(modelContext)
             }
+            .onChange(of: editingEvent) { _, newValue in
+                if newValue != nil {
+                    showEditSheet = true
+                }
+            }
             .alert(String(localized: "Event not found"), isPresented: $showEventNotFoundAlert) {
                 Button(String(localized: "OK"), role: .cancel) { }
             }
@@ -177,10 +182,10 @@ struct TasksView: View {
 
         // Resolve to master event (occurrence or master)
         let targetId = task.masterEventId ?? task.id
-        editingEvent = syncableEvents.first(where: { $0.id == targetId })
+        let foundEvent = syncableEvents.first(where: { $0.id == targetId })
 
-        if editingEvent != nil {
-            showEditSheet = true
+        if foundEvent != nil {
+            editingEvent = foundEvent
         } else {
             showEventNotFoundAlert = true
         }
