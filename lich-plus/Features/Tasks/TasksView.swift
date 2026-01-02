@@ -24,7 +24,6 @@ struct TasksView: View {
     @State private var isSearchActive: Bool = false
     @State private var showAddSheet: Bool = false
     @State private var editingEvent: SyncableEvent? = nil
-    @State private var showEditSheet: Bool = false
     @State private var refreshCounter: Int = 0
     @State private var showEventNotFoundAlert: Bool = false
     @State private var navigateToDate: Date? = nil
@@ -120,21 +119,15 @@ struct TasksView: View {
                 .environmentObject(syncService)
                 .modelContext(modelContext)
             }
-            .sheet(isPresented: $showEditSheet) {
+            .sheet(item: $editingEvent) { event in
                 CreateItemSheet(
-                    editingEvent: editingEvent,
+                    editingEvent: event,
                     onSave: { _ in
                         editingEvent = nil
-                        showEditSheet = false
                     }
                 )
                 .environmentObject(syncService)
                 .modelContext(modelContext)
-            }
-            .onChange(of: editingEvent) { _, newValue in
-                if newValue != nil {
-                    showEditSheet = true
-                }
             }
             .alert(String(localized: "Event not found"), isPresented: $showEventNotFoundAlert) {
                 Button(String(localized: "OK"), role: .cancel) { }
