@@ -57,9 +57,12 @@ struct CreateItemSheet: View {
     /// Returns the appropriate header title based on edit mode
     private var headerTitle: String {
         if isEditMode {
-            return selectedItemType == .event
-                ? String(localized: "createItem.editEvent")
-                : String(localized: "createItem.editTask")
+            switch selectedItemType {
+            case .event:
+                return String(localized: "createItem.editEvent")
+            case .task:
+                return String(localized: "createItem.editTask")
+            }
         } else {
             return String(localized: "createItem.title")
         }
@@ -70,9 +73,12 @@ struct CreateItemSheet: View {
         if isEditMode {
             return String(localized: "createItem.save")
         } else {
-            return selectedItemType == .event
-                ? String(localized: "createItem.createEvent")
-                : String(localized: "createItem.createTask")
+            switch selectedItemType {
+            case .event:
+                return String(localized: "createItem.createEvent")
+            case .task:
+                return String(localized: "createItem.createTask")
+            }
         }
     }
 

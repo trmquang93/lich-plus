@@ -120,25 +120,23 @@ final class CreateItemSheetEditModeTests: XCTestCase {
                        "Save button should show 'Create task' when creating a task")
     }
 
-    // MARK: - Edge Cases
-
-    func testEditModeIsDeterminedByEditingEventPresence() {
-        // This test verifies the isEditMode logic
-        let hasEditingEvent = true
-        let noEditingEvent = false
-
-        XCTAssertTrue(hasEditingEvent, "isEditMode should be true when editingEvent is not nil")
-        XCTAssertFalse(noEditingEvent, "isEditMode should be false when editingEvent is nil")
-    }
-
     // MARK: - Helper Methods
-    // These mirror the logic in CreateItemSheet to enable unit testing
+    //
+    // Note: These helper methods mirror the logic in CreateItemSheet's private computed
+    // properties (headerTitle, saveButtonTitle). Since those are private and part of a
+    // SwiftUI View, we cannot test them directly. This approach allows us to verify the
+    // title selection logic works correctly for all input combinations.
+    //
+    // If the logic in CreateItemSheet changes, these helpers must be updated to match.
 
     private func headerTitle(isEditMode: Bool, itemType: ItemType) -> String {
         if isEditMode {
-            return itemType == .event
-                ? String(localized: "createItem.editEvent")
-                : String(localized: "createItem.editTask")
+            switch itemType {
+            case .event:
+                return String(localized: "createItem.editEvent")
+            case .task:
+                return String(localized: "createItem.editTask")
+            }
         } else {
             return String(localized: "createItem.title")
         }
@@ -148,9 +146,12 @@ final class CreateItemSheetEditModeTests: XCTestCase {
         if isEditMode {
             return String(localized: "createItem.save")
         } else {
-            return itemType == .event
-                ? String(localized: "createItem.createEvent")
-                : String(localized: "createItem.createTask")
+            switch itemType {
+            case .event:
+                return String(localized: "createItem.createEvent")
+            case .task:
+                return String(localized: "createItem.createTask")
+            }
         }
     }
 }
