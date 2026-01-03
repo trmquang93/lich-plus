@@ -284,26 +284,44 @@ struct LunarCalendar {
             lunarToSolarCache.removeAll()
         }
 
-        // Start from January 1st of the lunar year
-        var testDate = Calendar.current.date(from: DateComponents(year: lunarYear, month: 1, day: 1)) ?? Date()
+        let calendar = Calendar.current
 
-        // Search forward through the year for a match
-        for _ in 0..<365 {
+        // Start from January 1st of the lunar year
+        var testDate = calendar.date(from: DateComponents(year: lunarYear, month: 1, day: 1)) ?? Date()
+
+        // Search forward through 425 days to cover lunar dates that fall in the next solar year
+        // Lunar months 11-12 often fall in January/February of the following solar year
+        // (e.g., lunar 11/20/2025 = solar January 8, 2026)
+        for _ in 0..<425 {
             let lunar = solarToLunar(testDate)
             if lunar.day == lunarDay && lunar.month == lunarMonth && lunar.year == lunarYear {
-                let components = Calendar.current.dateComponents([.year, .month, .day], from: testDate)
+                let components = calendar.dateComponents([.year, .month, .day], from: testDate)
                 let result = (day: components.day ?? 1, month: components.month ?? 1, year: components.year ?? lunarYear)
-                // Cache the result
                 lunarToSolarCache[cacheKey] = result
                 return result
             }
-
-            // Move to next day
-            testDate = Calendar.current.date(byAdding: .day, value: 1, to: testDate) ?? testDate
+            testDate = calendar.date(byAdding: .day, value: 1, to: testDate) ?? testDate
         }
 
-        // Fallback if not found
-        let fallback = (day: lunarDay, month: lunarMonth, year: lunarYear)
+        // If still not found, try searching from next year (for edge cases)
+        testDate = calendar.date(from: DateComponents(year: lunarYear + 1, month: 1, day: 1)) ?? Date()
+        for _ in 0..<60 {
+            let lunar = solarToLunar(testDate)
+            if lunar.day == lunarDay && lunar.month == lunarMonth && lunar.year == lunarYear {
+                let components = calendar.dateComponents([.year, .month, .day], from: testDate)
+                let result = (day: components.day ?? 1, month: components.month ?? 1, year: components.year ?? lunarYear)
+                lunarToSolarCache[cacheKey] = result
+                return result
+            }
+            testDate = calendar.date(byAdding: .day, value: 1, to: testDate) ?? testDate
+        }
+
+        // Fallback: Return an estimated solar date instead of treating lunar as solar
+        // Lunar new year typically falls in late January/early February
+        // So lunar month N roughly maps to solar month N+1 (with year adjustment for late months)
+        let estimatedSolarMonth = lunarMonth < 11 ? lunarMonth + 1 : (lunarMonth == 11 ? 12 : 1)
+        let estimatedSolarYear = lunarMonth >= 11 ? lunarYear + 1 : lunarYear
+        let fallback = (day: min(lunarDay, 28), month: estimatedSolarMonth, year: estimatedSolarYear)
         lunarToSolarCache[cacheKey] = fallback
         return fallback
     }
