@@ -68,9 +68,11 @@ struct NotificationSettingsView: View {
                         )
                     )
                     
-                    HStack {
-                        Text(String(localized: "notification.defaultReminder"))
-                        Spacer()
+                    VStack {
+                        HStack(spacing: 0) {
+                            Text(String(localized: "notification.defaultReminder"))
+                            Spacer()
+                        }
                         Picker("", selection: Binding(
                             get: { settingsValue.defaultReminderMinutes },
                             set: { newValue in
