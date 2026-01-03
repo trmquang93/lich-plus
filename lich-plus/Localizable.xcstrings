@@ -1017,57 +1017,6 @@
         }
       }
     },
-    "createItem.editEvent" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Edit Event"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sửa sự kiện"
-          }
-        }
-      }
-    },
-    "createItem.editTask" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Edit Task"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sửa việc"
-          }
-        }
-      }
-    },
-    "createItem.save" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Save"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lưu"
-          }
-        }
-      }
-    },
     "createItem.description" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -1098,6 +1047,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hạn hoàn thành"
+          }
+        }
+      }
+    },
+    "createItem.editEvent" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Event"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sửa sự kiện"
+          }
+        }
+      }
+    },
+    "createItem.editTask" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Edit Task"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sửa việc"
           }
         }
       }
@@ -1353,6 +1336,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lặp lại"
+          }
+        }
+      }
+    },
+    "createItem.save" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lưu"
           }
         }
       }
@@ -2844,13 +2844,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Event starts in %@"
+            "value" : "Event starts in %lld"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sự kiện bắt đầu trong %@"
+            "value" : "Sự kiện bắt đầu trong %lld"
           }
         }
       }
