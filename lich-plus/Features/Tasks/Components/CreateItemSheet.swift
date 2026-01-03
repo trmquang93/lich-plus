@@ -31,6 +31,7 @@ struct CreateItemSheet: View {
     @State private var showStartDatePicker = false
     @State private var showEndDatePicker = false
     @State private var showRecurrencePicker = false
+    @State private var showDeleteConfirmation = false
 
     let editingEvent: SyncableEvent?
     let initialItemType: ItemType?
@@ -81,6 +82,11 @@ struct CreateItemSheet: View {
                 return String(localized: "createItem.createTask")
             }
         }
+    }
+
+    /// Returns true if the editing event is recurring
+    private var isRecurringEvent: Bool {
+        editingEvent?.isRecurring ?? false
     }
 
     init(
@@ -179,14 +185,31 @@ struct CreateItemSheet: View {
             )
             .presentationDetents([.medium])
         }
+        .deleteConfirmationAlert(
+            isPresented: $showDeleteConfirmation,
+            isRecurring: isRecurringEvent,
+            itemType: selectedItemType,
+            onConfirm: deleteItem
+        )
     }
 
     // MARK: - Header View
     private var headerView: some View {
         HStack {
-            // Empty space for balance
-            Color.clear
-                .frame(width: 32, height: 32)
+            // Delete button (edit mode only, not for ICS events)
+            if isEditMode, let event = editingEvent, event.sourceEnum != .icsSubscription {
+                Button {
+                    showDeleteConfirmation = true
+                } label: {
+                    Image(systemName: "trash")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundStyle(AppColors.primary)
+                        .frame(width: 32, height: 32)
+                }
+            } else {
+                Color.clear
+                    .frame(width: 32, height: 32)
+            }
 
             Spacer()
 
@@ -591,7 +614,7 @@ struct CreateItemSheet: View {
 
             // Notify calendar to refresh
             NotificationCenter.default.post(name: .calendarDataDidChange, object: nil)
-            
+
             // Schedule notification if event has a reminder
             if selectedItemType == .event {
                 // If editing, cancel old notification first
@@ -603,12 +626,31 @@ struct CreateItemSheet: View {
                     notificationService.scheduleEventNotification(for: syncableEvent)
                 }
             }
+
+            onSave(syncableEvent)
+            dismiss()
         } catch {
             print("Error saving item: \(error)")
+            // TODO: Show error alert to user
+        }
+    }
+
+    private func deleteItem() {
+        guard let event = editingEvent else { return }
+
+        // Prevent deleting already deleted events
+        guard !event.isDeleted else {
+            dismiss()
+            return
         }
 
-        onSave(syncableEvent)
-        dismiss()
+        do {
+            try modelContext.deleteEvent(event, notificationService: notificationService)
+            dismiss()
+        } catch {
+            print("Error deleting item: \(error)")
+            // TODO: Show error alert to user
+        }
     }
 
     // MARK: - Lunar Date Derivation
