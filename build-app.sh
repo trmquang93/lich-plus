@@ -98,9 +98,8 @@ if [ ! -d "$WORKSPACE" ]; then
     echo "=== ERROR ==="
     echo "Workspace not found: $WORKSPACE"
     echo ""
-    echo "Please ensure you are running this script from the 'lich-plus' directory:"
-    echo "  cd lich-plus"
-    echo "  ./build-app.sh"
+    echo "If this is your first time building, you may need to run:"
+    echo "  pod install"
     exit 1
 fi
 
