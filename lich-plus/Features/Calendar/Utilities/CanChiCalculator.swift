@@ -16,15 +16,21 @@ struct CanChiCalculator {
 
     // MARK: - Year Can-Chi Calculation
 
-    /// Calculate Can-Chi for a lunar year using the VietnameseLunar library
+    /// Calculate Can-Chi for a lunar year
     /// - Parameter lunarYear: The lunar year (e.g., 2024)
     /// - Returns: Can-Chi pair for the year
+    /// - Note: Calculation uses 1900 (Canh Tý) as the reference year.
+    ///         Can cycles every 10 years, Chi cycles every 12 years.
     static func calculateYearCanChi(lunarYear: Int) -> CanChiPair {
-        // Can cycles every 10 years, Chi cycles every 12 years
-        // The calculation is based on a known reference point
+        // Validate input year range (Vietnamese lunar calendar practical limits)
+        guard lunarYear > 0 && lunarYear <= 9999 else {
+            return CanChiPair(can: .giap, chi: .ty)
+        }
 
-        let canIndex = lunarYear % 10
-        let chiIndex = lunarYear % 12
+        // Calculate Can-Chi indices using 1900 (Canh Tý) as reference
+        // Add offset before modulo to handle negative dividends correctly
+        let canIndex = ((lunarYear - 1900) % 10 + 10) % 10
+        let chiIndex = ((lunarYear - 1900) % 12 + 12) % 12
 
         let can = CanEnum(rawValue: canIndex) ?? .giap
         let chi = ChiEnum(rawValue: chiIndex) ?? .ty
