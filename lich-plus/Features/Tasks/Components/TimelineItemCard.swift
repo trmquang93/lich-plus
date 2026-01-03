@@ -25,6 +25,12 @@ struct TimelineItemCard: View {
     let onDelete: (TaskItem) -> Void
     let onEdit: (TaskItem) -> Void
 
+    @State private var showDeleteConfirmation = false
+
+    private var isRecurring: Bool {
+        task.recurrence != .none
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing8) {
             // MARK: - Header: Indicator + Title + Badge
@@ -79,16 +85,22 @@ struct TimelineItemCard: View {
                 onEdit(task)
             }
         }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             // Only show delete action if task is editable
             if task.isEditable {
                 Button(role: .destructive) {
-                    onDelete(task)
+                    showDeleteConfirmation = true
                 } label: {
-                    Label("Delete", systemImage: "trash")
+                    Label(String(localized: "delete.confirm"), systemImage: "trash")
                 }
             }
         }
+        .deleteConfirmationAlert(
+            isPresented: $showDeleteConfirmation,
+            isRecurring: isRecurring,
+            itemType: task.itemType,
+            onConfirm: { onDelete(task) }
+        )
     }
 }
 

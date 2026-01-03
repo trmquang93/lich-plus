@@ -116,6 +116,11 @@ final class SyncableEvent {
         Priority(rawValue: priority) ?? .none
     }
 
+    /// Returns true if the event has recurrence rules
+    var isRecurring: Bool {
+        recurrenceRuleData != nil && !recurrenceRuleData!.isEmpty
+    }
+
     // Update sync status
     func setSyncStatus(_ status: SyncStatus) {
         self.syncStatus = status.rawValue

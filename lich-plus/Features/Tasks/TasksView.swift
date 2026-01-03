@@ -168,11 +168,15 @@ struct TasksView: View {
         let targetId = task.masterEventId ?? task.id
 
         if let syncableEvent = syncableEvents.first(where: { $0.id == targetId }) {
-            syncableEvent.isDeleted = true
-            syncableEvent.setSyncStatus(.pending)
-            try? modelContext.save()
+            // Prevent double-delete
+            guard !syncableEvent.isDeleted else { return }
 
-            NotificationCenter.default.post(name: .calendarDataDidChange, object: nil)
+            do {
+                try modelContext.deleteEvent(syncableEvent, notificationService: notificationService)
+            } catch {
+                print("Error deleting task: \(error)")
+                // TODO: Show error alert to user or revert in-memory changes
+            }
         }
     }
 
