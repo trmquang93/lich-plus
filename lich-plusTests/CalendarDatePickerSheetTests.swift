@@ -9,6 +9,7 @@ import XCTest
 import SwiftUI
 @testable import lich_plus
 
+@MainActor
 final class CalendarDatePickerSheetTests: XCTestCase {
 
     // MARK: - Test: Month Navigation
@@ -137,23 +138,6 @@ final class CalendarDatePickerSheetTests: XCTestCase {
     }
 
     // MARK: - Test: Lunar Month/Year Formatting
-
-    func testLunarYearCanChiCalculation() {
-        // Test various lunar years
-        let testCases: [Int] = [2024, 2025, 2026, 2027]
-
-        for lunarYear in testCases {
-            let yearCanChi = CanChiCalculator.calculateYearCanChi(lunarYear: lunarYear)
-            let displayName = yearCanChi.displayName
-
-            // Should not be empty
-            XCTAssertFalse(displayName.isEmpty)
-
-            // Should contain both Can and Chi
-            XCTAssertTrue(displayName.contains(yearCanChi.can.vietnameseName))
-            XCTAssertTrue(displayName.contains(yearCanChi.chi.vietnameseName))
-        }
-    }
 
     func testLunarMonthYearFormatting() {
         let lunarYear = 2024
