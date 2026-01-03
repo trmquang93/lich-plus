@@ -2809,13 +2809,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Default Reminder"
+            "value" : "Default Reminder before events"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nhắc nhở mặc định"
+            "value" : "Nhắc nhở mặc định trước sự kiện"
           }
         }
       }
@@ -2965,13 +2965,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld minutes before"
+            "value" : "%lld min"
           }
         },
         "vi" : {
           "stringUnit" : {
-            "state" : "translated",
-            "value" : "Trước %lld phút"
+            "state" : "needs_review",
+            "value" : "%lld p"
           }
         }
       }
