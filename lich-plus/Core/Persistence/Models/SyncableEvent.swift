@@ -118,7 +118,7 @@ final class SyncableEvent {
 
     /// Returns true if the event has recurrence rules
     var isRecurring: Bool {
-        recurrenceRuleData != nil && !recurrenceRuleData!.isEmpty
+        recurrenceRuleData?.isEmpty == false
     }
 
     // Update sync status
