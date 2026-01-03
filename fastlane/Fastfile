@@ -1,0 +1,397 @@
+# Fastlane configuration for Lich+ iOS App
+# Bundle ID: com.qtran.lich-plus
+# Team ID: WVYA86B7LC
+# Using manual code signing with existing certificates
+
+default_platform(:ios)
+
+# Constants
+APP_IDENTIFIER = "com.qtran.lich-plus"
+SCHEME = "lich-plus"
+PROJECT = "lich-plus.xcodeproj"
+WORKSPACE = "lich-plus.xcworkspace"
+TEAM_ID = "WVYA86B7LC"
+
+# Provisioning Profile Names (wildcard profiles)
+PROFILE_APPSTORE = "quang_apple_all_appstore"
+PROFILE_DEVELOPMENT = "quang_apple_all_dev"
+PROFILE_ADHOC = "quang_apple_adhoc"
+
+# Certificates repo path
+CERTS_REPO = ENV["MATCH_GIT_URL"] || "/Users/quang.tranminh/Projects/new-ios/ios-certificates"
+
+platform :ios do
+  # ==========================================
+  # Pre-flight Checks
+  # ==========================================
+
+  before_all do
+    # Ensure CocoaPods are installed
+    cocoapods(
+      clean_install: false,
+      podfile: "./Podfile"
+    )
+  end
+
+  # ==========================================
+  # LANE: install_certificates
+  # Install certificates and profiles from local repo
+  # ==========================================
+  desc "Install certificates and profiles from local repo"
+  lane :install_certificates do |options|
+    profile_type = options[:type] || "appstore"
+
+    # Determine which profile to install
+    profile_name = case profile_type
+    when "appstore" then PROFILE_APPSTORE
+    when "development" then PROFILE_DEVELOPMENT
+    when "adhoc" then PROFILE_ADHOC
+    else PROFILE_APPSTORE
+    end
+
+    profile_path = "#{CERTS_REPO}/profiles/#{profile_type}/#{profile_name}.mobileprovision"
+
+    # Install the provisioning profile
+    if File.exist?(profile_path)
+      install_provisioning_profile(path: profile_path)
+      UI.success("Installed profile: #{profile_name}")
+    else
+      UI.user_error!("Profile not found at: #{profile_path}")
+    end
+
+    # Install certificates (p12 files need password)
+    cert_type = profile_type == "development" ? "development" : "distribution"
+    cert_path = "#{CERTS_REPO}/certs/#{cert_type}/#{TEAM_ID}.p12"
+
+    if File.exist?(cert_path)
+      import_certificate(
+        certificate_path: cert_path,
+        certificate_password: ENV["CERT_PASSWORD"] || "",
+        keychain_name: ENV["MATCH_KEYCHAIN_NAME"] || "login.keychain",
+        keychain_password: ENV["MATCH_KEYCHAIN_PASSWORD"] || ""
+      )
+      UI.success("Installed certificate from: #{cert_path}")
+    else
+      UI.message("Certificate not found at: #{cert_path} (may already be installed)")
+    end
+  end
+
+  # ==========================================
+  # LANE: test
+  # Run unit and UI tests
+  # ==========================================
+  desc "Run all tests (unit and UI)"
+  lane :test do |options|
+    if options[:use_script]
+      sh("cd .. && ./run-tests.sh")
+    else
+      run_tests(
+        workspace: WORKSPACE,
+        scheme: SCHEME,
+        devices: ["iPhone 16 Pro"],
+        clean: true,
+        code_coverage: true,
+        output_directory: "./fastlane/test_output",
+        result_bundle: true
+      )
+    end
+  end
+
+  desc "Run only unit tests"
+  lane :unit_tests do
+    run_tests(
+      workspace: WORKSPACE,
+      scheme: SCHEME,
+      only_testing: ["lich-plusTests"],
+      devices: ["iPhone 16 Pro"],
+      clean: true
+    )
+  end
+
+  # ==========================================
+  # LANE: xcode_cloud_submit
+  # Submit to App Store from Xcode Cloud builds
+  # ==========================================
+  desc "Submit to App Store from Xcode Cloud"
+  lane :xcode_cloud_submit do |options|
+    # Get the app path from options or environment
+    app_path = options[:ipa_path] || ENV["CI_APP_STORE_SIGNED_APP_PATH"]
+
+    if app_path.nil? || app_path.empty?
+      UI.user_error!("No IPA path provided. Pass ipa_path option or ensure CI_APP_STORE_SIGNED_APP_PATH is set.")
+    end
+
+    UI.message("Submitting app from: #{app_path}")
+
+    # Load App Store Connect API key
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_CONTENT"],
+      is_key_content_base64: true,
+      in_house: false
+    )
+
+    # Submit to App Store Connect using the signed app from Xcode Cloud
+    deliver(
+      api_key: api_key,
+      ipa: app_path,
+      skip_screenshots: true,
+      skip_metadata: false,
+      skip_app_version_update: true,
+      force: true,
+      submit_for_review: options[:submit_for_review] || false,
+      automatic_release: options[:automatic_release] || false,
+      submission_information: {
+        add_id_info_limits_tracking: true,
+        add_id_info_serves_ads: false,
+        add_id_info_tracks_action: false,
+        add_id_info_tracks_install: false,
+        add_id_info_uses_idfa: false,
+        content_rights_has_rights: true,
+        content_rights_contains_third_party_content: false,
+        export_compliance_platform: 'ios',
+        export_compliance_compliance_required: false,
+        export_compliance_encryption_updated: false,
+        export_compliance_app_type: nil,
+        export_compliance_uses_encryption: false,
+        export_compliance_is_exempt: false,
+        export_compliance_contains_third_party_cryptography: false,
+        export_compliance_contains_proprietary_cryptography: false,
+        export_compliance_available_on_french_store: false
+      }
+    )
+
+    UI.success("App successfully submitted to App Store Connect!")
+  end
+
+  # ==========================================
+  # LANE: beta
+  # Build and upload to TestFlight
+  # ==========================================
+  desc "Build and upload to TestFlight"
+  lane :beta do |options|
+    # Load App Store Connect API key
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_CONTENT"],
+      is_key_content_base64: true,
+      in_house: false
+    )
+
+    # Increment build number
+    increment_build_number(
+      build_number: options[:build_number] || (latest_testflight_build_number(api_key: api_key) + 1),
+      xcodeproj: PROJECT
+    )
+
+    # Optional: bump version if specified
+    if options[:version]
+      increment_version_number(
+        version_number: options[:version],
+        xcodeproj: PROJECT
+      )
+    end
+
+    # Install certificates (optional, profiles should already be installed)
+    install_certificates(type: "appstore") if options[:install_certs]
+
+    # Build the app
+    build_app(
+      workspace: WORKSPACE,
+      scheme: SCHEME,
+      export_method: "app-store",
+      export_options: {
+        teamID: TEAM_ID,
+        provisioningProfiles: {
+          APP_IDENTIFIER => PROFILE_APPSTORE
+        }
+      },
+      output_directory: "./fastlane/builds",
+      output_name: "lich-plus-beta.ipa",
+      clean: true,
+      include_bitcode: false
+    )
+
+    # Upload to TestFlight
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: options[:skip_waiting] || false,
+      changelog: options[:changelog] || "Bug fixes and improvements",
+      distribute_external: options[:distribute_external] || false,
+      notify_external_testers: false
+    )
+
+    # Clean up build artifacts
+    clean_build_artifacts
+
+    UI.success("Successfully uploaded build #{get_build_number(xcodeproj: PROJECT)} to TestFlight!")
+  end
+
+  # ==========================================
+  # LANE: release
+  # Build and submit to App Store
+  # ==========================================
+  desc "Build and submit to App Store"
+  lane :release do |options|
+    # Load App Store Connect API key
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_CONTENT"],
+      is_key_content_base64: true,
+      in_house: false
+    )
+
+    # Version management
+    if options[:version]
+      increment_version_number(
+        version_number: options[:version],
+        xcodeproj: PROJECT
+      )
+    end
+
+    # Build number: use specified or increment from App Store
+    build_num = options[:build_number] || begin
+      current = app_store_build_number(api_key: api_key, live: false) rescue 0
+      current + 1
+    end
+
+    increment_build_number(
+      build_number: build_num,
+      xcodeproj: PROJECT
+    )
+
+    # Install certificates (optional)
+    install_certificates(type: "appstore") if options[:install_certs]
+
+    # Build the app
+    build_app(
+      workspace: WORKSPACE,
+      scheme: SCHEME,
+      export_method: "app-store",
+      export_options: {
+        teamID: TEAM_ID,
+        provisioningProfiles: {
+          APP_IDENTIFIER => PROFILE_APPSTORE
+        }
+      },
+      output_directory: "./fastlane/builds",
+      output_name: "lich-plus-release.ipa",
+      clean: true,
+      include_bitcode: false
+    )
+
+    # Upload to App Store Connect
+    upload_to_app_store(
+      api_key: api_key,
+      skip_screenshots: options[:skip_screenshots] || true,
+      skip_metadata: options[:skip_metadata] || true,
+      submit_for_review: options[:submit_for_review] || false,
+      automatic_release: options[:automatic_release] || false,
+      force: true,
+      precheck_include_in_app_purchases: false
+    )
+
+    # Clean up
+    clean_build_artifacts
+
+    version = get_version_number(xcodeproj: PROJECT)
+    build = get_build_number(xcodeproj: PROJECT)
+
+    UI.success("Successfully uploaded v#{version} (#{build}) to App Store Connect!")
+  end
+
+  # ==========================================
+  # LANE: build_only
+  # Build without uploading (for testing)
+  # ==========================================
+  desc "Build IPA without uploading"
+  lane :build_only do |options|
+    export_method = options[:export_method] || "app-store"
+
+    profile_name = case export_method
+    when "app-store" then PROFILE_APPSTORE
+    when "development" then PROFILE_DEVELOPMENT
+    when "ad-hoc" then PROFILE_ADHOC
+    else PROFILE_APPSTORE
+    end
+
+    # Build the app
+    build_app(
+      workspace: WORKSPACE,
+      scheme: SCHEME,
+      export_method: export_method,
+      export_options: {
+        teamID: TEAM_ID,
+        provisioningProfiles: {
+          APP_IDENTIFIER => profile_name
+        }
+      },
+      output_directory: "./fastlane/builds",
+      output_name: "lich-plus-#{export_method}.ipa",
+      clean: true
+    )
+
+    UI.success("Build complete: ./fastlane/builds/lich-plus-#{export_method}.ipa")
+  end
+
+  # ==========================================
+  # LANE: bump_version
+  # Version management utilities
+  # ==========================================
+  desc "Bump version number"
+  lane :bump_version do |options|
+    if options[:type]
+      increment_version_number(
+        bump_type: options[:type],
+        xcodeproj: PROJECT
+      )
+    elsif options[:version]
+      increment_version_number(
+        version_number: options[:version],
+        xcodeproj: PROJECT
+      )
+    else
+      UI.user_error!("Specify either type: (major|minor|patch) or version: X.Y.Z")
+    end
+
+    version = get_version_number(xcodeproj: PROJECT)
+    UI.success("Version bumped to #{version}")
+  end
+
+  desc "Bump build number"
+  lane :bump_build do |options|
+    if options[:build_number]
+      increment_build_number(
+        build_number: options[:build_number],
+        xcodeproj: PROJECT
+      )
+    else
+      increment_build_number(xcodeproj: PROJECT)
+    end
+
+    build = get_build_number(xcodeproj: PROJECT)
+    UI.success("Build number bumped to #{build}")
+  end
+
+  # ==========================================
+  # Helper Lanes
+  # ==========================================
+
+  desc "Print current version and build number"
+  lane :version_info do
+    version = get_version_number(xcodeproj: PROJECT)
+    build = get_build_number(xcodeproj: PROJECT)
+    UI.message("Current version: #{version} (#{build})")
+  end
+
+  # ==========================================
+  # Error Handling
+  # ==========================================
+
+  error do |lane, exception|
+    UI.error("Lane #{lane} failed with exception: #{exception.message}")
+  end
+end

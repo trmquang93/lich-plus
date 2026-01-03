@@ -61,3 +61,22 @@ Carthage/Build/
 !.claude
 !.claude/settings.json
 book
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+fastlane/builds/
+fastlane/README.md
+fastlane/.env
+!fastlane/.env.default
+
+# Ruby
+.bundle/
+.vendor
+Gemfile.lock
+
+# App Store Connect API Key
+*.p8
+AuthKey_*.p8

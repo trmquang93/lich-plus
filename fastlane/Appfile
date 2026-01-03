@@ -1,0 +1,6 @@
+# App Store Connect configuration
+app_identifier("com.qtran.lich-plus")
+team_id("WVYA86B7LC")
+
+# App Store Connect Team ID (if different from Developer Portal)
+# itc_team_id(ENV["ITC_TEAM_ID"])

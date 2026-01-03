@@ -1,0 +1,24 @@
+# Git repository for certificates and profiles
+# Local path for development, change to remote URL for CI/CD
+git_url(ENV["MATCH_GIT_URL"] || "/Users/quang.tranminh/Projects/new-ios/ios-certificates")
+
+# Storage mode
+storage_mode("git")
+
+# App bundle identifiers (add more apps here as needed)
+app_identifier(["com.qtran.lich-plus"])
+
+# Team ID for Developer Portal
+team_id("WVYA86B7LC")
+
+# Default signing type
+type("appstore")
+
+# Git branch for certificates
+git_branch("main")
+
+# Platform
+platform("ios")
+
+# Read-only mode is controlled per-lane in Fastfile
+# Use --readonly flag when running match manually in CI
