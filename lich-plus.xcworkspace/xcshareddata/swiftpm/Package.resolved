@@ -1,0 +1,15 @@
+{
+  "originHash" : "418d8b58cf088b9e2abcce290304f9cdaec26ce711aeaa1b7b7e714801093f8d",
+  "pins" : [
+    {
+      "identity" : "parallax-scrollview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mtzaquia/parallax-scrollview.git",
+      "state" : {
+        "revision" : "b1589f7dbc71805dc74b8759f58e7c397f44aa66",
+        "version" : "1.0.2"
+      }
+    }
+  ],
+  "version" : 3
+}
