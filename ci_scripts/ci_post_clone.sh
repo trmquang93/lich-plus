@@ -128,9 +128,9 @@ rbenv rehash
 ACTUAL_RUBY=$(ruby --version)
 echo "Active Ruby: ${ACTUAL_RUBY}"
 
-# Install bundler for this Ruby version
-echo "Installing bundler..."
-gem install bundler --no-document
+# Install bundler for this Ruby version (fastlane requires bundler < 3.0.0)
+echo "Installing bundler 2.7.2..."
+gem install bundler:2.7.2 --no-document
 rbenv rehash
 
 echo "rbenv setup complete with Ruby ${RUBY_VERSION}"
@@ -152,9 +152,9 @@ if [ -f "Gemfile" ]; then
         echo "Warning: No Gemfile.lock found - bundler will resolve dependencies"
     fi
 
-    # Configure bundler and install
+    # Configure bundler and install (use specific version for fastlane compatibility)
     bundle config set --local path 'vendor/bundle'
-    bundle install
+    bundle _2.7.2_ install
 
     if [ $? -eq 0 ]; then
         echo "Bundle installation completed successfully"

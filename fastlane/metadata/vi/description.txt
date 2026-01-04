@@ -1,0 +1,37 @@
+Lich+ - Ứng dụng lịch Việt Nam hiện đại, kết hợp lịch âm dương với quản lý công việc và sự kiện trong một giao diện đẹp mắt, dễ sử dụng.
+
+LỊCH ÂM DƯƠNG CHÍNH XÁC
+- Xem lịch âm lịch dương song song
+- Hiển thị ngày tháng năm Can Chi
+- Thông tin 12 Trực và ngày Hoàng Đạo
+- Xem ngày tốt xấu theo phong thủy truyền thống
+- Hỗ trợ lịch vạn niên từ 1900-2100
+
+QUẢN LÝ SỰ KIỆN THÔNG MINH
+- Tạo sự kiện theo lịch âm hoặc dương
+- Lặp lại sự kiện theo chu kỳ âm lịch (sinh nhật âm, giỗ)
+- Đồng bộ với Lịch Apple, Google Calendar, Microsoft Calendar
+- Nhắc nhở thông minh cho các sự kiện quan trọng
+- Phân loại sự kiện theo màu sắc
+
+QUẢN LÝ CÔNG VIỆC HIỆU QUẢ
+- Danh sách công việc với timeline trực quan
+- Lọc theo ngày, tuần, tháng
+- Tìm kiếm nhanh công việc và sự kiện
+- Đánh dấu hoàn thành dễ dàng
+
+THIẾT KẾ HIỆN ĐẠI
+- Giao diện đơn giản, sạch sẽ
+- Trải nghiệm người dùng mượt mà
+- Hỗ trợ tiếng Việt hoàn toàn
+- Tối ưu cho iOS 17+
+
+TÍNH NĂNG NỔI BẬT
+- Xem nhanh thông tin ngày trên lịch tháng
+- Cuộn vô hạn giữa các tháng
+- Chọn tháng nhanh kiểu Apple Calendar
+- Widget cho màn hình chính (sắp ra mắt)
+
+Lich+ được thiết kế dành riêng cho người Việt, giúp bạn không bỏ lỡ những ngày quan trọng theo âm lịch như Tết Nguyên Đán, Rằm tháng Giêng, Tết Trung Thu, ngày giỗ ông bà và sinh nhật âm lịch của người thân.
+
+Tải Lich+ ngay để trải nghiệm cách quản lý thời gian thông minh theo phong cách Việt Nam!

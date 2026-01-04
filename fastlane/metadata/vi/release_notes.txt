@@ -1,1 +1,11 @@
-Bug fixes and improvements.
+Chào mừng bạn đến với Lich+ - Ứng dụng lịch Việt thế hệ mới!
+
+Phiên bản đầu tiên bao gồm:
+- Lịch tháng với hiển thị âm dương
+- Thông tin ngày tốt xấu, 12 Trực, Hoàng Đạo
+- Quản lý sự kiện với hỗ trợ lặp lại âm lịch
+- Quản lý công việc với timeline trực quan
+- Đồng bộ với Lịch Apple
+- Giao diện đẹp, dễ sử dụng
+
+Chúc bạn một năm mới Bính Ngọ 2026 an khang thịnh vượng!
