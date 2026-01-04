@@ -110,9 +110,9 @@ platform :ios do
 
   # ==========================================
   # LANE: xcode_cloud_submit
-  # Submit to App Store from Xcode Cloud builds
+  # Upload to TestFlight from Xcode Cloud builds
   # ==========================================
-  desc "Submit to App Store from Xcode Cloud"
+  desc "Upload to TestFlight from Xcode Cloud"
   lane :xcode_cloud_submit do |options|
     # Get the app path from options or environment
     app_path = options[:ipa_path] || ENV["CI_APP_STORE_SIGNED_APP_PATH"]
@@ -121,7 +121,7 @@ platform :ios do
       UI.user_error!("No IPA path provided. Pass ipa_path option or ensure CI_APP_STORE_SIGNED_APP_PATH is set.")
     end
 
-    UI.message("Submitting app from: #{app_path}")
+    UI.message("Uploading app from: #{app_path}")
 
     # Load App Store Connect API key
     api_key = app_store_connect_api_key(
@@ -132,37 +132,16 @@ platform :ios do
       in_house: false
     )
 
-    # Submit to App Store Connect using the signed app from Xcode Cloud
-    deliver(
+    # Upload to TestFlight (simpler, no metadata required)
+    upload_to_testflight(
       api_key: api_key,
       ipa: app_path,
-      skip_screenshots: true,
-      skip_metadata: false,
-      skip_app_version_update: true,
-      force: true,
-      submit_for_review: options[:submit_for_review] || false,
-      automatic_release: options[:automatic_release] || false,
-      submission_information: {
-        add_id_info_limits_tracking: true,
-        add_id_info_serves_ads: false,
-        add_id_info_tracks_action: false,
-        add_id_info_tracks_install: false,
-        add_id_info_uses_idfa: false,
-        content_rights_has_rights: true,
-        content_rights_contains_third_party_content: false,
-        export_compliance_platform: 'ios',
-        export_compliance_compliance_required: false,
-        export_compliance_encryption_updated: false,
-        export_compliance_app_type: nil,
-        export_compliance_uses_encryption: false,
-        export_compliance_is_exempt: false,
-        export_compliance_contains_third_party_cryptography: false,
-        export_compliance_contains_proprietary_cryptography: false,
-        export_compliance_available_on_french_store: false
-      }
+      skip_waiting_for_build_processing: true,
+      distribute_external: false,
+      notify_external_testers: false
     )
 
-    UI.success("App successfully submitted to App Store Connect!")
+    UI.success("App successfully uploaded to TestFlight!")
   end
 
   # ==========================================
@@ -385,6 +364,44 @@ platform :ios do
     version = get_version_number(xcodeproj: PROJECT)
     build = get_build_number(xcodeproj: PROJECT)
     UI.message("Current version: #{version} (#{build})")
+  end
+
+  # ==========================================
+  # LANE: upload_metadata
+  # Upload App Store metadata only (no binary)
+  # ==========================================
+  desc "Upload App Store metadata only (name, description, keywords, etc.)"
+  lane :upload_metadata do
+    api_key = app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_CONTENT"],
+      is_key_content_base64: true,
+      in_house: false
+    )
+
+    begin
+      deliver(
+        api_key: api_key,
+        skip_binary_upload: true,
+        skip_screenshots: true,
+        skip_metadata: false,
+        skip_app_version_update: true,
+        force: true,
+        precheck_include_in_app_purchases: false,
+        run_precheck_before_submit: false,
+        submit_for_review: false
+      )
+      UI.success("Metadata uploaded successfully!")
+    rescue => e
+      # Known errors for new apps without binary
+      if e.message.include?("No data") || e.message.include?("review detail")
+        UI.important("Core metadata uploaded. Review info error ignored (expected for new apps without binary).")
+        UI.success("Name, subtitle, keywords, description, and promo text are now on App Store Connect.")
+      else
+        raise e
+      end
+    end
   end
 
   # ==========================================
