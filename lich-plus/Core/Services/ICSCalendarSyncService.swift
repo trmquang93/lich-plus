@@ -102,6 +102,10 @@ class ICSCalendarSyncService: ObservableObject {
 
     /// Pull remote changes from all enabled subscriptions
     func pullRemoteChanges() async throws {
+        // Reload subscriptions to ensure we have the latest data
+        // (handles race condition when built-in calendars are added during startup)
+        await loadSubscriptions()
+
         guard !subscriptions.isEmpty else {
             syncState = .idle
             updateLastSyncDate()
