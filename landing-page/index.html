@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Lich Viet - Vietnamese Lunar Calendar app with modern productivity features. Track lunar dates, auspicious hours, and sync with your favorite calendars.">
+    <meta name="keywords" content="Vietnamese calendar, lunar calendar, lich viet, am lich, hoang dao, 12 truc, iOS app">
+    <meta name="author" content="Lich Viet">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Lich Viet - Vietnamese Lunar Calendar">
+    <meta property="og:description" content="Vietnamese Lunar Calendar meets Modern Productivity">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="images/og-image.png">
+
+    <title>Lich Viet - Vietnamese Lunar Calendar</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/favicon.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-container">
+            <a href="#" class="nav-logo">
+                <span class="logo-icon">
+                    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="16" cy="16" r="6" fill="currentColor"/>
+                        <path d="M16 4V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M16 24V28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M4 16H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        <path d="M24 16H28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                <span class="logo-text">Lich Viet</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#preview" class="nav-link">Preview</a>
+                <a href="#download" class="nav-link nav-link-cta">Download</a>
+            </div>
+
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="#features" class="mobile-menu-link">Features</a>
+        <a href="#preview" class="mobile-menu-link">Preview</a>
+        <a href="#download" class="mobile-menu-link">Download</a>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <div class="hero-bg-pattern"></div>
+        </div>
+
+        <div class="container hero-container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span>Now Available for iOS</span>
+                </div>
+
+                <h1 class="hero-title">
+                    <span class="title-main">Lich Viet</span>
+                    <span class="title-vn">Lich Viet</span>
+                </h1>
+
+                <p class="hero-tagline">Vietnamese Lunar Calendar meets Modern Productivity</p>
+
+                <div class="hero-lunar-date" id="lunarDate">
+                    <div class="lunar-date-card">
+                        <div class="lunar-solar">
+                            <span class="solar-date" id="solarDate">--</span>
+                        </div>
+                        <div class="lunar-info">
+                            <span class="lunar-day" id="lunarDay">--</span>
+                            <span class="lunar-canchi" id="lunarCanChi">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-cta">
+                    <a href="#download" class="btn btn-primary btn-lg">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14.167 7.083c1.326.79 1.326 2.71 0 3.5l-6.25 3.72c-1.375.818-3.084-.165-3.084-1.75V5.114c0-1.585 1.709-2.568 3.084-1.75l6.25 3.72z" fill="currentColor"/>
+                        </svg>
+                        Download on App Store
+                    </a>
+                    <a href="#features" class="btn btn-secondary btn-lg">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <div class="hero-image-wrapper">
+                    <img src="images/hero-phone.png" alt="Lich Viet Calendar App" class="hero-image">
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-scroll">
+            <a href="#features" class="scroll-indicator">
+                <span>Scroll to explore</span>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Features</span>
+                <h2 class="section-title">Everything you need in a Vietnamese calendar</h2>
+                <p class="section-subtitle">Combining centuries of Vietnamese tradition with modern calendar functionality</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card" data-aos="fade-up">
+                    <div class="feature-icon feature-icon-red">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="14" cy="14" r="12" stroke="currentColor" stroke-width="2"/>
+                            <path d="M14 6v8l5 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Vietnamese Lunar Calendar</h3>
+                    <p class="feature-desc">Accurate Can-Chi calculations with the traditional 12 Truc system. View both solar and lunar dates at a glance.</p>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="feature-icon feature-icon-gold">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14 2l3.09 6.26L24 9.27l-5 4.87 1.18 6.88L14 17.77l-6.18 3.25L9 14.14l-5-4.87 6.91-1.01L14 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Astrology Integration</h3>
+                    <p class="feature-desc">Hoang Dao (auspicious hours), good and bad stars, and day quality assessments based on traditional Vietnamese astrology.</p>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="feature-icon feature-icon-green">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 14a10 10 0 1020 0" stroke="currentColor" stroke-width="2"/>
+                            <path d="M14 4a10 10 0 00-10 10" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+                            <circle cx="14" cy="14" r="3" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Multi-Calendar Sync</h3>
+                    <p class="feature-desc">Seamlessly sync with Apple Calendar, Google Calendar, Microsoft Outlook, and ICS feeds. All your events in one place.</p>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="feature-icon feature-icon-blue">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="5" width="22" height="18" rx="2" stroke="currentColor" stroke-width="2"/>
+                            <path d="M3 11h22" stroke="currentColor" stroke-width="2"/>
+                            <path d="M9 3v4M19 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="14" cy="17" r="2" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Smart Events</h3>
+                    <p class="feature-desc">Create events with lunar-based recurrence. Perfect for anniversaries, death anniversaries (gio), and traditional celebrations.</p>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="feature-icon feature-icon-orange">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M14 4v4M14 20v4M4 14h4M20 14h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="14" cy="14" r="6" stroke="currentColor" stroke-width="2"/>
+                            <path d="M14 11v3l2 1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Day Quality</h3>
+                    <p class="feature-desc">Know if today is auspicious for important activities. Get recommendations based on traditional Vietnamese almanac wisdom.</p>
+                </div>
+
+                <div class="feature-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="feature-icon feature-icon-purple">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M4 7h20M4 14h14M4 21h20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <circle cx="22" cy="14" r="3" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h3 class="feature-title">Bilingual Support</h3>
+                    <p class="feature-desc">Full Vietnamese and English localization. Switch languages anytime to suit your preference.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Preview Section -->
+    <section class="preview" id="preview">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-badge">Preview</span>
+                <h2 class="section-title">Beautiful, intuitive design</h2>
+                <p class="section-subtitle">A modern interface that respects Vietnamese tradition</p>
+            </div>
+
+            <div class="preview-showcase">
+                <div class="preview-card preview-card-main">
+                    <img src="images/screenshot-calendar.png" alt="Calendar View" class="preview-image">
+                </div>
+
+                <div class="preview-card preview-card-side">
+                    <img src="images/screenshot-timeline.png" alt="Timeline View" class="preview-image">
+                </div>
+
+                <div class="preview-card preview-card-side">
+                    <img src="images/screenshot-daydetail.png" alt="Day Details View" class="preview-image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Download Section -->
+    <section class="download" id="download">
+        <div class="container">
+            <div class="download-card">
+                <div class="download-content">
+                    <h2 class="download-title">Ready to try Lich Viet?</h2>
+                    <p class="download-subtitle">Download now and experience the perfect blend of Vietnamese tradition and modern productivity.</p>
+
+                    <div class="download-buttons">
+                        <a href="#" class="app-store-btn" aria-label="Download on App Store">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                            </svg>
+                            <div class="app-store-text">
+                                <span class="app-store-label">Download on the</span>
+                                <span class="app-store-name">App Store</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <p class="download-note">Available for iPhone and iPad. Requires iOS 17.0 or later.</p>
+                </div>
+
+                <div class="download-visual">
+                    <div class="qr-placeholder">
+                        <svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="10" y="10" width="100" height="100" rx="8" stroke="currentColor" stroke-width="2"/>
+                            <rect x="20" y="20" width="30" height="30" rx="4" stroke="currentColor" stroke-width="2"/>
+                            <rect x="70" y="20" width="30" height="30" rx="4" stroke="currentColor" stroke-width="2"/>
+                            <rect x="20" y="70" width="30" height="30" rx="4" stroke="currentColor" stroke-width="2"/>
+                            <rect x="28" y="28" width="14" height="14" rx="2" fill="currentColor"/>
+                            <rect x="78" y="28" width="14" height="14" rx="2" fill="currentColor"/>
+                            <rect x="28" y="78" width="14" height="14" rx="2" fill="currentColor"/>
+                            <rect x="60" y="60" width="8" height="8" fill="currentColor"/>
+                            <rect x="72" y="60" width="8" height="8" fill="currentColor"/>
+                            <rect x="84" y="60" width="8" height="8" fill="currentColor"/>
+                            <rect x="60" y="72" width="8" height="8" fill="currentColor"/>
+                            <rect x="84" y="72" width="8" height="8" fill="currentColor"/>
+                            <rect x="60" y="84" width="8" height="8" fill="currentColor"/>
+                            <rect x="72" y="84" width="8" height="8" fill="currentColor"/>
+                            <rect x="84" y="84" width="8" height="8" fill="currentColor"/>
+                        </svg>
+                        <span>QR Code Coming Soon</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <a href="#" class="footer-logo">
+                        <span class="logo-icon">
+                            <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+                                <circle cx="16" cy="16" r="6" fill="currentColor"/>
+                                <path d="M16 4V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M16 24V28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M4 16H8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M24 16H28" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                        <span>Lich Viet</span>
+                    </a>
+                    <p class="footer-tagline">Vietnamese Lunar Calendar for the modern age</p>
+                </div>
+
+                <div class="footer-links">
+                    <a href="privacy.html" class="footer-link">Privacy Policy</a>
+                    <a href="terms.html" class="footer-link">Terms of Service</a>
+                    <a href="contact.html" class="footer-link">Contact</a>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p class="footer-copyright">&copy; 2025 Lich Viet. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/main.js"></script>
+</body>
+</html>
