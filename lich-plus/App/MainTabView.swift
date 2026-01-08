@@ -231,6 +231,10 @@ struct MainTabView: View {
             autoSyncCoordinator?.startObservingExternalChanges()
             // Start background sync scheduling when app is active
             backgroundSyncManager?.startScheduling()
+            // Sync ICS calendars (including built-in Vietnamese Holidays) on every app open
+            Task {
+                try? await icsSyncService?.pullRemoteChanges()
+            }
         case .inactive:
             // App transitioning to background - nothing special needed
             break
