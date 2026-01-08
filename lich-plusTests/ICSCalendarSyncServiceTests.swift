@@ -31,8 +31,8 @@ final class ICSCalendarSyncServiceTests: XCTestCase {
             calendarService: MockICSCalendarService()
         )
 
-        // Wait for initial loadSubscriptions to complete
-        try await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
+        // Explicitly await initial data loading for deterministic test setup
+        await sut.loadInitialData()
     }
 
     override func tearDown() async throws {
