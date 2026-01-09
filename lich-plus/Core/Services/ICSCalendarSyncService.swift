@@ -54,13 +54,19 @@ class ICSCalendarSyncService: ObservableObject {
         self.calendarService = calendarService ?? ICSCalendarService()
         self.modelContext = modelContext
 
-        // Load last sync date from UserDefaults
-        self.lastSyncDate = UserDefaults.standard.object(forKey: lastSyncDateKey) as? Date
-
-        // Load subscriptions
+        // Load initial data asynchronously
+        // For production use, the Task is fire-and-forget which is fine
+        // For tests, call loadInitialData() explicitly to await completion
         Task {
-            await self.loadSubscriptions()
+            await self.loadInitialData()
         }
+    }
+
+    /// Load initial data (last sync date and subscriptions)
+    /// Call this explicitly in tests to avoid flaky Task.sleep waits
+    func loadInitialData() async {
+        self.lastSyncDate = UserDefaults.standard.object(forKey: lastSyncDateKey) as? Date
+        await self.loadSubscriptions()
     }
 
     // MARK: - Public Methods
@@ -102,6 +108,10 @@ class ICSCalendarSyncService: ObservableObject {
 
     /// Pull remote changes from all enabled subscriptions
     func pullRemoteChanges() async throws {
+        // Reload subscriptions to ensure we have the latest data
+        // (handles race condition when built-in calendars are added during startup)
+        await loadSubscriptions()
+
         guard !subscriptions.isEmpty else {
             syncState = .idle
             updateLastSyncDate()
