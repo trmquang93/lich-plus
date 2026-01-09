@@ -63,18 +63,39 @@ if [ -n "${CI_TAG}" ]; then
     if echo "${VERSION}" | grep -qE '^[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
         echo "Updating marketing version to: ${VERSION}"
 
-        # Use agvtool to update version (works with Xcode project settings)
-        cd "${PROJECT_ROOT}"
-        agvtool new-marketing-version "${VERSION}"
+        # Find the Xcode project file
+        PBXPROJ_PATH="${PROJECT_ROOT}/lich-plus.xcodeproj/project.pbxproj"
+
+        if [ ! -f "${PBXPROJ_PATH}" ]; then
+            echo "Error: project.pbxproj not found at ${PBXPROJ_PATH}"
+            exit 1
+        fi
+
+        # Show current version before update
+        echo "Current MARKETING_VERSION values:"
+        grep "MARKETING_VERSION" "${PBXPROJ_PATH}" | head -5
+
+        # Update MARKETING_VERSION directly in project.pbxproj using sed
+        # This is more reliable than agvtool in Xcode Cloud environment
+        sed -i '' "s/MARKETING_VERSION = [0-9]*\.[0-9]*\(\.[0-9]*\)*/MARKETING_VERSION = ${VERSION}/g" "${PBXPROJ_PATH}"
 
         if [ $? -eq 0 ]; then
             echo "Marketing version updated to ${VERSION}"
             # Verify the change
-            UPDATED_VERSION=$(agvtool what-marketing-version -terse1 2>/dev/null || echo "${VERSION}")
-            echo "Verified marketing version: ${UPDATED_VERSION}"
+            echo "Updated MARKETING_VERSION values:"
+            grep "MARKETING_VERSION" "${PBXPROJ_PATH}" | head -5
+
+            # Double-check the version was actually updated
+            UPDATED_COUNT=$(grep -c "MARKETING_VERSION = ${VERSION}" "${PBXPROJ_PATH}")
+            if [ "${UPDATED_COUNT}" -gt 0 ]; then
+                echo "Verified: Found ${UPDATED_COUNT} occurrences of MARKETING_VERSION = ${VERSION}"
+            else
+                echo "Error: Version update verification failed"
+                exit 1
+            fi
         else
-            echo "Warning: agvtool failed, version may not be updated"
-            # Don't fail the build - Xcode Cloud may handle versioning differently
+            echo "Error: sed command failed to update version"
+            exit 1
         fi
     else
         echo "Warning: CI_TAG '${CI_TAG}' does not match version format (v1.2.3)"
