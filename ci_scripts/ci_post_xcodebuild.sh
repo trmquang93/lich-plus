@@ -133,9 +133,10 @@ echo "Build Number: ${BUILD_NUMBER}"
 echo "IPA: ${IPA_PATH}"
 echo ""
 
-# Force Fastlane to use shell script transporter instead of Java-based one
-# This fixes "Defaults.properties" error in Xcode Cloud
-export FASTLANE_ITUNES_TRANSPORTER_USE_SHELL_SCRIPT=1
+# Set DEVELOPER_DIR to help Fastlane find Xcode tools
+# xcode-select -p returns the correct path in Xcode Cloud
+export DEVELOPER_DIR=$(xcode-select -p)
+echo "DEVELOPER_DIR set to: ${DEVELOPER_DIR}"
 
 # Run Fastlane to upload .ipa
 bundle exec fastlane ios xcode_cloud_submit \
