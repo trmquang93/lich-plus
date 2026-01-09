@@ -140,7 +140,8 @@ echo "DEVELOPER_DIR set to: ${DEVELOPER_DIR}"
 
 # Run Fastlane to upload .ipa
 bundle exec fastlane ios xcode_cloud_submit \
-    ipa_path:"${IPA_PATH}"
+    ipa_path:"${IPA_PATH}" \
+    version:"${VERSION_NUMBER}"
 
 FASTLANE_EXIT_CODE=$?
 

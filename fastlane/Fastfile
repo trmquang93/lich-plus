@@ -116,12 +116,14 @@ platform :ios do
   lane :xcode_cloud_submit do |options|
     # Get the app path from options or environment
     app_path = options[:ipa_path] || ENV["CI_APP_STORE_SIGNED_APP_PATH"]
+    version = options[:version]
 
     if app_path.nil? || app_path.empty?
       UI.user_error!("No IPA path provided. Pass ipa_path option or ensure CI_APP_STORE_SIGNED_APP_PATH is set.")
     end
 
     UI.message("Uploading app from: #{app_path}")
+    UI.message("Version: #{version}") if version
 
     # Load App Store Connect API key
     api_key = app_store_connect_api_key(
@@ -144,27 +146,32 @@ platform :ios do
     UI.success("App successfully uploaded to TestFlight!")
 
     # Upload App Store metadata from fastlane/metadata/
-    UI.message("Uploading App Store metadata...")
-    begin
-      deliver(
-        api_key: api_key,
-        skip_binary_upload: true,
-        skip_screenshots: true,
-        skip_metadata: false,
-        skip_app_version_update: true,
-        force: true,
-        precheck_include_in_app_purchases: false,
-        run_precheck_before_submit: false,
-        submit_for_review: false
-      )
-      UI.success("Metadata uploaded successfully!")
-    rescue => e
-      if e.message.include?("No data") || e.message.include?("review detail")
-        UI.important("Core metadata uploaded. Review info error ignored (expected for new apps without binary).")
-      else
-        UI.error("Metadata upload failed: #{e.message}")
-        UI.important("Binary upload succeeded, but metadata upload failed. You may need to upload metadata manually.")
+    if version
+      UI.message("Uploading App Store metadata for version #{version}...")
+      begin
+        deliver(
+          api_key: api_key,
+          app_version: version,
+          skip_binary_upload: true,
+          skip_screenshots: true,
+          skip_metadata: false,
+          skip_app_version_update: false,
+          force: true,
+          precheck_include_in_app_purchases: false,
+          run_precheck_before_submit: false,
+          submit_for_review: false
+        )
+        UI.success("Metadata uploaded successfully for version #{version}!")
+      rescue => e
+        if e.message.include?("No data") || e.message.include?("review detail")
+          UI.important("Core metadata uploaded. Review info error ignored (expected for new apps without binary).")
+        else
+          UI.error("Metadata upload failed: #{e.message}")
+          UI.important("Binary upload succeeded, but metadata upload failed. You may need to upload metadata manually.")
+        end
       end
+    else
+      UI.important("No version specified, skipping metadata upload.")
     end
   end
 
