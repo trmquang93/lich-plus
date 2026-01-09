@@ -132,7 +132,7 @@ platform :ios do
       in_house: false
     )
 
-    # Upload to TestFlight (simpler, no metadata required)
+    # Upload to TestFlight
     upload_to_testflight(
       api_key: api_key,
       ipa: app_path,
@@ -142,6 +142,30 @@ platform :ios do
     )
 
     UI.success("App successfully uploaded to TestFlight!")
+
+    # Upload App Store metadata from fastlane/metadata/
+    UI.message("Uploading App Store metadata...")
+    begin
+      deliver(
+        api_key: api_key,
+        skip_binary_upload: true,
+        skip_screenshots: true,
+        skip_metadata: false,
+        skip_app_version_update: true,
+        force: true,
+        precheck_include_in_app_purchases: false,
+        run_precheck_before_submit: false,
+        submit_for_review: false
+      )
+      UI.success("Metadata uploaded successfully!")
+    rescue => e
+      if e.message.include?("No data") || e.message.include?("review detail")
+        UI.important("Core metadata uploaded. Review info error ignored (expected for new apps without binary).")
+      else
+        UI.error("Metadata upload failed: #{e.message}")
+        UI.important("Binary upload succeeded, but metadata upload failed. You may need to upload metadata manually.")
+      end
+    end
   end
 
   # ==========================================
