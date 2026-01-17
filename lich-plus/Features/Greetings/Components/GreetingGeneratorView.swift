@@ -375,8 +375,10 @@ struct GreetingGeneratorView: View {
                     generatedGreeting = GeneratedGreeting(text: offlineText, request: request)
                     isGenerating = false
 
-                    if !greetingService.isAPIKeyConfigured {
-                        errorMessage = "Đang dùng lời chúc mẫu. Cấu hình API key để tạo lời chúc AI."
+                    if !greetingService.isBackendConfigured {
+                        errorMessage = "Đang dùng lời chúc mẫu (offline mode)."
+                    } else {
+                        errorMessage = "Không thể kết nối server. Đang dùng lời chúc mẫu."
                     }
                 }
             }
