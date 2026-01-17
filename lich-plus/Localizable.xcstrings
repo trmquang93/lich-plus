@@ -4071,6 +4071,23 @@
         }
       }
     },
+    "tab.greetings" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Greetings"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lời chúc"
+          }
+        }
+      }
+    },
     "tab.settings" : {
       "extractionState" : "manual",
       "localizations" : {

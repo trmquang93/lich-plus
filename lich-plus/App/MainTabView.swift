@@ -54,11 +54,17 @@ struct MainTabView: View {
                 }
                 .tag(1)
 
+            GreetingsView()
+                .tabItem {
+                    Label("tab.greetings", systemImage: "gift.fill")
+                }
+                .tag(2)
+
             SettingsView()
                 .tabItem {
                     Label("tab.settings", systemImage: "gear")
                 }
-                .tag(2)
+                .tag(3)
         }
         // Apple Calendar environment objects
         .environmentObject(eventKitService)
