@@ -108,10 +108,7 @@ final class NotificationService: ObservableObject {
         let content = UNMutableNotificationContent()
         content.title = event.title
         content.body = String(
-            format: NSLocalizedString(
-                "notification.event.startsIn",
-                comment: "Event notification body"
-            ),
+            format: "starts in %d",
             reminderMinutes
         )
         content.sound = .default
@@ -228,16 +225,10 @@ final class NotificationService: ObservableObject {
         
         let content = UNMutableNotificationContent()
         content.title = String(
-            format: NSLocalizedString(
-                "notification.ram.title",
-                comment: "Rằm notification title"
-            ),
+            format: "Rằm %d",
             lunar.month
         )
-        content.body = NSLocalizedString(
-            "notification.ram.body",
-            comment: "Rằm notification body"
-        )
+        content.body = "Today is Rằm (15th day of lunar month)"
         content.sound = .default
         
         // Set notification time to user's preferred time
@@ -300,16 +291,10 @@ final class NotificationService: ObservableObject {
         
         let content = UNMutableNotificationContent()
         content.title = String(
-            format: NSLocalizedString(
-                "notification.mung1.title",
-                comment: "Mùng 1 notification title"
-            ),
+            format: "Mùng 1 %d",
             lunar.month
         )
-        content.body = NSLocalizedString(
-            "notification.mung1.body",
-            comment: "Mùng 1 notification body"
-        )
+        content.body = "Today is Mùng 1 (1st day of lunar month)"
         content.sound = .default
         
         // Set notification time to user's preferred time
@@ -413,10 +398,7 @@ final class NotificationService: ObservableObject {
         let content = UNMutableNotificationContent()
         content.title = NSLocalizedString(holiday.nameKey, comment: "Holiday name")
         content.body = String(
-            format: NSLocalizedString(
-                "notification.holiday.inDays",
-                comment: "Holiday reminder body"
-            ),
+            format: "Holiday in %d days",
             settings.fixedEventReminderDays
         )
         content.sound = .default

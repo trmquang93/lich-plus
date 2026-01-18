@@ -45,7 +45,7 @@ struct DayDetailView: View {
 
     private var formattedLunarDate: String {
         let yearCanChi = CanChiCalculator.calculateYearCanChi(lunarYear: day.lunarYear)
-        return "Ngày \(day.lunarDay) tháng \(day.lunarMonth) năm \(yearCanChi.displayName)"
+        return String(format: String(localized: "Day %@ Month %@ Year %@"), String(day.lunarDay), String(day.lunarMonth), yearCanChi.displayName)
     }
 
     private var formattedLuckyHours: String {
@@ -91,7 +91,7 @@ struct DayDetailView: View {
                 // Stars sections (if available)
                 if let goodStars = dayQuality.goodStars, !goodStars.isEmpty {
                     starsCard(
-                        title: "Sao tốt",
+                        title: String(localized: "Good Stars"),
                         stars: goodStars.map { $0.rawValue },
                         isGood: true
                     )
@@ -99,7 +99,7 @@ struct DayDetailView: View {
 
                 if let badStars = dayQuality.badStars, !badStars.isEmpty {
                     starsCard(
-                        title: "Sao xấu",
+                        title: String(localized: "Bad Stars"),
                         stars: badStars.map { $0.rawValue },
                         isGood: false
                     )
@@ -181,23 +181,23 @@ struct DayDetailView: View {
 
             // Lucky Hours
             if !formattedLuckyHours.isEmpty {
-                infoRow(title: "Giờ hoàng đạo", value: formattedLuckyHours)
+                infoRow(title: String(localized: "Lucky Hours"), value: formattedLuckyHours)
             }
 
             // Unlucky Hours
             if !formattedUnluckyHours.isEmpty {
-                infoRow(title: "Giờ hắc đạo", value: formattedUnluckyHours)
+                infoRow(title: String(localized: "Unlucky Hours"), value: formattedUnluckyHours)
             }
 
             // Lucky Direction
             if let direction = dayQuality.luckyDirection, !direction.isEmpty {
-                infoRow(title: "Hướng tốt", value: direction)
+                infoRow(title: String(localized: "Lucky Direction"), value: direction)
             }
 
             // Suitable Activities
             if !dayQuality.suitableActivities.isEmpty {
                 infoRow(
-                    title: "Việc nên làm",
+                    title: String(localized: "Good Activities"),
                     value: dayQuality.suitableActivities.joined(separator: ", ")
                 )
             }
@@ -219,7 +219,7 @@ struct DayDetailView: View {
                     Image(systemName: "calendar")
                         .font(.system(size: AppTheme.fontBody, weight: .semibold))
                         .foregroundStyle(AppColors.primary)
-                    Text("Sự kiện")
+                    Text(String(localized: "Events"))
                         .font(.system(size: AppTheme.fontTitle3, weight: .bold))
                         .foregroundStyle(AppColors.textPrimary)
                 }
@@ -236,7 +236,7 @@ struct DayDetailView: View {
 
             // Events list or empty state
             if day.events.isEmpty {
-                Text("Không có sự kiện nào")
+                Text(String(localized: "No events"))
                     .font(.system(size: AppTheme.fontCaption))
                     .foregroundStyle(AppColors.textSecondary)
                     .frame(maxWidth: .infinity)
@@ -352,7 +352,7 @@ struct DayDetailView: View {
             // Suitable activities
             if !dayQuality.suitableActivities.isEmpty {
                 VStack(alignment: .leading, spacing: AppTheme.spacing8) {
-                    Text("Việc nên làm")
+                    Text(String(localized: "Good Activities"))
                         .font(.system(size: AppTheme.fontTitle3, weight: .bold))
                         .foregroundStyle(AppColors.accent)
 
@@ -369,7 +369,7 @@ struct DayDetailView: View {
             // Taboo activities
             if !dayQuality.tabooActivities.isEmpty {
                 VStack(alignment: .leading, spacing: AppTheme.spacing8) {
-                    Text("Việc nên tránh")
+                    Text(String(localized: "Bad Activities"))
                         .font(.system(size: AppTheme.fontTitle3, weight: .bold))
                         .foregroundStyle(AppColors.primary)
 
@@ -389,7 +389,7 @@ struct DayDetailView: View {
 
     private var luckyInfoCard: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
-            Text("Thông tin may mắn")
+            Text(String(localized: "Lucky Information"))
                 .font(.system(size: AppTheme.fontTitle3, weight: .bold))
                 .foregroundStyle(AppColors.textPrimary)
 
@@ -401,7 +401,7 @@ struct DayDetailView: View {
                             .font(.system(size: 16))
                             .foregroundStyle(AppColors.accent)
                         VStack(alignment: .leading, spacing: AppTheme.spacing2) {
-                            Text("Hướng may mắn")
+                            Text(String(localized: "Lucky Direction"))
                                 .font(.system(size: AppTheme.fontCaption))
                                 .foregroundStyle(AppColors.textSecondary)
                             Text(direction)
@@ -419,7 +419,7 @@ struct DayDetailView: View {
                             .font(.system(size: 16))
                             .foregroundStyle(AppColors.accent)
                         VStack(alignment: .leading, spacing: AppTheme.spacing2) {
-                            Text("Màu may mắn")
+                            Text(String(localized: "Lucky Color"))
                                 .font(.system(size: AppTheme.fontCaption))
                                 .foregroundStyle(AppColors.textSecondary)
                             Text(color)
@@ -442,10 +442,10 @@ struct DayDetailView: View {
 
     private var qualityLabel: String {
         switch dayQuality.zodiacHour.quality {
-        case .veryAuspicious: return "Hoàng Đạo"
-        case .neutral: return "Khả Dụng"
-        case .inauspicious: return "Hắc Đạo"
-        case .severelyInauspicious: return "Rất Hung"
+        case .veryAuspicious: return String(localized: "Royal Zodiac")
+        case .neutral: return String(localized: "Usable")
+        case .inauspicious: return String(localized: "Dark Zodiac")
+        case .severelyInauspicious: return String(localized: "Very Bad")
         }
     }
 
