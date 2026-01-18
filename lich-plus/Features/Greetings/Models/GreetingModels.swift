@@ -36,6 +36,20 @@ enum RecipientType: String, CaseIterable, Identifiable {
         }
     }
 
+    /// Default recipient name to use when no custom name is provided
+    var defaultRecipientName: String {
+        switch self {
+        case .grandparents: return "Ông Bà"
+        case .parents: return "Bố Mẹ"
+        case .boss: return "Anh/Chị"
+        case .colleagues: return "Anh/Chị"
+        case .teachers: return "Thầy/Cô"
+        case .friends: return "bạn"
+        case .partner: return "em/anh"
+        case .children: return "con"
+        }
+    }
+
     /// Icon for each recipient type
     var icon: String {
         switch self {
@@ -208,106 +222,106 @@ struct SampleGreetings {
 
     private static func getTemplates(for request: GreetingRequest) -> [String] {
         let canChi = GreetingOccasion.canChi(for: request.year)
-        let zodiac = GreetingOccasion.zodiacAnimal(for: request.year) ?? ""
+        let zodiac = GreetingOccasion.zodiacAnimal(for: request.year)
 
         switch (request.recipientType, request.tone) {
         // Grandparents
         case (.grandparents, .formal):
             return [
-                "Cháu kính chúc Ông Bà năm \(canChi) sức khỏe dồi dào, trường thọ bách niên, vạn sự như ý. Mong Ông Bà luôn vui khỏe để con cháu được sum vầy mỗi dịp Tết!",
-                "Nhân dịp Tết \(canChi), cháu kính chúc Ông Bà an khang thịnh vượng, phúc lộc đầy nhà, sống lâu trăm tuổi!",
-                "Kính chúc Ông Bà năm mới \(zodiac) mạnh khỏe, bình an, gia đình hạnh phúc, con cháu thảo hiền!"
+                "Cháu kính chúc {{recipient}} năm \(canChi) sức khỏe dồi dào, trường thọ bách niên, vạn sự như ý. Mong {{recipient}} luôn vui khỏe để con cháu được sum vầy mỗi dịp Tết!",
+                "Nhân dịp Tết \(canChi), cháu kính chúc {{recipient}} an khang thịnh vượng, phúc lộc đầy nhà, sống lâu trăm tuổi!",
+                "Kính chúc {{recipient}} năm mới \(zodiac) mạnh khỏe, bình an, gia đình hạnh phúc, con cháu thảo hiền!"
             ]
         case (.grandparents, .casual):
             return [
-                "Chúc Ông Bà năm mới khỏe mạnh, vui vẻ! Cháu thương Ông Bà nhiều lắm ạ! 🧧",
-                "Ông Bà ơi, Tết \(canChi) rồi! Chúc Ông Bà luôn khỏe để cháu được về thăm hoài nha!",
-                "Happy New Year Ông Bà! Năm \(zodiac) chúc Ông Bà khỏe re, vui vẻ! 🎊"
+                "Chúc {{recipient}} năm mới khỏe mạnh, vui vẻ! Cháu thương {{recipient}} nhiều lắm ạ! 🧧",
+                "{{recipient}} ơi, Tết \(canChi) rồi! Chúc {{recipient}} luôn khỏe để cháu được về thăm hoài nha!",
+                "Happy New Year {{recipient}}! Năm \(zodiac) chúc {{recipient}} khỏe re, vui vẻ! 🎊"
             ]
 
         // Parents
         case (.parents, .formal):
             return [
-                "Con kính chúc Bố Mẹ năm \(canChi) sức khỏe dồi dào, vạn sự như ý. Cảm ơn Bố Mẹ đã luôn yêu thương và chở che cho con!",
-                "Nhân dịp xuân \(canChi), con kính chúc Bố Mẹ an khang thịnh vượng, gia đình hạnh phúc, công việc thuận lợi!",
-                "Năm \(zodiac), con chúc Bố Mẹ sức khỏe bình an, mọi điều tốt đẹp, luôn vui vẻ bên con cháu!"
+                "Con kính chúc {{recipient}} năm \(canChi) sức khỏe dồi dào, vạn sự như ý. Cảm ơn {{recipient}} đã luôn yêu thương và chở che cho con!",
+                "Nhân dịp xuân \(canChi), con kính chúc {{recipient}} an khang thịnh vượng, gia đình hạnh phúc, công việc thuận lợi!",
+                "Năm \(zodiac), con chúc {{recipient}} sức khỏe bình an, mọi điều tốt đẹp, luôn vui vẻ bên con cháu!"
             ]
         case (.parents, .casual):
             return [
-                "Bố Mẹ ơi, Happy New Year! Chúc Bố Mẹ năm mới khỏe mạnh, vui vẻ! Con yêu Bố Mẹ! ❤️",
-                "Tết \(canChi) rồi! Chúc Bố Mẹ năm mới phát tài phát lộc, khỏe mạnh, hạnh phúc nha!",
-                "Năm \(zodiac) chúc Bố Mẹ luôn trẻ khỏe, vui tươi! Con sẽ cố gắng để Bố Mẹ tự hào! 🧧"
+                "{{recipient}} ơi, Happy New Year! Chúc {{recipient}} năm mới khỏe mạnh, vui vẻ! Con yêu {{recipient}}! ❤️",
+                "Tết \(canChi) rồi! Chúc {{recipient}} năm mới phát tài phát lộc, khỏe mạnh, hạnh phúc nha!",
+                "Năm \(zodiac) chúc {{recipient}} luôn trẻ khỏe, vui tươi! Con sẽ cố gắng để {{recipient}} tự hào! 🧧"
             ]
 
         // Boss
         case (.boss, .formal):
             return [
-                "Kính chúc Anh/Chị năm \(canChi) sức khỏe dồi dào, công việc thuận lợi, vạn sự hanh thông!",
-                "Nhân dịp Tết \(canChi), kính chúc Sếp một năm mới thành công rực rỡ, mọi dự án đều thuận buồm xuôi gió!",
-                "Chúc Anh/Chị năm \(zodiac) đại cát đại lợi, sự nghiệp thăng tiến, gia đình hạnh phúc!"
+                "Kính chúc {{recipient}} năm \(canChi) sức khỏe dồi dào, công việc thuận lợi, vạn sự hanh thông!",
+                "Nhân dịp Tết \(canChi), kính chúc {{recipient}} một năm mới thành công rực rỡ, mọi dự án đều thuận buồm xuôi gió!",
+                "Chúc {{recipient}} năm \(zodiac) đại cát đại lợi, sự nghiệp thăng tiến, gia đình hạnh phúc!"
             ]
         case (.boss, .casual):
             return [
-                "Chúc Sếp năm mới \(canChi) vui vẻ, công việc suôn sẻ! Cảm ơn Sếp đã hỗ trợ em trong năm qua! 🎉",
-                "Happy New Year Sếp! Năm \(zodiac) chúc Sếp khỏe mạnh, thành công! 🧧",
-                "Tết \(canChi) rồi Sếp ơi! Chúc Sếp năm mới phát tài, công ty phát triển!"
+                "Chúc {{recipient}} năm mới \(canChi) vui vẻ, công việc suôn sẻ! Cảm ơn {{recipient}} đã hỗ trợ em trong năm qua! 🎉",
+                "Happy New Year {{recipient}}! Năm \(zodiac) chúc {{recipient}} khỏe mạnh, thành công! 🧧",
+                "Tết \(canChi) rồi {{recipient}} ơi! Chúc {{recipient}} năm mới phát tài, công ty phát triển!"
             ]
 
         // Colleagues
         case (.colleagues, .formal):
             return [
-                "Chúc các Anh/Chị năm \(canChi) sức khỏe, công việc thuận lợi, gia đình hạnh phúc!",
-                "Nhân dịp xuân \(canChi), chúc đồng nghiệp một năm mới tràn đầy năng lượng và thành công!",
-                "Năm \(zodiac) chúc mọi người an khang thịnh vượng, tinh thần sảng khoái, công việc hanh thông!"
+                "Chúc {{recipient}} năm \(canChi) sức khỏe, công việc thuận lợi, gia đình hạnh phúc!",
+                "Nhân dịp xuân \(canChi), chúc {{recipient}} một năm mới tràn đầy năng lượng và thành công!",
+                "Năm \(zodiac) chúc {{recipient}} an khang thịnh vượng, tinh thần sảng khoái, công việc hanh thông!"
             ]
         case (.colleagues, .casual):
             return [
                 "Happy New Year team! Năm \(canChi) cùng nhau cháy hết mình nha! 🔥",
                 "Chúc cả team năm mới \(zodiac) vui vẻ, lương thưởng đầy đủ, OT ít thôi! 😄",
-                "Tết \(canChi) rồi! Chúc mọi người năm mới phát tài, code không bug! 🎊"
+                "Tết \(canChi) rồi! Chúc {{recipient}} năm mới phát tài, code không bug! 🎊"
             ]
 
         // Teachers
         case (.teachers, .formal):
             return [
-                "Em kính chúc Thầy/Cô năm \(canChi) sức khỏe dồi dào, công tác thuận lợi, gia đình hạnh phúc!",
-                "Nhân dịp Tết \(canChi), em xin gửi lời chúc tốt đẹp nhất đến Thầy/Cô. Cảm ơn Thầy/Cô đã dìu dắt em!",
-                "Năm \(zodiac) em kính chúc Thầy/Cô vạn sự như ý, luôn tràn đầy nhiệt huyết với sự nghiệp trồng người!"
+                "Em kính chúc {{recipient}} năm \(canChi) sức khỏe dồi dào, công tác thuận lợi, gia đình hạnh phúc!",
+                "Nhân dịp Tết \(canChi), em xin gửi lời chúc tốt đẹp nhất đến {{recipient}}. Cảm ơn {{recipient}} đã dìu dắt em!",
+                "Năm \(zodiac) em kính chúc {{recipient}} vạn sự như ý, luôn tràn đầy nhiệt huyết với sự nghiệp trồng người!"
             ]
         case (.teachers, .casual):
             return [
-                "Chúc Thầy/Cô năm mới \(canChi) vui vẻ, khỏe mạnh! Em nhớ Thầy/Cô nhiều ạ! 📚",
-                "Happy New Year Thầy/Cô! Năm \(zodiac) chúc Thầy/Cô luôn hạnh phúc! 🎉",
-                "Tết \(canChi) rồi! Em chúc Thầy/Cô năm mới tràn ngập niềm vui!"
+                "Chúc {{recipient}} năm mới \(canChi) vui vẻ, khỏe mạnh! Em nhớ {{recipient}} nhiều ạ! 📚",
+                "Happy New Year {{recipient}}! Năm \(zodiac) chúc {{recipient}} luôn hạnh phúc! 🎉",
+                "Tết \(canChi) rồi! Em chúc {{recipient}} năm mới tràn ngập niềm vui!"
             ]
 
         // Friends
         case (.friends, .formal):
             return [
-                "Chúc bạn năm \(canChi) sức khỏe, thành công, vạn sự như ý!",
-                "Năm \(zodiac) chúc bạn mọi điều tốt đẹp, công việc thuận lợi, tình cảm viên mãn!",
-                "Nhân dịp Tết \(canChi), chúc bạn một năm mới an khang thịnh vượng!"
+                "Chúc {{recipient}} năm \(canChi) sức khỏe, thành công, vạn sự như ý!",
+                "Năm \(zodiac) chúc {{recipient}} mọi điều tốt đẹp, công việc thuận lợi, tình cảm viên mãn!",
+                "Nhân dịp Tết \(canChi), chúc {{recipient}} một năm mới an khang thịnh vượng!"
             ]
         case (.friends, .casual):
             return [
-                "Happy New Year bạn ơi! Năm \(canChi) chúc bạn phát tài phát lộc! 🧧",
-                "Tết \(zodiac) rồi! Chúc mày năm mới vui vẻ, có người yêu (nếu chưa có)! 😄",
-                "Chúc bạn năm mới \(canChi) khỏe mạnh, thành công, và quan trọng nhất là GIÀU! 💰"
+                "Happy New Year {{recipient}} ơi! Năm \(canChi) chúc {{recipient}} phát tài phát lộc! 🧧",
+                "Tết \(zodiac) rồi! Chúc {{recipient}} năm mới vui vẻ, có người yêu (nếu chưa có)! 😄",
+                "Chúc {{recipient}} năm mới \(canChi) khỏe mạnh, thành công, và quan trọng nhất là GIÀU! 💰"
             ]
         case (.friends, .funny):
             return [
-                "Năm \(canChi) chúc mày: Tiền vào như nước, tiền ra như... từ từ thôi! 😂",
-                "Happy New Year! Chúc năm \(zodiac) mày đẹp trai/xinh gái hơn... tao một chút thôi! 🤣",
-                "Tết \(canChi) rồi! Chúc mày năm mới ế ít hơn năm cũ nha! Just kidding! 😜",
-                "Năm mới chúc bạn: Cân nặng giảm, lương tăng, crush để ý! 🎊"
+                "Năm \(canChi) chúc {{recipient}}: Tiền vào như nước, tiền ra như... từ từ thôi! 😂",
+                "Happy New Year! Chúc năm \(zodiac) {{recipient}} đẹp trai/xinh gái hơn... tao một chút thôi! 🤣",
+                "Tết \(canChi) rồi! Chúc {{recipient}} năm mới ế ít hơn năm cũ nha! Just kidding! 😜",
+                "Năm mới chúc {{recipient}}: Cân nặng giảm, lương tăng, crush để ý! 🎊"
             ]
 
         // Partner
         case (.partner, .formal):
             return [
-                "Chúc em/anh năm \(canChi) sức khỏe, hạnh phúc. Cảm ơn em/anh đã luôn bên cạnh!",
-                "Năm \(zodiac) anh/em chúc em/anh mọi điều tốt đẹp nhất. Mong chúng mình mãi bên nhau!",
-                "Nhân dịp Tết \(canChi), anh/em muốn nói: Cảm ơn em/anh vì tất cả!"
+                "Chúc {{recipient}} năm \(canChi) sức khỏe, hạnh phúc. Cảm ơn {{recipient}} đã luôn bên cạnh!",
+                "Năm \(zodiac) chúc {{recipient}} mọi điều tốt đẹp nhất. Mong chúng mình mãi bên nhau!",
+                "Nhân dịp Tết \(canChi), muốn nói: Cảm ơn {{recipient}} vì tất cả!"
             ]
         case (.partner, .casual):
             return [
@@ -317,47 +331,43 @@ struct SampleGreetings {
             ]
         case (.partner, .romantic):
             return [
-                "Năm \(canChi), anh/em chỉ có một điều ước: Được bên em/anh mãi mãi. Yêu em/anh! 💕",
-                "Tết này có em/anh, đời anh/em trọn vẹn. Chúc chúng mình năm \(zodiac) thật hạnh phúc! ❤️",
-                "Em/Anh là món quà tuyệt vời nhất của năm cũ. Năm \(canChi) mình tiếp tục viết câu chuyện tình yêu nhé! 💑",
-                "365 ngày qua có em/anh, 365 ngày tới anh/em vẫn muốn có em/anh. Happy New Year, người anh/em yêu! 💖"
+                "Năm \(canChi), chỉ có một điều ước: Được bên {{recipient}} mãi mãi. Yêu {{recipient}}! 💕",
+                "Tết này có {{recipient}}, đời trọn vẹn. Chúc chúng mình năm \(zodiac) thật hạnh phúc! ❤️",
+                "{{recipient}} là món quà tuyệt vời nhất của năm cũ. Năm \(canChi) mình tiếp tục viết câu chuyện tình yêu nhé! 💑",
+                "365 ngày qua có {{recipient}}, 365 ngày tới vẫn muốn có {{recipient}}. Happy New Year, người yêu! 💖"
             ]
 
         // Children
         case (.children, .formal):
             return [
-                "Chúc con năm \(canChi) học giỏi, ngoan ngoãn, vâng lời ông bà cha mẹ!",
-                "Năm \(zodiac) ba/mẹ chúc con sức khỏe, học tập tiến bộ, ngày càng trưởng thành!",
-                "Nhân dịp Tết \(canChi), ba/mẹ chúc con một năm mới tràn đầy niềm vui và thành công!"
+                "Chúc {{recipient}} năm \(canChi) học giỏi, ngoan ngoãn, vâng lời ông bà cha mẹ!",
+                "Năm \(zodiac) chúc {{recipient}} sức khỏe, học tập tiến bộ, ngày càng trưởng thành!",
+                "Nhân dịp Tết \(canChi), chúc {{recipient}} một năm mới tràn đầy niềm vui và thành công!"
             ]
         case (.children, .casual):
             return [
-                "Happy New Year con yêu! Năm \(canChi) chúc con khỏe mạnh, học giỏi, chơi vui! 🎊",
-                "Tết \(zodiac) rồi! Chúc con nhiều lì xì, nhiều bánh kẹo nha! 🧧",
-                "Năm mới \(canChi) ba/mẹ chúc con: Cao hơn, khỏe hơn, và vẫn đáng yêu như vậy! 💕"
+                "Happy New Year {{recipient}}! Năm \(canChi) chúc {{recipient}} khỏe mạnh, học giỏi, chơi vui! 🎊",
+                "Tết \(zodiac) rồi! Chúc {{recipient}} nhiều lì xì, nhiều bánh kẹo nha! 🧧",
+                "Năm mới \(canChi) chúc {{recipient}}: Cao hơn, khỏe hơn, và vẫn đáng yêu như vậy! 💕"
             ]
 
         default:
             return [
-                "Chúc mừng năm mới \(canChi)! Chúc bạn sức khỏe, hạnh phúc, vạn sự như ý!",
-                "Năm \(zodiac) chúc bạn an khang thịnh vượng, mọi điều tốt đẹp!",
-                "Happy New Year! Tết \(canChi) chúc bạn phát tài phát lộc! 🧧"
+                "Chúc mừng năm mới \(canChi)! Chúc {{recipient}} sức khỏe, hạnh phúc, vạn sự như ý!",
+                "Năm \(zodiac) chúc {{recipient}} an khang thịnh vượng, mọi điều tốt đẹp!",
+                "Happy New Year! Tết \(canChi) chúc {{recipient}} phát tài phát lộc! 🧧"
             ]
         }
     }
 
     private static func formatTemplate(_ template: String, with request: GreetingRequest) -> String {
-        var result = template
+        // Use custom name if provided, otherwise use default recipient name
+        let replacement: String
         if let name = request.recipientName, !name.isEmpty {
-            // Add personalization if name is provided
-            result = result.replacingOccurrences(of: "Ông Bà", with: name)
-            result = result.replacingOccurrences(of: "Bố Mẹ", with: name)
-            result = result.replacingOccurrences(of: "Sếp", with: name)
-            result = result.replacingOccurrences(of: "Thầy/Cô", with: name)
-            result = result.replacingOccurrences(of: "bạn ơi", with: "\(name) ơi")
-            result = result.replacingOccurrences(of: "bé yêu", with: name)
-            result = result.replacingOccurrences(of: "con yêu", with: name)
+            replacement = name
+        } else {
+            replacement = request.recipientType.defaultRecipientName
         }
-        return result
+        return template.replacingOccurrences(of: "{{recipient}}", with: replacement)
     }
 }

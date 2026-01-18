@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4D01FCE02EDE8B99008DF610 /* ParallaxScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 4D01FCDF2EDE8B99008DF610 /* ParallaxScrollView */; };
+		7429BDE32F1D6DAE009519CF /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 7429BDE22F1D6DAE009519CF /* Auth */; };
+		7429BDE52F1D6DAE009519CF /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 7429BDE42F1D6DAE009519CF /* Functions */; };
+		7429BDE72F1D6DAE009519CF /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 7429BDE62F1D6DAE009519CF /* Supabase */; };
 		C63ECA53367BF224122B1CD5 /* libPods-lich-plus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB89303E18829DA587A5C91F /* libPods-lich-plus.a */; };
 		DE5B0E9D3EDCDB9C25DB164A /* libPods-lich-plusTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF797DDCB19A1578F299626B /* libPods-lich-plusTests.a */; };
 /* End PBXBuildFile section */
@@ -37,6 +40,8 @@
 		4DDBFDF22ED8F66900B892E0 /* Exceptions for "lich-plus" folder in "lich-plus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Config.xcconfig,
+				Config.xcconfig.example,
 				Info.plist,
 			);
 			target = 4DA45ED52ED108FE00C1F1F6 /* lich-plus */;
@@ -66,8 +71,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7429BDE72F1D6DAE009519CF /* Supabase in Frameworks */,
 				C63ECA53367BF224122B1CD5 /* libPods-lich-plus.a in Frameworks */,
 				4D01FCE02EDE8B99008DF610 /* ParallaxScrollView in Frameworks */,
+				7429BDE52F1D6DAE009519CF /* Functions in Frameworks */,
+				7429BDE32F1D6DAE009519CF /* Auth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,6 +207,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				4D01FCDE2EDE8B99008DF610 /* XCRemoteSwiftPackageReference "parallax-scrollview" */,
+				7429BDE12F1D6DAE009519CF /* XCRemoteSwiftPackageReference "supabase-swift" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4DA45ED72ED108FE00C1F1F6 /* Products */;
@@ -320,6 +329,8 @@
 /* Begin XCBuildConfiguration section */
 		4DA45EF72ED1090100C1F1F6 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 4DA45ED82ED108FE00C1F1F6 /* lich-plus */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -384,6 +395,8 @@
 		};
 		4DA45EF82ED1090100C1F1F6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 4DA45ED82ED108FE00C1F1F6 /* lich-plus */;
+			baseConfigurationReferenceRelativePath = Config.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -604,6 +617,14 @@
 				minimumVersion = 1.0.2;
 			};
 		};
+		7429BDE12F1D6DAE009519CF /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.5.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -611,6 +632,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 4D01FCDE2EDE8B99008DF610 /* XCRemoteSwiftPackageReference "parallax-scrollview" */;
 			productName = ParallaxScrollView;
+		};
+		7429BDE22F1D6DAE009519CF /* Auth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7429BDE12F1D6DAE009519CF /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Auth;
+		};
+		7429BDE42F1D6DAE009519CF /* Functions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7429BDE12F1D6DAE009519CF /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Functions;
+		};
+		7429BDE62F1D6DAE009519CF /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7429BDE12F1D6DAE009519CF /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

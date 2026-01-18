@@ -21,8 +21,9 @@ struct GreetingGeneratorView: View {
     private let currentYear = Calendar.current.component(.year, from: Date())
 
     var body: some View {
-        ScrollView {
-            VStack(spacing: AppTheme.spacing20) {
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(spacing: AppTheme.spacing20) {
                 // Header
                 headerSection
 
@@ -44,6 +45,7 @@ struct GreetingGeneratorView: View {
                 // Generated Greeting Card
                 if let greeting = generatedGreeting {
                     greetingCard(greeting)
+                        .id("greetingCard")
                 }
 
                 // Error Message
@@ -56,10 +58,19 @@ struct GreetingGeneratorView: View {
             .padding(.horizontal, AppTheme.spacing16)
             .padding(.top, AppTheme.spacing16)
         }
-        .background(AppColors.backgroundLightGray)
-        .overlay(alignment: .top) {
-            if showCopiedToast {
-                copiedToast
+            .background(AppColors.backgroundLightGray)
+            .scrollDismissesKeyboard(.interactively)
+            .overlay(alignment: .top) {
+                if showCopiedToast {
+                    copiedToast
+                }
+            }
+            .onChange(of: generatedGreeting) { _, newGreeting in
+                if newGreeting != nil {
+                    withAnimation {
+                        proxy.scrollTo("greetingCard", anchor: .bottom)
+                    }
+                }
             }
         }
     }

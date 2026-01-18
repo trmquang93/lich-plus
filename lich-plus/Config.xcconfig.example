@@ -1,0 +1,6 @@
+// Supabase Configuration Template
+// Copy this file to Config.xcconfig and fill in your values
+// Example: cp Config.xcconfig.example Config.xcconfig
+
+SUPABASE_PROJECT_ID = your-project-id
+SUPABASE_ANON_KEY = your-anon-key-here

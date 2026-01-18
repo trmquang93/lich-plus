@@ -57,7 +57,7 @@ echo ""
 
 # Step 5: Deploy function
 echo "Step 5: Deploying function..."
-supabase functions deploy generate-greeting
+supabase functions deploy generate-greeting --no-verify-jwt
 echo "✓ Function deployed"
 echo ""
 

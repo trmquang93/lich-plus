@@ -38,5 +38,9 @@
 	<array>
 		<string>fetch</string>
 	</array>
+	<key>SUPABASE_PROJECT_ID</key>
+	<string>$(SUPABASE_PROJECT_ID)</string>
+	<key>SUPABASE_ANON_KEY</key>
+	<string>$(SUPABASE_ANON_KEY)</string>
 </dict>
 </plist>
