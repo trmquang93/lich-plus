@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+import { validateNonce } from "./nonce.ts"
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -16,6 +17,7 @@ interface GreetingRequest {
   additionalInfo?: string
   year: number
   language?: string
+  nonce: string
 }
 
 interface GreetingResponse {
@@ -29,18 +31,40 @@ interface ErrorResponse {
 }
 
 // Authentication and rate limiting functions
-async function verifyAuth(req: Request): Promise<{ userId: string } | null> {
-  const authHeader = req.headers.get("Authorization")
-  if (!authHeader?.startsWith("Bearer ")) return null
+interface AuthResult {
+  userId?: string
+  error?: string
+}
 
-  const token = authHeader.substring(7)
+async function verifyAuth(req: Request): Promise<AuthResult> {
+  const authHeader = req.headers.get("Authorization")
+
+  if (!authHeader?.startsWith("Bearer ")) {
+    return { error: "Missing or invalid Authorization header" }
+  }
+
+  // Create Supabase client with the user's auth context
+  // This is the recommended pattern for Edge Functions
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    Deno.env.get("SUPABASE_ANON_KEY")!,
+    {
+      global: {
+        headers: { Authorization: authHeader }
+      }
+    }
   )
 
-  const { data: { user }, error } = await supabase.auth.getUser(token)
-  if (error || !user) return null
+  // getUser() will use the Authorization header we passed
+  const { data: { user }, error } = await supabase.auth.getUser()
+
+  if (error) {
+    return { error: `Supabase auth error: ${error.message}` }
+  }
+
+  if (!user) {
+    return { error: "No user found in session" }
+  }
 
   return { userId: user.id }
 }
@@ -63,16 +87,15 @@ function checkRateLimit(userId: string): { allowed: boolean; remaining: number }
 }
 
 // Vietnamese zodiac arrays (Can and Chi)
-const CAN = ["Canh", "Tan", "Nham", "Quy", "Giap", "At", "Binh", "Dinh", "Mau", "Ky"]
-const CHI = ["Than", "Dau", "Tuat", "Hoi", "Ty", "Suu", "Dan", "Mao", "Thin", "Ty", "Ngo", "Mui"]
-const CHI_ANIMALS = ["Monkey", "Rooster", "Dog", "Pig", "Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake", "Horse", "Goat"]
+// Reference: Year 4 AD was "Giáp Tý" - the canonical starting point
+const CAN = ["Giap", "At", "Binh", "Dinh", "Mau", "Ky", "Canh", "Tan", "Nham", "Quy"]
+const CHI = ["Ty", "Suu", "Dan", "Mao", "Thin", "Ti", "Ngo", "Mui", "Than", "Dau", "Tuat", "Hoi"]
+const CHI_ANIMALS = ["Rat", "Ox", "Tiger", "Rabbit", "Dragon", "Snake", "Horse", "Goat", "Monkey", "Rooster", "Dog", "Pig"]
 
 function calculateCanChi(year: number): { can: string; chi: string; animal: string } {
-  const referenceYear = 1900 // Canh Ty (reference)
-  const yearDiff = year - referenceYear
-
-  const canIndex = ((yearDiff % 10) + 10) % 10
-  const chiIndex = ((yearDiff % 12) + 12) % 12
+  // Use canonical formula: year 4 AD was "Giáp Tý"
+  const canIndex = (year - 4 + 10) % 10
+  const chiIndex = (year - 4 + 12) % 12
 
   return {
     can: CAN[canIndex],
@@ -153,11 +176,11 @@ function buildUserMessage(request: GreetingRequest, canChi: { can: string; chi: 
   }
 
   // Add recipient-specific guidance in Vietnamese
-  if (recipientType === "parents" || recipientType === "ông bà" || recipientType === "bố mẹ") {
+  if (recipientType === "parents" || recipientType === "grandparents") {
     message += "\n\nSử dụng ngôn ngữ kính trọng, thể hiện lòng biết ơn và đạo hiếu."
-  } else if (recipientType === "friends" || recipientType === "bạn bè" || recipientType === "colleagues" || recipientType === "đồng nghiệp") {
+  } else if (recipientType === "friends" || recipientType === "colleagues") {
     message += "\n\nSử dụng ngôn ngữ ấm áp, thân thiện, chúc nhau cùng thành công."
-  } else if (recipientType === "children" || recipientType === "con cái") {
+  } else if (recipientType === "children") {
     message += "\n\nSử dụng ngôn ngữ khích lệ, yêu thương, chúc con trưởng thành và học hành tốt."
   }
 
@@ -235,6 +258,10 @@ function validateRequest(body: any): { valid: boolean; error?: string } {
     return { valid: false, error: "language must be 'vi' or 'en'" }
   }
 
+  if (!body.nonce || typeof body.nonce !== "string") {
+    return { valid: false, error: "nonce is required and must be a string" }
+  }
+
   return { valid: true }
 }
 
@@ -267,9 +294,13 @@ serve(async (req) => {
   try {
     // 1. Verify authentication
     const auth = await verifyAuth(req)
-    if (!auth) {
+    if (!auth.userId) {
       return new Response(
-        JSON.stringify({ error: "Unauthorized", code: "AUTH_ERROR" } as ErrorResponse),
+        JSON.stringify({
+          error: "Unauthorized",
+          code: "AUTH_ERROR",
+          details: auth.error || "Unknown auth error"
+        }),
         {
           status: 401,
           headers: {
@@ -316,7 +347,25 @@ serve(async (req) => {
       )
     }
 
-    // Generate greeting
+    // 5. Validate nonce (prevent replay attacks)
+    const nonceValidation = await validateNonce(body.nonce, auth.userId)
+    if (!nonceValidation.valid) {
+      return new Response(
+        JSON.stringify({
+          error: nonceValidation.error,
+          code: nonceValidation.code
+        } as ErrorResponse),
+        {
+          status: nonceValidation.code === "REPLAY_DETECTED" ? 409 : 400,
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        }
+      )
+    }
+
+    // 6. Generate greeting
     const greeting = await generateGreeting(body as GreetingRequest)
 
     // Return success response

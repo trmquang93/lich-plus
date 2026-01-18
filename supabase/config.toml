@@ -1,4 +1,6 @@
 [api]
 enabled = true
 
-[functions]
+[functions.generate-greeting]
+# Disable gateway JWT verification - we handle auth manually in the function
+verify_jwt = false

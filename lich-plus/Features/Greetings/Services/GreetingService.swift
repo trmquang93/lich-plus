@@ -2,10 +2,9 @@
 //  GreetingService.swift
 //  lich-plus
 //
-//  Created by Claude on 17/01/26.
-//
 
 import Foundation
+import Supabase
 
 // MARK: - Greeting Service Error
 
@@ -15,6 +14,7 @@ enum GreetingServiceError: LocalizedError {
     case rateLimited
     case serverError(String)
     case unauthorized
+    case replayDetected
 
     var errorDescription: String? {
         switch self {
@@ -28,6 +28,8 @@ enum GreetingServiceError: LocalizedError {
             return "Lỗi server: \(message)"
         case .unauthorized:
             return "Không có quyền truy cập"
+        case .replayDetected:
+            return "Yêu cầu không hợp lệ, vui lòng thử lại"
         }
     }
 }
@@ -78,24 +80,8 @@ class GreetingService {
     /// - Parameter request: The greeting request with recipient type, tone, etc.
     /// - Returns: Generated greeting text
     func generateGreeting(for request: GreetingRequest) async throws -> String {
-        print("\n========================================")
-        print("🎉 [GreetingService] Generate Greeting Request")
-        print("========================================")
-        print("Recipient: \(request.recipientType.rawValue)")
-        print("Tone: \(request.tone.rawValue)")
-        print("Occasion: \(request.occasion.rawValue)")
-        print("Year: \(request.year)")
-        if let name = request.recipientName {
-            print("Name: \(name)")
-        }
-        if let info = request.additionalInfo {
-            print("Additional info: \(info)")
-        }
-        print("========================================\n")
-
         // If backend not configured, use offline samples
         guard let backendURL = GreetingServiceConfig.backendURL else {
-            print("⚠️  [GreetingService] Backend URL not configured, using offline greeting")
             return generateOfflineGreeting(for: request)
         }
 
@@ -110,92 +96,44 @@ class GreetingService {
     // MARK: - Private Methods
 
     private func callBackendFunction(url: URL, request: GreetingRequest) async throws -> String {
-        print("🌟 [GreetingService] Starting greeting generation...")
-        print("   URL: \(url.absoluteString)")
+        // Use Supabase SDK's built-in function invocation
+        // This handles authentication automatically
 
-        // Get authenticated JWT token (not static anon key)
-        let accessToken = try await SupabaseService.shared.getAccessToken()
-        let tokenPreview = String(accessToken.prefix(50))
-        print("   Token preview: \(tokenPreview)...")
+        // Generate unique nonce to prevent replay attacks
+        let nonce = NonceGenerator.generate()
 
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "POST"
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        urlRequest.timeoutInterval = GreetingServiceConfig.requestTimeout
-
-        // Build request payload
         let payload = GreetingAPIRequest(
             recipientType: request.recipientType.rawValue,
             tone: request.tone.rawValue,
             occasion: request.occasion.rawValue,
             recipientName: request.recipientName,
             additionalInfo: request.additionalInfo,
-            year: request.year
+            year: request.year,
+            nonce: nonce
         )
 
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        urlRequest.httpBody = try encoder.encode(payload)
+        // Ensure we have a valid session first
+        try await SupabaseService.shared.ensureAnonymousSession()
 
-        if let jsonString = String(data: urlRequest.httpBody!, encoding: .utf8) {
-            print("   Request payload:\n\(jsonString)")
-        }
+        do {
+            // Invoke function and decode response directly
+            let greetingResponse: GreetingAPIResponse = try await SupabaseService.shared.client.functions.invoke(
+                "generate-greeting",
+                options: .init(body: payload)
+            )
 
-        print("   Sending request...")
-        let (data, response) = try await URLSession.shared.data(for: urlRequest)
-
-        guard let httpResponse = response as? HTTPURLResponse else {
-            print("❌ [GreetingService] Invalid HTTP response")
-            throw GreetingServiceError.invalidResponse
-        }
-
-        print("   Response status: \(httpResponse.statusCode)")
-
-        let responseBody = String(data: data, encoding: .utf8) ?? "Unable to decode response"
-        print("   Response body: \(responseBody)")
-
-        switch httpResponse.statusCode {
-        case 200:
-            let decodedResponse = try JSONDecoder().decode(GreetingAPIResponse.self, from: data)
-
-            if let error = decodedResponse.error {
-                print("❌ [GreetingService] Server returned error: \(error)")
+            if let error = greetingResponse.error {
                 throw GreetingServiceError.serverError(error)
             }
 
-            guard let greeting = decodedResponse.greeting else {
-                print("❌ [GreetingService] No greeting in response")
+            guard let greeting = greetingResponse.greeting else {
                 throw GreetingServiceError.invalidResponse
             }
 
-            print("✅ [GreetingService] Greeting generated successfully")
-            print("   Length: \(greeting.count) characters")
-            return greeting.trimmingCharacters(in: .whitespacesAndNewlines)
+            return greeting.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
 
-        case 401, 403:
-            print("❌ [GreetingService] Unauthorized (status: \(httpResponse.statusCode))")
-            throw GreetingServiceError.unauthorized
-
-        case 429:
-            print("❌ [GreetingService] Rate limited")
-            throw GreetingServiceError.rateLimited
-
-        case 500...599:
-            // Try to parse error message from response
-            if let errorResponse = try? JSONDecoder().decode(GreetingAPIResponse.self, from: data),
-               let errorMessage = errorResponse.error {
-                print("❌ [GreetingService] Server error: \(errorMessage)")
-                throw GreetingServiceError.serverError(errorMessage)
-            }
-            print("❌ [GreetingService] Internal server error")
-            throw GreetingServiceError.serverError("Internal server error")
-
-        default:
-            print("❌ [GreetingService] Unexpected status code: \(httpResponse.statusCode)")
-            throw GreetingServiceError.networkError(
-                NSError(domain: "HTTP", code: httpResponse.statusCode, userInfo: nil)
-            )
+        } catch let error as FunctionsError {
+            throw GreetingServiceError.serverError(error.localizedDescription)
         }
     }
 }
@@ -210,6 +148,7 @@ struct GreetingAPIRequest: Codable {
     let recipientName: String?
     let additionalInfo: String?
     let year: Int
+    let nonce: String
 }
 
 /// Response from backend function
@@ -219,4 +158,7 @@ struct GreetingAPIResponse: Codable {
 
     /// Error message (on failure)
     let error: String?
+
+    /// Error details (for debugging)
+    let details: String?
 }
