@@ -9,11 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct LunarSpecialDatesSettingsView: View {
-    @State private var viewModel: LunarSpecialDatesViewModel
-
-    init(viewModel: LunarSpecialDatesViewModel) {
-        self._viewModel = State(initialValue: viewModel)
-    }
+    @ObservedObject var viewModel: LunarSpecialDatesViewModel
 
     var body: some View {
         Form {

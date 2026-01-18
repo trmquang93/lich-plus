@@ -12,9 +12,13 @@ struct LunarSpecialDate {
     let id: String
     let title: String
     let lunarDay: Int
-    let category: String  // "spiritual"
     let colorHex: String
     let enabledByDefault: Bool
+
+    /// Unique category for system-generated events (prevents collision with user events)
+    var uniqueCategory: String {
+        "lunar.special.date.\(id)"
+    }
 
     /// All supported lunar special dates
     static let allDates: [LunarSpecialDate] = [
@@ -22,7 +26,6 @@ struct LunarSpecialDate {
             id: "lunar-mung1",
             title: String(localized: "Mùng 1"),
             lunarDay: 1,
-            category: "spiritual",
             colorHex: "#9B59B6",  // Purple
             enabledByDefault: false
         ),
@@ -30,7 +33,6 @@ struct LunarSpecialDate {
             id: "lunar-ram",
             title: String(localized: "Ngày Rằm"),
             lunarDay: 15,
-            category: "spiritual",
             colorHex: "#D4AC0D",  // Gold
             enabledByDefault: false
         )

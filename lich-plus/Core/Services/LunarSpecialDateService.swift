@@ -36,11 +36,9 @@ final class LunarSpecialDateService {
 
     /// Disable a lunar special date by deleting its master event
     func disableSpecialDate(_ specialDate: LunarSpecialDate) throws {
-        let title = specialDate.title
-        let category = specialDate.category
+        let category = specialDate.uniqueCategory
 
         let predicate = #Predicate<SyncableEvent> { event in
-            event.title == title &&
             event.category == category
         }
 
@@ -62,9 +60,9 @@ final class LunarSpecialDateService {
         hasMasterEvent(for: specialDate)
     }
 
-    // MARK: - Private
+    // MARK: - Internal
 
-    private func createMasterEvent(_ specialDate: LunarSpecialDate) -> SyncableEvent {
+    func createMasterEvent(_ specialDate: LunarSpecialDate) -> SyncableEvent {
         // Use a representative date (first of next lunar month)
         let calendar = Calendar.current
         let startDate = calendar.startOfDay(for: Date())
@@ -74,7 +72,13 @@ final class LunarSpecialDateService {
         let container = RecurrenceRuleContainer.lunar(rule)
 
         // Encode to JSON
-        let recurrenceData = try? JSONEncoder().encode(container)
+        let recurrenceData: Data?
+        do {
+            recurrenceData = try JSONEncoder().encode(container)
+        } catch {
+            print("[LunarSpecialDateService] Error encoding recurrence rule: \(error)")
+            recurrenceData = nil
+        }
 
         return SyncableEvent(
             id: UUID(),
@@ -84,7 +88,7 @@ final class LunarSpecialDateService {
             isAllDay: true,
             notes: nil,
             isCompleted: false,
-            category: specialDate.category,
+            category: specialDate.uniqueCategory,
             reminderMinutes: nil,
             recurrenceRuleData: recurrenceData,
             lastModifiedLocal: Date(),
@@ -100,12 +104,10 @@ final class LunarSpecialDateService {
         )
     }
 
-    private func hasMasterEvent(for specialDate: LunarSpecialDate) -> Bool {
-        let title = specialDate.title
-        let category = specialDate.category
+    func hasMasterEvent(for specialDate: LunarSpecialDate) -> Bool {
+        let category = specialDate.uniqueCategory
 
         let predicate = #Predicate<SyncableEvent> { event in
-            event.title == title &&
             event.category == category
         }
 
@@ -115,6 +117,7 @@ final class LunarSpecialDateService {
             let events = try modelContext.fetch(descriptor)
             return !events.isEmpty
         } catch {
+            print("[LunarSpecialDateService] Error checking master event: \(error)")
             return false
         }
     }
