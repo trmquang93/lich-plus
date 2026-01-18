@@ -29,15 +29,15 @@ enum DayQualityDisplay {
         }
     }
 
-    /// Display label in Vietnamese
+    /// Display label
     var label: String {
         switch self {
         case .good:
-            return "NGÀY TỐT"
+            return String(localized: "Good Day")
         case .neutral:
-            return "NGÀY BÌNH"
+            return String(localized: "Neutral Day")
         case .bad:
-            return "NGÀY XẤU"
+            return String(localized: "Bad Day")
         }
     }
 }
@@ -135,7 +135,7 @@ struct TimelineDayHeader: View {
                 Spacer()
             }
 
-            Text("Dương lịch")
+            Text(String(localized: "Solar Calendar"))
                 .font(.system(size: AppTheme.fontCaption, weight: .regular))
                 .foregroundStyle(AppColors.textSecondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -167,7 +167,7 @@ struct TimelineDayHeader: View {
                 Spacer()
             }
 
-            Text("Âm lịch")
+            Text(String(localized: "Lunar Calendar"))
                 .font(.system(size: AppTheme.fontCaption, weight: .regular))
                 .foregroundStyle(AppColors.textSecondary)
         }
@@ -202,7 +202,7 @@ struct TimelineDayHeader: View {
                     .foregroundStyle(AppColors.textPrimary)
 
                 if !goodStars.isEmpty {
-                    Text("Sao tốt: \(goodStars.joined(separator: ", "))")
+                    Text(String(localized: "Good Stars: \(goodStars.joined(separator: ", "))"))
                         .font(.system(size: AppTheme.fontCaption, weight: .regular))
                         .foregroundStyle(AppColors.textSecondary)
                         .lineLimit(1)

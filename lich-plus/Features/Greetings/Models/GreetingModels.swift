@@ -22,17 +22,17 @@ enum RecipientType: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    /// Vietnamese display name
+    /// Display name
     var displayName: String {
         switch self {
-        case .grandparents: return "Ông bà"
-        case .parents: return "Bố mẹ"
-        case .boss: return "Sếp"
-        case .colleagues: return "Đồng nghiệp"
-        case .teachers: return "Thầy cô"
-        case .friends: return "Bạn bè"
-        case .partner: return "Người yêu"
-        case .children: return "Con cháu"
+        case .grandparents: return String(localized: "Grandparents")
+        case .parents: return String(localized: "Parents")
+        case .boss: return String(localized: "Boss")
+        case .colleagues: return String(localized: "Colleagues")
+        case .teachers: return String(localized: "Teachers")
+        case .friends: return String(localized: "Friends")
+        case .partner: return String(localized: "Partner")
+        case .children: return String(localized: "Children")
         }
     }
 
@@ -76,13 +76,13 @@ enum GreetingTone: String, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    /// Vietnamese display name
+    /// Display name
     var displayName: String {
         switch self {
-        case .formal: return "Trang trọng"
-        case .casual: return "Thân mật"
-        case .funny: return "Vui vẻ"
-        case .romantic: return "Lãng mạn"
+        case .formal: return String(localized: "Formal")
+        case .casual: return String(localized: "Casual")
+        case .funny: return String(localized: "Playful")
+        case .romantic: return String(localized: "Romantic")
         }
     }
 

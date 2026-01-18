@@ -66,6 +66,9 @@
     "About" : {
 
     },
+    "Access denied" : {
+
+    },
     "Account" : {
 
     },
@@ -87,6 +90,9 @@
     "Add new item" : {
 
     },
+    "Additional info (optional)" : {
+
+    },
     "AI Assistant" : {
 
     },
@@ -99,7 +105,7 @@
     "All Day" : {
 
     },
-    "Âm lịch" : {
+    "Automatically add lunar calendar events for Mùng 1 and Rằm each month" : {
 
     },
     "Automatically sync calendar changes" : {
@@ -114,7 +120,19 @@
     "Background sync feature coming soon" : {
 
     },
+    "Bad Activities" : {
+
+    },
+    "Bad Day" : {
+
+    },
+    "Bad Stars" : {
+
+    },
     "Birthday" : {
+
+    },
+    "Boss" : {
 
     },
     "Built-in Calendars" : {
@@ -144,10 +162,16 @@
     "Cancel" : {
 
     },
+    "Cannot connect to server. Using sample greetings." : {
+
+    },
+    "Casual" : {
+
+    },
     "Category" : {
 
     },
-    "Chia sẻ" : {
+    "Children" : {
 
     },
     "Choose which Google calendars to display in this app." : {
@@ -156,10 +180,10 @@
     "Choose which Outlook calendars to display in this app." : {
 
     },
-    "Chúc Tết %@" : {
+    "Clear search" : {
 
     },
-    "Clear search" : {
+    "Colleagues" : {
 
     },
     "Completed" : {
@@ -180,19 +204,28 @@
     "Connected" : {
 
     },
+    "Copied!" : {
+
+    },
+    "Copy" : {
+
+    },
     "Create Event" : {
+
+    },
+    "Create greeting" : {
 
     },
     "Create Task" : {
 
     },
-    "Đã sao chép!" : {
+    "Creating..." : {
 
     },
     "Daily" : {
 
     },
-    "Đang tạo..." : {
+    "Dark Zodiac" : {
 
     },
     "Date" : {
@@ -204,6 +237,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "date.lunarFormat %1$lld %2$lld %3$@"
+          }
+        }
+      }
+    },
+    "Day %@ Month %@ Year %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Day %1$@ Month %2$@ Year %3$@"
           }
         }
       }
@@ -235,7 +278,10 @@
     "Due Date" : {
 
     },
-    "Dương lịch" : {
+    "e.g. Grandpa, Mom, Brother..." : {
+
+    },
+    "e.g. Just got a promotion, New house..." : {
 
     },
     "Edit" : {
@@ -280,10 +326,40 @@
     "Event Reminders" : {
 
     },
+    "Events" : {
+
+    },
+    "Events on %@" : {
+
+    },
+    "First day of lunar month - for ancestor worship" : {
+
+    },
     "Fixed Reminders" : {
 
     },
+    "Formal" : {
+
+    },
     "Fri" : {
+
+    },
+    "Friends" : {
+
+    },
+    "Full moon day (15th) - for temple visits" : {
+
+    },
+    "Good Activities" : {
+
+    },
+    "Good Day" : {
+
+    },
+    "Good Stars" : {
+
+    },
+    "Good Stars: %@" : {
 
     },
     "Google Calendar" : {
@@ -292,22 +368,22 @@
     "Google Calendars" : {
 
     },
+    "Grandparents" : {
+
+    },
     "Grant Access" : {
 
     },
     "Greetings" : {
 
     },
-    "Gửi đến" : {
+    "Greetings for" : {
 
     },
     "High" : {
 
     },
     "Holiday" : {
-
-    },
-    "Hướng may mắn" : {
 
     },
     "ICS Calendar" : {
@@ -322,7 +398,7 @@
     "Information" : {
 
     },
-    "Không có sự kiện nào" : {
+    "Invalid response" : {
 
     },
     "Last sync: %@" : {
@@ -340,16 +416,31 @@
     "Location" : {
 
     },
-    "Lời chúc cho %@" : {
+    "Low" : {
 
     },
-    "Low" : {
+    "Lucky Color" : {
+
+    },
+    "Lucky Direction" : {
+
+    },
+    "Lucky Hours" : {
+
+    },
+    "Lucky Information" : {
+
+    },
+    "Lunar Calendar" : {
 
     },
     "Lunar Date" : {
 
     },
     "Lunar Monthly" : {
+
+    },
+    "Lunar Special Dates" : {
 
     },
     "Lunar Yearly" : {
@@ -359,9 +450,6 @@
 
     },
     "Mark Incomplete" : {
-
-    },
-    "Màu may mắn" : {
 
     },
     "Medium" : {
@@ -379,16 +467,28 @@
     "Monthly" : {
 
     },
+    "Mùng 1" : {
+
+    },
+    "Mùng 1 and Rằm events" : {
+
+    },
     "Mùng 1 Reminders" : {
 
     },
     "My Calendars" : {
 
     },
-    "Năm %@" : {
+    "Network error: %@" : {
+
+    },
+    "Neutral Day" : {
 
     },
     "New Item" : {
+
+    },
+    "Ngày Rằm" : {
 
     },
     "No all-day events" : {
@@ -403,6 +503,15 @@
     "No Calendars Found" : {
 
     },
+    "No events" : {
+
+    },
+    "No events on %@. Add a new event?" : {
+
+    },
+    "No events. Add a new event?" : {
+
+    },
     "No Items" : {
 
     },
@@ -414,30 +523,6 @@
     },
     "Notification Settings" : {
 
-    },
-    "notification.daysBefore" : {
-      "comment" : "Days before event"
-    },
-    "notification.event.startsIn" : {
-      "comment" : "Event notification body"
-    },
-    "notification.holiday.inDays" : {
-      "comment" : "Holiday reminder body"
-    },
-    "notification.minutesBefore" : {
-      "comment" : "Minutes before event"
-    },
-    "notification.mung1.body" : {
-      "comment" : "Mùng 1 notification body"
-    },
-    "notification.mung1.title" : {
-      "comment" : "Mùng 1 notification title"
-    },
-    "notification.ram.body" : {
-      "comment" : "Rằm notification body"
-    },
-    "notification.ram.title" : {
-      "comment" : "Rằm notification title"
     },
     "Now" : {
 
@@ -460,13 +545,19 @@
     "Outlook Calendars" : {
 
     },
+    "Parents" : {
+
+    },
     "Parse" : {
+
+    },
+    "Partner" : {
 
     },
     "Personal" : {
 
     },
-    "Phong cách" : {
+    "Playful" : {
 
     },
     "Please enable notifications in Settings to receive reminders." : {
@@ -481,6 +572,9 @@
     "Rằm Reminders" : {
 
     },
+    "Recipient name (optional)" : {
+
+    },
     "Recurrence" : {
 
     },
@@ -493,10 +587,10 @@
     "Reminder Days" : {
 
     },
-    "Sao chép" : {
+    "Romantic" : {
 
     },
-    "Sao tốt: %@" : {
+    "Royal Zodiac" : {
 
     },
     "Sat" : {
@@ -514,7 +608,16 @@
     "Select Time" : {
 
     },
+    "Send to" : {
+
+    },
+    "Server error: %@" : {
+
+    },
     "Settings" : {
+
+    },
+    "Share" : {
 
     },
     "Sign in with Microsoft" : {
@@ -526,6 +629,12 @@
     "Signing in..." : {
 
     },
+    "Solar Calendar" : {
+
+    },
+    "Special Dates" : {
+
+    },
     "Start Date" : {
 
     },
@@ -535,7 +644,7 @@
     "Status" : {
 
     },
-    "Sự kiện" : {
+    "Style" : {
 
     },
     "Subscribe to calendars" : {
@@ -571,9 +680,6 @@
     "System Calendar" : {
 
     },
-    "Tạo lời chúc" : {
-
-    },
     "Tap the refresh button to fetch your Google calendars." : {
 
     },
@@ -586,7 +692,10 @@
     "Task Title" : {
 
     },
-    "Tên người nhận (tuỳ chọn)" : {
+    "Teachers" : {
+
+    },
+    "Tet Greetings %@" : {
 
     },
     "This is a recurring item. Choose what to delete." : {
@@ -604,12 +713,6 @@
     "This will remove all synced Outlook calendar events from this app." : {
 
     },
-    "Thông tin may mắn" : {
-
-    },
-    "Thông tin thêm (tuỳ chọn)" : {
-
-    },
     "Thu" : {
 
     },
@@ -617,9 +720,6 @@
 
     },
     "Timeline" : {
-
-    },
-    "timeline.search" : {
 
     },
     "Title" : {
@@ -631,7 +731,16 @@
     "Today" : {
 
     },
+    "Today is a free day. Add a new event?" : {
+
+    },
+    "Today's Events" : {
+
+    },
     "Tomorrow" : {
+
+    },
+    "Too many requests, please try again later" : {
 
     },
     "Trực: %@ (%@)" : {
@@ -650,19 +759,19 @@
     "Type your message..." : {
 
     },
+    "Unlucky Hours" : {
+
+    },
+    "Usable" : {
+
+    },
+    "Using sample greetings (offline mode)." : {
+
+    },
     "Version" : {
 
     },
-    "Ví dụ: Con vừa được tăng lương, Chúc mừng nhà mới..." : {
-
-    },
-    "Ví dụ: Ông Nội, Mẹ, Anh Minh..." : {
-
-    },
-    "Việc nên làm" : {
-
-    },
-    "Việc nên tránh" : {
+    "Very Bad" : {
 
     },
     "Wed" : {
@@ -672,6 +781,9 @@
 
     },
     "Work" : {
+
+    },
+    "Year of" : {
 
     },
     "Yearly" : {

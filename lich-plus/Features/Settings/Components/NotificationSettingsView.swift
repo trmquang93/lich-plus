@@ -81,10 +81,7 @@ struct NotificationSettingsView: View {
                             }
                         )) {
                             ForEach([5, 10, 15, 30, 60], id: \.self) { minutes in
-                                Text(String(format: NSLocalizedString(
-                                    "notification.minutesBefore",
-                                    comment: "Minutes before event"
-                                ), minutes)).tag(minutes)
+                                Text(String(format: "%d minutes before", minutes)).tag(minutes)
                             }
                         }
                         .pickerStyle(.segmented)
@@ -203,10 +200,7 @@ struct NotificationSettingsView: View {
                                 if days == 0 {
                                     Text(String(localized: "On day")).tag(days)
                                 } else {
-                                    Text(String(format: NSLocalizedString(
-                                        "notification.daysBefore",
-                                        comment: "Days before event"
-                                    ), days)).tag(days)
+                                    Text(String(format: "%d days before", days)).tag(days)
                                 }
                             }
                         }

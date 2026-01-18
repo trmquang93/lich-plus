@@ -55,7 +55,7 @@ struct TimelineHeader: View {
                         .foregroundStyle(AppColors.textSecondary)
                         .font(.system(size: 16))
 
-                    TextField("timeline.search", text: $searchText)
+                    TextField("Search", text: $searchText)
                         .textContentType(.none)
                         .font(.system(size: AppTheme.fontBody))
                         .foregroundStyle(AppColors.textPrimary)

@@ -12,6 +12,7 @@ struct SettingsView: View {
     @EnvironmentObject var syncService: CalendarSyncService
     @EnvironmentObject var googleAuthService: GoogleAuthService
     @EnvironmentObject var microsoftAuthService: MicrosoftAuthService
+    @Environment(\.modelContext) private var modelContext
 
     private var syncStatusIcon: String {
         switch syncService.syncState {
@@ -151,6 +152,31 @@ struct SettingsView: View {
                                     .foregroundStyle(AppColors.textPrimary)
 
                                 Text("Subscribe to calendars")
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
+
+                    NavigationLink {
+                        let service = LunarSpecialDateService(modelContext: modelContext)
+                        let viewModel = LunarSpecialDatesViewModel(service: service)
+                        LunarSpecialDatesSettingsView(viewModel: viewModel)
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "moon.stars.fill")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text(String(localized: "Lunar Special Dates"))
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(String(localized: "Mùng 1 and Rằm events"))
                                     .font(.caption)
                                     .foregroundStyle(AppColors.textSecondary)
                             }

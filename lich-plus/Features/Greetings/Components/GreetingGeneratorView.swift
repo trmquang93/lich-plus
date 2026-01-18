@@ -71,11 +71,11 @@ struct GreetingGeneratorView: View {
             Text("🧧")
                 .font(.system(size: 48))
 
-            Text("Chúc Tết \(GreetingOccasion.canChi(for: currentYear))")
+            Text(String(localized: "Tet Greetings \(GreetingOccasion.canChi(for: currentYear))"))
                 .font(.system(size: AppTheme.fontTitle2, weight: .bold))
                 .foregroundColor(AppColors.textPrimary)
 
-            Text("Năm \(GreetingOccasion.zodiacAnimal(for: currentYear) ?? "")")
+            Text(String(localized: "Year of") + " \(GreetingOccasion.zodiacAnimal(for: currentYear) ?? "Unknown")")
                 .font(.system(size: AppTheme.fontBody))
                 .foregroundColor(AppColors.textSecondary)
         }
@@ -86,7 +86,7 @@ struct GreetingGeneratorView: View {
 
     private var recipientSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
-            Text("Gửi đến")
+            Text(String(localized: "Send to"))
                 .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
                 .foregroundColor(AppColors.textPrimary)
 
@@ -135,7 +135,7 @@ struct GreetingGeneratorView: View {
 
     private var toneSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
-            Text("Phong cách")
+            Text(String(localized: "Style"))
                 .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
                 .foregroundColor(AppColors.textPrimary)
 
@@ -187,11 +187,11 @@ struct GreetingGeneratorView: View {
 
     private var nameInputSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
-            Text("Tên người nhận (tuỳ chọn)")
+            Text(String(localized: "Recipient name (optional)"))
                 .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
                 .foregroundColor(AppColors.textPrimary)
 
-            TextField("Ví dụ: Ông Nội, Mẹ, Anh Minh...", text: $recipientName)
+            TextField(String(localized: "e.g. Grandpa, Mom, Brother..."), text: $recipientName)
                 .font(.system(size: AppTheme.fontBody))
                 .padding(AppTheme.spacing12)
                 .background(AppColors.backgroundLightGray)
@@ -206,11 +206,11 @@ struct GreetingGeneratorView: View {
 
     private var additionalInfoSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
-            Text("Thông tin thêm (tuỳ chọn)")
+            Text(String(localized: "Additional info (optional)"))
                 .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
                 .foregroundColor(AppColors.textPrimary)
 
-            TextField("Ví dụ: Con vừa được tăng lương, Chúc mừng nhà mới...", text: $additionalInfo, axis: .vertical)
+            TextField(String(localized: "e.g. Just got a promotion, New house..."), text: $additionalInfo, axis: .vertical)
                 .font(.system(size: AppTheme.fontBody))
                 .lineLimit(3...6)
                 .padding(AppTheme.spacing12)
@@ -236,7 +236,7 @@ struct GreetingGeneratorView: View {
                 } else {
                     Image(systemName: "sparkles")
                 }
-                Text(isGenerating ? "Đang tạo..." : "Tạo lời chúc")
+                Text(isGenerating ? String(localized: "Creating...") : String(localized: "Create greeting"))
                     .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
             }
             .foregroundColor(.white)
@@ -257,7 +257,7 @@ struct GreetingGeneratorView: View {
             HStack {
                 Text("🧧")
                     .font(.system(size: 24))
-                Text("Lời chúc cho \(greeting.request.recipientType.displayName)")
+                Text(String(localized: "Greetings for") + " \(greeting.request.recipientType.displayName)")
                     .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
                     .foregroundColor(AppColors.primary)
                 Spacer()
@@ -282,7 +282,7 @@ struct GreetingGeneratorView: View {
                 } label: {
                     HStack(spacing: AppTheme.spacing4) {
                         Image(systemName: "doc.on.doc")
-                        Text("Sao chép")
+                        Text(String(localized: "Copy"))
                     }
                     .font(.system(size: AppTheme.fontBody))
                     .foregroundColor(AppColors.primary)
@@ -297,7 +297,7 @@ struct GreetingGeneratorView: View {
                 ShareLink(item: greeting.text) {
                     HStack(spacing: AppTheme.spacing4) {
                         Image(systemName: "square.and.arrow.up")
-                        Text("Chia sẻ")
+                        Text(String(localized: "Share"))
                     }
                     .font(.system(size: AppTheme.fontBody))
                     .foregroundColor(AppColors.primary)
@@ -351,7 +351,7 @@ struct GreetingGeneratorView: View {
         HStack(spacing: AppTheme.spacing8) {
             Image(systemName: "checkmark.circle.fill")
                 .foregroundColor(AppColors.accent)
-            Text("Đã sao chép!")
+            Text(String(localized: "Copied!"))
                 .font(.system(size: AppTheme.fontBody, weight: .medium))
                 .foregroundColor(AppColors.textPrimary)
         }
@@ -401,9 +401,9 @@ struct GreetingGeneratorView: View {
                     isGenerating = false
 
                     if !greetingService.isBackendConfigured {
-                        errorMessage = "Đang dùng lời chúc mẫu (offline mode)."
+                        errorMessage = String(localized: "Using sample greetings (offline mode).")
                     } else {
-                        errorMessage = "Không thể kết nối server. Đang dùng lời chúc mẫu."
+                        errorMessage = String(localized: "Cannot connect to server. Using sample greetings.")
                     }
                 }
             }
