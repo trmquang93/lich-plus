@@ -29,11 +29,11 @@ struct EventsListView: View {
 
     private var sectionTitle: String {
         if day?.isToday == true {
-            return "Sự kiện hôm nay"
+            return String(localized: "Today's Events")
         } else if let day = day {
-            return "Sự kiện ngày \(day.solarDay)/\(day.solarMonth)"
+            return String(format: String(localized: "Events on %@"), "\(day.solarDay)/\(day.solarMonth)")
         } else {
-            return "Sự kiện"
+            return String(localized: "Events")
         }
     }
 
@@ -179,11 +179,11 @@ struct EmptyEventsView: View {
 
     private var emptyMessage: String {
         if day?.isToday == true {
-            return "Hôm nay là một ngày trống rỗi. Thêm sự kiện mới?"
+            return String(localized: "Today is a free day. Add a new event?")
         } else if let day = day {
-            return "Ngày \(day.solarDay)/\(day.solarMonth) không có sự kiện. Thêm sự kiện mới?"
+            return String(format: String(localized: "No events on %@. Add a new event?"), "\(day.solarDay)/\(day.solarMonth)")
         } else {
-            return "Không có sự kiện. Thêm sự kiện mới?"
+            return String(localized: "No events. Add a new event?")
         }
     }
 
@@ -194,7 +194,7 @@ struct EmptyEventsView: View {
                 .foregroundStyle(AppColors.secondary.opacity(0.5))
 
             VStack(spacing: AppTheme.spacing4) {
-                Text("Không có sự kiện nào")
+                Text(String(localized: "No events"))
                     .font(.system(size: AppTheme.fontBody, weight: .semibold))
                     .foregroundStyle(AppColors.textPrimary)
 

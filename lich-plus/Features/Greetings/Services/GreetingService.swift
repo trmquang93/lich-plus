@@ -19,15 +19,15 @@ enum GreetingServiceError: LocalizedError {
     var errorDescription: String? {
         switch self {
         case .networkError(let error):
-            return "Lỗi mạng: \(error.localizedDescription)"
+            return String(localized: "Network error: \(error.localizedDescription)")
         case .invalidResponse:
-            return "Phản hồi không hợp lệ"
+            return String(localized: "Invalid response")
         case .rateLimited:
-            return "Quá nhiều yêu cầu, vui lòng thử lại sau"
+            return String(localized: "Too many requests, please try again later")
         case .serverError(let message):
-            return "Lỗi server: \(message)"
+            return String(localized: "Server error: \(message)")
         case .unauthorized:
-            return "Không có quyền truy cập"
+            return String(localized: "Access denied")
         }
     }
 }
