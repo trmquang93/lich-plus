@@ -57,6 +57,7 @@ struct GreetingGeneratorView: View {
             .padding(.top, AppTheme.spacing16)
         }
         .background(AppColors.backgroundLightGray)
+        .scrollDismissesKeyboard(.interactively)
         .overlay(alignment: .top) {
             if showCopiedToast {
                 copiedToast
