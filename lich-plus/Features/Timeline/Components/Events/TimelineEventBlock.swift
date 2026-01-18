@@ -32,7 +32,7 @@ struct TimelineEventBlock: View {
     /// Format time range for display (24-hour format)
     private var timeRangeText: String {
         guard let startTime = event.startTime else {
-            return String(localized: "event.allDay")
+            return String(localized: "All Day")
         }
 
         let startStr = timeFormatter.string(from: startTime)
@@ -119,7 +119,7 @@ struct TimelineEventBlock: View {
                                 Image(systemName: "checkmark.circle.fill")
                                     .font(.caption)
                                     .foregroundColor(AppColors.accent)
-                                Text(String(localized: "task.completed"))
+                                Text(String(localized: "Completed"))
                                     .font(.caption)
                                     .foregroundColor(AppColors.accent)
                             }

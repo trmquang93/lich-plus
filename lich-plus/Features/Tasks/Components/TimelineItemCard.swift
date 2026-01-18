@@ -91,7 +91,7 @@ struct TimelineItemCard: View {
                 Button(role: .destructive) {
                     showDeleteConfirmation = true
                 } label: {
-                    Label(String(localized: "delete.confirm"), systemImage: "trash")
+                    Label(String(localized: "Delete"), systemImage: "trash")
                 }
             }
         }

@@ -82,7 +82,7 @@ struct CalendarDatePickerSheet: View {
 
                 // Time Picker
                 VStack(alignment: .leading, spacing: AppTheme.spacing8) {
-                    Text(String(localized: "datePicker.selectTime"))
+                    Text(String(localized: "Select Time"))
                         .font(.system(size: AppTheme.fontBody, weight: .medium))
                         .foregroundStyle(AppColors.textPrimary)
                         .padding(.horizontal, AppTheme.spacing16)
@@ -103,7 +103,7 @@ struct CalendarDatePickerSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "task.done")) {
+                    Button(String(localized: "Done")) {
                         onDone()
                     }
                     .foregroundStyle(AppColors.primary)
@@ -141,12 +141,12 @@ struct CalendarDatePickerSheet: View {
     // MARK: - Formatting Helpers
 
     private func formatSolarMonthYear() -> String {
-        String(format: String(localized: "datePicker.monthYear"), displayMonth, displayYear)
+        String(format: String(localized: "Date"), displayMonth, displayYear)
     }
 
     private func formatLunarMonthYear() -> String {
         let yearCanChi = CanChiCalculator.calculateYearCanChi(lunarYear: calendarMonth.lunarYear)
-        return String(format: String(localized: "datePicker.lunarMonthYear"), calendarMonth.lunarMonth, yearCanChi.displayName)
+        return String(format: String(localized: "Lunar Date"), calendarMonth.lunarMonth, yearCanChi.displayName)
     }
 }
 

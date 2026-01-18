@@ -66,8 +66,8 @@ struct InfiniteTimelineView: View {
                 ScrollView {
                     if tasks.isEmpty {
                         EmptyStateView(
-                            title: String(localized: "all.empty.title"),
-                            message: String(localized: "all.empty.message"),
+                            title: String(localized: "No Items"),
+                            message: String(localized: "You don't have any items yet."),
                             onAddNew: onAddNew
                         )
                     } else {

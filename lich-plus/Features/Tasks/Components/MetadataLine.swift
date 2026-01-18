@@ -50,7 +50,7 @@ struct MetadataLine: View {
                 Text("·")
                     .metadataStyle(color: textColor)
 
-                Text(String(localized: "event.allDay"))
+                Text(String(localized: "All Day"))
                     .metadataStyle(color: textColor)
             } else if let timeString = formattedTime {
                 Text("·")

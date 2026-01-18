@@ -37,7 +37,7 @@ struct AllDayStrip: View {
             HStack(spacing: AppTheme.spacing12) {
                 // "All Day" label
                 VStack {
-                    Text(String(localized: "timeline.allDay"))
+                    Text(String(localized: "All Day"))
                         .font(.system(size: AppTheme.fontCaption))
                         .foregroundColor(AppColors.textSecondary)
                     Spacer()
@@ -46,7 +46,7 @@ struct AllDayStrip: View {
 
                 // Events scroll view
                 if isEmpty {
-                    Text(String(localized: "timeline.noAllDayEvents"))
+                    Text(String(localized: "No all-day events"))
                         .font(.system(size: AppTheme.fontCaption))
                         .foregroundColor(AppColors.textSecondary)
                         .frame(maxWidth: .infinity, alignment: .leading)

@@ -28,7 +28,7 @@ struct EmptyStateView: View {
                 .multilineTextAlignment(.center)
 
             Button(action: onAddNew) {
-                Text(String(localized: "empty.addButton"))
+                Text(String(localized: "Add Item"))
                     .font(.system(size: AppTheme.fontBody, weight: .semibold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, AppTheme.spacing24)

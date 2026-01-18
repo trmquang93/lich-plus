@@ -15,7 +15,7 @@ struct TodayFloatingButton: View {
             HStack(spacing: AppTheme.spacing8) {
                 Image(systemName: "calendar.badge.clock")
                     .font(.system(size: 16, weight: .semibold))
-                Text(String(localized: "timeline.today"))
+                Text(String(localized: "Today"))
                     .font(.system(size: AppTheme.fontBody, weight: .semibold))
             }
             .foregroundStyle(.white)

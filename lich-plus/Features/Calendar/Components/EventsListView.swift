@@ -109,7 +109,7 @@ struct EventRow: View {
             VStack(alignment: .leading, spacing: AppTheme.spacing4) {
                 HStack(spacing: AppTheme.spacing8) {
                     if event.isAllDay {
-                        Text(String(localized: "event.allDay"))
+                        Text(String(localized: "All Day"))
                             .font(.system(size: AppTheme.fontCaption, weight: .semibold))
                             .foregroundStyle(AppColors.primary)
                             .frame(width: 60, alignment: .leading)

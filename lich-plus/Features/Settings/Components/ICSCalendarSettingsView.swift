@@ -84,7 +84,7 @@ struct ICSCalendarSettingsView: View {
                             }
                         }
                     } header: {
-                        Text("settings.builtInCalendars")
+                        Text("Built-in Calendars")
                     }
                 }
 
@@ -139,7 +139,7 @@ struct ICSCalendarSettingsView: View {
                     }
                 } header: {
                     HStack {
-                        Text("settings.myCalendars")
+                        Text("My Calendars")
                         Spacer()
                         Button(action: { showAddSubscription = true }) {
                             Image(systemName: "plus.circle.fill")
@@ -339,7 +339,7 @@ struct BuiltInSubscriptionRowView: View {
                     .font(.body)
                     .foregroundStyle(AppColors.textPrimary)
 
-                Text("settings.systemCalendar")
+                Text("System Calendar")
                     .font(.caption)
                     .foregroundStyle(AppColors.textSecondary)
             }

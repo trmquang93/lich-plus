@@ -52,17 +52,23 @@ final class CalendarSyncServiceTests: XCTestCase {
         XCTAssertNil(sut.syncError)
     }
 
-    func testInitializationSetsLastSyncDateFromUserDefaults() {
+    func testInitializationSetsLastSyncDateFromUserDefaults() throws {
         let testDate = Date().addingTimeInterval(-3600) // 1 hour ago
         UserDefaults.standard.set(testDate, forKey: "CalendarSyncLastSyncDate")
 
-        let newService = CalendarSyncService(
+        // Create a fresh ModelContext for this test to avoid conflicts
+        let config = ModelConfiguration(isStoredInMemoryOnly: true)
+        let container = try ModelContainer(for: SyncableEvent.self, SyncedCalendar.self, configurations: config)
+        let freshContext = ModelContext(container)
+
+        // Create new service with saved date and fresh context
+        let testService = CalendarSyncService(
             eventKitService: mockEventKitService,
-            modelContext: modelContext
+            modelContext: freshContext
         )
 
         // Allow small time difference due to initialization
-        let timeDiff = abs(newService.lastSyncDate?.timeIntervalSince(testDate) ?? 0)
+        let timeDiff = abs(testService.lastSyncDate?.timeIntervalSince(testDate) ?? 0)
         XCTAssertLessThan(timeDiff, 1.0)
 
         // Cleanup

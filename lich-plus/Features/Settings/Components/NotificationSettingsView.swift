@@ -20,7 +20,7 @@ struct NotificationSettingsView: View {
         List {
             // Master toggle section
             Section {
-                Toggle(String(localized: "notification.enable"), isOn: masterToggleBinding)
+                Toggle(String(localized: "Enable Notifications"), isOn: masterToggleBinding)
                     .onChange(of: masterToggleBinding.wrappedValue) { oldValue, newValue in
                         if newValue && notificationService.authorizationStatus == .denied {
                             // User denied permission previously
@@ -37,13 +37,13 @@ struct NotificationSettingsView: View {
             if notificationService.authorizationStatus == .denied {
                 Section {
                     VStack(alignment: .leading, spacing: 12) {
-                        Text(String(localized: "notification.permissionDenied.footer"))
+                        Text(String(localized: "Enable notifications in Settings to receive reminders."))
                             .font(.caption)
                             .foregroundStyle(AppColors.textSecondary)
                         
                         Button(action: openAppSettings) {
                             Label(
-                                String(localized: "notification.openSettings"),
+                                String(localized: "Open Settings"),
                                 systemImage: "gear"
                             )
                             .foregroundStyle(AppColors.primary)
@@ -56,9 +56,9 @@ struct NotificationSettingsView: View {
             // Only show settings if notifications are enabled
             if let settingsValue = settings, settingsValue.isEnabled {
                 // Event notifications section
-                Section(String(localized: "notification.events.section")) {
+                Section(String(localized: "Event Reminders")) {
                     Toggle(
-                        String(localized: "notification.events.enable"),
+                        String(localized: "Event Reminders"),
                         isOn: Binding(
                             get: { settingsValue.eventNotificationsEnabled },
                             set: { newValue in
@@ -70,7 +70,7 @@ struct NotificationSettingsView: View {
                     
                     VStack {
                         HStack(spacing: 0) {
-                            Text(String(localized: "notification.defaultReminder"))
+                            Text(String(localized: "Default Reminder"))
                             Spacer()
                         }
                         Picker("", selection: Binding(
@@ -92,9 +92,9 @@ struct NotificationSettingsView: View {
                 }
                 
                 // Rằm section
-                Section(String(localized: "notification.ram.section")) {
+                Section(String(localized: "Rằm (15th) Reminders")) {
                     Toggle(
-                        String(localized: "notification.ram.enable"),
+                        String(localized: "Rằm Reminders"),
                         isOn: Binding(
                             get: { settingsValue.ramNotificationsEnabled },
                             set: { newValue in
@@ -113,7 +113,7 @@ struct NotificationSettingsView: View {
                     
                     if settingsValue.ramNotificationsEnabled {
                         HStack {
-                            Text(String(localized: "notification.time"))
+                            Text(String(localized: "Time"))
                             Spacer()
                             DatePicker(
                                 "",
@@ -129,9 +129,9 @@ struct NotificationSettingsView: View {
                 }
                 
                 // Mùng 1 section
-                Section(String(localized: "notification.mung1.section")) {
+                Section(String(localized: "Mùng 1 Reminders")) {
                     Toggle(
-                        String(localized: "notification.mung1.enable"),
+                        String(localized: "Mùng 1 Reminders"),
                         isOn: Binding(
                             get: { settingsValue.mung1NotificationsEnabled },
                             set: { newValue in
@@ -150,7 +150,7 @@ struct NotificationSettingsView: View {
                     
                     if settingsValue.mung1NotificationsEnabled {
                         HStack {
-                            Text(String(localized: "notification.time"))
+                            Text(String(localized: "Time"))
                             Spacer()
                             DatePicker(
                                 "",
@@ -166,9 +166,9 @@ struct NotificationSettingsView: View {
                 }
                 
                 // Fixed events section
-                Section(String(localized: "notification.fixed.section")) {
+                Section(String(localized: "Fixed Reminders")) {
                     Toggle(
-                        String(localized: "notification.fixed.enable"),
+                        String(localized: "Fixed Reminders"),
                         isOn: Binding(
                             get: { settingsValue.fixedEventNotificationsEnabled },
                             set: { newValue in
@@ -187,7 +187,7 @@ struct NotificationSettingsView: View {
                     
                     if settingsValue.fixedEventNotificationsEnabled {
                         Picker(
-                            String(localized: "notification.fixed.reminderDays"),
+                            String(localized: "Reminder Days"),
                             selection: Binding(
                                 get: { settingsValue.fixedEventReminderDays },
                                 set: { newValue in
@@ -201,7 +201,7 @@ struct NotificationSettingsView: View {
                         ) {
                             ForEach(0..<7, id: \.self) { days in
                                 if days == 0 {
-                                    Text(String(localized: "notification.onDay")).tag(days)
+                                    Text(String(localized: "On day")).tag(days)
                                 } else {
                                     Text(String(format: NSLocalizedString(
                                         "notification.daysBefore",
@@ -214,18 +214,18 @@ struct NotificationSettingsView: View {
                 }
             }
         }
-        .navigationTitle(String(localized: "notification.settings.title"))
+        .navigationTitle(String(localized: "Notification Settings"))
         .onAppear {
             settings = notificationService.getSettings()
         }
         .alert(
-            String(localized: "notification.permissionRequired.title"),
+            String(localized: "Enable Notifications"),
             isPresented: $showPermissionAlert
         ) {
-            Button(String(localized: "notification.openSettings"), action: openAppSettings)
-            Button(String(localized: "notification.cancel"), role: .cancel) { }
+            Button(String(localized: "Open Settings"), action: openAppSettings)
+            Button(String(localized: "Cancel"), role: .cancel) { }
         } message: {
-            Text(String(localized: "notification.permissionRequired.message"))
+            Text(String(localized: "Please enable notifications in Settings to receive reminders."))
         }
     }
     

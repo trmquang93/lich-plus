@@ -51,11 +51,11 @@ struct RecurrencePickerSheet: View {
                     }
                 }
             }
-            .navigationTitle(String(localized: "createItem.recurrence"))
+            .navigationTitle(String(localized: "Recurrence"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "task.done")) {
+                    Button(String(localized: "Done")) {
                         onDone()
                     }
                     .foregroundStyle(AppColors.primary)
