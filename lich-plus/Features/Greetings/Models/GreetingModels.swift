@@ -153,6 +153,7 @@ struct GreetingRequest {
     let tone: GreetingTone
     let occasion: GreetingOccasion
     let recipientName: String?
+    let additionalInfo: String?
     let year: Int
 
     init(
@@ -160,12 +161,14 @@ struct GreetingRequest {
         tone: GreetingTone,
         occasion: GreetingOccasion = .tet,
         recipientName: String? = nil,
+        additionalInfo: String? = nil,
         year: Int = Calendar.current.component(.year, from: Date())
     ) {
         self.recipientType = recipientType
         self.tone = tone
         self.occasion = occasion
         self.recipientName = recipientName
+        self.additionalInfo = additionalInfo
         self.year = year
     }
 }

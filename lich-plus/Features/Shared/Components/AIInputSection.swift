@@ -40,7 +40,7 @@ struct AIInputSection: View {
                             .foregroundStyle(AppColors.primary)
                             .font(.system(size: 16))
 
-                        Text(String(localized: "ai.input.title"))
+                        Text(String(localized: "AI Assistant"))
                             .font(.system(size: AppTheme.fontBody, weight: .medium))
                             .foregroundStyle(AppColors.textPrimary)
 
@@ -60,7 +60,7 @@ struct AIInputSection: View {
                         // Text field
                         HStack(spacing: AppTheme.spacing8) {
                             TextField(
-                                String(localized: "ai.input.placeholder"),
+                                String(localized: "Type your message..."),
                                 text: $inputText
                             )
                             .textFieldStyle(.roundedBorder)
@@ -73,7 +73,7 @@ struct AIInputSection: View {
                                     .frame(width: 16, height: 16)
                             } else {
                                 Button(action: parseInput) {
-                                    Text(String(localized: "ai.input.parse"))
+                                    Text(String(localized: "Parse"))
                                         .font(.system(size: AppTheme.fontCaption, weight: .semibold))
                                         .foregroundStyle(.white)
                                         .padding(.vertical, AppTheme.spacing8)
@@ -105,7 +105,7 @@ struct AIInputSection: View {
                         }
 
                         // Hint text
-                        Text(String(localized: "ai.input.hint"))
+                        Text(String(localized: "AI-powered input"))
                             .font(.system(size: AppTheme.fontCaption))
                             .foregroundStyle(AppColors.textSecondary)
                     }

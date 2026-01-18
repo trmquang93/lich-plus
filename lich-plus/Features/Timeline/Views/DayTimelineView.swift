@@ -235,7 +235,7 @@ struct AllDayStripPlaceholder: View {
     var body: some View {
         VStack(spacing: AppTheme.spacing8) {
             if !events.isEmpty {
-                Text(String(localized: "event.allDay"))
+                Text(String(localized: "All Day"))
                     .font(.system(size: AppTheme.fontCaption, weight: .semibold))
                     .foregroundColor(AppColors.textSecondary)
                     .frame(maxWidth: .infinity, alignment: .leading)

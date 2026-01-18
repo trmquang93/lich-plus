@@ -15,13 +15,13 @@ struct CompactCalendarView: View {
 
     var dayLabels: [String] {
         [
-            String(localized: "day.sun"),
-            String(localized: "day.mon"),
-            String(localized: "day.tue"),
-            String(localized: "day.wed"),
-            String(localized: "day.thu"),
-            String(localized: "day.fri"),
-            String(localized: "day.sat")
+            String(localized: "Sun"),
+            String(localized: "Mon"),
+            String(localized: "Tue"),
+            String(localized: "Wed"),
+            String(localized: "Thu"),
+            String(localized: "Fri"),
+            String(localized: "Sat")
         ]
     }
 

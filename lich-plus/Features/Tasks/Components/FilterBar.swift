@@ -16,13 +16,13 @@ enum TaskFilter {
     var label: String {
         switch self {
         case .all:
-            return String(localized: "task.all")
+            return String(localized: "All")
         case .today:
-            return String(localized: "task.today")
+            return String(localized: "Today")
         case .thisWeek:
-            return String(localized: "task.thisWeek")
+            return String(localized: "This Week")
         case .thisMonth:
-            return String(localized: "task.thisMonth")
+            return String(localized: "This Month")
         }
     }
 }

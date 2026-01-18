@@ -24,12 +24,12 @@ extension View {
     ) -> some View {
         self.alert(
             isRecurring
-                ? String(localized: "delete.recurring.title")
-                : String(localized: "delete.confirm"),
+                ? String(localized: "Recurring Item")
+                : String(localized: "Delete"),
             isPresented: isPresented
         ) {
-            Button(String(localized: "delete.confirm"), role: .destructive, action: onConfirm)
-            Button(String(localized: "delete.cancel"), role: .cancel) { }
+            Button(String(localized: "Delete"), role: .destructive, action: onConfirm)
+            Button(String(localized: "Cancel"), role: .cancel) { }
         } message: {
             Text(deleteConfirmationMessage(isRecurring: isRecurring, itemType: itemType))
         }
@@ -38,10 +38,10 @@ extension View {
     /// Returns the appropriate confirmation message based on item type and recurrence
     private func deleteConfirmationMessage(isRecurring: Bool, itemType: ItemType) -> String {
         if isRecurring {
-            return String(localized: "delete.recurring.message")
+            return String(localized: "This is a recurring item. Choose what to delete.")
         }
         return itemType == .event
-            ? String(localized: "delete.event.message")
-            : String(localized: "delete.task.message")
+            ? String(localized: "Delete this event?")
+            : String(localized: "Delete this task?")
     }
 }

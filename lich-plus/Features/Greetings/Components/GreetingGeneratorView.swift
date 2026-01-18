@@ -11,6 +11,7 @@ struct GreetingGeneratorView: View {
     @State private var selectedRecipient: RecipientType = .parents
     @State private var selectedTone: GreetingTone = .formal
     @State private var recipientName: String = ""
+    @State private var additionalInfo: String = ""
     @State private var generatedGreeting: GeneratedGreeting?
     @State private var isGenerating: Bool = false
     @State private var errorMessage: String?
@@ -33,6 +34,9 @@ struct GreetingGeneratorView: View {
 
                 // Optional Name Input
                 nameInputSection
+
+                // Additional Info Input
+                additionalInfoSection
 
                 // Generate Button
                 generateButton
@@ -189,6 +193,26 @@ struct GreetingGeneratorView: View {
 
             TextField("Ví dụ: Ông Nội, Mẹ, Anh Minh...", text: $recipientName)
                 .font(.system(size: AppTheme.fontBody))
+                .padding(AppTheme.spacing12)
+                .background(AppColors.backgroundLightGray)
+                .cornerRadius(AppTheme.cornerRadiusMedium)
+        }
+        .padding(AppTheme.spacing16)
+        .background(AppColors.background)
+        .cornerRadius(AppTheme.cornerRadiusLarge)
+    }
+
+    // MARK: - Additional Info Section
+
+    private var additionalInfoSection: some View {
+        VStack(alignment: .leading, spacing: AppTheme.spacing12) {
+            Text("Thông tin thêm (tuỳ chọn)")
+                .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
+                .foregroundColor(AppColors.textPrimary)
+
+            TextField("Ví dụ: Con vừa được tăng lương, Chúc mừng nhà mới...", text: $additionalInfo, axis: .vertical)
+                .font(.system(size: AppTheme.fontBody))
+                .lineLimit(3...6)
                 .padding(AppTheme.spacing12)
                 .background(AppColors.backgroundLightGray)
                 .cornerRadius(AppTheme.cornerRadiusMedium)
@@ -356,6 +380,7 @@ struct GreetingGeneratorView: View {
             tone: selectedTone,
             occasion: .tet,
             recipientName: recipientName.isEmpty ? nil : recipientName,
+            additionalInfo: additionalInfo.isEmpty ? nil : additionalInfo,
             year: currentYear
         )
 

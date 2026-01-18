@@ -20,9 +20,9 @@ enum ItemType: String, CaseIterable, Identifiable {
     var displayName: String {
         switch self {
         case .task:
-            return String(localized: "item.task")
+            return String(localized: "Task")
         case .event:
-            return String(localized: "item.event")
+            return String(localized: "Event")
         }
     }
 }
@@ -40,13 +40,13 @@ enum Priority: String, CaseIterable, Identifiable {
     var displayName: String {
         switch self {
         case .none:
-            return String(localized: "priority.none")
+            return String(localized: "None")
         case .low:
-            return String(localized: "priority.low")
+            return String(localized: "Low")
         case .medium:
-            return String(localized: "priority.medium")
+            return String(localized: "Medium")
         case .high:
-            return String(localized: "priority.high")
+            return String(localized: "High")
         }
     }
 
@@ -79,17 +79,17 @@ enum TaskCategory: String, CaseIterable, Identifiable {
     var displayName: String {
         switch self {
         case .work:
-            return String(localized: "category.work")
+            return String(localized: "Work")
         case .personal:
-            return String(localized: "category.personal")
+            return String(localized: "Personal")
         case .birthday:
-            return String(localized: "category.birthday")
+            return String(localized: "Birthday")
         case .holiday:
-            return String(localized: "category.holiday")
+            return String(localized: "Holiday")
         case .meeting:
-            return String(localized: "category.meeting")
+            return String(localized: "Meeting")
         case .other:
-            return String(localized: "category.other")
+            return String(localized: "Other")
         }
     }
 
@@ -150,19 +150,19 @@ enum RecurrenceType: String, CaseIterable, Identifiable {
     var displayName: String {
         switch self {
         case .none:
-            return String(localized: "recurrence.none")
+            return String(localized: "None")
         case .daily:
-            return String(localized: "recurrence.daily")
+            return String(localized: "Daily")
         case .weekly:
-            return String(localized: "recurrence.weekly")
+            return String(localized: "Weekly")
         case .monthly:
-            return String(localized: "recurrence.monthly")
+            return String(localized: "Monthly")
         case .yearly:
-            return String(localized: "recurrence.yearly")
+            return String(localized: "Yearly")
         case .lunarMonthly:
-            return String(localized: "recurrence.lunarMonthly")
+            return String(localized: "Lunar Monthly")
         case .lunarYearly:
-            return String(localized: "recurrence.lunarYearly")
+            return String(localized: "Lunar Yearly")
         }
     }
 }
@@ -267,9 +267,9 @@ struct TaskItem: Identifiable, Equatable {
 
     var dateDisplay: String {
         if isToday {
-            return String(localized: "task.today")
+            return String(localized: "Today")
         } else if isTomorrow {
-            return String(localized: "task.tomorrow")
+            return String(localized: "Tomorrow")
         } else {
             return Self.dateFormatter.string(from: date)
         }
@@ -279,13 +279,13 @@ struct TaskItem: Identifiable, Equatable {
         guard let minutes = reminderMinutes else { return nil }
         switch minutes {
         case 15:
-            return String(localized: "reminder.15min")
+            return String(localized: "15 minutes before")
         case 30:
-            return String(localized: "reminder.30min")
+            return String(localized: "30 minutes before")
         case 60:
-            return String(localized: "reminder.1hr")
+            return String(localized: "1 hour before")
         default:
-            return "\(minutes) " + String(localized: "task.reminderMinutes")
+            return "\(minutes) " + String(localized: "minutes before")
         }
     }
 

@@ -49,11 +49,11 @@ struct SettingsView: View {
                             .frame(width: 32)
 
                         VStack(alignment: .leading, spacing: AppTheme.spacing2) {
-                            Text(String(localized: "notification.settings.title"))
+                            Text(String(localized: "Notification Settings"))
                                 .font(.body)
                                 .foregroundStyle(AppColors.textPrimary)
 
-                            Text(String(localized: "notification.settings.subtitle"))
+                            Text(String(localized: "Configure reminders and notifications"))
                                 .font(.caption)
                                 .foregroundStyle(AppColors.textSecondary)
                         }

@@ -30,7 +30,7 @@ struct DatePickerSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(String(localized: "task.done")) {
+                    Button(String(localized: "Done")) {
                         onDone()
                     }
                     .foregroundStyle(AppColors.primary)

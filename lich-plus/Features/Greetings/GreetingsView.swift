@@ -12,7 +12,7 @@ struct GreetingsView: View {
     var body: some View {
         NavigationStack {
             GreetingGeneratorView()
-                .navigationTitle(String(localized: "tab.greetings"))
+                .navigationTitle(String(localized: "Greetings"))
                 .navigationBarTitleDisplayMode(.inline)
         }
     }

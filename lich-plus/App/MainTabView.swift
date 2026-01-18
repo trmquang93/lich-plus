@@ -44,25 +44,25 @@ struct MainTabView: View {
         TabView(selection: $selectedTab) {
             CalendarView()
                 .tabItem {
-                    Label("tab.calendar", systemImage: "calendar")
+                    Label("Calendar", systemImage: "calendar")
                 }
                 .tag(0)
 
             TasksView()
                 .tabItem {
-                    Label("tab.timeline", systemImage: "list.bullet")
+                    Label("Timeline", systemImage: "list.bullet")
                 }
                 .tag(1)
 
             GreetingsView()
                 .tabItem {
-                    Label("tab.greetings", systemImage: "gift.fill")
+                    Label("Greetings", systemImage: "gift.fill")
                 }
                 .tag(2)
 
             SettingsView()
                 .tabItem {
-                    Label("tab.settings", systemImage: "gear")
+                    Label("Settings", systemImage: "gear")
                 }
                 .tag(3)
         }

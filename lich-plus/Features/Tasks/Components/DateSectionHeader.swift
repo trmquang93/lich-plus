@@ -40,7 +40,7 @@ struct DateSectionHeader: View {
             .frame(maxWidth: .infinity, alignment: .leading)
 
             if showTodayBadge {
-                Text(String(localized: "date.today"))
+                Text(String(localized: "Today"))
                     .font(.system(size: AppTheme.fontCaption, weight: .semibold))
                     .foregroundStyle(.white)
                     .padding(.horizontal, AppTheme.spacing8)

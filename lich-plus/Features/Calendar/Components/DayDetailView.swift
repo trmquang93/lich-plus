@@ -268,7 +268,7 @@ struct DayDetailView: View {
                 Text(event.title)
                     .font(.system(size: AppTheme.fontBody, weight: .bold))
                     .foregroundStyle(AppColors.textPrimary)
-                Text(event.isAllDay ? String(localized: "event.allDay") : (event.time ?? ""))
+                Text(event.isAllDay ? String(localized: "All Day") : (event.time ?? ""))
                     .font(.system(size: AppTheme.fontCaption))
                     .foregroundStyle(AppColors.textSecondary)
                 if let description = event.description {

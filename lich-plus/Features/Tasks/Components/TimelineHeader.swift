@@ -20,7 +20,7 @@ struct TimelineHeader: View {
         VStack(spacing: AppTheme.spacing12) {
             // MARK: - Title and Action Buttons Row
             HStack {
-                Text("timeline.title")
+                Text("Timeline")
                     .font(.system(size: AppTheme.fontLargeTitle, weight: .bold))
                     .foregroundStyle(AppColors.textPrimary)
 
