@@ -135,6 +135,7 @@ final class GreetingServiceTests: XCTestCase {
             tone: "formal",
             occasion: "tet",
             recipientName: "Ba Mẹ",
+            additionalInfo: nil,
             year: 2026
         )
 
