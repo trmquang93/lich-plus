@@ -21,7 +21,7 @@ struct DateSectionHeader: View {
     var lunarDateDisplay: String {
         let (day, month, _) = LunarCalendar.solarToLunar(date)
         let yearCanChi = CanChiCalculator.calculateYearCanChi(for: date)
-        return String(localized: "date.lunarFormat \(day) \(month) \(yearCanChi.displayName)")
+        return String(localized: "Lunar \(day)/\(month) \(yearCanChi.displayName)")
     }
 
     var body: some View {

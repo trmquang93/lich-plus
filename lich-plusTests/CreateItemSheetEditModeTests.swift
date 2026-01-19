@@ -23,7 +23,7 @@ final class CreateItemSheetEditModeTests: XCTestCase {
         let title = headerTitle(isEditMode: isEditMode, itemType: itemType)
 
         // Assert
-        XCTAssertEqual(title, String(localized: "createItem.editEvent"),
+        XCTAssertEqual(title, String(localized: "Edit Event"),
                        "Header should show 'Edit Event' when editing an event")
     }
 
@@ -36,7 +36,7 @@ final class CreateItemSheetEditModeTests: XCTestCase {
         let title = headerTitle(isEditMode: isEditMode, itemType: itemType)
 
         // Assert
-        XCTAssertEqual(title, String(localized: "createItem.editTask"),
+        XCTAssertEqual(title, String(localized: "Edit Task"),
                        "Header should show 'Edit Task' when editing a task")
     }
 
@@ -49,7 +49,7 @@ final class CreateItemSheetEditModeTests: XCTestCase {
         let title = headerTitle(isEditMode: isEditMode, itemType: itemType)
 
         // Assert
-        XCTAssertEqual(title, String(localized: "createItem.title"),
+        XCTAssertEqual(title, String(localized: "New Item"),
                        "Header should show 'Create new' when creating a new item")
     }
 
@@ -62,7 +62,7 @@ final class CreateItemSheetEditModeTests: XCTestCase {
         let title = headerTitle(isEditMode: isEditMode, itemType: itemType)
 
         // Assert
-        XCTAssertEqual(title, String(localized: "createItem.title"),
+        XCTAssertEqual(title, String(localized: "New Item"),
                        "Header should show 'Create new' when creating a new task")
     }
 
@@ -77,7 +77,7 @@ final class CreateItemSheetEditModeTests: XCTestCase {
         let title = saveButtonTitle(isEditMode: isEditMode, itemType: itemType)
 
         // Assert
-        XCTAssertEqual(title, String(localized: "createItem.save"),
+        XCTAssertEqual(title, String(localized: "Save"),
                        "Save button should show 'Save' when editing an event")
     }
 
@@ -90,7 +90,7 @@ final class CreateItemSheetEditModeTests: XCTestCase {
         let title = saveButtonTitle(isEditMode: isEditMode, itemType: itemType)
 
         // Assert
-        XCTAssertEqual(title, String(localized: "createItem.save"),
+        XCTAssertEqual(title, String(localized: "Save"),
                        "Save button should show 'Save' when editing a task")
     }
 
@@ -103,7 +103,7 @@ final class CreateItemSheetEditModeTests: XCTestCase {
         let title = saveButtonTitle(isEditMode: isEditMode, itemType: itemType)
 
         // Assert
-        XCTAssertEqual(title, String(localized: "createItem.createEvent"),
+        XCTAssertEqual(title, String(localized: "Create Event"),
                        "Save button should show 'Create event' when creating an event")
     }
 
@@ -116,7 +116,7 @@ final class CreateItemSheetEditModeTests: XCTestCase {
         let title = saveButtonTitle(isEditMode: isEditMode, itemType: itemType)
 
         // Assert
-        XCTAssertEqual(title, String(localized: "createItem.createTask"),
+        XCTAssertEqual(title, String(localized: "Create Task"),
                        "Save button should show 'Create task' when creating a task")
     }
 
@@ -133,24 +133,24 @@ final class CreateItemSheetEditModeTests: XCTestCase {
         if isEditMode {
             switch itemType {
             case .event:
-                return String(localized: "createItem.editEvent")
+                return String(localized: "Edit Event")
             case .task:
-                return String(localized: "createItem.editTask")
+                return String(localized: "Edit Task")
             }
         } else {
-            return String(localized: "createItem.title")
+            return String(localized: "New Item")
         }
     }
 
     private func saveButtonTitle(isEditMode: Bool, itemType: ItemType) -> String {
         if isEditMode {
-            return String(localized: "createItem.save")
+            return String(localized: "Save")
         } else {
             switch itemType {
             case .event:
-                return String(localized: "createItem.createEvent")
+                return String(localized: "Create Event")
             case .task:
-                return String(localized: "createItem.createTask")
+                return String(localized: "Create Task")
             }
         }
     }
