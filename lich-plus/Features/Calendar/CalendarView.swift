@@ -38,6 +38,10 @@ struct CalendarView: View {
         navigationUnit == .month ? displayedMonthOffset : displayedWeekOffset
     }
 
+    private var isViewingCurrentMonth: Bool {
+        displayedMonthOffset == 0
+    }
+
     private func calculateWeekIndex(for date: Date, in month: CalendarMonth) -> Int {
         let weeks = month.weeksOfDays
         guard !weeks.isEmpty else { return 0 }
@@ -75,10 +79,15 @@ struct CalendarView: View {
         let todayComponents = calendar.dateComponents([.year, .month], from: today)
         let weekComponents = calendar.dateComponents([.year, .month], from: weekDate)
 
-        // Calculate month difference
-        let monthDiff =
-            (weekComponents.year! - todayComponents.year!) * 12
-            + (weekComponents.month! - todayComponents.month!)
+        // Calculate month difference with safe unwrapping
+        guard let todayYear = todayComponents.year,
+              let todayMonth = todayComponents.month,
+              let weekYear = weekComponents.year,
+              let weekMonth = weekComponents.month else {
+            return
+        }
+
+        let monthDiff = (weekYear - todayYear) * 12 + (weekMonth - todayMonth)
 
         // Update month offset if different
         if displayedMonthOffset != monthDiff {
@@ -100,15 +109,20 @@ struct CalendarView: View {
                             displayedMonthOffset += 1
                         },
                         onMonthSelected: { month, year in
-                            let today = Date()
+                            // Create date for the selected month and calculate offset from today
                             let calendar = Calendar.current
-                            let todayComponents = calendar.dateComponents(
-                                [.year, .month], from: today)
-                            let monthDiff =
-                                (year - todayComponents.year!) * 12
-                                + (month - todayComponents.month!)
-                            displayedMonthOffset = monthDiff
-                        }
+                            let dateComponents = DateComponents(year: year, month: month, day: 1)
+                            guard let selectedDate = calendar.date(from: dateComponents) else {
+                                return
+                            }
+                            displayedMonthOffset = dataManager.calculateMonthOffsetFromToday(for: selectedDate)
+                        },
+                        onTodayTapped: {
+                            displayedMonthOffset = 0
+                            displayedWeekOffset = 0
+                            dataManager.goToToday()
+                        },
+                        isViewingCurrentMonth: isViewingCurrentMonth
                     )
                     .background(
                         GeometryReader { headerGeo in
