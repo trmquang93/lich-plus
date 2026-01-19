@@ -82,6 +82,13 @@ class CalendarDataManager: ObservableObject {
         currentMonth = generateCalendarMonth(for: date)
     }
 
+    /// Navigate to today's date and regenerate calendar
+    func goToToday() {
+        let today = Date()
+        selectedDate = today
+        currentMonth = generateCalendarMonth(for: today)
+    }
+
     /// Refresh the current month with latest data from the database
     func refreshCurrentMonth() {
         currentMonth = generateCalendarMonth(for: selectedDate)

@@ -141,6 +141,85 @@ final class CalendarDataManagerTests: XCTestCase {
         XCTAssertEqual(sut.selectedDate, previousSelectedDate)
     }
 
+    func testGoToTodaySetsSelectedDateToToday() {
+        // Given - navigate away from today first
+        sut.goToNextMonth()
+
+        // When
+        sut.goToToday()
+
+        // Then
+        let calendar = Calendar.current
+        XCTAssertTrue(calendar.isDateInToday(sut.selectedDate))
+    }
+
+    func testGoToTodayRegeneratesCurrentMonthForToday() {
+        // Given - navigate away from today
+        sut.goToNextMonth()
+        let previousMonth = sut.currentMonth.month
+
+        // When
+        sut.goToToday()
+
+        // Then
+        let calendar = Calendar.current
+        let todayComponents = calendar.dateComponents([.month, .year], from: Date())
+        XCTAssertEqual(sut.currentMonth.month, todayComponents.month)
+        XCTAssertEqual(sut.currentMonth.year, todayComponents.year)
+        XCTAssertNotEqual(sut.currentMonth.month, previousMonth)
+    }
+
+    func testGoToTodayWhenAlreadyOnToday() {
+        // Given - already on today
+        sut.goToToday()
+        let firstCallMonth = sut.currentMonth
+
+        // When - call again
+        sut.goToToday()
+
+        // Then - should still be on today without errors
+        let calendar = Calendar.current
+        XCTAssertTrue(calendar.isDateInToday(sut.selectedDate))
+        XCTAssertEqual(sut.currentMonth.month, firstCallMonth.month)
+        XCTAssertEqual(sut.currentMonth.year, firstCallMonth.year)
+    }
+
+    func testGoToTodayFromFutureMonth() {
+        // Given - navigate to a future month
+        sut.goToNextMonth()
+        sut.goToNextMonth()
+        sut.goToNextMonth()
+
+        // When
+        sut.goToToday()
+
+        // Then
+        let calendar = Calendar.current
+        let today = Date()
+        XCTAssertTrue(calendar.isDateInToday(sut.selectedDate))
+        XCTAssertEqual(
+            calendar.component(.month, from: sut.selectedDate),
+            calendar.component(.month, from: today)
+        )
+        XCTAssertEqual(
+            calendar.component(.year, from: sut.selectedDate),
+            calendar.component(.year, from: today)
+        )
+    }
+
+    func testGoToTodayFromPastMonth() {
+        // Given - navigate to a past month
+        sut.goToPreviousMonth()
+        sut.goToPreviousMonth()
+
+        // When
+        sut.goToToday()
+
+        // Then
+        let calendar = Calendar.current
+        XCTAssertTrue(calendar.isDateInToday(sut.selectedDate))
+    }
+
     // MARK: - Model Context Integration
 
     func testSetModelContextStoresDatabaseAccess() {

@@ -14,6 +14,8 @@ struct CalendarHeaderView: View {
     let onPreviousMonth: () -> Void
     let onNextMonth: () -> Void
     let onMonthSelected: ((Int, Int) -> Void)?
+    let onTodayTapped: (() -> Void)?
+    let isViewingCurrentMonth: Bool
 
     @State private var showMonthPicker = false
 
@@ -57,6 +59,17 @@ struct CalendarHeaderView: View {
                         .font(.system(size: AppTheme.fontTitle3, weight: .semibold))
                         .foregroundStyle(AppColors.primary)
                         .frame(width: 40, height: 40)
+                }
+
+                // Today button - only show when not viewing current month
+                if !isViewingCurrentMonth {
+                    Button(action: { onTodayTapped?() }) {
+                        Image(systemName: "calendar.circle.fill")
+                            .font(.system(size: AppTheme.fontTitle3, weight: .semibold))
+                            .foregroundStyle(AppColors.primary)
+                            .frame(width: 40, height: 40)
+                    }
+                    .accessibilityLabel(String(localized: "Today"))
                 }
             }
             .frame(height: 36)
@@ -102,7 +115,18 @@ struct CalendarHeaderView: View {
             selectedDate: .constant(Date()),
             onPreviousMonth: {},
             onNextMonth: {},
-            onMonthSelected: nil
+            onMonthSelected: nil,
+            onTodayTapped: nil,
+            isViewingCurrentMonth: true
+        )
+
+        CalendarHeaderView(
+            selectedDate: .constant(Date()),
+            onPreviousMonth: {},
+            onNextMonth: {},
+            onMonthSelected: nil,
+            onTodayTapped: { print("Today tapped") },
+            isViewingCurrentMonth: false
         )
 
         Spacer()

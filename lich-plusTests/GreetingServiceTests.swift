@@ -142,7 +142,8 @@ final class GreetingServiceTests: XCTestCase {
             occasion: "tet",
             recipientName: "Ba Mẹ",
             additionalInfo: nil,
-            year: 2026
+            year: 2026,
+            nonce: UUID().uuidString
         )
 
         // Test encoding

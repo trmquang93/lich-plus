@@ -398,6 +398,9 @@
     "Information" : {
 
     },
+    "Invalid request, please try again" : {
+
+    },
     "Invalid response" : {
 
     },
@@ -729,7 +732,14 @@
 
     },
     "Today" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôm nay"
+          }
+        }
+      }
     },
     "Today is a free day. Add a new event?" : {
 
