@@ -2,8 +2,6 @@
 //  GreetingModels.swift
 //  lich-plus
 //
-//  Created by Claude on 17/01/26.
-//
 
 import Foundation
 
@@ -37,16 +35,30 @@ enum RecipientType: String, CaseIterable, Identifiable {
     }
 
     /// Default recipient name to use when no custom name is provided
-    var defaultRecipientName: String {
-        switch self {
-        case .grandparents: return "Ông Bà"
-        case .parents: return "Bố Mẹ"
-        case .boss: return "Anh/Chị"
-        case .colleagues: return "Anh/Chị"
-        case .teachers: return "Thầy/Cô"
-        case .friends: return "bạn"
-        case .partner: return "em/anh"
-        case .children: return "con"
+    func defaultRecipientName(for language: GreetingLanguage) -> String {
+        switch language {
+        case .vietnamese:
+            switch self {
+            case .grandparents: return "Ông Bà"
+            case .parents: return "Bố Mẹ"
+            case .boss: return "Anh/Chị"
+            case .colleagues: return "Anh/Chị"
+            case .teachers: return "Thầy/Cô"
+            case .friends: return "bạn"
+            case .partner: return "em/anh"
+            case .children: return "con"
+            }
+        case .english:
+            switch self {
+            case .grandparents: return "Grandparents"
+            case .parents: return "Mom and Dad"
+            case .boss: return "Boss"
+            case .colleagues: return "Colleague"
+            case .teachers: return "Teacher"
+            case .friends: return "friend"
+            case .partner: return "my love"
+            case .children: return "sweetheart"
+            }
         }
     }
 
@@ -159,6 +171,32 @@ enum GreetingOccasion: String, CaseIterable, Identifiable {
     }
 }
 
+// MARK: - Greeting Language
+
+/// Language for greeting messages
+enum GreetingLanguage: String, CaseIterable, Identifiable {
+    case vietnamese = "vi"
+    case english = "en"
+
+    var id: String { rawValue }
+
+    /// Display name
+    var displayName: String {
+        switch self {
+        case .vietnamese: return "Tiếng Việt"
+        case .english: return "English"
+        }
+    }
+
+    /// Flag emoji
+    var flag: String {
+        switch self {
+        case .vietnamese: return "🇻🇳"
+        case .english: return "🇺🇸"
+        }
+    }
+}
+
 // MARK: - Greeting Request
 
 /// Request model for generating a greeting
@@ -169,6 +207,7 @@ struct GreetingRequest {
     let recipientName: String?
     let additionalInfo: String?
     let year: Int
+    let language: GreetingLanguage
 
     init(
         recipientType: RecipientType,
@@ -176,7 +215,8 @@ struct GreetingRequest {
         occasion: GreetingOccasion = .tet,
         recipientName: String? = nil,
         additionalInfo: String? = nil,
-        year: Int = Calendar.current.component(.year, from: Date())
+        year: Int = Calendar.current.component(.year, from: Date()),
+        language: GreetingLanguage = .vietnamese
     ) {
         self.recipientType = recipientType
         self.tone = tone
@@ -184,6 +224,7 @@ struct GreetingRequest {
         self.recipientName = recipientName
         self.additionalInfo = additionalInfo
         self.year = year
+        self.language = language
     }
 }
 
@@ -221,6 +262,14 @@ struct SampleGreetings {
     }
 
     private static func getTemplates(for request: GreetingRequest) -> [String] {
+        if request.language == .english {
+            return getEnglishTemplates(for: request)
+        }
+
+        return getVietnameseTemplates(for: request)
+    }
+
+    private static func getVietnameseTemplates(for request: GreetingRequest) -> [String] {
         let canChi = GreetingOccasion.canChi(for: request.year)
         let zodiac = GreetingOccasion.zodiacAnimal(for: request.year)
 
@@ -360,13 +409,153 @@ struct SampleGreetings {
         }
     }
 
+    private static func getEnglishTemplates(for request: GreetingRequest) -> [String] {
+        let canChi = GreetingOccasion.canChi(for: request.year)
+        let zodiac = GreetingOccasion.zodiacAnimal(for: request.year)
+
+        switch (request.recipientType, request.tone) {
+        // Grandparents
+        case (.grandparents, .formal):
+            return [
+                "Wishing {{recipient}} good health, longevity, and prosperity in the year \(canChi). May you always be joyful to see your family gather every Tet!",
+                "On the occasion of Tet \(canChi), respectfully wishing {{recipient}} peace, prosperity, and abundance in your home. May you live to a hundred years!",
+                "Wishing {{recipient}} health and peace in the new year \(zodiac). May your family be happy and your descendants be filial!"
+            ]
+        case (.grandparents, .casual):
+            return [
+                "Happy New Year {{recipient}}! Wishing you health and joy in the year \(canChi)! I love you so much! 🧧",
+                "{{recipient}}, Tet \(canChi) is here! Wishing you health so I can keep visiting you!",
+                "Happy New Year {{recipient}}! Wishing you health and happiness in the year \(zodiac)! 🎊"
+            ]
+
+        // Parents
+        case (.parents, .formal):
+            return [
+                "Respectfully wishing {{recipient}} abundant health and all your wishes come true in the year \(canChi). Thank you for always loving and protecting me!",
+                "On the occasion of spring \(canChi), respectfully wishing {{recipient}} peace, prosperity, family happiness, and success in work!",
+                "In the year \(zodiac), I wish {{recipient}} health and peace, all things good, and always joyful with your family!"
+            ]
+        case (.parents, .casual):
+            return [
+                "Happy New Year {{recipient}}! Wishing you health and joy in the new year! Love you! ❤️",
+                "Tet \(canChi) is here! Wishing {{recipient}} prosperity, health, and happiness this year!",
+                "Year \(zodiac) wishing {{recipient}} always young and healthy! I will try to make you proud! 🧧"
+            ]
+
+        // Boss
+        case (.boss, .formal):
+            return [
+                "Respectfully wishing {{recipient}} abundant health, smooth work, and success in everything in the year \(canChi)!",
+                "On the occasion of Tet \(canChi), respectfully wishing {{recipient}} a brilliantly successful new year, with every project going smoothly!",
+                "Wishing {{recipient}} great fortune and success in the year \(zodiac), career advancement, and family happiness!"
+            ]
+        case (.boss, .casual):
+            return [
+                "Happy New Year {{recipient}}! Wishing you joy and smooth work in the year \(canChi)! Thank you for supporting me this past year! 🎉",
+                "Happy New Year {{recipient}}! Year \(zodiac) wishing you health and success! 🧧",
+                "Tet \(canChi) is here {{recipient}}! Wishing you prosperity and company growth this year!"
+            ]
+
+        // Colleagues
+        case (.colleagues, .formal):
+            return [
+                "Wishing {{recipient}} health, work success, and family happiness in the year \(canChi)!",
+                "On the occasion of spring \(canChi), wishing {{recipient}} a new year full of energy and success!",
+                "Year \(zodiac) wishing {{recipient}} peace and prosperity, refreshed spirit, and successful work!"
+            ]
+        case (.colleagues, .casual):
+            return [
+                "Happy New Year team! Let's burn it together this year \(canChi)! 🔥",
+                "Wishing the team joy in year \(zodiac), good salary and bonuses, and less OT! 😄",
+                "Tet \(canChi) is here! Wishing {{recipient}} prosperity and bug-free code this year! 🎊"
+            ]
+
+        // Teachers
+        case (.teachers, .formal):
+            return [
+                "Respectfully wishing {{recipient}} abundant health, smooth work, and family happiness in the year \(canChi)!",
+                "On the occasion of Tet \(canChi), respectfully sending my best wishes to {{recipient}}. Thank you for guiding me!",
+                "In the year \(zodiac), respectfully wishing {{recipient}} everything goes well, and always full of enthusiasm for your teaching career!"
+            ]
+        case (.teachers, .casual):
+            return [
+                "Happy New Year {{recipient}}! Wishing you joy and health in year \(canChi)! I miss you! 📚",
+                "Happy New Year {{recipient}}! Year \(zodiac) wishing you always happy! 🎉",
+                "Tet \(canChi) is here! Wishing {{recipient}} a new year full of joy!"
+            ]
+
+        // Friends
+        case (.friends, .formal):
+            return [
+                "Wishing {{recipient}} health, success, and prosperity in the year \(canChi)!",
+                "Year \(zodiac) wishing {{recipient}} all things good, smooth work, and fulfilling relationships!",
+                "On the occasion of Tet \(canChi), wishing {{recipient}} a new year of peace and prosperity!"
+            ]
+        case (.friends, .casual):
+            return [
+                "Happy New Year {{recipient}}! Wishing you prosperity in the year \(canChi)! 🧧",
+                "Tet \(zodiac) is here! Wishing {{recipient}} joy this year, and may you find love (if you don't have one yet)! 😄",
+                "Wishing {{recipient}} health, success, and most importantly, RICH in the new year \(canChi)! 💰"
+            ]
+        case (.friends, .funny):
+            return [
+                "Year \(canChi) wishing {{recipient}}: Money flows in like water, money goes out like... slowly! 😂",
+                "Happy New Year! Wishing year \(zodiac) you're more handsome/beautiful than me... just a little bit! 🤣",
+                "Tet \(canChi) is here! Wishing {{recipient}} fewer lonely days this year than last! Just kidding! 😜",
+                "New year wishing {{recipient}}: Weight down, salary up, crush notices you! 🎊"
+            ]
+
+        // Partner
+        case (.partner, .formal):
+            return [
+                "Wishing {{recipient}} health and happiness in the year \(canChi). Thank you for always being by my side!",
+                "Year \(zodiac) wishing {{recipient}} all the best things. Hope we stay together forever!",
+                "On the occasion of Tet \(canChi), I want to say: Thank you for everything!"
+            ]
+        case (.partner, .casual):
+            return [
+                "Happy New Year my love! Let's be happy together in year \(canChi)! 💕",
+                "Tet \(zodiac) is here! Wishing my love always beautiful/handsome and healthy! ❤️",
+                "New year \(canChi) wishing you: Be loved more, be pampered more! 🥰"
+            ]
+        case (.partner, .romantic):
+            return [
+                "Year \(canChi), only one wish: To be with {{recipient}} forever. Love you! 💕",
+                "This Tet has {{recipient}}, life is complete. Wishing us true happiness in year \(zodiac)! ❤️",
+                "{{recipient}} is the best gift of last year. Year \(canChi) let's continue writing our love story! 💑",
+                "365 days past had {{recipient}}, 365 days ahead I still want {{recipient}}. Happy New Year, my love! 💖"
+            ]
+
+        // Children
+        case (.children, .formal):
+            return [
+                "Wishing {{recipient}} good study, obedience, and respect for grandparents and parents in the year \(canChi)!",
+                "Year \(zodiac) wishing {{recipient}} health, study progress, and growing maturity!",
+                "On the occasion of Tet \(canChi), wishing {{recipient}} a new year full of joy and success!"
+            ]
+        case (.children, .casual):
+            return [
+                "Happy New Year {{recipient}}! Wishing you health, good study, and fun play in year \(canChi)! 🎊",
+                "Tet \(zodiac) is here! Wishing {{recipient}} lots of lucky money and candies! 🧧",
+                "New year \(canChi) wishing {{recipient}}: Taller, healthier, and still as cute as that! 💕"
+            ]
+
+        default:
+            return [
+                "Happy New Year \(canChi)! Wishing {{recipient}} health, happiness, and prosperity!",
+                "Year \(zodiac) wishing {{recipient}} peace and prosperity, all things good!",
+                "Happy New Year! Tet \(canChi) wishing {{recipient}} prosperity! 🧧"
+            ]
+        }
+    }
+
     private static func formatTemplate(_ template: String, with request: GreetingRequest) -> String {
         // Use custom name if provided, otherwise use default recipient name
         let replacement: String
         if let name = request.recipientName, !name.isEmpty {
             replacement = name
         } else {
-            replacement = request.recipientType.defaultRecipientName
+            replacement = request.recipientType.defaultRecipientName(for: request.language)
         }
         return template.replacingOccurrences(of: "{{recipient}}", with: replacement)
     }

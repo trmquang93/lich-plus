@@ -109,6 +109,7 @@ class GreetingService {
             recipientName: request.recipientName,
             additionalInfo: request.additionalInfo,
             year: request.year,
+            language: request.language.rawValue,
             nonce: nonce
         )
 
@@ -148,6 +149,7 @@ struct GreetingAPIRequest: Codable {
     let recipientName: String?
     let additionalInfo: String?
     let year: Int
+    let language: String
     let nonce: String
 }
 
