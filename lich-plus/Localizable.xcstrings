@@ -729,7 +729,14 @@
 
     },
     "Today" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôm nay"
+          }
+        }
+      }
     },
     "Today is a free day. Add a new event?" : {
 

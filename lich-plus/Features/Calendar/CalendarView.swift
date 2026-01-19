@@ -38,6 +38,10 @@ struct CalendarView: View {
         navigationUnit == .month ? displayedMonthOffset : displayedWeekOffset
     }
 
+    private var isViewingCurrentMonth: Bool {
+        displayedMonthOffset == 0
+    }
+
     private func calculateWeekIndex(for date: Date, in month: CalendarMonth) -> Int {
         let weeks = month.weeksOfDays
         guard !weeks.isEmpty else { return 0 }
@@ -108,7 +112,13 @@ struct CalendarView: View {
                                 (year - todayComponents.year!) * 12
                                 + (month - todayComponents.month!)
                             displayedMonthOffset = monthDiff
-                        }
+                        },
+                        onTodayTapped: {
+                            displayedMonthOffset = 0
+                            displayedWeekOffset = 0
+                            dataManager.goToToday()
+                        },
+                        isViewingCurrentMonth: isViewingCurrentMonth
                     )
                     .background(
                         GeometryReader { headerGeo in
