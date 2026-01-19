@@ -334,6 +334,7 @@ struct GreetingGeneratorView: View {
                 .buttonStyle(.plain)
             }
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(AppTheme.spacing16)
         .background(AppColors.background)
         .cornerRadius(AppTheme.cornerRadiusLarge)
