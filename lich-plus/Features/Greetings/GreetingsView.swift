@@ -2,8 +2,6 @@
 //  GreetingsView.swift
 //  lich-plus
 //
-//  Created by Claude on 17/01/26.
-//
 
 import SwiftUI
 

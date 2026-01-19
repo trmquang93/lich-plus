@@ -40,7 +40,6 @@
 		4DDBFDF22ED8F66900B892E0 /* Exceptions for "lich-plus" folder in "lich-plus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Config.xcconfig,
 				Config.xcconfig.example,
 				Info.plist,
 			);
@@ -59,8 +58,6 @@
 		};
 		4DA45EE82ED1090100C1F1F6 /* lich-plusTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = "lich-plusTests";
 			sourceTree = "<group>";
 		};
@@ -290,9 +287,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-lich-plus/Pods-lich-plus-resources-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-lich-plus/Pods-lich-plus-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

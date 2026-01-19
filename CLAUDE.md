@@ -271,6 +271,8 @@ lich-plus/
 │   │   └── ContentView.swift       # Tab navigation container
 │   ├── Core/                       # Shared design system and utilities
 │   │   ├── Theme.swift             # Design system (colors, spacing, typography)
+│   │   ├── Components/             # Reusable SwiftUI components
+│   │   │   └── FlowLayout.swift    # Flow layout with automatic line wrapping
 │   │   ├── Services/               # Shared business logic services
 │   │   │   ├── AutoSyncCoordinator.swift              # Orchestrates real-time Apple Calendar sync
 │   │   │   ├── BackgroundSyncManager.swift            # Manages 15-minute periodic sync across all sources
@@ -470,6 +472,51 @@ ParallaxScrollView(
 **Integration with Design System:**
 - Use AppColors and AppTheme for consistent styling
 - Remember to apply `.clipped()` to header to prevent overflow during collapse
+
+### Working with the FlowLayout Component
+
+The project includes a reusable `FlowLayout` component for arranging views in horizontal rows with automatic wrapping when content overflows the available width.
+
+**FlowLayout (`FlowLayout.swift`):**
+- Native SwiftUI `Layout` implementation (iOS 16+, project minimum iOS 17.0)
+- Arranges subviews left-to-right in horizontal rows
+- Automatically wraps to next line when content exceeds container width
+- Supports configurable spacing and alignment (leading, center, trailing)
+- Efficient size calculation and positioning for optimal performance
+
+**Usage Example:**
+```swift
+FlowLayout(spacing: 8) {
+    ForEach(items) { item in
+        Button(item.label) { }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 8)
+            .background(AppColors.backgroundLight)
+            .cornerRadius(AppTheme.cornerRadiusMedium)
+    }
+}
+```
+
+**Key Properties:**
+- `spacing`: Horizontal and vertical spacing between items (default: 8)
+- `alignment`: Horizontal alignment for rows - `.leading`, `.center`, or `.trailing`
+
+**Behavior:**
+- Items are sized to fit their content (no forced stretching)
+- Rows wrap automatically based on container width
+- Supports dynamic content (items can change without layout issues)
+- Efficient with large numbers of items (no lazy loading needed for typical UI use cases)
+
+**Use Cases:**
+- Flexible button layouts with varying text lengths (e.g., tone selection buttons)
+- Tag or chip collections
+- Responsive icon grids
+- Filter option groups
+
+**Integration with Design System:**
+- Use AppColors for backgrounds and text colors
+- Use AppTheme for spacing and corner radius consistency
+- Combine with other reusable components (ParallaxScrollView, etc.)
 
 ### Working with the Calendar Month Picker
 
