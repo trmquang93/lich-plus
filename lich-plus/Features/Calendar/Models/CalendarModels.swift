@@ -17,22 +17,22 @@ enum DayType {
     var displayName: String {
         switch self {
         case .good:
-            return "Ngày tốt"
+            return String(localized: "Good Day")
         case .bad:
-            return "Ngày xấu"
+            return String(localized: "Bad Day")
         case .neutral:
-            return "Ngày thường"
+            return String(localized: "Neutral Day")
         }
     }
 
     var description: String {
         switch self {
         case .good:
-            return "Thích hợp cho các hoạt động quan trọng"
+            return String(localized: "Suitable for important activities")
         case .bad:
-            return "Nên tránh các quyết định lớn"
+            return String(localized: "Avoid major decisions")
         case .neutral:
-            return "Ngày bình thường"
+            return String(localized: "Normal day")
         }
     }
 }
@@ -131,11 +131,11 @@ struct CalendarMonth: Identifiable, Equatable {
     let lunarYear: Int
 
     var monthYearDisplay: String {
-        String(format: "Tháng %d, %d", month, year)
+        String(format: String(localized: "Month %d, %d"), month, year)
     }
 
     var lunarMonthYearDisplay: String {
-        String(format: "Tháng %d, Năm %d (AL)", lunarMonth, lunarYear)
+        String(format: String(localized: "Month %d, Year %d (Lunar)"), lunarMonth, lunarYear)
     }
 
     var weeksOfDays: [[CalendarDay]] {
