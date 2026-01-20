@@ -39,6 +39,34 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
+                // Language Section
+                Section {
+                    NavigationLink {
+                        LanguageSettingsView()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "globe")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text(String(localized: "Language"))
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(LanguageManager.shared.currentLanguage.displayName)
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
+                } header: {
+                    Text("Preferences")
+                }
+
                 // Notifications
                 NavigationLink {
                     NotificationSettingsView()

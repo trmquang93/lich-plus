@@ -356,6 +356,11 @@ lich-plus/
 
 The app uses Xcode's **String Catalog** format (`Localizable.xcstrings`) for managing localized strings. Currently supported languages: English (en) and Vietnamese (vi).
 
+**CRITICAL: NEVER update Localizable.xcstrings file manually.**
+- Always use Xcode to manage the string catalog
+- Xcode automatically extracts and maintains string catalog entries
+- Manual edits can corrupt the file structure and break localization
+
 **Workflow for adding new strings:**
 
 1. **In Swift code**, use the `String(localized:)` initializer with raw English text:

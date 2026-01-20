@@ -32,9 +32,6 @@ struct GreetingGeneratorView: View {
         ScrollViewReader { proxy in
             ScrollView {
                 VStack(spacing: AppTheme.spacing20) {
-                    // Header
-                    headerSection
-
                     // Recipient Selection
                     recipientSection
 
@@ -84,21 +81,6 @@ struct GreetingGeneratorView: View {
                 copiedToast
             }
         }
-    }
-    
-    // MARK: - Header Section
-    
-    private var headerSection: some View {
-        VStack(spacing: AppTheme.spacing8) {
-            Text(String(localized: "Tet Greetings") + " \(GreetingOccasion.canChi(for: currentYear))")
-                .font(.system(size: AppTheme.fontTitle2, weight: .bold))
-                .foregroundColor(AppColors.textPrimary)
-            
-            Text(String(localized: "Year of") + " \(GreetingOccasion.zodiacAnimal(for: currentYear))")
-                .font(.system(size: AppTheme.fontBody))
-                .foregroundColor(AppColors.textSecondary)
-        }
-        .padding(.vertical, AppTheme.spacing8)
     }
     
     // MARK: - Recipient Section

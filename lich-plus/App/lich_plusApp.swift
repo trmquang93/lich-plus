@@ -17,8 +17,11 @@ struct lich_plusApp: App {
     @StateObject private var notificationService: NotificationService
     
     init() {
+        // Initialize language manager BEFORE other services
+        LanguageManager.shared.initialize()
+
         AppColors.configureSegmentedControlAppearance()
-        
+
         // Initialize notification service with container's main context for data consistency
         let persistenceController = PersistenceController.shared
         _notificationService = StateObject(
