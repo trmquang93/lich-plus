@@ -1,5 +1,4 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3"
 import { validateNonce } from "./nonce.ts"
 
 const OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
@@ -43,20 +42,17 @@ async function verifyAuth(req: Request): Promise<AuthResult> {
     return { error: "Missing or invalid Authorization header" }
   }
 
-  // Create Supabase client with the user's auth context
-  // This is the recommended pattern for Edge Functions
+  const jwt = authHeader.replace("Bearer ", "")
+
+  // In a stateless Edge Function there is no stored session, so we must
+  // pass the JWT directly to getUser() instead of relying on the client's
+  // session store (which is always empty here).
   const supabase = createClient(
     Deno.env.get("SUPABASE_URL")!,
-    Deno.env.get("SUPABASE_ANON_KEY")!,
-    {
-      global: {
-        headers: { Authorization: authHeader }
-      }
-    }
+    Deno.env.get("SUPABASE_ANON_KEY")!
   )
 
-  // getUser() will use the Authorization header we passed
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const { data: { user }, error } = await supabase.auth.getUser(jwt)
 
   if (error) {
     return { error: `Supabase auth error: ${error.message}` }
@@ -265,7 +261,7 @@ function validateRequest(body: any): { valid: boolean; error?: string } {
   return { valid: true }
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
     return new Response(null, {

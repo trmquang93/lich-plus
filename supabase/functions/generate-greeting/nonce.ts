@@ -6,7 +6,7 @@
  * Stores used nonces in Supabase database (persists across Edge Function isolates)
  */
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3"
 
 // Validation constants
 const NONCE_MAX_AGE_MS = 5 * 60 * 1000        // 5 minutes (allows clock drift)
