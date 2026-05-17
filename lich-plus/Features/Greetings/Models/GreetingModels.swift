@@ -153,21 +153,20 @@ enum GreetingOccasion: String, CaseIterable, Identifiable {
         return Self.zodiacAnimal(for: year)
     }
 
-    /// Get zodiac animal for a given year
+    /// Get zodiac animal for a given lunar year
     static func zodiacAnimal(for year: Int) -> String {
-        let animals = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"]
-        let animalEmojis = ["🐀", "🐂", "🐅", "🐇", "🐉", "🐍", "🐴", "🐐", "🐒", "🐓", "🐕", "🐖"]
-        let index = (year - 4) % 12
-        return "\(animalEmojis[index]) \(animals[index])"
+        let chi = CanChiCalculator.calculateYearCanChi(lunarYear: year).chi
+        let emojis: [ChiEnum: String] = [
+            .ty: "🐀", .suu: "🐂", .dan: "🐅", .mao: "🐇",
+            .thin: "🐉", .ty2: "🐍", .ngo: "🐴", .mui: "🐐",
+            .than: "🐒", .dau: "🐓", .tuat: "🐕", .hoi: "🐖"
+        ]
+        return "\(emojis[chi] ?? "") \(chi.vietnameseName)"
     }
 
-    /// Get Can-Chi for a given year
+    /// Get Can-Chi for a given lunar year
     static func canChi(for year: Int) -> String {
-        let can = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"]
-        let chi = ["Tý", "Sửu", "Dần", "Mão", "Thìn", "Tỵ", "Ngọ", "Mùi", "Thân", "Dậu", "Tuất", "Hợi"]
-        let canIndex = (year - 4) % 10
-        let chiIndex = (year - 4) % 12
-        return "\(can[canIndex]) \(chi[chiIndex])"
+        return CanChiCalculator.calculateYearCanChi(lunarYear: year).displayName
     }
 }
 
