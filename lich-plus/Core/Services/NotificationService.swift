@@ -193,9 +193,7 @@ final class NotificationService: ObservableObject {
         // Dedupe: iterating by solar month can revisit the same lunar month
         // (lunar months are ~29.5 days, and the leap-month branch can also
         // produce a date already added in a previous iteration).
-        var seen = Set<TimeInterval>()
-        let unique = dates.filter { seen.insert($0.timeIntervalSince1970).inserted }
-        return unique.sorted()
+        return Set(dates).sorted()
     }
     
     // MARK: - Rằm Notifications
