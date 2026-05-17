@@ -49,7 +49,10 @@ struct LunarCalendar {
     /// - Parameter date: Solar date to convert
     /// - Returns: Tuple of (lunarDay, lunarMonth, lunarYear)
     static func solarToLunar(_ date: Date) -> (day: Int, month: Int, year: Int) {
-        let solarYear = Calendar.current.component(.year, from: date)
+        // Use an explicit Gregorian calendar — Calendar.current can be set to
+        // a non-Gregorian system (Buddhist, Japanese, ...) on the user's device,
+        // which would skew the integer year fed into CanChiCalculator.
+        let solarYear = Calendar(identifier: .gregorian).component(.year, from: date)
         let vietnameseCalendar = VietnameseCalendar(date: date)
         guard let lunarDate = vietnameseCalendar.vietnameseDate else {
             return (1, 1, solarYear)

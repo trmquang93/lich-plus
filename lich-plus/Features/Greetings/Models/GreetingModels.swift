@@ -156,12 +156,22 @@ enum GreetingOccasion: String, CaseIterable, Identifiable {
     /// Get zodiac animal for a given lunar year
     static func zodiacAnimal(for year: Int) -> String {
         let chi = CanChiCalculator.calculateYearCanChi(lunarYear: year).chi
-        let emojis: [ChiEnum: String] = [
-            .ty: "🐀", .suu: "🐂", .dan: "🐅", .mao: "🐇",
-            .thin: "🐉", .ty2: "🐍", .ngo: "🐴", .mui: "🐐",
-            .than: "🐒", .dau: "🐓", .tuat: "🐕", .hoi: "🐖"
-        ]
-        return "\(emojis[chi] ?? "") \(chi.vietnameseName)"
+        let emoji: String
+        switch chi {
+        case .ty: emoji = "🐀"
+        case .suu: emoji = "🐂"
+        case .dan: emoji = "🐅"
+        case .mao: emoji = "🐇"
+        case .thin: emoji = "🐉"
+        case .ty2: emoji = "🐍"
+        case .ngo: emoji = "🐴"
+        case .mui: emoji = "🐐"
+        case .than: emoji = "🐒"
+        case .dau: emoji = "🐓"
+        case .tuat: emoji = "🐕"
+        case .hoi: emoji = "🐖"
+        }
+        return "\(emoji) \(chi.vietnameseName)"
     }
 
     /// Get Can-Chi for a given lunar year
