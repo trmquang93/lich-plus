@@ -56,15 +56,14 @@ final class CalendarSyncServiceTests: XCTestCase {
         let testDate = Date().addingTimeInterval(-3600) // 1 hour ago
         UserDefaults.standard.set(testDate, forKey: "CalendarSyncLastSyncDate")
 
-        // Create a fresh ModelContext for this test to avoid conflicts
-        let config = ModelConfiguration(isStoredInMemoryOnly: true)
-        let container = try ModelContainer(for: SyncableEvent.self, SyncedCalendar.self, configurations: config)
-        let freshContext = ModelContext(container)
-
-        // Create new service with saved date and fresh context
+        // Reuse the setUp-provided modelContext. Creating a second in-memory
+        // ModelContainer for the same @Model types while the first is still
+        // alive can corrupt SwiftData's allocator state on deinit (manifests
+        // as `pointer being freed was not allocated` in
+        // CalendarSyncService.__deallocating_deinit).
         let testService = CalendarSyncService(
             eventKitService: mockEventKitService,
-            modelContext: freshContext
+            modelContext: modelContext
         )
 
         // Allow small time difference due to initialization

@@ -2,3 +2,6 @@
 .env
 .env.local
 .env.*.local
+
+# Supabase CLI scratch directory
+.temp/

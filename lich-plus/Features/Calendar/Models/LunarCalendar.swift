@@ -49,15 +49,37 @@ struct LunarCalendar {
     /// - Parameter date: Solar date to convert
     /// - Returns: Tuple of (lunarDay, lunarMonth, lunarYear)
     static func solarToLunar(_ date: Date) -> (day: Int, month: Int, year: Int) {
+        // Use an explicit Gregorian calendar — Calendar.current can be set to
+        // a non-Gregorian system (Buddhist, Japanese, ...) on the user's device,
+        // which would skew the integer year fed into CanChiCalculator.
+        let solarYear = Calendar(identifier: .gregorian).component(.year, from: date)
         let vietnameseCalendar = VietnameseCalendar(date: date)
         guard let lunarDate = vietnameseCalendar.vietnameseDate else {
-            return (1, 1, 2025)
+            return (1, 1, solarYear)
         }
 
-        // Convert year from String to Int
-        let year = Int(lunarDate.year) ?? 2025
+        // VietnameseLunar exposes `year` as a String formatted "<Can> <Chi>" (e.g. "Bính Ngọ"),
+        // not an Int. The integer lunar year is either the solar year or solar year - 1
+        // (lunar new year falls in Jan/Feb). Pick whichever candidate's Can-Chi matches.
+        let year = resolveLunarYear(
+            solarYear: solarYear,
+            libraryCan: lunarDate.can,
+            libraryChi: lunarDate.chi
+        )
 
         return (day: lunarDate.day, month: lunarDate.month, year: year)
+    }
+
+    private static func resolveLunarYear(solarYear: Int, libraryCan: String, libraryChi: String) -> Int {
+        let target = "\(libraryCan) \(libraryChi)"
+        for candidate in [solarYear, solarYear - 1] {
+            let pair = CanChiCalculator.calculateYearCanChi(lunarYear: candidate)
+            if pair.displayName == target {
+                return candidate
+            }
+        }
+        print("[LunarCalendar] Unable to match Can-Chi '\(target)' for solar year \(solarYear); falling back to solar year")
+        return solarYear
     }
 
     /// Convert lunar date to solar date

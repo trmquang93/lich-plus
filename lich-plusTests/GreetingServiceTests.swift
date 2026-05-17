@@ -143,6 +143,7 @@ final class GreetingServiceTests: XCTestCase {
             recipientName: "Ba Mẹ",
             additionalInfo: nil,
             year: 2026,
+            language: "vi",
             nonce: UUID().uuidString
         )
 
