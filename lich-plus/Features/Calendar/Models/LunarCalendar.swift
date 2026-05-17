@@ -91,10 +91,17 @@ struct LunarCalendar {
         "2026-4-16": (29, 2, 2026)
     ]
 
-    private static func lunarOverride(for date: Date) -> (day: Int, month: Int, year: Int)? {
+    /// Shared Asia/Ho_Chi_Minh Gregorian calendar. The wrapper layer must
+    /// resolve solar Y/M/D and shift by ±1 day in Vietnam time, otherwise a
+    /// device in another timezone could land on the wrong solar year/day.
+    private static let hcmCalendar: Calendar = {
         var cal = Calendar(identifier: .gregorian)
         cal.timeZone = TimeZone(identifier: "Asia/Ho_Chi_Minh") ?? .current
-        let comps = cal.dateComponents([.year, .month, .day], from: date)
+        return cal
+    }()
+
+    private static func lunarOverride(for date: Date) -> (day: Int, month: Int, year: Int)? {
+        let comps = hcmCalendar.dateComponents([.year, .month, .day], from: date)
         guard let y = comps.year, let m = comps.month, let d = comps.day else { return nil }
         return lunarOverrides["\(y)-\(m)-\(d)"]
     }
@@ -117,7 +124,7 @@ struct LunarCalendar {
         // one solar day too early. Skip the extra pod calls otherwise.
         guard raw.day == 1 else { return raw }
 
-        let cal = Calendar(identifier: .gregorian)
+        let cal = hcmCalendar
         guard let nextSolar = cal.date(byAdding: .day, value: 1, to: date),
               let next = VietnameseCalendar(date: nextSolar).vietnameseDate,
               next.day == raw.day, next.month == raw.month
