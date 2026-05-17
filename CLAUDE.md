@@ -55,67 +55,50 @@ Before committing changes that modify the project:
 
 ### Essential Commands
 
-**Building:**
+**Building and testing — use the `ios-build-test` skill, not raw `xcodebuild`.**
+
+The repo's previous `build-app.sh` / `run-tests.sh` wrappers were removed. Use the skill's scripts from this directory:
+
 ```bash
-# Build the app (quiet mode - shows only BUILD SUCCEEDED or errors)
-./build-app.sh
+# Build (auto-detects workspace, scheme, and simulator)
+/Users/quang/.claude/skills/ios-build-test/scripts/build.sh
 
-# Build with full output showing all compilation steps
-./build-app.sh --verbose
+# Build with full output
+/Users/quang/.claude/skills/ios-build-test/scripts/build.sh --verbose
 
-# Clean build folder first, then build
-./build-app.sh --clean
-
-# Clean and build with verbose output
-./build-app.sh --clean --verbose
-
-# View build script help
-./build-app.sh --help
-```
-
-**Build Output Modes:**
-- **Quiet mode (default)**: Shows only `BUILD SUCCEEDED` on success, or error details on failure
-- **Verbose mode (`--verbose`)**: Shows full build output with all compilation steps and warnings
-
-**Important:** Do not pipe `build-app.sh` or `run-tests.sh` with grep. Both scripts are optimized for clean output handling and include proper error detection internally.
-
-**Testing:**
-The test runner script is already optimized for output handling. Do not pipe with grep.
-```bash
-# Run all tests (unit and UI) using the test runner script
-./run-tests.sh
+# Run all tests
+/Users/quang/.claude/skills/ios-build-test/scripts/run_tests.sh
 
 # Run only unit tests
-./run-tests.sh --unit
+/Users/quang/.claude/skills/ios-build-test/scripts/run_tests.sh unit
 
 # Run only UI tests
-./run-tests.sh --ui
+/Users/quang/.claude/skills/ios-build-test/scripts/run_tests.sh ui
 
-# Run with verbose output for debugging
-./run-tests.sh --verbose
+# Run a specific test target / class / method
+/Users/quang/.claude/skills/ios-build-test/scripts/run_tests.sh single lich-plusTests
+/Users/quang/.claude/skills/ios-build-test/scripts/run_tests.sh single lich-plusTests/LunarYearResolutionTests
 
-# View test runner help
-./run-tests.sh --help
+# Verbose output for debugging
+/Users/quang/.claude/skills/ios-build-test/scripts/run_tests.sh --verbose unit
 ```
 
-**Test Device Configuration:**
-The test runner supports device configuration via a `.env` file (not committed to git).
-```bash
-# Copy the template and set your preferred test device
-cp .env.example .env
+The scripts handle workspace/project detection, scheme resolution, simulator selection, log capture under `.build_logs/` and `.test_logs/`, crash detection (Fatal error, EXC_BAD_ACCESS, SIGABRT, malloc corruption, `Thread X Crashed`, etc.), and error filtering. Do **not** pipe their output through `grep` — they already format cleanly and crash banners get truncated.
 
-# Edit .env with your device UDID
-# TEST_DEVICE_ID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX
+**Test Device Configuration:**
+The scripts read `.env` from the current directory (gitignored):
+```bash
+DEVICE_ID=XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX  # simulator UDID
+SCHEME=lich-plus                                  # optional override
 
 # Find available simulator UDIDs
 xcrun simctl list devices available --json | jq -r '.devices[][] | select(.isAvailable) | "\(.udid) \(.name)"'
 ```
 
 Device selection priority:
-1. `TEST_DEVICE_ID` from `.env` file (if set)
+1. `DEVICE_ID` from `.env` file (if set)
 2. Booted simulator (auto-detected)
-3. Connected physical device
-4. Interactive selection from available simulators
+3. First available iPhone simulator
 
 **Dependencies:**
 ```bash
@@ -861,7 +844,7 @@ To improve star data accuracy for Months 1-6:
 3. Add new stars to `StarModels.swift` enums if needed
 4. Update `Month<X>StarData.swift` with complete data
 5. Assign appropriate scores based on star meanings
-6. Run tests: `./run-tests.sh --unit`
+6. Run tests: `/Users/quang/.claude/skills/ios-build-test/scripts/run_tests.sh unit`
 
 **Cross-Reference:**
 - Book pages (ground truth)
