@@ -109,16 +109,17 @@ struct LunarOccurrenceGenerator {
 
         // Group candidates by (year, month) so we can identify leap variants:
         // a group with two entries means the month repeats — first is regular, second is leap.
-        var dateGroups: [String: [Date]] = [:]
+        // Packed `year * 100 + month` is cheaper than a string key in this hot path.
+        var dateGroups: [Int: [Date]] = [:]
         for c in candidates {
-            let key = "\(c.year)-\(c.month)"
+            let key = c.year * 100 + c.month
             dateGroups[key, default: []].append(c.date)
         }
 
         var resolved: [Date] = []
         resolved.reserveCapacity(candidates.count)
         for c in candidates {
-            let key = "\(c.year)-\(c.month)"
+            let key = c.year * 100 + c.month
             guard let group = dateGroups[key] else { continue }
 
             if group.count <= 1 {
@@ -138,16 +139,17 @@ struct LunarOccurrenceGenerator {
             }
         }
 
-        let sorted = resolved.sorted()
-
-        // Apply interval (indexed from master — same as before).
-        var filtered = applyInterval(sorted, interval: rule.interval)
+        // `resolved` is already in forward order (candidates are appended during
+        // a forward solar walk; applyInterval / applyRecurrenceEnd preserve order;
+        // walkEnd already caps the upper bound), so no extra sorts or rangeEnd
+        // filter are needed.
+        var filtered = applyInterval(resolved, interval: rule.interval)
 
         if let recurrenceEnd = rule.recurrenceEnd {
             filtered = applyRecurrenceEnd(filtered, recurrenceEnd: recurrenceEnd)
         }
 
-        return filtered.filter { $0 >= rangeStart && $0 <= rangeEnd }.sorted()
+        return filtered.filter { $0 >= rangeStart }
     }
 
     // MARK: - Helper Methods
