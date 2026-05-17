@@ -129,7 +129,16 @@ struct LunarCalendar {
 
         let candidate = prev.day + 1
         guard candidate <= 30 else { return raw }
-        return (day: candidate, month: prev.month, year: raw.year)
+        // Resolve prev's Int year independently — `raw.year` reflects the
+        // pod's (buggy) day, which at a lunar year boundary can land in the
+        // wrong year. `prev` is mid-month and safe to trust.
+        let prevSolarYear = cal.component(.year, from: prevSolar)
+        let prevYear = resolveLunarYear(
+            solarYear: prevSolarYear,
+            libraryCan: prev.can,
+            libraryChi: prev.chi
+        )
+        return (day: candidate, month: prev.month, year: prevYear)
     }
 
     private static func resolveLunarYear(solarYear: Int, libraryCan: String, libraryChi: String) -> Int {
