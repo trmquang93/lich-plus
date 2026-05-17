@@ -26,27 +26,26 @@ struct TasksView: View {
     @State private var showAddSheet: Bool = false
     @State private var addEventDate: Date? = nil
     @State private var editingEvent: SyncableEvent? = nil
-    @State private var refreshCounter: Int = 0
     @State private var showEventNotFoundAlert: Bool = false
     @State private var navigateToDate: Date? = nil
+    @State private var tasks: [TaskItem] = []
 
     // MARK: - Computed Properties
 
-    private var tasks: [TaskItem] {
-        RecurringEventExpander.expandRecurringEvents(syncableEvents)
+    private var eventsFingerprint: String {
+        let count = syncableEvents.count
+        let maxUpdated = syncableEvents
+            .map { $0.lastModifiedLocal }
+            .max() ?? .distantPast
+        return "\(count)-\(maxUpdated.timeIntervalSince1970)"
     }
 
     private var filteredTasks: [TaskItem] {
-        var filtered = tasks
-
-        if !searchText.isEmpty {
-            filtered = filtered.filter { task in
-                task.title.localizedCaseInsensitiveContains(searchText) ||
-                    (task.notes?.localizedCaseInsensitiveContains(searchText) ?? false)
-            }
+        guard !searchText.isEmpty else { return tasks }
+        return tasks.filter { task in
+            task.title.localizedCaseInsensitiveContains(searchText) ||
+                (task.notes?.localizedCaseInsensitiveContains(searchText) ?? false)
         }
-
-        return filtered.sorted { $0.date < $1.date }
     }
 
     /// Events for a given date (used when navigating to Day view)
@@ -91,7 +90,6 @@ struct TasksView: View {
                         navigateToDate = date
                     }
                 )
-                .id(refreshCounter)
             }
             .background(AppColors.background)
             .navigationDestination(item: $navigateToDate) { date in
@@ -109,8 +107,8 @@ struct TasksView: View {
                     onToggleCompletion: toggleTaskCompletion
                 )
             }
-            .onReceive(NotificationCenter.default.publisher(for: .calendarDataDidChange)) { _ in
-                refreshCounter += 1
+            .task(id: eventsFingerprint) {
+                tasks = RecurringEventExpander.expandRecurringEvents(syncableEvents)
             }
             .sheet(isPresented: $showAddSheet) {
                 CreateItemSheet(
