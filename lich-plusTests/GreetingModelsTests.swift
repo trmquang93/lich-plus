@@ -16,13 +16,13 @@ final class GreetingModelsTests: XCTestCase {
 
     func testRecipientTypeDisplayNames() {
         XCTAssertEqual(RecipientType.grandparents.displayName, "Ông bà")
-        XCTAssertEqual(RecipientType.parents.displayName, "Bố mẹ")
+        XCTAssertEqual(RecipientType.parents.displayName, "Cha mẹ")
         XCTAssertEqual(RecipientType.boss.displayName, "Sếp")
         XCTAssertEqual(RecipientType.colleagues.displayName, "Đồng nghiệp")
-        XCTAssertEqual(RecipientType.teachers.displayName, "Thầy cô")
+        XCTAssertEqual(RecipientType.teachers.displayName, "Giáo viên")
         XCTAssertEqual(RecipientType.friends.displayName, "Bạn bè")
-        XCTAssertEqual(RecipientType.partner.displayName, "Người yêu")
-        XCTAssertEqual(RecipientType.children.displayName, "Con cháu")
+        XCTAssertEqual(RecipientType.partner.displayName, "Vợ chồng")
+        XCTAssertEqual(RecipientType.children.displayName, "Con cái")
     }
 
     func testRecipientTypeIcons() {

@@ -64,6 +64,7 @@ final class CalendarSyncService: ObservableObject {
 
     private let eventKitService: EventKitService
     private let modelContext: ModelContext
+    private let userDefaults: UserDefaults
     private var changeObserver: NSObjectProtocol?
 
     // Constants for sync
@@ -83,12 +84,17 @@ final class CalendarSyncService: ObservableObject {
 
     // MARK: - Initialization
 
-    init(eventKitService: EventKitService, modelContext: ModelContext) {
+    init(
+        eventKitService: EventKitService,
+        modelContext: ModelContext,
+        userDefaults: UserDefaults = .standard
+    ) {
         self.eventKitService = eventKitService
         self.modelContext = modelContext
+        self.userDefaults = userDefaults
 
         // Load lastSyncDate from UserDefaults
-        if let savedDate = UserDefaults.standard.object(forKey: userDefaultsLastSyncKey) as? Date {
+        if let savedDate = userDefaults.object(forKey: userDefaultsLastSyncKey) as? Date {
             self.lastSyncDate = savedDate
         }
     }
@@ -120,7 +126,7 @@ final class CalendarSyncService: ObservableObject {
             // Update last sync date
             let now = Date()
             lastSyncDate = now
-            UserDefaults.standard.set(now, forKey: userDefaultsLastSyncKey)
+            userDefaults.set(now, forKey: userDefaultsLastSyncKey)
 
             // Update calendar sync dates
             let enabledCalendars = try getEnabledCalendars()
