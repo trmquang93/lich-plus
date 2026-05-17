@@ -122,8 +122,11 @@ struct InfiniteTimelineView: View {
                     guard !hasInitialScrolled else { return }
                     if let anchorID = anchorSectionID {
                         scrollProxy.scrollTo(anchorID, anchor: .top)
-                        hasInitialScrolled = true
                     }
+                    // Flip even when anchorSectionID is nil (empty tasks),
+                    // otherwise the ScrollView's opacity stays at 0 and the
+                    // EmptyStateView is invisible.
+                    hasInitialScrolled = true
                 }
 
                 // Today floating button - shows when anchor section is off-screen
@@ -149,8 +152,7 @@ struct InfiniteTimelineView: View {
                     .transition(.scale.combined(with: .opacity))
             }
             .animation(.easeInOut(duration: 0.2), value: isAnchorSectionVisible)
-            .onAppear { rebuildCache() }
-            .onChange(of: tasks) { _, _ in rebuildCache() }
+            .task(id: tasks) { rebuildCache() }
         }
     }
 }

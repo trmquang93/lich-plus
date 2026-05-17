@@ -33,11 +33,13 @@ struct TasksView: View {
     // MARK: - Computed Properties
 
     private var eventsFingerprint: String {
+        // Sum (not max) of timestamps so an edit to any event invalidates the
+        // fingerprint, not only edits that bump the maximum. Background-sync
+        // writes can arrive with timestamps older than an existing local edit;
+        // a max-only fingerprint would silently skip the rebuild in that case.
         let count = syncableEvents.count
-        let maxUpdated = syncableEvents
-            .map { $0.lastModifiedLocal }
-            .max() ?? .distantPast
-        return "\(count)-\(maxUpdated.timeIntervalSince1970)"
+        let sum = syncableEvents.reduce(0.0) { $0 + $1.lastModifiedLocal.timeIntervalSince1970 }
+        return "\(count)-\(sum)"
     }
 
     private var filteredTasks: [TaskItem] {
