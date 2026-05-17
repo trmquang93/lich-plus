@@ -70,18 +70,23 @@ struct LunarCalendar {
         let raw = (day: lunarDate.day, month: lunarDate.month, year: year)
 
         // The underlying pod (VietnameseLunar / Hồ Ngọc Đức algorithm) has a
-        // floor-rounding artifact near GMT+7-midnight new-moon boundaries that
-        // produces off-by-one lunar days for certain solar dates (e.g.
-        // 2026-04-16). Apply hard overrides for known cases, then a generic
-        // repair pass.
+        // floor-rounding artifact near GMT+7-midnight new-moon boundaries.
+        // Apply hard overrides for known buggy dates first, then a generic
+        // duplicate-pair repair pass for the recoverable variant.
         if let override = lunarOverride(for: date) {
             return override
         }
         return repairOffByOneIfNeeded(date: date, raw: raw)
     }
 
-    /// Known off-by-one dates returned by the VietnameseLunar pod. Keyed by
-    /// "YYYY-M-D" (no zero padding) interpreted in Asia/Ho_Chi_Minh.
+    /// Known off-by-one dates returned by the VietnameseLunar pod that the
+    /// generic heuristic cannot recover (typically the clean-shift variant
+    /// where the pod's `k` flips mid-month and no consecutive duplicate is
+    /// produced). Keyed by "YYYY-M-D" (no zero padding) in Asia/Ho_Chi_Minh.
+    ///
+    /// `2026-4-16` is also fixable by the duplicate-pair heuristic below;
+    /// it stays here as documented belt-and-suspenders for the original
+    /// reported bug.
     private static let lunarOverrides: [String: (day: Int, month: Int, year: Int)] = [
         "2026-4-16": (29, 2, 2026)
     ]
@@ -94,48 +99,36 @@ struct LunarCalendar {
         return lunarOverrides["\(y)-\(m)-\(d)"]
     }
 
-    /// Detect and repair the pod's off-by-one where two consecutive solar days
-    /// return the same lunar (day, month) tuple. A correct lunar calendar can
-    /// never produce that, so we treat it as a fingerprint of the bug.
+    /// Repair the pod's "duplicate-pair" off-by-one: two consecutive solar
+    /// days returning the same lunar (d, m, y). A correct lunar calendar can
+    /// never produce that, so when `pod(date) == pod(date+1)`, `date` is the
+    /// buggy one and its correct lunar day is `pod(date-1).day + 1`.
     ///
-    /// In the observed case (Apr 2026): pod returns 28/2, 1/3, 1/3, 2/3 for
-    /// solar Apr 15–18, skipping 29/2. The DUPLICATE pair is (Apr 16, Apr 17)
-    /// and the BUGGY day is the EARLIER one (Apr 16). So we look FORWARD: if
-    /// pod(date) == pod(date+1), then `date` is the off-by-one and the
-    /// correct lunar day is pod(date-1).day + 1.
+    /// Observed at 2026-04-16 (Bính Ngọ M2→M3 new moon). Does NOT cover the
+    /// clean-shift variant (e.g. April 2027/2029/2030) where the pod skips a
+    /// day without leaving a duplicate fingerprint — those need explicit
+    /// overrides or an algorithmic patch (out of scope for this fix; see
+    /// `.claude/backlogs/lunar-apr-2026-off-by-one-plan.md`).
     private static func repairOffByOneIfNeeded(
         date: Date,
         raw: (day: Int, month: Int, year: Int)
     ) -> (day: Int, month: Int, year: Int) {
-        // Fast path: this bug class always manifests as the pod returning day=1
-        // one solar day too early (then repeating it on the legitimate day-1
-        // solar). If raw.day != 1, this date cannot be the duplicate-pair's
-        // earlier (buggy) member, so skip the extra pod calls.
+        // Fast path: this variant always manifests as the pod returning day=1
+        // one solar day too early. Skip the extra pod calls otherwise.
         guard raw.day == 1 else { return raw }
 
         let cal = Calendar(identifier: .gregorian)
         guard let nextSolar = cal.date(byAdding: .day, value: 1, to: date),
-              let next = VietnameseCalendar(date: nextSolar).vietnameseDate
+              let next = VietnameseCalendar(date: nextSolar).vietnameseDate,
+              next.day == raw.day, next.month == raw.month
         else { return raw }
-
-        // Only the duplicate-with-next pattern indicates `date` is the buggy one.
-        guard next.day == raw.day && next.month == raw.month else {
-            return raw
-        }
 
         guard let prevSolar = cal.date(byAdding: .day, value: -1, to: date),
               let prev = VietnameseCalendar(date: prevSolar).vietnameseDate
         else { return raw }
 
         let candidate = prev.day + 1
-        // Lunar months are 29 or 30 days. If incrementing would overflow,
-        // bail out conservatively and trust the pod's raw value (the override
-        // table can catch any cross-month edge case).
         guard candidate <= 30 else { return raw }
-
-        // Use the prior day's (month, year) — they should already match `raw`'s
-        // month in this duplicate-pair case, but anchoring on `prev` avoids
-        // any year-boundary pitfall.
         return (day: candidate, month: prev.month, year: raw.year)
     }
 
