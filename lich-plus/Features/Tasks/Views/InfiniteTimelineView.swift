@@ -17,10 +17,22 @@ struct InfiniteTimelineView: View {
 
     @State private var hasInitialScrolled: Bool = false
     @State private var isAnchorSectionVisible: Bool = false
+    @State private var groupedTasks: [(date: Date, items: [TaskItem])] = []
+    @State private var anchorSectionID: String?
 
     var calendar: Calendar = Calendar.current
 
-    private var groupedTasks: [(date: Date, items: [TaskItem])] {
+    private static let dateIDFormatter: DateFormatter = {
+        let f = DateFormatter()
+        f.dateFormat = "yyyyMMdd"
+        return f
+    }()
+
+    private func dateID(_ date: Date) -> String {
+        Self.dateIDFormatter.string(from: date)
+    }
+
+    private func rebuildCache() {
         var groupedByDate: [Date: [TaskItem]] = [:]
 
         for task in tasks {
@@ -33,31 +45,23 @@ struct InfiniteTimelineView: View {
         }
 
         let sortedDates = groupedByDate.keys.sorted()
-        return sortedDates.map { date in
+        let groups = sortedDates.map { date -> (date: Date, items: [TaskItem]) in
             let dayTasks = (groupedByDate[date] ?? [])
                 .sorted { ($0.startTime ?? $0.date) < ($1.startTime ?? $1.date) }
             return (date: date, items: dayTasks)
         }
-    }
+        groupedTasks = groups
 
-    // Anchor section: today if exists, else nearest future, else first
-    private var anchorSectionID: String? {
         let today = calendar.startOfDay(for: Date())
-
-        if let todayGroup = groupedTasks.first(where: { calendar.isDateInToday($0.date) }) {
-            return dateID(todayGroup.date)
-        } else if let futureGroup = groupedTasks.first(where: { $0.date > today }) {
-            return dateID(futureGroup.date)
-        } else if let firstGroup = groupedTasks.first {
-            return dateID(firstGroup.date)
+        if let todayGroup = groups.first(where: { calendar.isDateInToday($0.date) }) {
+            anchorSectionID = dateID(todayGroup.date)
+        } else if let futureGroup = groups.first(where: { $0.date > today }) {
+            anchorSectionID = dateID(futureGroup.date)
+        } else if let firstGroup = groups.first {
+            anchorSectionID = dateID(firstGroup.date)
+        } else {
+            anchorSectionID = nil
         }
-        return nil
-    }
-
-    private func dateID(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyyMMdd"
-        return formatter.string(from: date)
     }
 
     var body: some View {
@@ -114,10 +118,14 @@ struct InfiniteTimelineView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(AppColors.background)
                 .opacity(hasInitialScrolled ? 1 : 0)
-                .task {
+                .task(id: anchorSectionID) {
+                    guard !hasInitialScrolled else { return }
                     if let anchorID = anchorSectionID {
                         scrollProxy.scrollTo(anchorID, anchor: .top)
                     }
+                    // Flip even when anchorSectionID is nil (empty tasks),
+                    // otherwise the ScrollView's opacity stays at 0 and the
+                    // EmptyStateView is invisible.
                     hasInitialScrolled = true
                 }
 
@@ -144,6 +152,7 @@ struct InfiniteTimelineView: View {
                     .transition(.scale.combined(with: .opacity))
             }
             .animation(.easeInOut(duration: 0.2), value: isAnchorSectionVisible)
+            .task(id: tasks) { rebuildCache() }
         }
     }
 }

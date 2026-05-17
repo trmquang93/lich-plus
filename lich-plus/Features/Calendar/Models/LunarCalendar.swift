@@ -39,23 +39,47 @@ struct LunarCalendar {
     /// Cache for lunar-to-solar conversions: (day, month, year) -> (day, month, year)
     private static var lunarToSolarCache: [String: (day: Int, month: Int, year: Int)] = [:]
 
+    /// Cache for solar-to-lunar conversions: startOfDay(solarDate) -> (day, month, year)
+    private static var solarToLunarCache: [Date: (day: Int, month: Int, year: Int)] = [:]
+
     /// Cache for leap month information: solarYear -> LeapMonthInfo
     private static var leapMonthCache: [Int: LeapMonthInfo] = [:]
 
-    /// Maximum cache size before clearing (to prevent unbounded growth)
-    private static let maxCacheSize = 1000
+    /// Maximum cache size before clearing (to prevent unbounded growth).
+    /// Sized to comfortably hold the 6-year production expansion window
+    /// (~2190 solar days) plus some headroom — smaller values caused the
+    /// `solarToLunar` cache to thrash mid-expansion.
+    private static let maxCacheSize = 3000
+
+    /// Shared Gregorian calendar — instantiating per call is measurably expensive
+    /// inside the lunar conversion hot path.
+    private static let gregorianCalendar = Calendar(identifier: .gregorian)
+
+    /// Guards the three static caches against concurrent access. The conversion
+    /// helpers are called from `@MainActor` services today, but they're also
+    /// reachable from background-sync `Task`s and `NotificationService`'s
+    /// scheduling code, so the caches need explicit synchronization.
+    private static let cacheLock = NSLock()
 
     /// Convert solar date to lunar date
     /// - Parameter date: Solar date to convert
     /// - Returns: Tuple of (lunarDay, lunarMonth, lunarYear)
     static func solarToLunar(_ date: Date) -> (day: Int, month: Int, year: Int) {
+        // Normalize to start-of-day so identical calendar days share a cache entry.
+        let dayKey = gregorianCalendar.startOfDay(for: date)
+        if let cached = cacheLock.withLock({ solarToLunarCache[dayKey] }) {
+            return cached
+        }
+
         // Use an explicit Gregorian calendar — Calendar.current can be set to
         // a non-Gregorian system (Buddhist, Japanese, ...) on the user's device,
         // which would skew the integer year fed into CanChiCalculator.
-        let solarYear = Calendar(identifier: .gregorian).component(.year, from: date)
+        let solarYear = gregorianCalendar.component(.year, from: date)
         let vietnameseCalendar = VietnameseCalendar(date: date)
         guard let lunarDate = vietnameseCalendar.vietnameseDate else {
-            return (1, 1, solarYear)
+            let fallback = (day: 1, month: 1, year: solarYear)
+            storeSolarToLunar(dayKey, fallback)
+            return fallback
         }
 
         // VietnameseLunar exposes `year` as a String formatted "<Can> <Chi>" (e.g. "Bính Ngọ"),
@@ -72,11 +96,26 @@ struct LunarCalendar {
         // The underlying pod (VietnameseLunar / Hồ Ngọc Đức algorithm) has a
         // floor-rounding artifact near GMT+7-midnight new-moon boundaries.
         // Apply hard overrides for known buggy dates first, then a generic
-        // duplicate-pair repair pass for the recoverable variant.
+        // duplicate-pair repair pass for the recoverable variant. Cache the
+        // repaired result so subsequent calls skip both the pod call and the
+        // repair probe.
+        let result: (day: Int, month: Int, year: Int)
         if let override = lunarOverride(for: date) {
-            return override
+            result = override
+        } else {
+            result = repairOffByOneIfNeeded(date: date, raw: raw)
         }
-        return repairOffByOneIfNeeded(date: date, raw: raw)
+        storeSolarToLunar(dayKey, result)
+        return result
+    }
+
+    private static func storeSolarToLunar(_ key: Date, _ value: (day: Int, month: Int, year: Int)) {
+        cacheLock.withLock {
+            if solarToLunarCache.count > maxCacheSize {
+                solarToLunarCache.removeAll()
+            }
+            solarToLunarCache[key] = value
+        }
     }
 
     /// Known off-by-one dates returned by the VietnameseLunar pod that the
@@ -240,14 +279,8 @@ struct LunarCalendar {
     /// - Parameter forSolarYear: The solar year to check
     /// - Returns: LeapMonthInfo struct with leap month details
     static func getLeapMonthInfo(forSolarYear solarYear: Int) -> LeapMonthInfo {
-        // Check cache first
-        if let cached = leapMonthCache[solarYear] {
+        if let cached = cacheLock.withLock({ leapMonthCache[solarYear] }) {
             return cached
-        }
-
-        // Clear cache if it gets too large
-        if leapMonthCache.count > maxCacheSize {
-            leapMonthCache.removeAll()
         }
 
         // Strategy: Check all lunar years that span this solar year
@@ -292,7 +325,7 @@ struct LunarCalendar {
                 leapMonth: leapMonth,
                 lunarYear: targetLunarDate.year
             )
-            leapMonthCache[solarYear] = result
+            storeLeapMonth(solarYear, result)
             return result
         }
 
@@ -315,8 +348,17 @@ struct LunarCalendar {
             leapMonth: nil,
             lunarYear: targetLunarDate.year
         )
-        leapMonthCache[solarYear] = result
+        storeLeapMonth(solarYear, result)
         return result
+    }
+
+    private static func storeLeapMonth(_ key: Int, _ value: LeapMonthInfo) {
+        cacheLock.withLock {
+            if leapMonthCache.count > maxCacheSize {
+                leapMonthCache.removeAll()
+            }
+            leapMonthCache[key] = value
+        }
     }
 
     // MARK: - Private Leap Month Detection
@@ -373,15 +415,9 @@ struct LunarCalendar {
     /// Since VietnameseLunar doesn't directly support lunar-to-solar conversion,
     /// we search through dates until we find the matching lunar date
     private static func convertLunarToSolar(lunarDay: Int, lunarMonth: Int, lunarYear: Int) -> (day: Int, month: Int, year: Int) {
-        // Check cache first
         let cacheKey = "\(lunarDay)-\(lunarMonth)-\(lunarYear)"
-        if let cached = lunarToSolarCache[cacheKey] {
+        if let cached = cacheLock.withLock({ lunarToSolarCache[cacheKey] }) {
             return cached
-        }
-
-        // Clear cache if it gets too large
-        if lunarToSolarCache.count > maxCacheSize {
-            lunarToSolarCache.removeAll()
         }
 
         let calendar = Calendar.current
@@ -397,7 +433,7 @@ struct LunarCalendar {
             if lunar.day == lunarDay && lunar.month == lunarMonth && lunar.year == lunarYear {
                 let components = calendar.dateComponents([.year, .month, .day], from: testDate)
                 let result = (day: components.day ?? 1, month: components.month ?? 1, year: components.year ?? lunarYear)
-                lunarToSolarCache[cacheKey] = result
+                storeLunarToSolar(cacheKey, result)
                 return result
             }
             testDate = calendar.date(byAdding: .day, value: 1, to: testDate) ?? testDate
@@ -410,7 +446,7 @@ struct LunarCalendar {
             if lunar.day == lunarDay && lunar.month == lunarMonth && lunar.year == lunarYear {
                 let components = calendar.dateComponents([.year, .month, .day], from: testDate)
                 let result = (day: components.day ?? 1, month: components.month ?? 1, year: components.year ?? lunarYear)
-                lunarToSolarCache[cacheKey] = result
+                storeLunarToSolar(cacheKey, result)
                 return result
             }
             testDate = calendar.date(byAdding: .day, value: 1, to: testDate) ?? testDate
@@ -422,8 +458,17 @@ struct LunarCalendar {
         let estimatedSolarMonth = lunarMonth < 11 ? lunarMonth + 1 : (lunarMonth == 11 ? 12 : 1)
         let estimatedSolarYear = lunarMonth >= 11 ? lunarYear + 1 : lunarYear
         let fallback = (day: min(lunarDay, 28), month: estimatedSolarMonth, year: estimatedSolarYear)
-        lunarToSolarCache[cacheKey] = fallback
+        storeLunarToSolar(cacheKey, fallback)
         return fallback
+    }
+
+    private static func storeLunarToSolar(_ key: String, _ value: (day: Int, month: Int, year: Int)) {
+        cacheLock.withLock {
+            if lunarToSolarCache.count > maxCacheSize {
+                lunarToSolarCache.removeAll()
+            }
+            lunarToSolarCache[key] = value
+        }
     }
 }
 

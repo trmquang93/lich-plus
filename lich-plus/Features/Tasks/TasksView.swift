@@ -26,27 +26,28 @@ struct TasksView: View {
     @State private var showAddSheet: Bool = false
     @State private var addEventDate: Date? = nil
     @State private var editingEvent: SyncableEvent? = nil
-    @State private var refreshCounter: Int = 0
     @State private var showEventNotFoundAlert: Bool = false
     @State private var navigateToDate: Date? = nil
+    @State private var tasks: [TaskItem] = []
 
     // MARK: - Computed Properties
 
-    private var tasks: [TaskItem] {
-        RecurringEventExpander.expandRecurringEvents(syncableEvents)
+    private var eventsFingerprint: String {
+        // Sum (not max) of timestamps so an edit to any event invalidates the
+        // fingerprint, not only edits that bump the maximum. Background-sync
+        // writes can arrive with timestamps older than an existing local edit;
+        // a max-only fingerprint would silently skip the rebuild in that case.
+        let count = syncableEvents.count
+        let sum = syncableEvents.reduce(0.0) { $0 + $1.lastModifiedLocal.timeIntervalSince1970 }
+        return "\(count)-\(sum)"
     }
 
     private var filteredTasks: [TaskItem] {
-        var filtered = tasks
-
-        if !searchText.isEmpty {
-            filtered = filtered.filter { task in
-                task.title.localizedCaseInsensitiveContains(searchText) ||
-                    (task.notes?.localizedCaseInsensitiveContains(searchText) ?? false)
-            }
+        guard !searchText.isEmpty else { return tasks }
+        return tasks.filter { task in
+            task.title.localizedCaseInsensitiveContains(searchText) ||
+                (task.notes?.localizedCaseInsensitiveContains(searchText) ?? false)
         }
-
-        return filtered.sorted { $0.date < $1.date }
     }
 
     /// Events for a given date (used when navigating to Day view)
@@ -91,7 +92,6 @@ struct TasksView: View {
                         navigateToDate = date
                     }
                 )
-                .id(refreshCounter)
             }
             .background(AppColors.background)
             .navigationDestination(item: $navigateToDate) { date in
@@ -109,8 +109,8 @@ struct TasksView: View {
                     onToggleCompletion: toggleTaskCompletion
                 )
             }
-            .onReceive(NotificationCenter.default.publisher(for: .calendarDataDidChange)) { _ in
-                refreshCounter += 1
+            .task(id: eventsFingerprint) {
+                tasks = RecurringEventExpander.expandRecurringEvents(syncableEvents)
             }
             .sheet(isPresented: $showAddSheet) {
                 CreateItemSheet(

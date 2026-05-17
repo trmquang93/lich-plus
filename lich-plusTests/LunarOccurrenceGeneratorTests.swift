@@ -480,6 +480,182 @@ final class LunarOccurrenceGeneratorTests: XCTestCase {
         XCTAssertTrue(isSorted)
     }
 
+    // MARK: - Forward-Walk Rewrite Regression Tests
+    // These tests pin behaviors that the forward-solar-walk implementation must
+    // preserve. They use 2023 (a known Vietnamese lunar leap-month-2 year) as a
+    // reference for leap-variant behavior.
+
+    /// "Mùng 1" — monthly recurrence on lunar day 1 over the production 6-year window.
+    /// Asserts that the new generator produces roughly one occurrence per lunar
+    /// month (no missed months, no duplicates beyond legitimate leap variants).
+    func testMonthlyDay1OverSixYearsCountWithinExpectedRange() {
+        let rule = SerializableLunarRecurrenceRule(
+            frequency: .monthly,
+            lunarDay: 1,
+            lunarMonth: nil,
+            leapMonthBehavior: .skipLeap,
+            interval: 1,
+            recurrenceEnd: nil
+        )
+
+        // Span equivalent to the production range: 1 year past + 5 years future.
+        let masterStartDate = Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 17))!
+        let rangeStart = Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 17))!
+        let rangeEnd = Calendar.current.date(from: DateComponents(year: 2031, month: 5, day: 17))!
+
+        let occurrences = LunarOccurrenceGenerator.generateOccurrences(
+            rule: rule,
+            masterStartDate: masterStartDate,
+            rangeStart: rangeStart,
+            rangeEnd: rangeEnd
+        )
+
+        // 6 lunar years × 12 months = 72; allow ±2 for window boundaries.
+        // skipLeap means leap-month duplicates are excluded.
+        XCTAssertGreaterThan(occurrences.count, 65, "Expected ~72 monthly occurrences over 6 years")
+        XCTAssertLessThan(occurrences.count, 78)
+
+        // No two occurrences should land on the same calendar day.
+        let uniqueDays = Set(occurrences.map { Calendar.current.startOfDay(for: $0) })
+        XCTAssertEqual(uniqueDays.count, occurrences.count, "Occurrences must be unique by day")
+    }
+
+    /// Leap-month behavior contract (matches pre-rewrite semantics):
+    ///   - For lunar months WITHOUT a leap variant, ALL three behaviors emit
+    ///     the regular occurrence.
+    ///   - For lunar months WITH a leap variant (i.e., the month appears twice
+    ///     in the same lunar year), behaviors diverge:
+    ///       .includeLeap → both regular and leap
+    ///       .skipLeap    → regular only
+    ///       .leapOnly    → leap only
+    /// 2023 has lunar leap month 2, which is the only month-with-leap in the
+    /// year — making it the cleanest cell to assert the contract against.
+    func testLeapMonthBehaviorContractAcross2023() {
+        let masterStartDate = Calendar.current.date(from: DateComponents(year: 2023, month: 1, day: 1))!
+        let rangeStart = masterStartDate
+        let rangeEnd = Calendar.current.date(from: DateComponents(year: 2023, month: 12, day: 31))!
+
+        func run(_ behavior: LeapMonthBehavior) -> [Date] {
+            let rule = SerializableLunarRecurrenceRule(
+                frequency: .monthly,
+                lunarDay: 1,
+                lunarMonth: nil,
+                leapMonthBehavior: behavior,
+                interval: 1,
+                recurrenceEnd: nil
+            )
+            return LunarOccurrenceGenerator.generateOccurrences(
+                rule: rule,
+                masterStartDate: masterStartDate,
+                rangeStart: rangeStart,
+                rangeEnd: rangeEnd
+            )
+        }
+
+        let skip = run(.skipLeap)
+        let include = run(.includeLeap)
+        let leapOnly = run(.leapOnly)
+
+        // includeLeap should contain every regular AND every leap variant —
+        // strictly more dates than skipLeap (by exactly the leap-variant count).
+        XCTAssertGreaterThan(include.count, skip.count,
+                             "includeLeap must contain strictly more occurrences than skipLeap")
+        XCTAssertEqual(include.count - skip.count, 1,
+                       "2023 has exactly one leap month; includeLeap - skipLeap should equal 1")
+
+        // skipLeap and leapOnly emit the same NUMBER of occurrences (one per
+        // lunar month captured): for non-leap months both emit the same
+        // regular date; for the leap month they emit different sides of the pair.
+        XCTAssertEqual(skip.count, leapOnly.count,
+                       "skipLeap and leapOnly produce one entry per captured month")
+
+        // skipLeap and leapOnly should differ on exactly one date — the
+        // leap-month's regular vs leap variant.
+        let skipSet = Set(skip.map { Calendar.current.startOfDay(for: $0) })
+        let leapOnlySet = Set(leapOnly.map { Calendar.current.startOfDay(for: $0) })
+        let symmetricDifference = skipSet.symmetricDifference(leapOnlySet)
+        XCTAssertEqual(symmetricDifference.count, 2,
+                       "skipLeap and leapOnly should differ on exactly the leap month (regular date in one, leap date in the other)")
+
+        // Every skipLeap and leapOnly date must appear in includeLeap.
+        let includeSet = Set(include.map { Calendar.current.startOfDay(for: $0) })
+        XCTAssertTrue(skipSet.isSubset(of: includeSet))
+        XCTAssertTrue(leapOnlySet.isSubset(of: includeSet))
+    }
+
+    /// Yearly recurrence on month 2 with `.leapOnly`: when a year has lunar
+    /// leap month 2 the leap variant is used; when it doesn't, the regular
+    /// month-2 occurrence is still emitted. This matches pre-rewrite behavior.
+    /// Comparing against `.skipLeap` across the same window proves the algorithm
+    /// emits the LEAP date in 2023 specifically.
+    func testYearlyLeapOnlyDiffersFromSkipLeapOnlyInLeapYears() {
+        let masterStartDate = Calendar.current.date(from: DateComponents(year: 2022, month: 1, day: 1))!
+        let rangeStart = masterStartDate
+        let rangeEnd = Calendar.current.date(from: DateComponents(year: 2027, month: 12, day: 31))!
+
+        func run(_ behavior: LeapMonthBehavior) -> [Date] {
+            let rule = SerializableLunarRecurrenceRule(
+                frequency: .yearly,
+                lunarDay: 15,
+                lunarMonth: 2,
+                leapMonthBehavior: behavior,
+                interval: 1,
+                recurrenceEnd: nil
+            )
+            return LunarOccurrenceGenerator.generateOccurrences(
+                rule: rule,
+                masterStartDate: masterStartDate,
+                rangeStart: rangeStart,
+                rangeEnd: rangeEnd
+            )
+        }
+
+        let skip = run(.skipLeap)
+        let leapOnly = run(.leapOnly)
+
+        XCTAssertEqual(skip.count, leapOnly.count,
+                       "skipLeap and leapOnly should yield the same number of yearly occurrences")
+
+        // 2023 is the only leap-month-2 year in the 2022–2027 window, so
+        // exactly one date should differ between the two.
+        let skipSet = Set(skip.map { Calendar.current.startOfDay(for: $0) })
+        let leapOnlySet = Set(leapOnly.map { Calendar.current.startOfDay(for: $0) })
+        let diff = skipSet.symmetricDifference(leapOnlySet)
+        XCTAssertEqual(diff.count, 2, "Exactly one year (2023) should produce different dates between skipLeap and leapOnly")
+    }
+
+    /// Performance guard: expanding monthly day=1 over the production 6-year
+    /// window must complete in well under the freeze threshold the user was hitting.
+    /// First call is cold (cache empty). Threshold chosen to be generous so this
+    /// is a smoke test, not a flaky benchmark.
+    func testMonthlyExpansionPerformanceUnderOneSecond() {
+        let rule = SerializableLunarRecurrenceRule(
+            frequency: .monthly,
+            lunarDay: 1,
+            lunarMonth: nil,
+            leapMonthBehavior: .skipLeap,
+            interval: 1,
+            recurrenceEnd: nil
+        )
+
+        let masterStartDate = Calendar.current.date(from: DateComponents(year: 2025, month: 5, day: 17))!
+        let rangeStart = masterStartDate
+        let rangeEnd = Calendar.current.date(from: DateComponents(year: 2031, month: 5, day: 17))!
+
+        let start = CFAbsoluteTimeGetCurrent()
+        _ = LunarOccurrenceGenerator.generateOccurrences(
+            rule: rule,
+            masterStartDate: masterStartDate,
+            rangeStart: rangeStart,
+            rangeEnd: rangeEnd
+        )
+        let elapsed = CFAbsoluteTimeGetCurrent() - start
+
+        // Old implementation took ~6 seconds per event on this dataset.
+        // The rewrite plus the solarToLunar cache should land well under 1 second.
+        XCTAssertLessThan(elapsed, 1.0, "Monthly expansion took \(elapsed)s — perf regression vs forward-walk rewrite")
+    }
+
     /// Test no duplicates in results
     func testNoDuplicatesInResults() {
         let rule = SerializableLunarRecurrenceRule(
