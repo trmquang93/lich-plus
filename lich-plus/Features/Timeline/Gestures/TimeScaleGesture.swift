@@ -5,7 +5,12 @@ import SwiftUI
 /// Manages scaling calculations, clamping to valid ranges, and snapping to predefined
 /// scale levels. The three scale levels (15-min, 30-min, 1-hour) correspond to
 /// hour heights of 120pt, 60pt, and 40pt respectively.
-final class TimeScaleGestureHandler {
+// Value type: with SWIFT_DEFAULT_ACTOR_ISOLATION=MainActor a class here gets an
+// implicit MainActor-isolated deinit, which routes through
+// swift_task_deinitOnExecutorImpl and trips a libswift_Concurrency
+// double-free (TaskLocal::StopLookupScope destructor) when deinit runs off the
+// main thread. A struct avoids the executor hop.
+struct TimeScaleGestureHandler {
 
     // MARK: - Constants
 

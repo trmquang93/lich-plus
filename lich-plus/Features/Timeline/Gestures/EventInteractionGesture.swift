@@ -18,7 +18,12 @@ enum SwipeAction: String, CaseIterable, Identifiable {
 /// Manages gesture detection, swipe translations, and offset calculations for
 /// delete and complete actions. Provides haptic feedback and animations for
 /// a polished user experience.
-final class EventInteractionGestureHandler {
+// Value type: with SWIFT_DEFAULT_ACTOR_ISOLATION=MainActor a class here gets an
+// implicit MainActor-isolated deinit, which routes through
+// swift_task_deinitOnExecutorImpl and trips a libswift_Concurrency
+// double-free (TaskLocal::StopLookupScope destructor) when deinit runs off the
+// main thread. A struct avoids the executor hop.
+struct EventInteractionGestureHandler {
 
     // MARK: - Constants
 

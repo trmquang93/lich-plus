@@ -214,12 +214,12 @@ final class GreetingServiceTests: XCTestCase {
 
         let serverError = GreetingServiceError.serverError("Server down")
         XCTAssertNotNil(serverError.errorDescription)
-        XCTAssertTrue(serverError.errorDescription?.contains("Lỗi server") ?? false)
+        XCTAssertTrue(serverError.errorDescription?.contains("Lỗi máy chủ") ?? false)
         XCTAssertTrue(serverError.errorDescription?.contains("Server down") ?? false)
 
         let unauthorized = GreetingServiceError.unauthorized
         XCTAssertNotNil(unauthorized.errorDescription)
-        XCTAssertEqual(unauthorized.errorDescription, "Không có quyền truy cập")
+        XCTAssertEqual(unauthorized.errorDescription, "Truy cập bị từ chối")
     }
 
     // MARK: - Configuration Tests

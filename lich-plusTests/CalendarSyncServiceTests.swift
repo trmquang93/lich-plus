@@ -16,6 +16,8 @@ final class CalendarSyncServiceTests: XCTestCase {
     var sut: CalendarSyncService!
     var mockEventKitService: MockEventKitService!
     var modelContext: ModelContext!
+    var testDefaults: UserDefaults!
+    var testDefaultsSuiteName: String!
 
     override func setUp() async throws {
         try await super.setUp()
@@ -25,13 +27,20 @@ final class CalendarSyncServiceTests: XCTestCase {
         let container = try ModelContainer(for: SyncableEvent.self, SyncedCalendar.self, configurations: config)
         modelContext = ModelContext(container)
 
+        // Isolated UserDefaults per test — avoid polluting `.standard`,
+        // which is global shared state and can cause flaky behavior and
+        // unrelated allocator issues when reused across tests.
+        testDefaultsSuiteName = "CalendarSyncServiceTests.\(UUID().uuidString)"
+        testDefaults = UserDefaults(suiteName: testDefaultsSuiteName)
+
         // Initialize mock EventKitService
         mockEventKitService = MockEventKitService()
 
         // Initialize SUT
         sut = CalendarSyncService(
             eventKitService: mockEventKitService,
-            modelContext: modelContext
+            modelContext: modelContext,
+            userDefaults: testDefaults
         )
     }
 
@@ -39,6 +48,9 @@ final class CalendarSyncServiceTests: XCTestCase {
         sut = nil
         mockEventKitService = nil
         modelContext = nil
+        testDefaults?.removePersistentDomain(forName: testDefaultsSuiteName)
+        testDefaults = nil
+        testDefaultsSuiteName = nil
         try await super.tearDown()
     }
 
@@ -52,26 +64,19 @@ final class CalendarSyncServiceTests: XCTestCase {
         XCTAssertNil(sut.syncError)
     }
 
-    func testInitializationSetsLastSyncDateFromUserDefaults() throws {
+    func testInitializationSetsLastSyncDateFromUserDefaults() async throws {
         let testDate = Date().addingTimeInterval(-3600) // 1 hour ago
-        UserDefaults.standard.set(testDate, forKey: "CalendarSyncLastSyncDate")
+        testDefaults.set(testDate, forKey: "CalendarSyncLastSyncDate")
 
-        // Reuse the setUp-provided modelContext. Creating a second in-memory
-        // ModelContainer for the same @Model types while the first is still
-        // alive can corrupt SwiftData's allocator state on deinit (manifests
-        // as `pointer being freed was not allocated` in
-        // CalendarSyncService.__deallocating_deinit).
         let testService = CalendarSyncService(
             eventKitService: mockEventKitService,
-            modelContext: modelContext
+            modelContext: modelContext,
+            userDefaults: testDefaults
         )
 
         // Allow small time difference due to initialization
         let timeDiff = abs(testService.lastSyncDate?.timeIntervalSince(testDate) ?? 0)
         XCTAssertLessThan(timeDiff, 1.0)
-
-        // Cleanup
-        UserDefaults.standard.removeObject(forKey: "CalendarSyncLastSyncDate")
     }
 
     // MARK: - Pull Sync Tests

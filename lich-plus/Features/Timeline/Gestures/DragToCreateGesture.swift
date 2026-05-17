@@ -221,7 +221,14 @@ struct DragPreviewBlock: View {
 // MARK: - Helper Classes for Time Snapping
 
 /// Helper for snapping times to 15-minute grid intervals.
-class DragToCreateSnapHelper {
+//
+// Intentionally a value type: with SWIFT_DEFAULT_ACTOR_ISOLATION=MainActor a
+// `class` here gets an implicit MainActor-isolated deinit, which routes through
+// `swift_task_deinitOnExecutorImpl`. That path hits a libswift_Concurrency bug
+// (TaskLocal::StopLookupScope destructor double-frees) when the deinit runs off
+// the main thread — reproducibly aborts xctest with `pointer being freed was
+// not allocated`. A struct avoids the executor hop entirely.
+struct DragToCreateSnapHelper {
     private let calendar: Calendar
 
     init(calendar: Calendar = .current) {
