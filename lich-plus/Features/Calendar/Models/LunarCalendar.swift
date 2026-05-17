@@ -67,7 +67,85 @@ struct LunarCalendar {
             libraryChi: lunarDate.chi
         )
 
-        return (day: lunarDate.day, month: lunarDate.month, year: year)
+        let raw = (day: lunarDate.day, month: lunarDate.month, year: year)
+
+        // The underlying pod (VietnameseLunar / Hồ Ngọc Đức algorithm) has a
+        // floor-rounding artifact near GMT+7-midnight new-moon boundaries.
+        // Apply hard overrides for known buggy dates first, then a generic
+        // duplicate-pair repair pass for the recoverable variant.
+        if let override = lunarOverride(for: date) {
+            return override
+        }
+        return repairOffByOneIfNeeded(date: date, raw: raw)
+    }
+
+    /// Known off-by-one dates returned by the VietnameseLunar pod that the
+    /// generic heuristic cannot recover (typically the clean-shift variant
+    /// where the pod's `k` flips mid-month and no consecutive duplicate is
+    /// produced). Keyed by "YYYY-M-D" (no zero padding) in Asia/Ho_Chi_Minh.
+    ///
+    /// `2026-4-16` is also fixable by the duplicate-pair heuristic below;
+    /// it stays here as documented belt-and-suspenders for the original
+    /// reported bug.
+    private static let lunarOverrides: [String: (day: Int, month: Int, year: Int)] = [
+        "2026-4-16": (29, 2, 2026)
+    ]
+
+    /// Shared Asia/Ho_Chi_Minh Gregorian calendar. The wrapper layer must
+    /// resolve solar Y/M/D and shift by ±1 day in Vietnam time, otherwise a
+    /// device in another timezone could land on the wrong solar year/day.
+    private static let hcmCalendar: Calendar = {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(identifier: "Asia/Ho_Chi_Minh") ?? .current
+        return cal
+    }()
+
+    private static func lunarOverride(for date: Date) -> (day: Int, month: Int, year: Int)? {
+        let comps = hcmCalendar.dateComponents([.year, .month, .day], from: date)
+        guard let y = comps.year, let m = comps.month, let d = comps.day else { return nil }
+        return lunarOverrides["\(y)-\(m)-\(d)"]
+    }
+
+    /// Repair the pod's "duplicate-pair" off-by-one: two consecutive solar
+    /// days returning the same lunar (d, m, y). A correct lunar calendar can
+    /// never produce that, so when `pod(date) == pod(date+1)`, `date` is the
+    /// buggy one and its correct lunar day is `pod(date-1).day + 1`.
+    ///
+    /// Observed at 2026-04-16 (Bính Ngọ M2→M3 new moon). Does NOT cover the
+    /// clean-shift variant (e.g. April 2027/2029/2030) where the pod skips a
+    /// day without leaving a duplicate fingerprint — those need explicit
+    /// overrides or an algorithmic patch (out of scope for this fix; see
+    /// `.claude/backlogs/lunar-apr-2026-off-by-one-plan.md`).
+    private static func repairOffByOneIfNeeded(
+        date: Date,
+        raw: (day: Int, month: Int, year: Int)
+    ) -> (day: Int, month: Int, year: Int) {
+        // Fast path: this variant always manifests as the pod returning day=1
+        // one solar day too early. Skip the extra pod calls otherwise.
+        guard raw.day == 1 else { return raw }
+
+        let cal = hcmCalendar
+        guard let nextSolar = cal.date(byAdding: .day, value: 1, to: date),
+              let next = VietnameseCalendar(date: nextSolar).vietnameseDate,
+              next.day == raw.day, next.month == raw.month
+        else { return raw }
+
+        guard let prevSolar = cal.date(byAdding: .day, value: -1, to: date),
+              let prev = VietnameseCalendar(date: prevSolar).vietnameseDate
+        else { return raw }
+
+        let candidate = prev.day + 1
+        guard candidate <= 30 else { return raw }
+        // Resolve prev's Int year independently — `raw.year` reflects the
+        // pod's (buggy) day, which at a lunar year boundary can land in the
+        // wrong year. `prev` is mid-month and safe to trust.
+        let prevSolarYear = cal.component(.year, from: prevSolar)
+        let prevYear = resolveLunarYear(
+            solarYear: prevSolarYear,
+            libraryCan: prev.can,
+            libraryChi: prev.chi
+        )
+        return (day: candidate, month: prev.month, year: prevYear)
     }
 
     private static func resolveLunarYear(solarYear: Int, libraryCan: String, libraryChi: String) -> Int {
