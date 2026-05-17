@@ -39,23 +39,42 @@ struct LunarCalendar {
     /// Cache for lunar-to-solar conversions: (day, month, year) -> (day, month, year)
     private static var lunarToSolarCache: [String: (day: Int, month: Int, year: Int)] = [:]
 
+    /// Cache for solar-to-lunar conversions: startOfDay(solarDate) -> (day, month, year)
+    private static var solarToLunarCache: [Date: (day: Int, month: Int, year: Int)] = [:]
+
     /// Cache for leap month information: solarYear -> LeapMonthInfo
     private static var leapMonthCache: [Int: LeapMonthInfo] = [:]
 
     /// Maximum cache size before clearing (to prevent unbounded growth)
     private static let maxCacheSize = 1000
 
+    /// Shared Gregorian calendar — instantiating per call is measurably expensive
+    /// inside the lunar conversion hot path.
+    private static let gregorianCalendar = Calendar(identifier: .gregorian)
+
     /// Convert solar date to lunar date
     /// - Parameter date: Solar date to convert
     /// - Returns: Tuple of (lunarDay, lunarMonth, lunarYear)
     static func solarToLunar(_ date: Date) -> (day: Int, month: Int, year: Int) {
+        // Normalize to start-of-day so identical calendar days share a cache entry.
+        let dayKey = gregorianCalendar.startOfDay(for: date)
+        if let cached = solarToLunarCache[dayKey] {
+            return cached
+        }
+
+        if solarToLunarCache.count > maxCacheSize {
+            solarToLunarCache.removeAll()
+        }
+
         // Use an explicit Gregorian calendar — Calendar.current can be set to
         // a non-Gregorian system (Buddhist, Japanese, ...) on the user's device,
         // which would skew the integer year fed into CanChiCalculator.
-        let solarYear = Calendar(identifier: .gregorian).component(.year, from: date)
+        let solarYear = gregorianCalendar.component(.year, from: date)
         let vietnameseCalendar = VietnameseCalendar(date: date)
         guard let lunarDate = vietnameseCalendar.vietnameseDate else {
-            return (1, 1, solarYear)
+            let fallback = (day: 1, month: 1, year: solarYear)
+            solarToLunarCache[dayKey] = fallback
+            return fallback
         }
 
         // VietnameseLunar exposes `year` as a String formatted "<Can> <Chi>" (e.g. "Bính Ngọ"),
@@ -72,11 +91,17 @@ struct LunarCalendar {
         // The underlying pod (VietnameseLunar / Hồ Ngọc Đức algorithm) has a
         // floor-rounding artifact near GMT+7-midnight new-moon boundaries.
         // Apply hard overrides for known buggy dates first, then a generic
-        // duplicate-pair repair pass for the recoverable variant.
+        // duplicate-pair repair pass for the recoverable variant. Cache the
+        // repaired result so subsequent calls skip both the pod call and the
+        // repair probe.
+        let result: (day: Int, month: Int, year: Int)
         if let override = lunarOverride(for: date) {
-            return override
+            result = override
+        } else {
+            result = repairOffByOneIfNeeded(date: date, raw: raw)
         }
-        return repairOffByOneIfNeeded(date: date, raw: raw)
+        solarToLunarCache[dayKey] = result
+        return result
     }
 
     /// Known off-by-one dates returned by the VietnameseLunar pod that the
