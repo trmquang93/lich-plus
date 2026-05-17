@@ -7,12 +7,14 @@
 
 import SwiftUI
 import SwiftData
+import StoreKit
 
 struct SettingsView: View {
     @EnvironmentObject var syncService: CalendarSyncService
     @EnvironmentObject var googleAuthService: GoogleAuthService
     @EnvironmentObject var microsoftAuthService: MicrosoftAuthService
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.requestReview) private var requestReviewAction
 
     private var syncStatusIcon: String {
         switch syncService.syncState {
@@ -236,6 +238,55 @@ struct SettingsView: View {
 
                         Spacer()
                     }
+
+                    ShareLink(
+                        item: AppStoreConfig.appStoreURL,
+                        message: Text(String(localized: "Lich+ — Vietnamese lunar calendar app. Try it: "))
+                    ) {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "square.and.arrow.up")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text(String(localized: "Share Lich+"))
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(String(localized: "Tell friends about the app"))
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
+                    .buttonStyle(.plain)
+
+                    Button {
+                        requestReviewAction()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "star.fill")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text(String(localized: "Rate Lich+"))
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(String(localized: "Leave a review on the App Store"))
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
+                    .buttonStyle(.plain)
                 } header: {
                     Text("About")
                 }
