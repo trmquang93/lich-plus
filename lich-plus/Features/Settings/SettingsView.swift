@@ -14,6 +14,7 @@ struct SettingsView: View {
     @EnvironmentObject var googleAuthService: GoogleAuthService
     @EnvironmentObject var microsoftAuthService: MicrosoftAuthService
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.requestReview) private var requestReviewAction
 
     private var syncStatusIcon: String {
         switch syncService.syncState {
@@ -240,7 +241,7 @@ struct SettingsView: View {
 
                     ShareLink(
                         item: AppStoreConfig.appStoreURL,
-                        message: Text(String(localized: "Lich+ — Vietnamese lunar calendar app. Try it:"))
+                        message: Text(String(localized: "Lich+ — Vietnamese lunar calendar app. Try it: "))
                     ) {
                         HStack(spacing: AppTheme.spacing12) {
                             Image(systemName: "square.and.arrow.up")
@@ -264,7 +265,7 @@ struct SettingsView: View {
                     .buttonStyle(.plain)
 
                     Button {
-                        requestReview()
+                        requestReviewAction()
                     } label: {
                         HStack(spacing: AppTheme.spacing12) {
                             Image(systemName: "star.fill")
@@ -292,13 +293,6 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
         }
-    }
-
-    private func requestReview() {
-        guard let scene = UIApplication.shared.connectedScenes
-            .first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene
-        else { return }
-        SKStoreReviewController.requestReview(in: scene)
     }
 }
 
