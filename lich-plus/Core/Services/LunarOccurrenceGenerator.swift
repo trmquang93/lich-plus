@@ -28,143 +28,129 @@ struct LunarOccurrenceGenerator {
         rangeStart: Date,
         rangeEnd: Date
     ) -> [Date] {
-        // Get the master lunar date information
-        let masterLunar = LunarCalendar.solarToLunar(masterStartDate)
-        let targetLunarDay = rule.lunarDay
+        // Algorithmic shape: walk solar dates forward from the master start date once,
+        // testing each day's lunar tuple against the target day (and month, for yearly).
+        // Previous implementation searched lunar→solar 192 times per event, each search
+        // brute-forcing up to 425 days. This rewrite makes the work O(rangeDays) instead
+        // of O(years × 12 × 425), and leans on the cached `solarToLunar`.
 
-        // For yearly recurrence, use the specified month or the master's month
-        // For monthly recurrence, targetLunarMonth is used differently
-        let targetLunarMonth: Int?
+        let masterLunar = LunarCalendar.solarToLunar(masterStartDate)
+        let targetDay = rule.lunarDay
+
+        // Monthly recurrence: any lunar month qualifies (matches prior behavior).
+        // Yearly: must match a specific lunar month — rule.lunarMonth or the master's.
+        let targetMonth: Int?
         if rule.frequency == .yearly {
-            targetLunarMonth = rule.lunarMonth ?? masterLunar.month
+            targetMonth = rule.lunarMonth ?? masterLunar.month
         } else {
-            // For monthly, use the specified month (if any), but the actual processing
-            // will iterate through all 12 months
-            targetLunarMonth = rule.lunarMonth
+            targetMonth = nil
         }
 
-        // Get the master lunar year as starting point
-        let masterLunarYear = masterLunar.year
+        // Walk window: start at the master so interval/occurrenceCount are anchored there
+        // (matches prior semantics); end at min(rangeEnd, rule's endDate) if any.
+        let calendar = Calendar.current
+        let walkStart = masterStartDate
+        var walkEnd = rangeEnd
+        if case .endDate(let endDate) = rule.recurrenceEnd, endDate < walkEnd {
+            walkEnd = endDate
+        }
 
-        // Determine how many years to generate (use wide range to be safe)
-        // Convert master lunar year to approximate solar year for calculation
-        let masterSolarDate = LunarCalendar.lunarToSolar(day: 1, month: 1, year: masterLunarYear)
-        let masterSolarYear = Calendar.current.component(.year, from: masterSolarDate)
-        let endSolarYear = Calendar.current.component(.year, from: rangeEnd)
-        let yearsToGenerate = (endSolarYear - masterSolarYear) + 5
+        // After a match we know the next match is at least ~28 days away (lunar months are
+        // 29–30 days). For yearly, the next match in a different year is ~340+ days away.
+        // For occurrenceCount termination, we can stop the walk once we have enough.
+        let skipAfterMatch = (rule.frequency == .yearly) ? 340 : 28
+        let occurrenceCountLimit: Int? = {
+            if case .occurrenceCount(let count) = rule.recurrenceEnd { return count }
+            return nil
+        }()
 
-        var allOccurrences: [Date] = []
+        var candidates: [(date: Date, year: Int, month: Int)] = []
 
-        // Generate occurrences for each lunar year starting from master lunar year
-        for yearOffset in 0..<yearsToGenerate {
-            let lunarYear = masterLunarYear + yearOffset
+        var current = walkStart
+        while current <= walkEnd {
+            let lunar = LunarCalendar.solarToLunar(current)
+            let dayMatch = lunar.day == targetDay
+            let monthMatch = (targetMonth == nil) || (targetMonth == lunar.month)
 
-            let monthsToProcess: [Int]
-            if rule.frequency == .monthly {
-                monthsToProcess = Array(1...12)
-            } else {
-                // Yearly recurrence - use the target month (which is not nil for yearly)
-                monthsToProcess = [targetLunarMonth ?? masterLunar.month]
-            }
+            if dayMatch && monthMatch {
+                candidates.append((current, lunar.year, lunar.month))
+                var lastMatch = current
 
-            for month in monthsToProcess {
-                // Generate occurrences for this lunar date
-                let occurrencesForMonth = generateOccurrencesForMonth(
-                    day: targetLunarDay,
-                    month: month,
-                    year: lunarYear,
-                    leapMonthBehavior: rule.leapMonthBehavior
-                )
-
-                for occurrence in occurrencesForMonth {
-                    // Check if this date already exists (using same-day comparison)
-                    let isDuplicate = allOccurrences.contains { existing in
-                        Calendar.current.isDate(existing, inSameDayAs: occurrence)
-                    }
-                    if !isDuplicate {
-                        allOccurrences.append(occurrence)
+                // Probe for a leap-month variant: same (year, month, day) reappearing
+                // ~29 or ~30 days later. Two probes are enough to catch it.
+                for offset in [29, 30] {
+                    guard let probe = calendar.date(byAdding: .day, value: offset, to: current),
+                          probe <= walkEnd else { break }
+                    let probeLunar = LunarCalendar.solarToLunar(probe)
+                    if probeLunar.day == targetDay
+                        && probeLunar.month == lunar.month
+                        && probeLunar.year == lunar.year {
+                        candidates.append((probe, probeLunar.year, probeLunar.month))
+                        lastMatch = probe
+                        break
                     }
                 }
+
+                // Cheap termination: if we already have enough candidates to satisfy
+                // occurrenceCount post-interval, stop walking. Worst case overshoot is
+                // small (interval/leap behavior may discard some, so add a buffer).
+                if let limit = occurrenceCountLimit,
+                   candidates.count >= max(limit * rule.interval, limit) + 4 {
+                    break
+                }
+
+                guard let next = calendar.date(byAdding: .day, value: skipAfterMatch, to: lastMatch) else { break }
+                current = next
+            } else {
+                guard let next = calendar.date(byAdding: .day, value: 1, to: current) else { break }
+                current = next
             }
         }
 
-        // Sort occurrences
-        let sortedOccurrences = allOccurrences.sorted()
-
-        // Apply interval
-        var filteredOccurrences = applyInterval(sortedOccurrences, interval: rule.interval)
-
-        // Apply recurrence end
-        if let recurrenceEnd = rule.recurrenceEnd {
-            filteredOccurrences = applyRecurrenceEnd(filteredOccurrences, recurrenceEnd: recurrenceEnd)
+        // Group candidates by (year, month) so we can identify leap variants:
+        // a group with two entries means the month repeats — first is regular, second is leap.
+        var dateGroups: [String: [Date]] = [:]
+        for c in candidates {
+            let key = "\(c.year)-\(c.month)"
+            dateGroups[key, default: []].append(c.date)
         }
 
-        // Filter by date range
-        let finalOccurrences = filteredOccurrences.filter { $0 >= rangeStart && $0 <= rangeEnd }
+        var resolved: [Date] = []
+        resolved.reserveCapacity(candidates.count)
+        for c in candidates {
+            let key = "\(c.year)-\(c.month)"
+            guard let group = dateGroups[key] else { continue }
 
-        // Return sorted final occurrences
-        return finalOccurrences.sorted()
+            if group.count <= 1 {
+                resolved.append(c.date)
+                continue
+            }
+
+            // Group has 2 entries: earliest = regular, latest = leap.
+            let isLeap = (c.date == (group.max() ?? c.date))
+            switch rule.leapMonthBehavior {
+            case .includeLeap:
+                resolved.append(c.date)
+            case .skipLeap:
+                if !isLeap { resolved.append(c.date) }
+            case .leapOnly:
+                if isLeap { resolved.append(c.date) }
+            }
+        }
+
+        let sorted = resolved.sorted()
+
+        // Apply interval (indexed from master — same as before).
+        var filtered = applyInterval(sorted, interval: rule.interval)
+
+        if let recurrenceEnd = rule.recurrenceEnd {
+            filtered = applyRecurrenceEnd(filtered, recurrenceEnd: recurrenceEnd)
+        }
+
+        return filtered.filter { $0 >= rangeStart && $0 <= rangeEnd }.sorted()
     }
 
     // MARK: - Helper Methods
-
-    /// Generate occurrences for a specific lunar month/year combination
-    ///
-    /// - Parameters:
-    ///   - day: Lunar day (1-30)
-    ///   - month: Lunar month (1-12)
-    ///   - year: Lunar year
-    ///   - leapMonthBehavior: How to handle leap months
-    /// - Returns: Array of solar dates for the occurrences
-    private static func generateOccurrencesForMonth(
-        day: Int,
-        month: Int,
-        year: Int,
-        leapMonthBehavior: LeapMonthBehavior
-    ) -> [Date] {
-        var occurrences: [Date] = []
-
-        // Get leap month information for this year
-        // Convert lunar year to solar year for leap month detection
-        let approxSolarDate = LunarCalendar.lunarToSolar(day: 1, month: 1, year: year)
-        let solarYear = Calendar.current.component(.year, from: approxSolarDate)
-        let leapInfo = LunarCalendar.getLeapMonthInfo(forSolarYear: solarYear)
-
-        // Check if this month is the leap month
-        let isLeapMonth = leapInfo.hasLeapMonth && leapInfo.leapMonth == month
-
-        if isLeapMonth {
-            // Handle leap month based on behavior
-            switch leapMonthBehavior {
-            case .includeLeap:
-                // Generate both regular and leap occurrences
-                let regularDate = LunarCalendar.lunarToSolar(day: day, month: month, year: year, isLeapMonth: false)
-                let leapDate = LunarCalendar.lunarToSolar(day: day, month: month, year: year, isLeapMonth: true)
-
-                // Only add if they differ (to avoid duplicates)
-                occurrences.append(regularDate)
-                if leapDate != regularDate {
-                    occurrences.append(leapDate)
-                }
-
-            case .skipLeap:
-                // Only generate regular occurrence
-                let regularDate = LunarCalendar.lunarToSolar(day: day, month: month, year: year, isLeapMonth: false)
-                occurrences.append(regularDate)
-
-            case .leapOnly:
-                // Only generate leap occurrence
-                let leapDate = LunarCalendar.lunarToSolar(day: day, month: month, year: year, isLeapMonth: true)
-                occurrences.append(leapDate)
-            }
-        } else {
-            // Regular month (not a leap month)
-            let date = LunarCalendar.lunarToSolar(day: day, month: month, year: year, isLeapMonth: false)
-            occurrences.append(date)
-        }
-
-        return occurrences
-    }
 
     /// Apply interval to occurrences
     ///
