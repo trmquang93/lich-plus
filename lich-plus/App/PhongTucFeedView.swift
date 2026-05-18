@@ -113,8 +113,8 @@ struct PhongTucFeedView: View {
 
     private struct GreetingCategoryItem {
         let occasion: GreetingOccasion
-        let title: String
-        let subtitle: String
+        let title: LocalizedStringKey
+        let subtitle: LocalizedStringKey
         let icon: String
     }
 
@@ -122,26 +122,26 @@ struct PhongTucFeedView: View {
         [
             GreetingCategoryItem(
                 occasion: .tet,
-                title: String(localized: "Chúc Tết"),
-                subtitle: String(localized: "Lời chúc năm mới"),
+                title: "Chúc Tết",
+                subtitle: "Lời chúc năm mới",
                 icon: "envelope.fill"
             ),
             GreetingCategoryItem(
                 occasion: .birthday,
-                title: String(localized: "Sinh nhật"),
-                subtitle: String(localized: "Gửi người thân, bạn bè"),
+                title: "Sinh nhật",
+                subtitle: "Gửi người thân, bạn bè",
                 icon: "gift.fill"
             ),
             GreetingCategoryItem(
                 occasion: .wedding,
-                title: String(localized: "Cưới hỏi"),
-                subtitle: String(localized: "Lời chúc trăm năm hạnh phúc"),
+                title: "Cưới hỏi",
+                subtitle: "Lời chúc trăm năm hạnh phúc",
                 icon: "heart.fill"
             ),
             GreetingCategoryItem(
                 occasion: .housewarming,
-                title: String(localized: "Mừng tân gia"),
-                subtitle: String(localized: "An cư lạc nghiệp"),
+                title: "Mừng tân gia",
+                subtitle: "An cư lạc nghiệp",
                 icon: "house.fill"
             ),
         ]

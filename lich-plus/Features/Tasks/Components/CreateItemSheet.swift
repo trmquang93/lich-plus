@@ -158,7 +158,7 @@ struct CreateItemSheet: View {
         }
         .sheet(isPresented: $showStartDatePicker) {
             CalendarDatePickerSheet(
-                title: String(localized: "Starts"),
+                title: "Starts",
                 selectedDate: $startDate,
                 onDone: {
                     showStartDatePicker = false
@@ -172,7 +172,7 @@ struct CreateItemSheet: View {
         }
         .sheet(isPresented: $showEndDatePicker) {
             CalendarDatePickerSheet(
-                title: String(localized: "Ends"),
+                title: "Ends",
                 selectedDate: $endDate,
                 onDone: { showEndDatePicker = false }
             )
@@ -248,7 +248,7 @@ struct CreateItemSheet: View {
     private var eventFormContent: some View {
         VStack(spacing: AppTheme.spacing24) {
             // Title
-            FormSection(title: String(localized: "Title")) {
+            FormSection(title: "Title") {
                 TextField(String(localized: "Enter title"), text: $title)
                     .font(.system(size: AppTheme.fontBody))
                     .padding(AppTheme.spacing12)
@@ -261,12 +261,12 @@ struct CreateItemSheet: View {
             }
 
             // Category
-            FormSection(title: String(localized: "Category")) {
+            FormSection(title: "Category") {
                 categoryPills
             }
 
             // All-day toggle
-            FormSection(title: String(localized: "All Day")) {
+            FormSection(title: "All Day") {
                 Toggle(isOn: $isAllDay) {
                     Text(String(localized: "All Day"))
                 }
@@ -276,25 +276,25 @@ struct CreateItemSheet: View {
             // Start/End Time
             HStack(spacing: AppTheme.spacing16) {
                 if isAllDay {
-                    FormSection(title: String(localized: "Start Date")) {
+                    FormSection(title: "Start Date") {
                         DateButton(date: startDate) {
                             showStartDatePicker = true
                         }
                     }
 
-                    FormSection(title: String(localized: "End Date")) {
+                    FormSection(title: "End Date") {
                         DateButton(date: endDate) {
                             showEndDatePicker = true
                         }
                     }
                 } else {
-                    FormSection(title: String(localized: "Starts")) {
+                    FormSection(title: "Starts") {
                         DateButton(date: startDate) {
                             showStartDatePicker = true
                         }
                     }
 
-                    FormSection(title: String(localized: "Ends")) {
+                    FormSection(title: "Ends") {
                         DateButton(date: endDate) {
                             showEndDatePicker = true
                         }
@@ -303,7 +303,7 @@ struct CreateItemSheet: View {
             }
 
             // Location
-            FormSection(title: String(localized: "Location")) {
+            FormSection(title: "Location") {
                 HStack(spacing: AppTheme.spacing8) {
                     Image(systemName: "mappin.circle.fill")
                         .font(.system(size: 20))
@@ -332,7 +332,7 @@ struct CreateItemSheet: View {
             }
 
             // Description
-            FormSection(title: String(localized: "Description")) {
+            FormSection(title: "Description") {
                 TextEditor(text: $notes)
                     .font(.system(size: AppTheme.fontBody))
                     .frame(minHeight: 80)
@@ -347,7 +347,7 @@ struct CreateItemSheet: View {
             }
 
             // Recurrence
-            FormSection(title: String(localized: "Recurrence")) {
+            FormSection(title: "Recurrence") {
                 recurrenceButton
             }
         }
@@ -357,7 +357,7 @@ struct CreateItemSheet: View {
     private var taskFormContent: some View {
         VStack(spacing: AppTheme.spacing24) {
             // Title
-            FormSection(title: String(localized: "Task Title")) {
+            FormSection(title: "Task Title") {
                 TextField(String(localized: "Enter task title"), text: $title)
                     .font(.system(size: AppTheme.fontBody))
                     .padding(AppTheme.spacing12)
@@ -370,29 +370,29 @@ struct CreateItemSheet: View {
             }
 
             // Category
-            FormSection(title: String(localized: "Category")) {
+            FormSection(title: "Category") {
                 taskCategoryPills
             }
 
             // Due Date
-            FormSection(title: String(localized: "Due Date")) {
+            FormSection(title: "Due Date") {
                 DateButton(date: startDate) {
                     showStartDatePicker = true
                 }
             }
 
             // Priority
-            FormSection(title: String(localized: "Priority")) {
+            FormSection(title: "Priority") {
                 priorityButtons
             }
 
             // Recurrence
-            FormSection(title: String(localized: "Recurrence")) {
+            FormSection(title: "Recurrence") {
                 recurrenceButton
             }
 
             // Description
-            FormSection(title: String(localized: "Description")) {
+            FormSection(title: "Description") {
                 TextEditor(text: $notes)
                     .font(.system(size: AppTheme.fontBody))
                     .frame(minHeight: 80)

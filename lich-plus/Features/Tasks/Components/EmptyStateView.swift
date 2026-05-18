@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct EmptyStateView: View {
-    let title: String
-    let message: String
+    let title: LocalizedStringKey
+    let message: LocalizedStringKey
     let onAddNew: () -> Void
 
     var body: some View {

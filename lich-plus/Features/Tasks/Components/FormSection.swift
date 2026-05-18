@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct FormSection<Content: View>: View {
-    let title: String
+    let title: LocalizedStringKey
     @ViewBuilder let content: Content
 
     var body: some View {
