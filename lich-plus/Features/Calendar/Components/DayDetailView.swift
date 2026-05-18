@@ -79,6 +79,9 @@ struct DayDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: AppTheme.spacing16) {
+                // Văn khấn banner (renders nothing when no occasion matches)
+                VanKhanBannerCard(day: day)
+
                 // Day quality card
                 dayQualityCard
 
