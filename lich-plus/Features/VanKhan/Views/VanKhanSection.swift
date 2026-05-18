@@ -8,13 +8,25 @@
 import SwiftUI
 
 struct VanKhanSection: View {
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            groupTitle
+    /// When non-nil, render exactly these groups (used by search). When nil,
+    /// fall back to the full library.
+    var filteredGroups: [(VanKhanCategory, [VanKhanOccasion])]? = nil
 
-            ForEach(VanKhanLibrary.grouped(), id: \.0.id) { (category, occasions) in
-                if !occasions.isEmpty {
-                    categoryBlock(category: category, occasions: occasions)
+    private var groups: [(VanKhanCategory, [VanKhanOccasion])] {
+        filteredGroups ?? VanKhanLibrary.grouped()
+    }
+
+    var body: some View {
+        if filteredGroups?.isEmpty == true {
+            EmptyView()
+        } else {
+            VStack(alignment: .leading, spacing: 0) {
+                groupTitle
+
+                ForEach(groups, id: \.0.id) { (category, occasions) in
+                    if !occasions.isEmpty {
+                        categoryBlock(category: category, occasions: occasions)
+                    }
                 }
             }
         }

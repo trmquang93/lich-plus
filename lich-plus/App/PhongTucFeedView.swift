@@ -10,15 +10,33 @@ import SwiftUI
 import SwiftData
 
 struct PhongTucFeedView: View {
+    @State private var searchText: String = ""
+    @FocusState private var isSearchFocused: Bool
+
+    private var trimmedQuery: String {
+        searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private var isSearching: Bool { !trimmedQuery.isEmpty }
+
     var body: some View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
                     screenHeader
                     searchBar
-                    TodayHighlightsSection()
-                    greetingsSection
-                    VanKhanSection()
+                    if !isSearching {
+                        TodayHighlightsSection()
+                    }
+                    let greetings = filteredGreetings
+                    let vanKhanGroups = filteredVanKhanGroups
+                    if !greetings.isEmpty {
+                        greetingsSection(items: greetings)
+                    }
+                    VanKhanSection(filteredGroups: isSearching ? vanKhanGroups : nil)
+                    if isSearching && greetings.isEmpty && vanKhanGroups.isEmpty {
+                        emptyResults
+                    }
                     Spacer(minLength: 32)
                 }
             }
@@ -51,10 +69,26 @@ struct PhongTucFeedView: View {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 14, weight: .regular))
                 .foregroundStyle(AppColors.textDisabled)
-            Text(String(localized: "Tìm lời chúc, bài khấn…"))
-                .font(.system(size: 15))
-                .foregroundStyle(AppColors.textSecondary)
-            Spacer()
+            TextField(
+                String(localized: "Tìm lời chúc, bài khấn…"),
+                text: $searchText
+            )
+            .font(.system(size: 15))
+            .foregroundStyle(AppColors.textPrimary)
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled(true)
+            .submitLabel(.search)
+            .focused($isSearchFocused)
+            if !searchText.isEmpty {
+                Button {
+                    searchText = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 15))
+                        .foregroundStyle(AppColors.textDisabled)
+                }
+                .buttonStyle(.plain)
+            }
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 10)
@@ -63,12 +97,14 @@ struct PhongTucFeedView: View {
                 .fill(AppColors.background)
                 .overlay(Capsule().strokeBorder(AppColors.borderLight, lineWidth: 1))
         )
+        .contentShape(Capsule())
+        .onTapGesture { isSearchFocused = true }
         .padding(.horizontal, 16)
         .padding(.top, 12)
         .padding(.bottom, 8)
     }
 
-    private var greetingsSection: some View {
+    private func greetingsSection(items: [GreetingCategoryItem]) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .firstTextBaseline) {
                 Text(String(localized: "Lời chúc"))
@@ -77,15 +113,17 @@ struct PhongTucFeedView: View {
                     .textCase(.uppercase)
                     .foregroundStyle(AppColors.textSecondary)
                 Spacer()
-                Text(String(localized: "Xem tất cả"))
-                    .font(.system(size: 13, weight: .medium))
-                    .foregroundStyle(AppColors.primary)
+                if !isSearching {
+                    Text(String(localized: "Xem tất cả"))
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundStyle(AppColors.primary)
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 24)
 
             VStack(spacing: 0) {
-                ForEach(Array(greetingCategories.enumerated()), id: \.element.occasion) { idx, item in
+                ForEach(Array(items.enumerated()), id: \.element.occasion) { idx, item in
                     NavigationLink {
                         GreetingGeneratorView(occasion: item.occasion)
                             .navigationTitle(item.title)
@@ -95,7 +133,7 @@ struct PhongTucFeedView: View {
                     }
                     .buttonStyle(.plain)
 
-                    if idx < greetingCategories.count - 1 {
+                    if idx < items.count - 1 {
                         Divider()
                             .background(AppColors.borderLight)
                             .padding(.leading, 64)
@@ -113,8 +151,8 @@ struct PhongTucFeedView: View {
 
     private struct GreetingCategoryItem {
         let occasion: GreetingOccasion
-        let title: LocalizedStringKey
-        let subtitle: LocalizedStringKey
+        let title: String
+        let subtitle: String
         let icon: String
     }
 
@@ -122,29 +160,72 @@ struct PhongTucFeedView: View {
         [
             GreetingCategoryItem(
                 occasion: .tet,
-                title: "Chúc Tết",
-                subtitle: "Lời chúc năm mới",
+                title: String(localized: "Chúc Tết"),
+                subtitle: String(localized: "Lời chúc năm mới"),
                 icon: "envelope.fill"
             ),
             GreetingCategoryItem(
                 occasion: .birthday,
-                title: "Sinh nhật",
-                subtitle: "Gửi người thân, bạn bè",
+                title: String(localized: "Sinh nhật"),
+                subtitle: String(localized: "Gửi người thân, bạn bè"),
                 icon: "gift.fill"
             ),
             GreetingCategoryItem(
                 occasion: .wedding,
-                title: "Cưới hỏi",
-                subtitle: "Lời chúc trăm năm hạnh phúc",
+                title: String(localized: "Cưới hỏi"),
+                subtitle: String(localized: "Lời chúc trăm năm hạnh phúc"),
                 icon: "heart.fill"
             ),
             GreetingCategoryItem(
                 occasion: .housewarming,
-                title: "Mừng tân gia",
-                subtitle: "An cư lạc nghiệp",
+                title: String(localized: "Mừng tân gia"),
+                subtitle: String(localized: "An cư lạc nghiệp"),
                 icon: "house.fill"
             ),
         ]
+    }
+
+    private var filteredGreetings: [GreetingCategoryItem] {
+        let q = trimmedQuery
+        guard !q.isEmpty else { return greetingCategories }
+        return greetingCategories.filter {
+            Self.matches($0.title, q) || Self.matches($0.subtitle, q)
+        }
+    }
+
+    private var filteredVanKhanGroups: [(VanKhanCategory, [VanKhanOccasion])] {
+        let q = trimmedQuery
+        let all = VanKhanLibrary.grouped()
+        guard !q.isEmpty else { return all }
+        return all.compactMap { (cat, occasions) in
+            let matched = occasions.filter {
+                Self.matches($0.title, q) || Self.matches($0.subtitle ?? "", q)
+            }
+            return matched.isEmpty ? nil : (cat, matched)
+        }
+    }
+
+    private static func matches(_ haystack: String, _ needle: String) -> Bool {
+        haystack.range(
+            of: needle,
+            options: [.caseInsensitive, .diacriticInsensitive]
+        ) != nil
+    }
+
+    private var emptyResults: some View {
+        VStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 28, weight: .light))
+                .foregroundStyle(AppColors.textDisabled)
+            Text(String(localized: "Không có kết quả"))
+                .font(.system(size: 15, weight: .medium))
+                .foregroundStyle(AppColors.textPrimary)
+            Text(String(localized: "Thử từ khoá khác."))
+                .font(.system(size: 13))
+                .foregroundStyle(AppColors.textSecondary)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 48)
     }
 
     private func greetingRow(_ item: GreetingCategoryItem) -> some View {
