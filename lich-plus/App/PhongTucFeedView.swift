@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct PhongTucFeedView: View {
     var body: some View {
@@ -177,5 +178,24 @@ struct PhongTucFeedView: View {
 }
 
 #Preview {
-    PhongTucFeedView()
+    let container = try! ModelContainer(
+        for: PersonalProfile.self, DeceasedRelative.self,
+        configurations: ModelConfiguration(isStoredInMemoryOnly: true)
+    )
+    let lunar = LunarCalendar.solarToLunar(Date())
+    let relative = DeceasedRelative(
+        relation: "ông",
+        name: "Nguyễn Văn A",
+        lunarDay: lunar.day,
+        lunarMonth: lunar.month
+    )
+    let profile = PersonalProfile(
+        fullName: "Trần Quang",
+        address: "Hà Nội",
+        deceasedRelatives: [relative]
+    )
+    container.mainContext.insert(profile)
+
+    return PhongTucFeedView()
+        .modelContainer(container)
 }
