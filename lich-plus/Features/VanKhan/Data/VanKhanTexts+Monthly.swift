@@ -36,7 +36,9 @@ extension VanKhanLibrary {
 
             Chúng con kính mời: Ngài Bản cảnh Thành hoàng chư vị đại vương, ngài Bản xứ Thần linh Thổ địa, ngài Bản gia Táo quân, Ngũ phương, Long mạch, Tài thần. Cúi xin các ngài giáng lâm trước án, chứng giám lòng thành thụ hưởng lễ vật.
 
+            \(VanKhanSectionTag.ancestors.open)
             Chúng con kính mời các cụ Tổ khảo, Tổ tỷ, chư vị hương linh gia tiên nội ngoại họ \(T.familyName), cúi xin thương xót con cháu linh thiêng hiện về, chứng giám tâm thành, thụ hưởng lễ vật.
+            \(VanKhanSectionTag.ancestors.close)
 
             Tín chủ con lại kính mời các vị Tiền chủ, Hậu chủ ngụ tại nhà này, đồng lâm án tiền, đồng lai hâm hưởng, phù hộ cho gia đình chúng con luôn luôn mạnh khỏe, mọi sự bình an, vạn sự tốt lành, làm ăn phát tài, gia đình hòa thuận.
 

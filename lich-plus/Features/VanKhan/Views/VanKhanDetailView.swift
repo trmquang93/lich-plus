@@ -42,6 +42,12 @@ struct VanKhanDetailView: View {
         )
     }
 
+    private var hiddenSections: Set<VanKhanSectionTag> {
+        var hidden: Set<VanKhanSectionTag> = []
+        if profile?.showAncestorsSection == false { hidden.insert(.ancestors) }
+        return hidden
+    }
+
     private var overrides: [String: String] {
         var dict: [String: String] = [:]
         if !nameOverride.isEmpty { dict[VanKhanToken.name.rawValue] = nameOverride }
@@ -310,7 +316,8 @@ struct VanKhanDetailView: View {
                     text: text,
                     profile: profile,
                     overrides: overrides,
-                    context: renderContext
+                    context: renderContext,
+                    hiddenSections: hiddenSections
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -423,7 +430,8 @@ struct VanKhanDetailView: View {
             text: text,
             profile: profile,
             overrides: overrides,
-            context: renderContext
+            context: renderContext,
+            hiddenSections: hiddenSections
         )
         UIPasteboard.general.string = rendered
     }
@@ -437,7 +445,8 @@ struct VanKhanDetailView: View {
             text: text,
             profile: profile,
             overrides: overrides,
-            context: renderContext
+            context: renderContext,
+            hiddenSections: hiddenSections
         )
 
         let url = VanKhanPDFRenderer.renderToTempFile(

@@ -20,6 +20,10 @@ final class PersonalProfile {
     /// "...gia tiên nội ngoại họ {familyName}".
     var familyName: String = ""
 
+    /// Whether the "gia tiên" (ancestor invocation) section is rendered in
+    /// văn khấn bodies. Some users skip this section by family practice.
+    var showAncestorsSection: Bool = true
+
     /// "nam" / "nữ" — drives the "tín chủ con là …" pronoun
     var gender: String?
 

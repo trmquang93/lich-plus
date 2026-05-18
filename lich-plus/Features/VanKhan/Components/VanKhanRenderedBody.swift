@@ -17,6 +17,7 @@ struct VanKhanRenderedBody: View {
     let profile: PersonalProfile?
     let overrides: [String: String]
     let context: VanKhanRenderer.Context
+    var hiddenSections: Set<VanKhanSectionTag> = []
 
     var body: some View {
         Text(attributedBody)
@@ -29,8 +30,8 @@ struct VanKhanRenderedBody: View {
     private var attributedBody: AttributedString {
         var attr = AttributedString()
 
-        // Walk the original body, emitting plain runs and styled token runs
-        let body = text.body
+        // Walk the (section-preprocessed) body, emitting plain runs and styled token runs
+        let body = VanKhanRenderer.applySections(body: text.body, hidden: hiddenSections)
         let pattern = #"\{([a-zA-Z][a-zA-Z0-9_]*)\}"#
         guard let regex = try? NSRegularExpression(pattern: pattern) else {
             var fallback = AttributedString(body)

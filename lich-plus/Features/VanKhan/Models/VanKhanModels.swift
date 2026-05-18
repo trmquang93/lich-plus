@@ -73,3 +73,20 @@ enum VanKhanToken: String, CustomStringConvertible, CaseIterable {
     /// String-interpolation form. Lets bodies write `\(VanKhanToken.name)`.
     var description: String { placeholder }
 }
+
+/// Optional named regions inside a văn khấn body that the user can hide
+/// via Personal Profile toggles. Wrap each region in the data file with
+/// the `open` / `close` markers on their own lines:
+///
+///     \(VanKhanSectionTag.ancestors.open)
+///     …ancestor paragraph…
+///     \(VanKhanSectionTag.ancestors.close)
+///
+/// `VanKhanRenderer.applySections` strips the markers (show) or the whole
+/// block (hide) before token substitution.
+enum VanKhanSectionTag: String, CaseIterable {
+    case ancestors
+
+    var open: String { "<<\(rawValue)>>" }
+    var close: String { "<</\(rawValue)>>" }
+}

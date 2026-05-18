@@ -30,13 +30,14 @@ enum VanKhanRenderer {
         text: VanKhanText,
         profile: PersonalProfile?,
         overrides: [String: String] = [:],
-        context: Context = Context()
+        context: Context = Context(),
+        hiddenSections: Set<VanKhanSectionTag> = []
     ) -> String {
         let tokens = buildTokenMap(profile: profile, overrides: overrides, context: context)
 
         // Find {key} placeholders; only substitute keys present in the map
         // (and non-empty values). Leaves unknown / empty tokens intact.
-        var result = text.body
+        var result = applySections(body: text.body, hidden: hiddenSections)
         let pattern = #"\{([a-zA-Z][a-zA-Z0-9_]*)\}"#
         guard let regex = try? NSRegularExpression(pattern: pattern) else {
             return result
@@ -50,6 +51,34 @@ enum VanKhanRenderer {
             let key = ns.substring(with: match.range(at: 1))
             if let value = tokens[key], !value.isEmpty {
                 result = (result as NSString).replacingCharacters(in: match.range, with: value)
+            }
+        }
+        return result
+    }
+
+    /// Process `VanKhanSectionTag` markers in a body. Sections in `hidden` are
+    /// dropped entirely (including the markers and any trailing blank line);
+    /// other sections have only their `open` / `close` marker lines stripped.
+    static func applySections(body: String, hidden: Set<VanKhanSectionTag>) -> String {
+        var result = body
+        for section in VanKhanSectionTag.allCases {
+            let openPat = NSRegularExpression.escapedPattern(for: section.open)
+            let closePat = NSRegularExpression.escapedPattern(for: section.close)
+            if hidden.contains(section) {
+                // Drop the whole block; eat one preceding blank line so we
+                // don't leave a doubled paragraph break.
+                let pattern = "\\n?\(openPat)[\\s\\S]*?\(closePat)\\n*"
+                result = result.replacingOccurrences(
+                    of: pattern,
+                    with: "",
+                    options: .regularExpression
+                )
+            } else {
+                // Show: strip the marker lines but keep the body content.
+                result = result.replacingOccurrences(of: "\(section.open)\n", with: "")
+                result = result.replacingOccurrences(of: section.open, with: "")
+                result = result.replacingOccurrences(of: "\n\(section.close)", with: "")
+                result = result.replacingOccurrences(of: section.close, with: "")
             }
         }
         return result

@@ -24,6 +24,7 @@ struct PersonalProfileView: View {
         Form {
             tinChuSection
             familySection
+            vanKhanSection
             deceasedSection
         }
         .navigationTitle(String(localized: "Personal Profile"))
@@ -79,6 +80,21 @@ struct PersonalProfileView: View {
             )
         } header: {
             Text(String(localized: "Family"))
+        }
+    }
+
+    // MARK: - Văn khấn options
+
+    private var vanKhanSection: some View {
+        Section {
+            Toggle(String(localized: "Show ancestors section"), isOn: Binding(
+                get: { profile.showAncestorsSection },
+                set: { profile.showAncestorsSection = $0; save() }
+            ))
+        } header: {
+            Text(String(localized: "Văn khấn options"))
+        } footer: {
+            Text(String(localized: "Off: skip the \u{201C}gia tiên\u{201D} (ancestor invocation) paragraph in văn khấn templates."))
         }
     }
 
