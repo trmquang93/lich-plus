@@ -155,6 +155,23 @@ struct AppColors {
 
     /// Neutral day (Ngày thường) indicator color - uses textSecondary
     static let dayQualityNeutral = Color(red: 117/255, green: 117/255, blue: 117/255)
+
+    // MARK: - Văn Khấn Surfaces
+
+    /// Warm off-white canvas (Phong tục tab background)
+    static let vkCream = Color(red: 251/255, green: 246/255, blue: 244/255)
+
+    /// Prayer-paper surface (văn khấn detail body card)
+    static let vkPaper = Color(red: 251/255, green: 246/255, blue: 241/255)
+
+    /// Soft gold fill (icons, banner background)
+    static let vkGoldTint = Color(red: 250/255, green: 243/255, blue: 224/255)
+
+    /// Gold border / hairline (paper border, banner border)
+    static let vkGoldSoft = Color(red: 233/255, green: 217/255, blue: 182/255)
+
+    /// Soft brown fill (deceased-relative icon background)
+    static let vkBrownTint = Color(red: 245/255, green: 235/255, blue: 224/255)
 }
 
 // MARK: - UIKit Appearance Configuration

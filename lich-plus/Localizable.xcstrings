@@ -13,6 +13,26 @@
     "(%lld)" : {
       "shouldTranslate" : false
     },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%d tháng %d ÂL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$d tháng %2$d ÂL"
+          }
+        }
+      }
+    },
     "%lld" : {
       "shouldTranslate" : false
     },
@@ -59,6 +79,9 @@
     },
     "🧧" : {
       "shouldTranslate" : false
+    },
+    "1 / 1" : {
+
     },
     "1 hour before" : {
       "localizations" : {
@@ -175,6 +198,9 @@
         }
       }
     },
+    "Add" : {
+
+    },
     "Add an ICS calendar URL to get started" : {
       "localizations" : {
         "en" : {
@@ -206,6 +232,12 @@
           }
         }
       }
+    },
+    "Add deceased" : {
+
+    },
+    "Add deceased relative" : {
+
     },
     "Add ICS Calendar" : {
       "localizations" : {
@@ -286,6 +318,9 @@
           }
         }
       }
+    },
+    "Address" : {
+
     },
     "AI Assistant" : {
       "localizations" : {
@@ -494,6 +529,9 @@
           }
         }
       }
+    },
+    "Bài khấn" : {
+
     },
     "Birthday" : {
       "localizations" : {
@@ -735,6 +773,9 @@
         }
       }
     },
+    "Chỉnh sửa" : {
+
+    },
     "Choose which Google calendars to display in this app." : {
       "localizations" : {
         "en" : {
@@ -766,6 +807,12 @@
           }
         }
       }
+    },
+    "Chưa có địa chỉ" : {
+
+    },
+    "Chưa có tên" : {
+
     },
     "Clear search" : {
       "localizations" : {
@@ -991,6 +1038,15 @@
         }
       }
     },
+    "Customs" : {
+
+    },
+    "Đã điền sẵn thông tin" : {
+
+    },
+    "Đã điền sẵn thông tin của bạn" : {
+
+    },
     "Daily" : {
       "localizations" : {
         "en" : {
@@ -1039,6 +1095,9 @@
         }
       }
     },
+    "Date of birth" : {
+
+    },
     "Day %@ Month %@ Year %@" : {
       "localizations" : {
         "en" : {
@@ -1054,6 +1113,15 @@
           }
         }
       }
+    },
+    "Death anniversary" : {
+
+    },
+    "Death Anniversary" : {
+
+    },
+    "Deceased relatives" : {
+
     },
     "Default Reminder" : {
       "localizations" : {
@@ -1134,6 +1202,9 @@
           }
         }
       }
+    },
+    "Địa chỉ" : {
+
     },
     "Disconnect Google Account" : {
       "localizations" : {
@@ -1487,6 +1558,21 @@
         }
       }
     },
+    "Family" : {
+
+    },
+    "Family events" : {
+
+    },
+    "Family Events" : {
+
+    },
+    "Female" : {
+
+    },
+    "Festivals" : {
+
+    },
     "First day of lunar month - for ancestor worship" : {
       "localizations" : {
         "en" : {
@@ -1579,6 +1665,32 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ngày Rằm (ngày 15) - để đi chùa"
+          }
+        }
+      }
+    },
+    "Full name" : {
+
+    },
+    "Gender" : {
+
+    },
+    "Giỗ %@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "Giỗ %1$@ %2$@"
+          }
+        }
+      }
+    },
+    "giỗ %d/%d ÂL" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "giỗ %1$d/%2$d ÂL"
           }
         }
       }
@@ -1699,6 +1811,7 @@
       }
     },
     "Greetings" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1729,6 +1842,9 @@
           }
         }
       }
+    },
+    "Hãy thêm Người đã khuất trong Cài đặt → Cá nhân để cá nhân hoá nội dung văn khấn giỗ." : {
+
     },
     "High" : {
       "localizations" : {
@@ -1761,6 +1877,15 @@
           }
         }
       }
+    },
+    "Hôm nay · %@" : {
+
+    },
+    "Hôm nay là ngày Mùng 1" : {
+
+    },
+    "Hôm nay là ngày Rằm" : {
+
     },
     "ICS Calendar" : {
       "localizations" : {
@@ -1992,6 +2117,15 @@
         }
       }
     },
+    "Lời chúc" : {
+
+    },
+    "Lời chúc Tết, sinh nhật, đám cưới…" : {
+
+    },
+    "Lời chúc và văn khấn cổ truyền — gợi ý theo ngày âm lịch của bạn." : {
+
+    },
     "Low" : {
       "localizations" : {
         "en" : {
@@ -2120,6 +2254,12 @@
         }
       }
     },
+    "Lunar day: %d" : {
+
+    },
+    "Lunar month: %d" : {
+
+    },
     "Lunar Monthly" : {
       "localizations" : {
         "en" : {
@@ -2167,6 +2307,12 @@
           }
         }
       }
+    },
+    "Major Festivals" : {
+
+    },
+    "Male" : {
+
     },
     "Mark Complete" : {
       "localizations" : {
@@ -2376,6 +2522,9 @@
         }
       }
     },
+    "Name" : {
+
+    },
     "Network error: %@" : {
       "localizations" : {
         "en" : {
@@ -2424,6 +2573,9 @@
         }
       }
     },
+    "Ngày khấn" : {
+
+    },
     "Ngày Rằm" : {
       "localizations" : {
         "en" : {
@@ -2439,6 +2591,12 @@
           }
         }
       }
+    },
+    "Người được giỗ" : {
+
+    },
+    "Nhập tên bé" : {
+
     },
     "No all-day events" : {
       "localizations" : {
@@ -2782,6 +2940,12 @@
         }
       }
     },
+    "Personal Profile" : {
+
+    },
+    "Phong tục" : {
+
+    },
     "Playful" : {
       "localizations" : {
         "en" : {
@@ -2960,6 +3124,9 @@
           }
         }
       }
+    },
+    "Relation (ông, bà, bố, mẹ, …)" : {
+
     },
     "Reminder Days" : {
       "localizations" : {
@@ -3236,6 +3403,9 @@
         }
       }
     },
+    "Spouse name" : {
+
+    },
     "Start Date" : {
       "localizations" : {
         "en" : {
@@ -3492,6 +3662,9 @@
         }
       }
     },
+    "Tạo lời chúc" : {
+
+    },
     "Tap the refresh button to fetch your Google calendars." : {
       "localizations" : {
         "en" : {
@@ -3575,6 +3748,9 @@
     "Tell friends about the app" : {
 
     },
+    "Tên bé" : {
+
+    },
     "Tet Greetings" : {
       "localizations" : {
         "en" : {
@@ -3590,6 +3766,9 @@
           }
         }
       }
+    },
+    "Theo Văn khấn cổ truyền Việt Nam" : {
+
     },
     "This is a recurring item. Choose what to delete." : {
       "localizations" : {
@@ -3671,6 +3850,9 @@
         }
       }
     },
+    "Thông tin cá nhân" : {
+
+    },
     "Thu" : {
       "localizations" : {
         "en" : {
@@ -3718,6 +3900,12 @@
           }
         }
       }
+    },
+    "Tín chủ" : {
+
+    },
+    "Tín chủ (You)" : {
+
     },
     "Title" : {
       "localizations" : {
@@ -3911,6 +4099,12 @@
         }
       }
     },
+    "Used to prefill văn khấn" : {
+
+    },
+    "Used to surface giỗ (death anniversary) văn khấn on the matching lunar date." : {
+
+    },
     "Using sample greetings (offline mode)." : {
       "localizations" : {
         "en" : {
@@ -3926,6 +4120,15 @@
           }
         }
       }
+    },
+    "Văn khấn" : {
+
+    },
+    "Văn khấn gợi ý hôm nay" : {
+
+    },
+    "Văn khấn hôm nay" : {
+
     },
     "Version" : {
       "localizations" : {
@@ -4006,6 +4209,15 @@
           }
         }
       }
+    },
+    "Xem gợi ý hôm nay" : {
+
+    },
+    "Xong" : {
+
+    },
+    "Xuất PDF để in" : {
+
     },
     "Year of" : {
       "localizations" : {

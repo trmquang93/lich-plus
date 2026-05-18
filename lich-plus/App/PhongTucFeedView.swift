@@ -12,59 +12,92 @@ struct PhongTucFeedView: View {
     var body: some View {
         NavigationStack {
             ScrollView {
-                VStack(alignment: .leading, spacing: AppTheme.spacing20) {
+                VStack(alignment: .leading, spacing: 0) {
+                    screenHeader
                     TodayHighlightsSection()
-                    greetingsLink
+                    greetingsSection
                     VanKhanSection()
+                    Spacer(minLength: 32)
                 }
-                .padding(AppTheme.spacing16)
             }
-            .background(AppColors.backgroundLightGray)
-            .navigationTitle(String(localized: "Phong tục"))
+            .background(AppColors.vkCream)
+            .scrollContentBackground(.hidden)
+            .navigationTitle("")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar(.hidden, for: .navigationBar)
         }
     }
 
-    private var greetingsLink: some View {
-        VStack(alignment: .leading, spacing: AppTheme.spacing12) {
-            HStack(spacing: AppTheme.spacing8) {
-                Image(systemName: "gift.fill")
-                    .foregroundStyle(AppColors.primary)
-                Text(String(localized: "Lời chúc"))
-                    .font(.system(size: AppTheme.fontTitle3, weight: .bold))
-                    .foregroundStyle(AppColors.textPrimary)
-                Spacer()
-            }
+    private var screenHeader: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(String(localized: "Phong tục"))
+                .font(.system(size: 34, weight: .semibold, design: .serif))
+                .foregroundStyle(AppColors.primaryDark)
+                .tracking(-0.4)
+            Text(String(localized: "Lời chúc và văn khấn cổ truyền — gợi ý theo ngày âm lịch của bạn."))
+                .font(.system(size: 15))
+                .foregroundStyle(AppColors.textSecondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 16)
+        .padding(.top, 8)
+        .padding(.bottom, 4)
+    }
+
+    private var greetingsSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(String(localized: "Lời chúc"))
+                .font(.system(size: 13, weight: .semibold))
+                .tracking(0.6)
+                .textCase(.uppercase)
+                .foregroundStyle(AppColors.textSecondary)
+                .padding(.horizontal, 20)
+                .padding(.top, 24)
 
             NavigationLink {
                 GreetingGeneratorView()
                     .navigationTitle(String(localized: "Tet Greetings"))
                     .navigationBarTitleDisplayMode(.inline)
             } label: {
-                HStack(spacing: AppTheme.spacing12) {
-                    Image(systemName: "wand.and.stars")
-                        .font(.title2)
-                        .foregroundStyle(AppColors.primary)
-                        .frame(width: 32)
-                    VStack(alignment: .leading, spacing: AppTheme.spacing2) {
-                        Text(String(localized: "Tạo lời chúc"))
-                            .font(.system(size: AppTheme.fontSubheading, weight: .medium))
-                            .foregroundStyle(AppColors.textPrimary)
-                        Text(String(localized: "Lời chúc Tết, sinh nhật, đám cưới…"))
-                            .font(.caption)
-                            .foregroundStyle(AppColors.textSecondary)
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .foregroundStyle(AppColors.textSecondary)
-                }
-                .padding(AppTheme.spacing12)
-                .background(
-                    RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium)
-                        .fill(AppColors.background)
-                )
+                greetingsRow
             }
             .buttonStyle(.plain)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(AppColors.background)
+                    .shadow(color: Color.black.opacity(0.04), radius: 1, x: 0, y: 1)
+            )
+            .padding(.horizontal, 16)
         }
+    }
+
+    private var greetingsRow: some View {
+        HStack(spacing: 12) {
+            ZStack {
+                Circle().fill(AppColors.backgroundLight)
+                Image(systemName: "wand.and.stars")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(AppColors.primaryDark)
+            }
+            .frame(width: 36, height: 36)
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(String(localized: "Tạo lời chúc"))
+                    .font(.system(size: 17, weight: .medium))
+                    .foregroundStyle(AppColors.textPrimary)
+                Text(String(localized: "Lời chúc Tết, sinh nhật, đám cưới…"))
+                    .font(.system(size: 13))
+                    .foregroundStyle(AppColors.textSecondary)
+            }
+            Spacer(minLength: 8)
+            Image(systemName: "chevron.right")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(AppColors.textDisabled)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+        .frame(minHeight: 60)
+        .contentShape(Rectangle())
     }
 }
 

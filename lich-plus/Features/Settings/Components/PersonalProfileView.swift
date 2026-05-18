@@ -46,10 +46,10 @@ struct PersonalProfileView: View {
             .lineLimit(2...4)
 
             Picker(String(localized: "Gender"), selection: bindOptionalString(\.gender)) {
-                Text(String(localized: "Not set")).tag(String?.none)
                 Text(String(localized: "Male")).tag(String?("nam"))
                 Text(String(localized: "Female")).tag(String?("nữ"))
             }
+            .pickerStyle(.segmented)
 
             DatePicker(
                 String(localized: "Date of birth"),
@@ -87,13 +87,20 @@ struct PersonalProfileView: View {
         Section {
             ForEach(profile.deceasedRelatives) { r in
                 HStack(spacing: AppTheme.spacing12) {
-                    Image(systemName: "person.crop.circle.fill")
-                        .foregroundStyle(AppColors.lunarAccent)
-                    VStack(alignment: .leading) {
+                    ZStack {
+                        Circle().fill(AppColors.vkBrownTint)
+                        Image(systemName: "person.fill")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundStyle(AppColors.lunarAccent)
+                    }
+                    .frame(width: 38, height: 38)
+
+                    VStack(alignment: .leading, spacing: 2) {
                         Text("\(r.relation) \(r.name)")
+                            .font(.system(size: 17, weight: .medium))
                             .foregroundStyle(AppColors.textPrimary)
-                        Text(String(format: String(localized: "Lunar %d/%d"), r.lunarDay, r.lunarMonth))
-                            .font(.caption)
+                        Text(String(format: String(localized: "giỗ %d/%d ÂL"), r.lunarDay, r.lunarMonth))
+                            .font(.system(size: 13))
                             .foregroundStyle(AppColors.textSecondary)
                     }
                 }

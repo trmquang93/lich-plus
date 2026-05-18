@@ -18,7 +18,7 @@ struct VanKhanDetailView: View {
     @State private var nameOverride: String = ""
     @State private var childNameOverride: String = ""
     @State private var selectedDeceasedId: UUID?
-    @State private var showOverridesExpanded: Bool = false
+    @State private var isEditingInfo: Bool = false
     @State private var pdfURL: URL?
     @State private var isExporting = false
 
@@ -54,22 +54,49 @@ struct VanKhanDetailView: View {
         VanKhanText(occasionId: occasion.id, body: "[Chưa có bản văn khấn cho dịp này]")
     }
 
+    private var resolvedName: String {
+        !nameOverride.isEmpty ? nameOverride : (profile?.fullName ?? "")
+    }
+
+    private var resolvedAddress: String {
+        !addressOverride.isEmpty ? addressOverride : (profile?.address ?? "")
+    }
+
+    private var lunarKicker: String {
+        let lunar = LunarCalendar.solarToLunar(Date())
+        return String(format: String(localized: "%d tháng %d ÂL"), lunar.day, lunar.month)
+    }
+
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: AppTheme.spacing20) {
-                titleSection
+            VStack(alignment: .leading, spacing: 0) {
+                titleBlock
                 if occasion.category == .anniversary {
-                    deceasedPicker
+                    deceasedPickerSection
                 }
-                paperCard
-                overridesSection
-                exportButton
+                infoSection
+                paperSection
+                Spacer(minLength: 24)
             }
-            .padding(AppTheme.spacing16)
         }
-        .background(AppColors.backgroundLightGray)
-        .navigationTitle(occasion.title)
+        .background(AppColors.vkCream)
+        .scrollContentBackground(.hidden)
+        .navigationTitle(navTitle)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    Task { await exportPDF() }
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .tint(AppColors.primary)
+                .disabled(isExporting)
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            actionBar
+        }
         .onAppear {
             selectedDeceasedId = initialDeceasedId ?? profile?.deceasedRelatives.first?.id
         }
@@ -81,118 +108,324 @@ struct VanKhanDetailView: View {
         }
     }
 
-    // MARK: - Sections
+    private var navTitle: String {
+        occasion.title.replacingOccurrences(of: "Văn khấn ", with: "")
+    }
 
-    private var titleSection: some View {
-        VStack(alignment: .leading, spacing: AppTheme.spacing4) {
+    // MARK: - Title block
+
+    private var titleBlock: some View {
+        VStack(spacing: 8) {
+            Text(lunarKicker)
+                .font(.system(size: 11, weight: .bold))
+                .tracking(1.4)
+                .textCase(.uppercase)
+                .foregroundStyle(AppColors.hoangDaoGold)
+
             Text(occasion.title)
-                .font(.system(size: 22, weight: .semibold, design: .serif))
-                .foregroundStyle(AppColors.primary)
+                .font(.system(size: 30, weight: .semibold, design: .serif))
+                .tracking(-0.3)
+                .foregroundStyle(AppColors.primaryDark)
+                .multilineTextAlignment(.center)
+                .lineLimit(3)
+
             if let s = occasion.subtitle {
                 Text(s)
-                    .font(.system(size: AppTheme.fontBody))
+                    .font(.system(size: 14))
                     .foregroundStyle(AppColors.textSecondary)
+                    .multilineTextAlignment(.center)
             }
+
+            ornament
+                .padding(.top, 8)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 20)
+        .padding(.top, 24)
+        .padding(.bottom, 8)
+    }
+
+    private var ornament: some View {
+        HStack(spacing: 10) {
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [.clear, AppColors.vkGoldSoft],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .frame(width: 56, height: 1)
+            Image(systemName: "sparkle")
+                .font(.system(size: 12))
+                .foregroundStyle(AppColors.hoangDaoGold)
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [AppColors.vkGoldSoft, .clear],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .frame(width: 56, height: 1)
         }
     }
 
+    // MARK: - Deceased picker (anniversary only)
+
     @ViewBuilder
-    private var deceasedPicker: some View {
+    private var deceasedPickerSection: some View {
         if let p = profile, !p.deceasedRelatives.isEmpty {
-            VStack(alignment: .leading, spacing: AppTheme.spacing8) {
-                Text(String(localized: "Người được giỗ"))
-                    .font(.caption)
-                    .foregroundStyle(AppColors.textSecondary)
-                Picker("", selection: $selectedDeceasedId) {
+            sectionHeader(String(localized: "Người được giỗ"), trailing: nil)
+            VStack(spacing: 0) {
+                Picker(String(localized: "Người được giỗ"), selection: $selectedDeceasedId) {
                     ForEach(p.deceasedRelatives) { r in
                         Text("\(r.relation) \(r.name)").tag(Optional(r.id))
                     }
                 }
                 .pickerStyle(.menu)
+                .tint(AppColors.primary)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .frame(minHeight: 48)
             }
+            .background(
+                RoundedRectangle(cornerRadius: 16).fill(AppColors.background)
+            )
+            .padding(.horizontal, 16)
         } else {
             Text(String(localized: "Hãy thêm Người đã khuất trong Cài đặt → Cá nhân để cá nhân hoá nội dung văn khấn giỗ."))
-                .font(.caption)
+                .font(.system(size: 13))
                 .foregroundStyle(AppColors.textSecondary)
-                .padding(AppTheme.spacing12)
-                .background(AppColors.backgroundLight)
-                .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium))
+                .padding(.horizontal, 16)
+                .padding(.top, 8)
         }
     }
 
-    private var paperCard: some View {
-        VanKhanRenderedBody(
+    // MARK: - Personal info section
+
+    private var infoSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            sectionHeader(
+                String(localized: "Thông tin cá nhân"),
+                trailing: isEditingInfo ? String(localized: "Xong") : String(localized: "Chỉnh sửa")
+            ) {
+                isEditingInfo.toggle()
+            }
+
+            VStack(spacing: 0) {
+                infoRow(
+                    label: String(localized: "Tín chủ"),
+                    value: resolvedName,
+                    placeholder: String(localized: "Chưa có tên"),
+                    binding: $nameOverride
+                )
+                Divider().padding(.leading, 16)
+                infoRow(
+                    label: String(localized: "Địa chỉ"),
+                    value: resolvedAddress,
+                    placeholder: String(localized: "Chưa có địa chỉ"),
+                    binding: $addressOverride
+                )
+                if needsChildName {
+                    Divider().padding(.leading, 16)
+                    infoRow(
+                        label: String(localized: "Tên bé"),
+                        value: childNameOverride,
+                        placeholder: String(localized: "Nhập tên bé"),
+                        binding: $childNameOverride
+                    )
+                }
+                Divider().padding(.leading, 16)
+                infoRow(
+                    label: String(localized: "Ngày khấn"),
+                    value: lunarKicker,
+                    placeholder: "",
+                    binding: nil
+                )
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 16).fill(AppColors.background)
+            )
+            .padding(.horizontal, 16)
+        }
+    }
+
+    private var needsChildName: Bool {
+        occasion.id == "day-thang" || occasion.id == "thoi-noi"
+    }
+
+    private func infoRow(
+        label: String,
+        value: String,
+        placeholder: String,
+        binding: Binding<String>?
+    ) -> some View {
+        HStack(spacing: 12) {
+            Text(label)
+                .font(.system(size: 13))
+                .foregroundStyle(AppColors.textSecondary)
+                .frame(width: 92, alignment: .leading)
+
+            if isEditingInfo, let binding = binding {
+                TextField(placeholder, text: binding)
+                    .font(.system(size: 17))
+                    .foregroundStyle(AppColors.textPrimary)
+                    .textFieldStyle(.plain)
+                    .submitLabel(.done)
+            } else if value.isEmpty {
+                Text(placeholder)
+                    .font(.system(size: 17, weight: .regular))
+                    .italic()
+                    .foregroundStyle(AppColors.primary)
+                Spacer(minLength: 0)
+            } else {
+                Text(value)
+                    .font(.system(size: 17))
+                    .foregroundStyle(AppColors.textPrimary)
+                    .lineLimit(2)
+                Spacer(minLength: 0)
+            }
+
+            if binding != nil {
+                Image(systemName: isEditingInfo ? "checkmark.circle.fill" : "pencil")
+                    .font(.system(size: 13))
+                    .foregroundStyle(isEditingInfo ? AppColors.primary : AppColors.textDisabled)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(minHeight: 48)
+    }
+
+    // MARK: - Paper card
+
+    private var paperSection: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            sectionHeader(String(localized: "Bài khấn"), trailing: nil)
+
+            VStack(alignment: .leading, spacing: 14) {
+                VanKhanRenderedBody(
+                    text: text,
+                    profile: profile,
+                    overrides: overrides,
+                    context: renderContext
+                )
+                .frame(maxWidth: .infinity, alignment: .leading)
+
+                paperFooter
+            }
+            .padding(.horizontal, 22)
+            .padding(.top, 24)
+            .padding(.bottom, 22)
+            .background(
+                RoundedRectangle(cornerRadius: 18).fill(AppColors.vkPaper)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 18)
+                    .strokeBorder(AppColors.vkGoldSoft, lineWidth: 1)
+            )
+            .padding(.horizontal, 16)
+        }
+    }
+
+    private var paperFooter: some View {
+        VStack(spacing: 12) {
+            // Dashed gold rule
+            DashedGoldRule()
+                .frame(height: 1)
+            HStack {
+                Text(String(localized: "Theo Văn khấn cổ truyền Việt Nam"))
+                Spacer()
+                Text("1 / 1")
+            }
+            .font(.system(size: 13))
+            .foregroundStyle(AppColors.textSecondary)
+        }
+    }
+
+    // MARK: - Section header helper
+
+    private func sectionHeader(_ title: String, trailing: String?, onTap: (() -> Void)? = nil) -> some View {
+        HStack {
+            Text(title)
+                .font(.system(size: 13, weight: .semibold))
+                .tracking(0.6)
+                .textCase(.uppercase)
+                .foregroundStyle(AppColors.textSecondary)
+            Spacer()
+            if let trailing {
+                Button(action: { onTap?() }) {
+                    Text(trailing)
+                        .font(.system(size: 15, weight: .medium))
+                        .foregroundStyle(AppColors.primary)
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.top, 20)
+        .padding(.bottom, 8)
+    }
+
+    // MARK: - Sticky bottom action bar
+
+    private var actionBar: some View {
+        HStack(spacing: 10) {
+            Button {
+                copyToClipboard()
+            } label: {
+                Image(systemName: "doc.on.doc")
+                    .font(.system(size: 18, weight: .medium))
+                    .foregroundStyle(AppColors.primaryDark)
+                    .frame(width: 50, height: 50)
+                    .background(
+                        Circle()
+                            .fill(AppColors.background)
+                            .overlay(Circle().strokeBorder(AppColors.borderLight, lineWidth: 1))
+                    )
+            }
+
+            Button {
+                Task { await exportPDF() }
+            } label: {
+                HStack(spacing: 8) {
+                    if isExporting {
+                        ProgressView().tint(.white)
+                    } else {
+                        Image(systemName: "doc.text")
+                        Text(String(localized: "Xuất PDF để in"))
+                    }
+                }
+                .font(.system(size: 17, weight: .semibold))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity, minHeight: 50)
+                .background(Capsule().fill(AppColors.primary))
+            }
+            .disabled(isExporting)
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 12)
+        .padding(.bottom, 8)
+        .background(
+            AppColors.vkCream.opacity(0.94)
+                .background(.ultraThinMaterial)
+        )
+        .overlay(alignment: .top) {
+            Rectangle().fill(AppColors.borderLight).frame(height: 0.5)
+        }
+    }
+
+    // MARK: - Actions
+
+    private func copyToClipboard() {
+        let rendered = VanKhanRenderer.render(
             text: text,
             profile: profile,
             overrides: overrides,
             context: renderContext
         )
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(AppTheme.spacing20)
-        .background(
-            RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
-                .fill(AppColors.backgroundLight.opacity(0.4))
-                .overlay(
-                    RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
-                        .stroke(AppColors.hoangDaoGold.opacity(0.6), lineWidth: 1)
-                )
-        )
-    }
-
-    private var overridesSection: some View {
-        DisclosureGroup(isExpanded: $showOverridesExpanded) {
-            VStack(spacing: AppTheme.spacing12) {
-                overrideField(title: String(localized: "Tên (Tín chủ)"), text: $nameOverride, placeholder: profile?.fullName ?? "")
-                overrideField(title: String(localized: "Địa chỉ"), text: $addressOverride, placeholder: profile?.address ?? "")
-                if occasion.id == "day-thang" || occasion.id == "thoi-noi" {
-                    overrideField(title: String(localized: "Tên bé"), text: $childNameOverride, placeholder: "")
-                }
-            }
-            .padding(.top, AppTheme.spacing8)
-        } label: {
-            Label(String(localized: "Tuỳ chỉnh thông tin"), systemImage: "pencil.circle")
-                .foregroundStyle(AppColors.primary)
-        }
-        .padding(AppTheme.spacing12)
-        .background(
-            RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium)
-                .fill(AppColors.background)
-        )
-    }
-
-    private func overrideField(title: String, text: Binding<String>, placeholder: String) -> some View {
-        VStack(alignment: .leading, spacing: AppTheme.spacing4) {
-            Text(title)
-                .font(.caption)
-                .foregroundStyle(AppColors.textSecondary)
-            TextField(placeholder, text: text, axis: .vertical)
-                .textFieldStyle(.roundedBorder)
-                .lineLimit(1...3)
-        }
-    }
-
-    private var exportButton: some View {
-        Button {
-            Task { await exportPDF() }
-        } label: {
-            HStack {
-                if isExporting {
-                    ProgressView().tint(.white)
-                } else {
-                    Image(systemName: "doc.text")
-                    Text(String(localized: "Xuất PDF"))
-                }
-            }
-            .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
-            .foregroundStyle(.white)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, AppTheme.spacing12)
-            .background(
-                RoundedRectangle(cornerRadius: AppTheme.cornerRadiusMedium)
-                    .fill(AppColors.primary)
-            )
-        }
-        .disabled(isExporting)
+        UIPasteboard.general.string = rendered
     }
 
     @MainActor
@@ -214,6 +447,23 @@ struct VanKhanDetailView: View {
             slug: occasion.id
         )
         pdfURL = url
+    }
+}
+
+// MARK: - Dashed gold rule
+
+private struct DashedGoldRule: View {
+    var body: some View {
+        GeometryReader { geo in
+            Path { p in
+                p.move(to: CGPoint(x: 0, y: 0))
+                p.addLine(to: CGPoint(x: geo.size.width, y: 0))
+            }
+            .stroke(
+                AppColors.vkGoldSoft,
+                style: StrokeStyle(lineWidth: 1, dash: [4, 4])
+            )
+        }
     }
 }
 
