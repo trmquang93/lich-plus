@@ -78,23 +78,24 @@ struct VanKhanRenderedBody: View {
         // Mirror VanKhanRenderer's token assembly so we know what is resolved.
         var tokens: [String: String] = [:]
         if let p = profile {
-            tokens["name"] = p.fullName
-            tokens["address"] = p.address
-            if let g = p.gender { tokens["gender"] = g }
-            if let s = p.spouseName { tokens["spouseName"] = s }
+            tokens[VanKhanToken.name.rawValue] = p.fullName
+            tokens[VanKhanToken.address.rawValue] = p.address
+            tokens[VanKhanToken.familyName.rawValue] = p.familyName
+            if let g = p.gender { tokens[VanKhanToken.gender.rawValue] = g }
+            if let s = p.spouseName { tokens[VanKhanToken.spouseName.rawValue] = s }
         }
         if let r = context.deceasedRelative {
-            tokens["deceasedName"] = r.name
-            tokens["deceasedRelation"] = r.relation
+            tokens[VanKhanToken.deceasedName.rawValue] = r.name
+            tokens[VanKhanToken.deceasedRelation.rawValue] = r.relation
         }
         if let c = context.childName, !c.isEmpty {
-            tokens["childName"] = c
+            tokens[VanKhanToken.childName.rawValue] = c
         }
         let solarFmt = DateFormatter()
         solarFmt.dateFormat = "dd/MM/yyyy"
-        tokens["solarDate"] = solarFmt.string(from: context.date)
+        tokens[VanKhanToken.solarDate.rawValue] = solarFmt.string(from: context.date)
         let lunar = LunarCalendar.solarToLunar(context.date)
-        tokens["lunarDate"] = String(format: "%02d/%02d/%04d", lunar.day, lunar.month, lunar.year)
+        tokens[VanKhanToken.lunarDate.rawValue] = String(format: "%02d/%02d/%04d", lunar.day, lunar.month, lunar.year)
         for (k, v) in overrides where !v.isEmpty { tokens[k] = v }
         return tokens.filter { !$0.value.isEmpty }
     }

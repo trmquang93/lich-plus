@@ -49,3 +49,27 @@ struct VanKhanText: Equatable {
     let occasionId: String
     let body: String
 }
+
+/// Typed placeholder keys used inside văn khấn bodies.
+///
+/// Interpolate a case directly into a body string (`"… họ \(VanKhanToken.familyName) …"`)
+/// instead of typing `{familyName}` by hand — that way a typo becomes a compile
+/// error and the set of known tokens lives in one place.
+enum VanKhanToken: String, CustomStringConvertible, CaseIterable {
+    case name
+    case address
+    case familyName
+    case gender
+    case spouseName
+    case deceasedName
+    case deceasedRelation
+    case childName
+    case solarDate
+    case lunarDate
+
+    /// `"{rawValue}"` — the wire form `VanKhanRenderer` looks for.
+    var placeholder: String { "{\(rawValue)}" }
+
+    /// String-interpolation form. Lets bodies write `\(VanKhanToken.name)`.
+    var description: String { placeholder }
+}

@@ -65,6 +65,7 @@ struct PersonalProfileView: View {
 
     private var familySection: some View {
         Section {
+            TextField(String(localized: "Family name (họ)"), text: bindString(\.familyName))
             TextField(String(localized: "Spouse name"), text: bindOptionalString(\.spouseName, default: ""))
             stringListEditor(
                 title: String(localized: "Children"),

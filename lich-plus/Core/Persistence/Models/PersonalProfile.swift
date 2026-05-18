@@ -16,6 +16,10 @@ final class PersonalProfile {
     var fullName: String
     var address: String
 
+    /// Họ của gia đình (e.g. "Nguyễn", "Trần") — dùng trong văn khấn
+    /// "...gia tiên nội ngoại họ {familyName}".
+    var familyName: String = ""
+
     /// "nam" / "nữ" — drives the "tín chủ con là …" pronoun
     var gender: String?
 
@@ -32,6 +36,7 @@ final class PersonalProfile {
     init(
         fullName: String = "",
         address: String = "",
+        familyName: String = "",
         gender: String? = nil,
         dateOfBirth: Date? = nil,
         spouseName: String? = nil,
@@ -42,6 +47,7 @@ final class PersonalProfile {
         self.id = "personal_profile"
         self.fullName = fullName
         self.address = address
+        self.familyName = familyName
         self.gender = gender
         self.dateOfBirth = dateOfBirth
         self.spouseName = spouseName

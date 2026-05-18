@@ -76,30 +76,31 @@ enum VanKhanRenderer {
 
         // Personal profile
         if let p = profile {
-            tokens["name"] = p.fullName
-            tokens["address"] = p.address
-            if let g = p.gender { tokens["gender"] = g }
-            if let spouse = p.spouseName { tokens["spouseName"] = spouse }
+            tokens[VanKhanToken.name.rawValue] = p.fullName
+            tokens[VanKhanToken.address.rawValue] = p.address
+            tokens[VanKhanToken.familyName.rawValue] = p.familyName
+            if let g = p.gender { tokens[VanKhanToken.gender.rawValue] = g }
+            if let spouse = p.spouseName { tokens[VanKhanToken.spouseName.rawValue] = spouse }
         }
 
         // Deceased (giỗ)
         if let r = context.deceasedRelative {
-            tokens["deceasedName"] = r.name
-            tokens["deceasedRelation"] = r.relation
+            tokens[VanKhanToken.deceasedName.rawValue] = r.name
+            tokens[VanKhanToken.deceasedRelation.rawValue] = r.relation
         }
 
         // Child (đầy tháng / thôi nôi)
         if let c = context.childName, !c.isEmpty {
-            tokens["childName"] = c
+            tokens[VanKhanToken.childName.rawValue] = c
         }
 
         // Dates
         let solarFormatter = DateFormatter()
         solarFormatter.dateFormat = "dd/MM/yyyy"
-        tokens["solarDate"] = solarFormatter.string(from: context.date)
+        tokens[VanKhanToken.solarDate.rawValue] = solarFormatter.string(from: context.date)
 
         let lunar = LunarCalendar.solarToLunar(context.date)
-        tokens["lunarDate"] = String(format: "%02d/%02d/%04d", lunar.day, lunar.month, lunar.year)
+        tokens[VanKhanToken.lunarDate.rawValue] = String(format: "%02d/%02d/%04d", lunar.day, lunar.month, lunar.year)
 
         // Overrides win.
         for (k, v) in overrides where !v.isEmpty {

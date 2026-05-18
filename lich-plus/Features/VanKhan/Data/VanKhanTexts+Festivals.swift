@@ -2,12 +2,15 @@
 //  VanKhanTexts+Festivals.swift
 //  lich-plus
 //
-//  Template bodies for festival occasions.
+//  Template bodies for festival occasions. Placeholders are typed via
+//  `VanKhanToken` interpolation.
 //
 //  TODO: Replace stub text with vetted Vietnamese sources before shipping.
 //
 
 import Foundation
+
+private typealias T = VanKhanToken
 
 extension VanKhanLibrary {
 
@@ -24,8 +27,8 @@ extension VanKhanLibrary {
             – Ngài Bản cảnh Thành Hoàng, ngài Bản xứ Thổ địa, ngài Bản gia Táo Quân.
             – Các cụ Tổ tiên nội ngoại chư vị Hương linh.
 
-            Tín chủ con là: {name}
-            Ngụ tại: {address}
+            Tín chủ con là: \(T.name)
+            Ngụ tại: \(T.address)
 
             Phút Giao Thừa vừa tới, năm cũ qua đi đón mừng năm mới, tín chủ con thành tâm sửa biện hương hoa phẩm vật, kính dâng trước án.
 
@@ -47,8 +50,8 @@ extension VanKhanLibrary {
             Con kính lạy ngài Bản cảnh Thành Hoàng, Bản xứ Thổ địa, Bản gia Táo Quân.
             Con kính lạy Tổ tiên nội ngoại chư vị Hương linh.
 
-            Tín chủ con là: {name}
-            Ngụ tại: {address}
+            Tín chủ con là: \(T.name)
+            Ngụ tại: \(T.address)
 
             Hôm nay mồng Một Tết Nguyên Đán, năm mới khai xuân, tín chủ con thành tâm dâng lễ vật, hương hoa, trà quả lên trước án.
 
@@ -69,8 +72,8 @@ extension VanKhanLibrary {
             Con kính lạy Đức Bản gia Táo Quân, ngài Thổ Địa Long Mạch.
             Con kính lạy Tổ tiên nội ngoại chư vị Hương linh.
 
-            Tín chủ con là: {name}
-            Ngụ tại: {address}
+            Tín chủ con là: \(T.name)
+            Ngụ tại: \(T.address)
 
             Hôm nay là ngày Rằm tháng Giêng (Tết Nguyên Tiêu), tín chủ con thành tâm dâng lễ vật, hương hoa, trà quả.
 
@@ -89,8 +92,8 @@ extension VanKhanLibrary {
 
             Con kính lạy ngài Đông Trù Tư Mệnh Táo Phủ Thần Quân.
 
-            Tín chủ con là: {name}
-            Ngụ tại: {address}
+            Tín chủ con là: \(T.name)
+            Ngụ tại: \(T.address)
 
             Hôm nay là ngày 23 tháng Chạp, tín chủ con thành tâm sắm sửa hương hoa, lễ vật, áo mũ, cá chép tiễn ngài Táo Quân về trời.
 
@@ -111,10 +114,10 @@ extension VanKhanLibrary {
             Con kính lạy chư vị Tôn thần, Thổ Địa Long Mạch.
             Con kính lạy hương linh Tổ tiên nội ngoại.
 
-            Tín chủ con là: {name}
-            Ngụ tại: {address}
+            Tín chủ con là: \(T.name)
+            Ngụ tại: \(T.address)
 
-            Hôm nay tiết Thanh Minh ngày {solarDate}, tín chủ con thành tâm sắm sửa hương hoa, lễ vật, kính cẩn tảo mộ tiền nhân.
+            Hôm nay tiết Thanh Minh ngày \(T.solarDate), tín chủ con thành tâm sắm sửa hương hoa, lễ vật, kính cẩn tảo mộ tiền nhân.
 
             [TODO: nội dung khấn tảo mộ — tra cứu nguồn chính thống]
 
@@ -133,8 +136,8 @@ extension VanKhanLibrary {
             Con kính lạy chư vị Bồ Tát, Hiền Thánh Tăng.
             Con kính lạy hương linh Tổ tiên, Cha Mẹ nhiều đời nhiều kiếp.
 
-            Tín chủ con là: {name}
-            Ngụ tại: {address}
+            Tín chủ con là: \(T.name)
+            Ngụ tại: \(T.address)
 
             Hôm nay là ngày Rằm tháng 7, ngày Lễ Vu Lan báo hiếu, tín chủ con thành tâm dâng lễ vật, hương hoa, trà quả.
 
@@ -153,8 +156,8 @@ extension VanKhanLibrary {
 
             Con kính lạy chư vị Tôn thần, Gia tiên nội ngoại.
 
-            Tín chủ con là: {name}
-            Ngụ tại: {address}
+            Tín chủ con là: \(T.name)
+            Ngụ tại: \(T.address)
 
             Hôm nay là ngày Rằm tháng 8, Tết Trung Thu, tín chủ con thành tâm dâng lễ vật, bánh trái, hương hoa lên trước án.
 

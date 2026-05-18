@@ -44,8 +44,8 @@ struct VanKhanDetailView: View {
 
     private var overrides: [String: String] {
         var dict: [String: String] = [:]
-        if !nameOverride.isEmpty { dict["name"] = nameOverride }
-        if !addressOverride.isEmpty { dict["address"] = addressOverride }
+        if !nameOverride.isEmpty { dict[VanKhanToken.name.rawValue] = nameOverride }
+        if !addressOverride.isEmpty { dict[VanKhanToken.address.rawValue] = addressOverride }
         return dict
     }
 

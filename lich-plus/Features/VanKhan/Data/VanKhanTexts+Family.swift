@@ -3,11 +3,14 @@
 //  lich-plus
 //
 //  Template bodies for family events: cưới hỏi, nhập trạch, đầy tháng, thôi nôi.
+//  Placeholders are typed via `VanKhanToken` interpolation.
 //
 //  TODO: Replace stub text with vetted Vietnamese sources before shipping.
 //
 
 import Foundation
+
+private typealias T = VanKhanToken
 
 extension VanKhanLibrary {
 
@@ -21,10 +24,10 @@ extension VanKhanLibrary {
             Con kính lạy Hoàng Thiên Hậu Thổ chư vị Tôn thần.
             Con kính lạy Tổ tiên nội ngoại chư vị Hương linh.
 
-            Tín chủ con là: {name}
-            Ngụ tại: {address}
+            Tín chủ con là: \(T.name)
+            Ngụ tại: \(T.address)
 
-            Hôm nay ngày {solarDate} (nhằm ngày {lunarDate}), nhân lễ cưới hỏi, tín chủ con thành tâm dâng lễ vật, hương hoa, trà quả kính cáo gia tiên.
+            Hôm nay ngày \(T.solarDate) (nhằm ngày \(T.lunarDate)), nhân lễ cưới hỏi, tín chủ con thành tâm dâng lễ vật, hương hoa, trà quả kính cáo gia tiên.
 
             [TODO: nội dung khấn lễ cưới gia tiên — tra cứu nguồn chính thống]
 
@@ -43,8 +46,8 @@ extension VanKhanLibrary {
             Con kính lạy Hoàng Thiên Hậu Thổ chư vị Tôn thần.
             Con kính lạy ngài Đương cảnh Thành Hoàng, ngài Bản xứ Thổ địa, ngài Định Phúc Táo Quân.
 
-            Tín chủ con là: {name}
-            Hôm nay chuyển đến cư ngụ tại: {address}
+            Tín chủ con là: \(T.name)
+            Hôm nay chuyển đến cư ngụ tại: \(T.address)
 
             Tín chủ con thành tâm dâng lễ vật, hương hoa, trà quả kính cáo chư vị Tôn thần.
 
@@ -63,14 +66,14 @@ extension VanKhanLibrary {
 
             Con kính lạy chư vị Tôn thần, đặc biệt là Mười hai Bà Mụ và Đức Bà Chúa Tiên.
 
-            Tín chủ con là: {name}
-            Ngụ tại: {address}
+            Tín chủ con là: \(T.name)
+            Ngụ tại: \(T.address)
 
-            Hôm nay là ngày đầy tháng của cháu {childName}. Tín chủ con thành tâm sắm sửa lễ vật, hương hoa, trà quả, xôi chè kính dâng lên trước án.
+            Hôm nay là ngày đầy tháng của cháu \(T.childName). Tín chủ con thành tâm sắm sửa lễ vật, hương hoa, trà quả, xôi chè kính dâng lên trước án.
 
             [TODO: nội dung khấn đầy tháng — tra cứu nguồn chính thống]
 
-            Cúi xin chư vị Bà Mụ, các vị Tôn thần phù hộ độ trì cho cháu {childName} hay ăn chóng lớn, mạnh khoẻ, thông minh.
+            Cúi xin chư vị Bà Mụ, các vị Tôn thần phù hộ độ trì cho cháu \(T.childName) hay ăn chóng lớn, mạnh khoẻ, thông minh.
 
             Nam mô A Di Đà Phật! (3 lần)
             """
@@ -83,14 +86,14 @@ extension VanKhanLibrary {
 
             Con kính lạy chư vị Tôn thần, Mười hai Bà Mụ, Đức Ông và Đức Bà Chúa Tiên.
 
-            Tín chủ con là: {name}
-            Ngụ tại: {address}
+            Tín chủ con là: \(T.name)
+            Ngụ tại: \(T.address)
 
-            Hôm nay là ngày Thôi Nôi (tròn 1 tuổi) của cháu {childName}. Tín chủ con thành tâm dâng lễ vật, hương hoa, xôi chè kính cẩn dâng lên trước án.
+            Hôm nay là ngày Thôi Nôi (tròn 1 tuổi) của cháu \(T.childName). Tín chủ con thành tâm dâng lễ vật, hương hoa, xôi chè kính cẩn dâng lên trước án.
 
             [TODO: nội dung khấn thôi nôi — tra cứu nguồn chính thống]
 
-            Cúi xin chư vị Bà Mụ, các vị Tôn thần và Gia tiên chứng giám lòng thành, phù hộ cho cháu {childName} mạnh khoẻ, ngoan ngoãn, học hành tấn tới.
+            Cúi xin chư vị Bà Mụ, các vị Tôn thần và Gia tiên chứng giám lòng thành, phù hộ cho cháu \(T.childName) mạnh khoẻ, ngoan ngoãn, học hành tấn tới.
 
             Nam mô A Di Đà Phật! (3 lần)
             """
