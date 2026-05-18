@@ -18,7 +18,7 @@ struct VanKhanRenderedBody: View {
     let overrides: [String: String]
     let context: VanKhanRenderer.Context
     var hiddenSections: Set<VanKhanSectionTag> = []
-    var onTapPlaceholder: ((String) -> Void)? = nil
+    var onTapPlaceholder: ((_ key: String, _ currentValue: String) -> Void)? = nil
 
     private static let editScheme = "vankhanedit"
 
@@ -29,10 +29,10 @@ struct VanKhanRenderedBody: View {
             .lineSpacing(4)
             .textSelection(.enabled)
             .tint(AppColors.primary)
-            .environment(\.openURL, OpenURLAction { url in
+            .environment(\.openURL, OpenURLAction { [tokenMap = currentTokenMap] url in
                 guard url.scheme == Self.editScheme else { return .systemAction }
                 let key = url.host ?? url.lastPathComponent
-                onTapPlaceholder?(key)
+                onTapPlaceholder?(key, tokenMap[key] ?? "")
                 return .handled
             })
     }
@@ -65,8 +65,12 @@ struct VanKhanRenderedBody: View {
             let key = ns.substring(with: match.range(at: 1))
             if let value = tokenMap[key], !value.isEmpty {
                 var resolved = AttributedString(value)
+                if let url = URL(string: "\(Self.editScheme)://\(key)") {
+                    resolved.link = url
+                }
                 resolved.backgroundColor = AppColors.hoangDaoGold.opacity(0.25)
                 resolved.foregroundColor = AppColors.textPrimary
+                resolved.underlineStyle = nil
                 attr.append(resolved)
             } else {
                 var missing = AttributedString("{\(key)}")

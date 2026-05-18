@@ -452,8 +452,8 @@ struct VanKhanDetailView: View {
                     overrides: overrides,
                     context: renderContext,
                     hiddenSections: hiddenSections,
-                    onTapPlaceholder: { key in
-                        tokenDraft = overrides[key] ?? ""
+                    onTapPlaceholder: { key, currentValue in
+                        tokenDraft = currentValue
                         editingToken = key
                     }
                 )
