@@ -69,7 +69,7 @@ struct MonthPickerView: View {
 
                 Spacer()
 
-                Text("\(displayYear)")
+                Text(String(displayYear))
                     .font(.system(size: AppTheme.fontTitle2, weight: .bold))
                     .foregroundStyle(AppColors.textPrimary)
 

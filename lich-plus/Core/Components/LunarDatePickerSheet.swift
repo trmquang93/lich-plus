@@ -11,15 +11,21 @@ import SwiftUI
 struct LunarDatePickerSheet: View {
     @Binding var selectedDate: Date
     @Environment(\.dismiss) private var dismiss
-    @State private var displayedMonth: Date
+    @State private var pageOffset: Int
+    @State private var showMonthPicker = false
+
+    private let anchor: Date
 
     init(selectedDate: Binding<Date>) {
         self._selectedDate = selectedDate
-        self._displayedMonth = State(initialValue: selectedDate.wrappedValue)
+        let cal = Calendar.current
+        let comps = cal.dateComponents([.year, .month], from: selectedDate.wrappedValue)
+        self.anchor = cal.date(from: comps) ?? selectedDate.wrappedValue
+        self._pageOffset = State(initialValue: 0)
     }
 
-    private var month: CalendarMonth {
-        CalendarDataManager.generateCalendarMonth(for: displayedMonth)
+    private var displayedMonth: Date {
+        Calendar.current.date(byAdding: .month, value: pageOffset, to: anchor) ?? anchor
     }
 
     private var monthTitle: String {
@@ -29,32 +35,67 @@ struct LunarDatePickerSheet: View {
         return f.string(from: displayedMonth)
     }
 
+    private var gridHeight: CGFloat {
+        CalendarDisplayMode.rowHeight * 6 + CalendarDisplayMode.spacingBetweenItems * 5
+    }
+
     var body: some View {
         VStack(spacing: AppTheme.spacing8) {
             header
             weekdayRow
             Divider().foregroundStyle(AppColors.borderLight)
-            grid
+            pager
             Spacer(minLength: 0)
         }
         .padding(.top, AppTheme.spacing16)
         .background(AppColors.background)
+        .sheet(isPresented: $showMonthPicker) {
+            MonthPickerView(
+                selectedDate: displayedMonth,
+                onMonthSelected: { month, year in
+                    if let new = Calendar.current.date(
+                        from: DateComponents(year: year, month: month, day: 1))
+                    {
+                        let diff = Calendar.current.dateComponents(
+                            [.month], from: anchor, to: new
+                        ).month ?? 0
+                        pageOffset = diff
+                    }
+                },
+                onDismiss: { showMonthPicker = false }
+            )
+            .presentationDetents([.medium, .large])
+            .presentationDragIndicator(.visible)
+        }
     }
 
     private var header: some View {
         HStack {
-            Button { shiftMonth(-1) } label: {
+            Button {
+                pageOffset -= 1
+            } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: AppTheme.fontTitle3, weight: .semibold))
                     .foregroundStyle(AppColors.primary)
                     .frame(width: 40, height: 40)
             }
             Spacer()
-            Text(monthTitle)
-                .font(.system(size: AppTheme.fontTitle2, weight: .bold))
-                .foregroundStyle(AppColors.textPrimary)
+            Button {
+                showMonthPicker = true
+            } label: {
+                HStack(spacing: AppTheme.spacing4) {
+                    Text(monthTitle)
+                        .font(.system(size: AppTheme.fontTitle2, weight: .bold))
+                        .foregroundStyle(AppColors.textPrimary)
+                    Image(systemName: "chevron.down")
+                        .font(.system(size: AppTheme.fontCaption, weight: .semibold))
+                        .foregroundStyle(AppColors.textSecondary)
+                }
+            }
             Spacer()
-            Button { shiftMonth(1) } label: {
+            Button {
+                pageOffset += 1
+            } label: {
                 Image(systemName: "chevron.right")
                     .font(.system(size: AppTheme.fontTitle3, weight: .semibold))
                     .foregroundStyle(AppColors.primary)
@@ -78,32 +119,41 @@ struct LunarDatePickerSheet: View {
         .padding(.horizontal, AppTheme.spacing16)
     }
 
-    private var grid: some View {
-        VStack(spacing: CalendarDisplayMode.spacingBetweenItems) {
-            ForEach(month.weeksOfDays.indices, id: \.self) { weekIndex in
-                HStack(spacing: CalendarDisplayMode.spacingBetweenItems) {
-                    ForEach(month.weeksOfDays[weekIndex]) { day in
-                        CalendarDayCell(
-                            day: day,
-                            isSelected: Calendar.current.isDate(
-                                selectedDate, inSameDayAs: day.date),
-                            showEvents: false,
-                            onTap: {
-                                selectedDate = day.date
-                                dismiss()
+    private var pager: some View {
+        InfinitePageView(
+            initialIndex: pageOffset,
+            currentValue: pageOffset,
+            content: { offset in
+                let date =
+                    Calendar.current.date(byAdding: .month, value: offset, to: anchor)
+                    ?? anchor
+                let month = CalendarDataManager.generateCalendarMonth(for: date)
+                return VStack(spacing: CalendarDisplayMode.spacingBetweenItems) {
+                    ForEach(month.weeksOfDays.indices, id: \.self) { weekIndex in
+                        HStack(spacing: CalendarDisplayMode.spacingBetweenItems) {
+                            ForEach(month.weeksOfDays[weekIndex]) { day in
+                                CalendarDayCell(
+                                    day: day,
+                                    isSelected: Calendar.current.isDate(
+                                        selectedDate, inSameDayAs: day.date),
+                                    showEvents: false,
+                                    onTap: {
+                                        selectedDate = day.date
+                                        dismiss()
+                                    }
+                                )
                             }
-                        )
+                        }
+                        .frame(height: CalendarDisplayMode.rowHeight)
                     }
+                    Spacer(minLength: 0)
                 }
-                .frame(height: CalendarDisplayMode.rowHeight)
+                .padding(.horizontal, AppTheme.spacing16)
+            },
+            onPageChanged: { newOffset in
+                pageOffset = newOffset
             }
-        }
-        .padding(.horizontal, AppTheme.spacing16)
-    }
-
-    private func shiftMonth(_ delta: Int) {
-        if let new = Calendar.current.date(byAdding: .month, value: delta, to: displayedMonth) {
-            displayedMonth = new
-        }
+        )
+        .frame(height: gridHeight)
     }
 }
