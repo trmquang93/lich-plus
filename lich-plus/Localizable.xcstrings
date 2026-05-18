@@ -868,6 +868,15 @@
         }
       }
     },
+    "con gái" : {
+
+    },
+    "Con là" : {
+
+    },
+    "con trai" : {
+
+    },
     "Configure reminders and notifications" : {
       "localizations" : {
         "en" : {
@@ -1568,6 +1577,9 @@
 
     },
     "Family events" : {
+
+    },
+    "Family name (họ)" : {
 
     },
     "Female" : {
@@ -2827,6 +2839,9 @@
         }
       }
     },
+    "Off: skip the “gia tiên” (ancestor invocation) paragraph in văn khấn templates." : {
+
+    },
     "OK" : {
       "shouldTranslate" : false
     },
@@ -3344,6 +3359,9 @@
     "Share Lich+" : {
 
     },
+    "Show ancestors section" : {
+
+    },
     "Sign in with Microsoft" : {
       "localizations" : {
         "en" : {
@@ -3772,7 +3790,19 @@
     "Tell friends about the app" : {
 
     },
+    "Tên bạn đời" : {
+
+    },
     "Tên bé" : {
+
+    },
+    "Tên con" : {
+
+    },
+    "Tên con trai/gái của tín chủ" : {
+
+    },
+    "Tên vợ/chồng của con" : {
 
     },
     "Tet Greetings" : {
@@ -4158,6 +4188,9 @@
 
     },
     "Văn khấn hôm nay" : {
+
+    },
+    "Văn khấn options" : {
 
     },
     "Version" : {

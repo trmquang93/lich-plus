@@ -18,6 +18,7 @@ struct VanKhanDetailView: View {
     @State private var nameOverride: String = ""
     @State private var childNameOverride: String = ""
     @State private var partnerNameOverride: String = ""
+    @State private var childIsSon: Bool = true
     @State private var selectedDeceasedId: UUID?
     @State private var isEditingInfo: Bool = false
     @State private var pdfURL: URL?
@@ -54,6 +55,11 @@ struct VanKhanDetailView: View {
         if !nameOverride.isEmpty { dict[VanKhanToken.name.rawValue] = nameOverride }
         if !addressOverride.isEmpty { dict[VanKhanToken.address.rawValue] = addressOverride }
         if !partnerNameOverride.isEmpty { dict[VanKhanToken.partnerName.rawValue] = partnerNameOverride }
+        if needsPartnerName {
+            dict[VanKhanToken.childGender.rawValue] = childIsSon
+                ? String(localized: "con trai")
+                : String(localized: "con gái")
+        }
         return dict
     }
 
@@ -247,6 +253,15 @@ struct VanKhanDetailView: View {
                 }
                 if needsPartnerName {
                     Divider().padding(.leading, 16)
+                    childGenderRow
+                    Divider().padding(.leading, 16)
+                    infoRow(
+                        label: String(localized: "Tên con"),
+                        value: childNameOverride,
+                        placeholder: String(localized: "Tên con trai/gái của tín chủ"),
+                        binding: $childNameOverride
+                    )
+                    Divider().padding(.leading, 16)
                     infoRow(
                         label: String(localized: "Tên bạn đời"),
                         value: partnerNameOverride,
@@ -275,6 +290,24 @@ struct VanKhanDetailView: View {
 
     private var needsPartnerName: Bool {
         occasion.id == "cuoi-hoi"
+    }
+
+    private var childGenderRow: some View {
+        HStack(spacing: 12) {
+            Text(String(localized: "Con là"))
+                .font(.system(size: 13))
+                .foregroundStyle(AppColors.textSecondary)
+                .frame(width: 92, alignment: .leading)
+
+            Picker(String(localized: "Con là"), selection: $childIsSon) {
+                Text(String(localized: "con trai")).tag(true)
+                Text(String(localized: "con gái")).tag(false)
+            }
+            .pickerStyle(.segmented)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(minHeight: 48)
     }
 
     private func infoRow(

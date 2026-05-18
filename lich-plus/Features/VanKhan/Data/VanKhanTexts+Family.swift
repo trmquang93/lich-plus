@@ -36,7 +36,7 @@ extension VanKhanLibrary {
 
             Hôm nay là ngày \(T.lunarDate), tức ngày \(T.solarDate).
 
-            Tín chủ chúng con có con trai (con gái) kết duyên cùng \(T.partnerName). Nay thủ tục hôn lễ đã thành. Xin kính dâng lễ vật, dâng lên trước án.
+            Tín chủ chúng con có \(T.childGender) là \(T.childName) kết duyên cùng \(T.partnerName). Nay thủ tục hôn lễ đã thành. Xin kính dâng lễ vật, dâng lên trước án.
 
             Kính lạy trước linh tọa Ngũ tự Gia thần chư vị Tôn linh, trước linh bài liệt vị Gia tiên, trước Phúc Tổ Di Lai, ông Tơ bà Nguyệt. Xin kính cẩn khẩn cầu:
 

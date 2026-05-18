@@ -65,6 +65,7 @@ enum VanKhanToken: String, CustomStringConvertible, CaseIterable {
     case deceasedName
     case deceasedRelation
     case childName
+    case childGender
     case solarDate
     case lunarDate
 
