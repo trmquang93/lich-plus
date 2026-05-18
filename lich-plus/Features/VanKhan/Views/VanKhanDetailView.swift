@@ -25,6 +25,8 @@ struct VanKhanDetailView: View {
     @State private var extraOverrides: [String: String] = [:]
     @State private var editingToken: String?
     @State private var tokenDraft: String = ""
+    @State private var selectedDate: Date = Date()
+    @State private var showDatePicker: Bool = false
 
     init(occasion: VanKhanOccasion, initialDeceasedId: UUID? = nil) {
         self.occasion = occasion
@@ -40,7 +42,7 @@ struct VanKhanDetailView: View {
 
     private var renderContext: VanKhanRenderer.Context {
         VanKhanRenderer.Context(
-            date: Date(),
+            date: selectedDate,
             deceasedRelative: selectedDeceased,
             childName: childNameOverride.isEmpty ? nil : childNameOverride
         )
@@ -71,7 +73,7 @@ struct VanKhanDetailView: View {
     }
 
     private var lunarKicker: String {
-        let lunar = LunarCalendar.solarToLunar(Date())
+        let lunar = LunarCalendar.solarToLunar(selectedDate)
         return String(format: String(localized: "%d tháng %d ÂL"), lunar.day, lunar.month)
     }
 
@@ -118,6 +120,7 @@ struct VanKhanDetailView: View {
                 partnerNameOverride = s.partnerNameOverride
                 childIsSon = s.childIsSon
                 extraOverrides = s.extraOverrides
+                if let d = s.selectedDate { selectedDate = d }
             }
             selectedDeceasedId = initialDeceasedId
                 ?? persisted?.selectedDeceasedId
@@ -132,11 +135,17 @@ struct VanKhanDetailView: View {
         .onChange(of: childIsSon) { _, _ in persist() }
         .onChange(of: selectedDeceasedId) { _, _ in persist() }
         .onChange(of: extraOverrides) { _, _ in persist() }
+        .onChange(of: selectedDate) { _, _ in persist() }
         .sheet(item: Binding(
             get: { pdfURL.map { ShareablePDFURL(url: $0) } },
             set: { if $0 == nil { pdfURL = nil } }
         )) { wrapper in
             ShareSheet(items: [wrapper.url])
+        }
+        .sheet(isPresented: $showDatePicker) {
+            LunarDatePickerSheet(selectedDate: $selectedDate)
+                .presentationDetents([.medium, .large])
+                .presentationDragIndicator(.visible)
         }
         .alert(
             tokenLabel(editingToken ?? ""),
@@ -166,6 +175,7 @@ struct VanKhanDetailView: View {
         var childIsSon: Bool = true
         var selectedDeceasedId: UUID?
         var extraOverrides: [String: String] = [:]
+        var selectedDate: Date?
     }
 
     private var storageKey: String { "vankhan.overrides.\(occasion.id)" }
@@ -183,7 +193,8 @@ struct VanKhanDetailView: View {
             partnerNameOverride: partnerNameOverride,
             childIsSon: childIsSon,
             selectedDeceasedId: selectedDeceasedId,
-            extraOverrides: extraOverrides
+            extraOverrides: extraOverrides,
+            selectedDate: selectedDate
         )
         if let data = try? JSONEncoder().encode(snapshot) {
             UserDefaults.standard.set(data, forKey: storageKey)
@@ -356,10 +367,7 @@ struct VanKhanDetailView: View {
                     )
                 }
                 Divider().padding(.leading, 16)
-                readOnlyRow(
-                    label: String(localized: "Ngày khấn"),
-                    value: lunarKicker
-                )
+                datePickerRow
             }
             .background(
                 RoundedRectangle(cornerRadius: 16).fill(AppColors.background)
@@ -422,6 +430,46 @@ struct VanKhanDetailView: View {
         .frame(minHeight: 48)
     }
 
+    private var datePickerRow: some View {
+        Button {
+            showDatePicker = true
+        } label: {
+            HStack(spacing: 12) {
+                Text(String(localized: "Ngày khấn"))
+                    .font(.system(size: 13))
+                    .foregroundStyle(AppColors.textSecondary)
+                    .frame(width: 92, alignment: .leading)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(solarDateText)
+                        .font(.system(size: 17))
+                        .foregroundStyle(AppColors.textPrimary)
+                    Text(lunarKicker)
+                        .font(.system(size: 13))
+                        .foregroundStyle(AppColors.hoangDaoGold)
+                }
+
+                Spacer(minLength: 0)
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundStyle(AppColors.textSecondary.opacity(0.5))
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+            .frame(minHeight: 48)
+            .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+    }
+
+    private var solarDateText: String {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "vi_VN")
+        f.dateFormat = "EEEE, d/M/yyyy"
+        return f.string(from: selectedDate).capitalized
+    }
+
     private func readOnlyRow(label: String, value: String) -> some View {
         HStack(spacing: 12) {
             Text(label)
@@ -453,6 +501,11 @@ struct VanKhanDetailView: View {
                     context: renderContext,
                     hiddenSections: hiddenSections,
                     onTapPlaceholder: { key, currentValue in
+                        if key == VanKhanToken.solarDate.rawValue
+                            || key == VanKhanToken.lunarDate.rawValue {
+                            showDatePicker = true
+                            return
+                        }
                         tokenDraft = currentValue
                         editingToken = key
                     }
