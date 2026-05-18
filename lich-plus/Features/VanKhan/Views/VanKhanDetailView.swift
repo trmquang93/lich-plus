@@ -20,9 +20,11 @@ struct VanKhanDetailView: View {
     @State private var partnerNameOverride: String = ""
     @State private var childIsSon: Bool = true
     @State private var selectedDeceasedId: UUID?
-    @State private var isEditingInfo: Bool = false
     @State private var pdfURL: URL?
     @State private var isExporting = false
+    @State private var extraOverrides: [String: String] = [:]
+    @State private var editingToken: String?
+    @State private var tokenDraft: String = ""
 
     init(occasion: VanKhanOccasion, initialDeceasedId: UUID? = nil) {
         self.occasion = occasion
@@ -51,7 +53,7 @@ struct VanKhanDetailView: View {
     }
 
     private var overrides: [String: String] {
-        var dict: [String: String] = [:]
+        var dict: [String: String] = extraOverrides
         if !nameOverride.isEmpty { dict[VanKhanToken.name.rawValue] = nameOverride }
         if !addressOverride.isEmpty { dict[VanKhanToken.address.rawValue] = addressOverride }
         if !partnerNameOverride.isEmpty { dict[VanKhanToken.partnerName.rawValue] = partnerNameOverride }
@@ -66,14 +68,6 @@ struct VanKhanDetailView: View {
     private var text: VanKhanText {
         VanKhanLibrary.text(for: occasion.id) ??
         VanKhanText(occasionId: occasion.id, body: "[Chưa có bản văn khấn cho dịp này]")
-    }
-
-    private var resolvedName: String {
-        !nameOverride.isEmpty ? nameOverride : (profile?.fullName ?? "")
-    }
-
-    private var resolvedAddress: String {
-        !addressOverride.isEmpty ? addressOverride : (profile?.address ?? "")
     }
 
     private var lunarKicker: String {
@@ -98,7 +92,14 @@ struct VanKhanDetailView: View {
         .navigationTitle(navTitle)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .topBarTrailing) {
+            ToolbarItemGroup(placement: .topBarTrailing) {
+                Button {
+                    copyToClipboard()
+                } label: {
+                    Image(systemName: "doc.on.doc")
+                }
+                .tint(AppColors.primary)
+
                 Button {
                     Task { await exportPDF() }
                 } label: {
@@ -108,17 +109,62 @@ struct VanKhanDetailView: View {
                 .disabled(isExporting)
             }
         }
-        .safeAreaInset(edge: .bottom) {
-            actionBar
-        }
         .onAppear {
             selectedDeceasedId = initialDeceasedId ?? profile?.deceasedRelatives.first?.id
+            if nameOverride.isEmpty, let n = profile?.fullName { nameOverride = n }
+            if addressOverride.isEmpty, let a = profile?.address { addressOverride = a }
         }
         .sheet(item: Binding(
             get: { pdfURL.map { ShareablePDFURL(url: $0) } },
             set: { if $0 == nil { pdfURL = nil } }
         )) { wrapper in
             ShareSheet(items: [wrapper.url])
+        }
+        .alert(
+            tokenLabel(editingToken ?? ""),
+            isPresented: Binding(
+                get: { editingToken != nil },
+                set: { if !$0 { editingToken = nil } }
+            )
+        ) {
+            TextField(tokenLabel(editingToken ?? ""), text: $tokenDraft)
+                .textInputAutocapitalization(.words)
+            Button(String(localized: "Huỷ"), role: .cancel) { editingToken = nil }
+            Button(String(localized: "Lưu")) {
+                if let key = editingToken {
+                    let trimmed = tokenDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+                    applyTokenEdit(key: key, value: trimmed)
+                }
+                editingToken = nil
+            }
+        }
+    }
+
+    private func applyTokenEdit(key: String, value: String) {
+        switch key {
+        case VanKhanToken.name.rawValue: nameOverride = value
+        case VanKhanToken.address.rawValue: addressOverride = value
+        case VanKhanToken.partnerName.rawValue: partnerNameOverride = value
+        case VanKhanToken.childName.rawValue: childNameOverride = value
+        default:
+            if value.isEmpty { extraOverrides.removeValue(forKey: key) }
+            else { extraOverrides[key] = value }
+        }
+    }
+
+    private func tokenLabel(_ key: String) -> String {
+        switch key {
+        case VanKhanToken.name.rawValue: return String(localized: "Tín chủ")
+        case VanKhanToken.address.rawValue: return String(localized: "Địa chỉ")
+        case VanKhanToken.familyName.rawValue: return String(localized: "Họ")
+        case VanKhanToken.gender.rawValue: return String(localized: "Giới tính")
+        case VanKhanToken.spouseName.rawValue: return String(localized: "Tên bạn đời")
+        case VanKhanToken.partnerName.rawValue: return String(localized: "Tên bạn đời")
+        case VanKhanToken.deceasedName.rawValue: return String(localized: "Tên người đã khuất")
+        case VanKhanToken.deceasedRelation.rawValue: return String(localized: "Quan hệ")
+        case VanKhanToken.childName.rawValue: return String(localized: "Tên con")
+        case VanKhanToken.childGender.rawValue: return String(localized: "Giới tính con")
+        default: return key
         }
     }
 
@@ -221,24 +267,17 @@ struct VanKhanDetailView: View {
 
     private var infoSection: some View {
         VStack(alignment: .leading, spacing: 0) {
-            sectionHeader(
-                String(localized: "Thông tin cá nhân"),
-                trailing: isEditingInfo ? String(localized: "Xong") : String(localized: "Chỉnh sửa")
-            ) {
-                isEditingInfo.toggle()
-            }
+            sectionHeader(String(localized: "Thông tin cá nhân"), trailing: nil)
 
             VStack(spacing: 0) {
                 infoRow(
                     label: String(localized: "Tín chủ"),
-                    value: resolvedName,
                     placeholder: String(localized: "Chưa có tên"),
                     binding: $nameOverride
                 )
                 Divider().padding(.leading, 16)
                 infoRow(
                     label: String(localized: "Địa chỉ"),
-                    value: resolvedAddress,
                     placeholder: String(localized: "Chưa có địa chỉ"),
                     binding: $addressOverride
                 )
@@ -246,7 +285,6 @@ struct VanKhanDetailView: View {
                     Divider().padding(.leading, 16)
                     infoRow(
                         label: String(localized: "Tên bé"),
-                        value: childNameOverride,
                         placeholder: String(localized: "Nhập tên bé"),
                         binding: $childNameOverride
                     )
@@ -257,24 +295,20 @@ struct VanKhanDetailView: View {
                     Divider().padding(.leading, 16)
                     infoRow(
                         label: String(localized: "Tên con"),
-                        value: childNameOverride,
                         placeholder: String(localized: "Tên con trai/gái của tín chủ"),
                         binding: $childNameOverride
                     )
                     Divider().padding(.leading, 16)
                     infoRow(
                         label: String(localized: "Tên bạn đời"),
-                        value: partnerNameOverride,
                         placeholder: String(localized: "Tên vợ/chồng của con"),
                         binding: $partnerNameOverride
                     )
                 }
                 Divider().padding(.leading, 16)
-                infoRow(
+                readOnlyRow(
                     label: String(localized: "Ngày khấn"),
-                    value: lunarKicker,
-                    placeholder: "",
-                    binding: nil
+                    value: lunarKicker
                 )
             }
             .background(
@@ -312,9 +346,8 @@ struct VanKhanDetailView: View {
 
     private func infoRow(
         label: String,
-        value: String,
         placeholder: String,
-        binding: Binding<String>?
+        binding: Binding<String>
     ) -> some View {
         HStack(spacing: 12) {
             Text(label)
@@ -322,31 +355,34 @@ struct VanKhanDetailView: View {
                 .foregroundStyle(AppColors.textSecondary)
                 .frame(width: 92, alignment: .leading)
 
-            if isEditingInfo, let binding = binding {
-                TextField(placeholder, text: binding)
-                    .font(.system(size: 17))
-                    .foregroundStyle(AppColors.textPrimary)
-                    .textFieldStyle(.plain)
-                    .submitLabel(.done)
-            } else if value.isEmpty {
-                Text(placeholder)
-                    .font(.system(size: 17, weight: .regular))
-                    .italic()
+            TextField(
+                "",
+                text: binding,
+                prompt: Text(placeholder)
+                    .font(.system(size: 17).italic())
                     .foregroundStyle(AppColors.primary)
-                Spacer(minLength: 0)
-            } else {
-                Text(value)
-                    .font(.system(size: 17))
-                    .foregroundStyle(AppColors.textPrimary)
-                    .lineLimit(2)
-                Spacer(minLength: 0)
-            }
+            )
+            .font(.system(size: 17))
+            .foregroundStyle(AppColors.textPrimary)
+            .textFieldStyle(.plain)
+            .submitLabel(.done)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
+        .frame(minHeight: 48)
+    }
 
-            if binding != nil {
-                Image(systemName: isEditingInfo ? "checkmark.circle.fill" : "pencil")
-                    .font(.system(size: 13))
-                    .foregroundStyle(isEditingInfo ? AppColors.primary : AppColors.textDisabled)
-            }
+    private func readOnlyRow(label: String, value: String) -> some View {
+        HStack(spacing: 12) {
+            Text(label)
+                .font(.system(size: 13))
+                .foregroundStyle(AppColors.textSecondary)
+                .frame(width: 92, alignment: .leading)
+            Text(value)
+                .font(.system(size: 17))
+                .foregroundStyle(AppColors.textPrimary)
+                .lineLimit(2)
+            Spacer(minLength: 0)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
@@ -365,7 +401,11 @@ struct VanKhanDetailView: View {
                     profile: profile,
                     overrides: overrides,
                     context: renderContext,
-                    hiddenSections: hiddenSections
+                    hiddenSections: hiddenSections,
+                    onTapPlaceholder: { key in
+                        tokenDraft = overrides[key] ?? ""
+                        editingToken = key
+                    }
                 )
                 .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -421,54 +461,6 @@ struct VanKhanDetailView: View {
         .padding(.horizontal, 20)
         .padding(.top, 20)
         .padding(.bottom, 8)
-    }
-
-    // MARK: - Sticky bottom action bar
-
-    private var actionBar: some View {
-        HStack(spacing: 10) {
-            Button {
-                copyToClipboard()
-            } label: {
-                Image(systemName: "doc.on.doc")
-                    .font(.system(size: 18, weight: .medium))
-                    .foregroundStyle(AppColors.primaryDark)
-                    .frame(width: 50, height: 50)
-                    .background(
-                        Circle()
-                            .fill(AppColors.background)
-                            .overlay(Circle().strokeBorder(AppColors.borderLight, lineWidth: 1))
-                    )
-            }
-
-            Button {
-                Task { await exportPDF() }
-            } label: {
-                HStack(spacing: 8) {
-                    if isExporting {
-                        ProgressView().tint(.white)
-                    } else {
-                        Image(systemName: "doc.text")
-                        Text(String(localized: "Xuất PDF để in"))
-                    }
-                }
-                .font(.system(size: 17, weight: .semibold))
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity, minHeight: 50)
-                .background(Capsule().fill(AppColors.primary))
-            }
-            .disabled(isExporting)
-        }
-        .padding(.horizontal, 16)
-        .padding(.top, 12)
-        .padding(.bottom, 8)
-        .background(
-            AppColors.vkCream.opacity(0.94)
-                .background(.ultraThinMaterial)
-        )
-        .overlay(alignment: .top) {
-            Rectangle().fill(AppColors.borderLight).frame(height: 0.5)
-        }
     }
 
     // MARK: - Actions
