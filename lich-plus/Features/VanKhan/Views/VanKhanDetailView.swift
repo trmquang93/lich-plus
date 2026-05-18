@@ -110,10 +110,28 @@ struct VanKhanDetailView: View {
             }
         }
         .onAppear {
-            selectedDeceasedId = initialDeceasedId ?? profile?.deceasedRelatives.first?.id
+            let persisted = loadPersisted()
+            if let s = persisted {
+                nameOverride = s.nameOverride
+                addressOverride = s.addressOverride
+                childNameOverride = s.childNameOverride
+                partnerNameOverride = s.partnerNameOverride
+                childIsSon = s.childIsSon
+                extraOverrides = s.extraOverrides
+            }
+            selectedDeceasedId = initialDeceasedId
+                ?? persisted?.selectedDeceasedId
+                ?? profile?.deceasedRelatives.first?.id
             if nameOverride.isEmpty, let n = profile?.fullName { nameOverride = n }
             if addressOverride.isEmpty, let a = profile?.address { addressOverride = a }
         }
+        .onChange(of: nameOverride) { _, _ in persist() }
+        .onChange(of: addressOverride) { _, _ in persist() }
+        .onChange(of: childNameOverride) { _, _ in persist() }
+        .onChange(of: partnerNameOverride) { _, _ in persist() }
+        .onChange(of: childIsSon) { _, _ in persist() }
+        .onChange(of: selectedDeceasedId) { _, _ in persist() }
+        .onChange(of: extraOverrides) { _, _ in persist() }
         .sheet(item: Binding(
             get: { pdfURL.map { ShareablePDFURL(url: $0) } },
             set: { if $0 == nil { pdfURL = nil } }
@@ -137,6 +155,38 @@ struct VanKhanDetailView: View {
                 }
                 editingToken = nil
             }
+        }
+    }
+
+    private struct PersistedOverrides: Codable {
+        var nameOverride: String = ""
+        var addressOverride: String = ""
+        var childNameOverride: String = ""
+        var partnerNameOverride: String = ""
+        var childIsSon: Bool = true
+        var selectedDeceasedId: UUID?
+        var extraOverrides: [String: String] = [:]
+    }
+
+    private var storageKey: String { "vankhan.overrides.\(occasion.id)" }
+
+    private func loadPersisted() -> PersistedOverrides? {
+        guard let data = UserDefaults.standard.data(forKey: storageKey) else { return nil }
+        return try? JSONDecoder().decode(PersistedOverrides.self, from: data)
+    }
+
+    private func persist() {
+        let snapshot = PersistedOverrides(
+            nameOverride: nameOverride,
+            addressOverride: addressOverride,
+            childNameOverride: childNameOverride,
+            partnerNameOverride: partnerNameOverride,
+            childIsSon: childIsSon,
+            selectedDeceasedId: selectedDeceasedId,
+            extraOverrides: extraOverrides
+        )
+        if let data = try? JSONEncoder().encode(snapshot) {
+            UserDefaults.standard.set(data, forKey: storageKey)
         }
     }
 
