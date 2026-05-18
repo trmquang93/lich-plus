@@ -65,6 +65,28 @@ struct SettingsView: View {
                             Spacer()
                         }
                     }
+                    NavigationLink {
+                        PersonalProfileView()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "person.text.rectangle")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text(String(localized: "Personal Profile"))
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(String(localized: "Used to prefill văn khấn"))
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
                 } header: {
                     Text("Preferences")
                 }
