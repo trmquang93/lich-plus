@@ -17,6 +17,7 @@ struct VanKhanDetailView: View {
     @State private var addressOverride: String = ""
     @State private var nameOverride: String = ""
     @State private var childNameOverride: String = ""
+    @State private var partnerNameOverride: String = ""
     @State private var selectedDeceasedId: UUID?
     @State private var isEditingInfo: Bool = false
     @State private var pdfURL: URL?
@@ -52,6 +53,7 @@ struct VanKhanDetailView: View {
         var dict: [String: String] = [:]
         if !nameOverride.isEmpty { dict[VanKhanToken.name.rawValue] = nameOverride }
         if !addressOverride.isEmpty { dict[VanKhanToken.address.rawValue] = addressOverride }
+        if !partnerNameOverride.isEmpty { dict[VanKhanToken.partnerName.rawValue] = partnerNameOverride }
         return dict
     }
 
@@ -243,6 +245,15 @@ struct VanKhanDetailView: View {
                         binding: $childNameOverride
                     )
                 }
+                if needsPartnerName {
+                    Divider().padding(.leading, 16)
+                    infoRow(
+                        label: String(localized: "Tên bạn đời"),
+                        value: partnerNameOverride,
+                        placeholder: String(localized: "Tên vợ/chồng của con"),
+                        binding: $partnerNameOverride
+                    )
+                }
                 Divider().padding(.leading, 16)
                 infoRow(
                     label: String(localized: "Ngày khấn"),
@@ -260,6 +271,10 @@ struct VanKhanDetailView: View {
 
     private var needsChildName: Bool {
         occasion.id == "day-thang" || occasion.id == "thoi-noi"
+    }
+
+    private var needsPartnerName: Bool {
+        occasion.id == "cuoi-hoi"
     }
 
     private func infoRow(
