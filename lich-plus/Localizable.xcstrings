@@ -386,6 +386,9 @@
         }
       }
     },
+    "An cư lạc nghiệp" : {
+
+    },
     "Automatically add lunar calendar events for Mùng 1 and Rằm each month" : {
       "localizations" : {
         "en" : {
@@ -814,6 +817,9 @@
     "Chưa có tên" : {
 
     },
+    "Chúc Tết" : {
+
+    },
     "Clear search" : {
       "localizations" : {
         "en" : {
@@ -1038,6 +1044,9 @@
         }
       }
     },
+    "Cưới hỏi" : {
+
+    },
     "Customs" : {
 
     },
@@ -1115,9 +1124,6 @@
       }
     },
     "Death anniversary" : {
-
-    },
-    "Death Anniversary" : {
 
     },
     "Deceased relatives" : {
@@ -1564,9 +1570,6 @@
     "Family events" : {
 
     },
-    "Family Events" : {
-
-    },
     "Female" : {
 
     },
@@ -1673,6 +1676,9 @@
 
     },
     "Gender" : {
+
+    },
+    "Giỗ & Gia tiên" : {
 
     },
     "Giỗ %@ %@" : {
@@ -1842,6 +1848,12 @@
           }
         }
       }
+    },
+    "Gửi người thân, bạn bè" : {
+
+    },
+    "Hằng tháng" : {
+
     },
     "Hãy thêm Người đã khuất trong Cài đặt → Cá nhân để cá nhân hoá nội dung văn khấn giỗ." : {
 
@@ -2079,6 +2091,9 @@
         }
       }
     },
+    "Lễ Tết lớn" : {
+
+    },
     "Leave a review on the App Store" : {
 
     },
@@ -2120,7 +2135,10 @@
     "Lời chúc" : {
 
     },
-    "Lời chúc Tết, sinh nhật, đám cưới…" : {
+    "Lời chúc năm mới" : {
+
+    },
+    "Lời chúc trăm năm hạnh phúc" : {
 
     },
     "Lời chúc và văn khấn cổ truyền — gợi ý theo ngày âm lịch của bạn." : {
@@ -2308,7 +2326,7 @@
         }
       }
     },
-    "Major Festivals" : {
+    "Lưu ngày giỗ âm lịch để nhắc" : {
 
     },
     "Male" : {
@@ -2505,6 +2523,9 @@
           }
         }
       }
+    },
+    "Mừng tân gia" : {
+
     },
     "My Calendars" : {
       "localizations" : {
@@ -3371,6 +3392,9 @@
         }
       }
     },
+    "Sinh nhật" : {
+
+    },
     "Solar Calendar" : {
       "localizations" : {
         "en" : {
@@ -3469,6 +3493,9 @@
           }
         }
       }
+    },
+    "Sự kiện gia đình" : {
+
     },
     "Subscribe to calendars" : {
       "localizations" : {
@@ -3662,9 +3689,6 @@
         }
       }
     },
-    "Tạo lời chúc" : {
-
-    },
     "Tap the refresh button to fetch your Google calendars." : {
       "localizations" : {
         "en" : {
@@ -3767,6 +3791,9 @@
         }
       }
     },
+    "Thêm người đã khuất" : {
+
+    },
     "Theo Văn khấn cổ truyền Việt Nam" : {
 
     },
@@ -3868,6 +3895,9 @@
           }
         }
       }
+    },
+    "Tìm lời chúc, bài khấn…" : {
+
     },
     "Time" : {
       "localizations" : {
@@ -4211,6 +4241,9 @@
       }
     },
     "Xem gợi ý hôm nay" : {
+
+    },
+    "Xem tất cả" : {
 
     },
     "Xong" : {
