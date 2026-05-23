@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DatePickerSheet: View {
-    let title: String
+    let title: LocalizedStringKey
     @Binding var selectedDate: Date
     let onDone: () -> Void
 

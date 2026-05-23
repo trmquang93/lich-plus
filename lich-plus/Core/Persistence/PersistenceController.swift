@@ -20,6 +20,8 @@ struct PersistenceController {
             SyncedCalendar.self,
             ICSSubscription.self,
             NotificationSettings.self,
+            PersonalProfile.self,
+            DeceasedRelative.self,
         ])
 
         let modelConfiguration = ModelConfiguration(

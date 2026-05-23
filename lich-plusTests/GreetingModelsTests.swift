@@ -105,9 +105,10 @@ final class GreetingModelsTests: XCTestCase {
     // MARK: - GreetingOccasion Tests
 
     func testGreetingOccasionDisplayNames() {
-        XCTAssertEqual(GreetingOccasion.tet.displayName, "Tết Nguyên Đán")
+        XCTAssertEqual(GreetingOccasion.tet.displayName, "Chúc Tết")
         XCTAssertEqual(GreetingOccasion.birthday.displayName, "Sinh nhật")
-        XCTAssertEqual(GreetingOccasion.wedding.displayName, "Đám cưới")
+        XCTAssertEqual(GreetingOccasion.wedding.displayName, "Cưới hỏi")
+        XCTAssertEqual(GreetingOccasion.housewarming.displayName, "Mừng tân gia")
         XCTAssertEqual(GreetingOccasion.newYear.displayName, "Năm mới dương lịch")
         XCTAssertEqual(GreetingOccasion.womensDay.displayName, "Ngày 8/3")
         XCTAssertEqual(GreetingOccasion.teachersDay.displayName, "Ngày Nhà giáo")
@@ -118,6 +119,7 @@ final class GreetingModelsTests: XCTestCase {
         XCTAssertEqual(GreetingOccasion.tet.icon, "🧧")
         XCTAssertEqual(GreetingOccasion.birthday.icon, "🎂")
         XCTAssertEqual(GreetingOccasion.wedding.icon, "💒")
+        XCTAssertEqual(GreetingOccasion.housewarming.icon, "🏠")
         XCTAssertEqual(GreetingOccasion.newYear.icon, "🎉")
         XCTAssertEqual(GreetingOccasion.womensDay.icon, "🌷")
         XCTAssertEqual(GreetingOccasion.teachersDay.icon, "📚")
@@ -126,12 +128,13 @@ final class GreetingModelsTests: XCTestCase {
     func testGreetingOccasionCaseIterable() {
         // Verify CaseIterable conformance
         let allCases = GreetingOccasion.allCases
-        XCTAssertEqual(allCases.count, 6)
+        XCTAssertEqual(allCases.count, 7)
 
         // Verify all expected cases are present
         XCTAssertTrue(allCases.contains(.tet))
         XCTAssertTrue(allCases.contains(.birthday))
         XCTAssertTrue(allCases.contains(.wedding))
+        XCTAssertTrue(allCases.contains(.housewarming))
         XCTAssertTrue(allCases.contains(.newYear))
         XCTAssertTrue(allCases.contains(.womensDay))
         XCTAssertTrue(allCases.contains(.teachersDay))

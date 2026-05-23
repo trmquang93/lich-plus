@@ -6,6 +6,12 @@
 import SwiftUI
 
 struct GreetingGeneratorView: View {
+    let occasion: GreetingOccasion
+
+    init(occasion: GreetingOccasion = .tet) {
+        self.occasion = occasion
+    }
+
     @State private var selectedRecipient: RecipientType = .parents
     @State private var selectedTone: GreetingTone = .formal
     @State private var selectedLanguage: GreetingLanguage = .vietnamese
@@ -420,7 +426,7 @@ struct GreetingGeneratorView: View {
         let request = GreetingRequest(
             recipientType: selectedRecipient,
             tone: selectedTone,
-            occasion: .tet,
+            occasion: occasion,
             recipientName: recipientName.isEmpty ? nil : recipientName,
             additionalInfo: additionalInfo.isEmpty ? nil : additionalInfo,
             year: currentYear,

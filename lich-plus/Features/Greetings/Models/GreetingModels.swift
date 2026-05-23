@@ -116,6 +116,7 @@ enum GreetingOccasion: String, CaseIterable, Identifiable {
     case tet = "tet"
     case birthday = "birthday"
     case wedding = "wedding"
+    case housewarming = "housewarming"
     case newYear = "new_year"
     case womensDay = "womens_day"
     case teachersDay = "teachers_day"
@@ -125,9 +126,10 @@ enum GreetingOccasion: String, CaseIterable, Identifiable {
     /// Vietnamese display name
     var displayName: String {
         switch self {
-        case .tet: return "Tết Nguyên Đán"
+        case .tet: return "Chúc Tết"
         case .birthday: return "Sinh nhật"
-        case .wedding: return "Đám cưới"
+        case .wedding: return "Cưới hỏi"
+        case .housewarming: return "Mừng tân gia"
         case .newYear: return "Năm mới dương lịch"
         case .womensDay: return "Ngày 8/3"
         case .teachersDay: return "Ngày Nhà giáo"
@@ -140,6 +142,7 @@ enum GreetingOccasion: String, CaseIterable, Identifiable {
         case .tet: return "🧧"
         case .birthday: return "🎂"
         case .wedding: return "💒"
+        case .housewarming: return "🏠"
         case .newYear: return "🎉"
         case .womensDay: return "🌷"
         case .teachersDay: return "📚"

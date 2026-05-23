@@ -54,9 +54,9 @@ struct MainTabView: View {
                 }
                 .tag(1)
 
-            GreetingsView()
+            PhongTucFeedView()
                 .tabItem {
-                    Label("Greetings", systemImage: "gift.fill")
+                    Label("Customs", systemImage: "scroll")
                 }
                 .tag(2)
 

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CalendarDatePickerSheet: View {
-    let title: String
+    let title: LocalizedStringKey
     @Binding var selectedDate: Date
     let onDone: () -> Void
 
@@ -16,7 +16,7 @@ struct CalendarDatePickerSheet: View {
     @State private var displayYear: Int
     @State private var calendarMonth: CalendarMonth
 
-    init(title: String, selectedDate: Binding<Date>, onDone: @escaping () -> Void) {
+    init(title: LocalizedStringKey, selectedDate: Binding<Date>, onDone: @escaping () -> Void) {
         self.title = title
         self._selectedDate = selectedDate
         self.onDone = onDone
