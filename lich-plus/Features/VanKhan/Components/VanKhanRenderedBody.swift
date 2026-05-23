@@ -73,7 +73,7 @@ struct VanKhanRenderedBody: View {
                 resolved.underlineStyle = nil
                 attr.append(resolved)
             } else {
-                var missing = AttributedString("{\(key)}")
+                var missing = AttributedString("{\(VanKhanToken.displayLabel(forKey: key))}")
                 if let url = URL(string: "\(Self.editScheme)://\(key)") {
                     missing.link = url
                 }

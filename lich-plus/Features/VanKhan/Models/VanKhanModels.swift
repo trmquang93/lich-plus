@@ -76,6 +76,31 @@ enum VanKhanToken: String, CustomStringConvertible, CaseIterable {
     var description: String { placeholder }
 }
 
+extension VanKhanToken {
+    /// Localized display label for user-facing UI (alert titles, unresolved placeholder text).
+    var displayLabel: String {
+        switch self {
+        case .name: return String(localized: "Tín chủ")
+        case .address: return String(localized: "Địa chỉ")
+        case .familyName: return String(localized: "Họ")
+        case .gender: return String(localized: "Giới tính")
+        case .spouseName: return String(localized: "Tên bạn đời")
+        case .partnerName: return String(localized: "Tên bạn đời")
+        case .deceasedName: return String(localized: "Tên người đã khuất")
+        case .deceasedRelation: return String(localized: "Quan hệ")
+        case .childName: return String(localized: "Tên con")
+        case .childGender: return String(localized: "Giới tính con")
+        case .solarDate: return String(localized: "Ngày dương")
+        case .lunarDate: return String(localized: "Ngày âm")
+        }
+    }
+
+    /// Resolve a raw key string to its display label, falling back to the key itself.
+    static func displayLabel(forKey key: String) -> String {
+        VanKhanToken(rawValue: key)?.displayLabel ?? key
+    }
+}
+
 /// Optional named regions inside a văn khấn body that the user can hide
 /// via Personal Profile toggles. Wrap each region in the data file with
 /// the `open` / `close` markers on their own lines:

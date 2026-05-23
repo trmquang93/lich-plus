@@ -148,14 +148,14 @@ struct VanKhanDetailView: View {
                 .presentationDragIndicator(.visible)
         }
         .alert(
-            tokenLabel(editingToken ?? ""),
+            VanKhanToken.displayLabel(forKey: editingToken ?? ""),
             isPresented: Binding(
                 get: { editingToken != nil },
                 set: { if !$0 { editingToken = nil } }
             ),
             presenting: editingToken
         ) { key in
-            TextField(tokenLabel(key), text: $tokenDraft)
+            TextField(VanKhanToken.displayLabel(forKey: key), text: $tokenDraft)
                 .textInputAutocapitalization(.words)
             Button(String(localized: "Huỷ"), role: .cancel) { editingToken = nil }
             Button(String(localized: "Lưu")) {
@@ -209,22 +209,6 @@ struct VanKhanDetailView: View {
         default:
             if value.isEmpty { extraOverrides.removeValue(forKey: key) }
             else { extraOverrides[key] = value }
-        }
-    }
-
-    private func tokenLabel(_ key: String) -> String {
-        switch key {
-        case VanKhanToken.name.rawValue: return String(localized: "Tín chủ")
-        case VanKhanToken.address.rawValue: return String(localized: "Địa chỉ")
-        case VanKhanToken.familyName.rawValue: return String(localized: "Họ")
-        case VanKhanToken.gender.rawValue: return String(localized: "Giới tính")
-        case VanKhanToken.spouseName.rawValue: return String(localized: "Tên bạn đời")
-        case VanKhanToken.partnerName.rawValue: return String(localized: "Tên bạn đời")
-        case VanKhanToken.deceasedName.rawValue: return String(localized: "Tên người đã khuất")
-        case VanKhanToken.deceasedRelation.rawValue: return String(localized: "Quan hệ")
-        case VanKhanToken.childName.rawValue: return String(localized: "Tên con")
-        case VanKhanToken.childGender.rawValue: return String(localized: "Giới tính con")
-        default: return key
         }
     }
 
