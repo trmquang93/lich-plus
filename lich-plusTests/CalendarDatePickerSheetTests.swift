@@ -239,7 +239,7 @@ final class CalendarDatePickerSheetTests: XCTestCase {
     // MARK: - Test: Title Parameter
 
     func testTitleParameter() {
-        let titles = ["Select Start Date", "Select End Date", "Choose Event Date"]
+        let titles: [LocalizedStringKey] = ["Select Start Date", "Select End Date", "Choose Event Date"]
 
         for title in titles {
             var selectedDate = Date()
