@@ -152,16 +152,15 @@ struct VanKhanDetailView: View {
             isPresented: Binding(
                 get: { editingToken != nil },
                 set: { if !$0 { editingToken = nil } }
-            )
-        ) {
-            TextField(tokenLabel(editingToken ?? ""), text: $tokenDraft)
+            ),
+            presenting: editingToken
+        ) { key in
+            TextField(tokenLabel(key), text: $tokenDraft)
                 .textInputAutocapitalization(.words)
             Button(String(localized: "Huỷ"), role: .cancel) { editingToken = nil }
             Button(String(localized: "Lưu")) {
-                if let key = editingToken {
-                    let trimmed = tokenDraft.trimmingCharacters(in: .whitespacesAndNewlines)
-                    applyTokenEdit(key: key, value: trimmed)
-                }
+                let trimmed = tokenDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+                applyTokenEdit(key: key, value: trimmed)
                 editingToken = nil
             }
         }
