@@ -329,7 +329,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+			shellScript = "PLIST=\"${SRCROOT}/lich-plus/GoogleService-Info.plist\"\nBUILT_PLIST=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleService-Info.plist\"\n\nif [ ! -f \"${PLIST}\" ] && [ ! -f \"${BUILT_PLIST}\" ]; then\n  echo \"note: GoogleService-Info.plist not found; skipping Crashlytics\"\n  exit 0\nfi\n\nif [ \"${CONFIGURATION}\" != \"Release\" ]; then\n  echo \"note: skipping Crashlytics upload for ${CONFIGURATION} (Release/archive only)\"\n  exit 0\nfi\n\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

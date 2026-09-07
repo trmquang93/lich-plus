@@ -23,7 +23,10 @@ Lich+ uses the [Firebase iOS SDK](https://github.com/firebase/firebase-ios-sdk) 
 
 ## Local build without Firebase
 
-If `GoogleService-Info.plist` is missing, the app still builds and runs. `AnalyticsService.configureIfNeeded()` skips Firebase initialization and logs events to the debug console only (`#if DEBUG`).
+If `GoogleService-Info.plist` is missing, the app still builds and runs:
+
+- `AnalyticsService.configureIfNeeded()` skips Firebase initialization and logs events to the debug console only (`#if DEBUG`).
+- The **Firebase Crashlytics** run script exits 0 when the plist is absent, and also skips Debug (dSYM upload runs for **Release/archive** when the plist exists).
 
 ## Verify Analytics
 
@@ -49,7 +52,13 @@ Only call this during manual QA. Do not ship test-crash UI in production builds 
 
 ## Xcode Cloud / CI
 
-Store `GoogleService-Info.plist` as a **secret file** or CI environment artifact and copy it into `lich-plus/` during `ci_post_clone.sh` before the Xcode build. Without it, CI builds succeed but Analytics/Crashlytics remain inactive.
+`ci_post_clone.sh` copies `GoogleService-Info.plist` into `lich-plus/` when a secret is present. Add one of:
+
+- Secret env var `GOOGLESERVICE_INFO_PLIST_BASE64` — base64-encoded plist contents (preferred)
+- Secret env var `GOOGLESERVICE_INFO_PLIST` — absolute path to the plist, or raw XML
+- File at `ci_scripts/GoogleService-Info.plist` (do not commit a real plist)
+
+Without a secret, CI builds still succeed: Analytics/Crashlytics stay inactive and the Crashlytics upload script skips. Release/archive dSYM upload runs only when the plist was copied.
 
 ## Privacy
 

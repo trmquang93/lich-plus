@@ -108,6 +108,36 @@ fi
 echo ""
 
 # =============================================================================
+# FIREBASE GoogleService-Info.plist (optional)
+# =============================================================================
+# Real plist is gitignored. Xcode Cloud: add a secret env var
+# GOOGLESERVICE_INFO_PLIST_BASE64 (base64 of the plist) or
+# GOOGLESERVICE_INFO_PLIST (file path or raw XML). Without it, the Crashlytics
+# run script skips and Analytics stays inactive — the build still succeeds.
+
+GOOGLE_PLIST_DEST="${PROJECT_ROOT}/lich-plus/GoogleService-Info.plist"
+
+if [ -f "${GOOGLE_PLIST_DEST}" ]; then
+    echo "GoogleService-Info.plist already present"
+elif [ -n "${GOOGLESERVICE_INFO_PLIST_BASE64}" ]; then
+    echo "${GOOGLESERVICE_INFO_PLIST_BASE64}" | base64 --decode > "${GOOGLE_PLIST_DEST}"
+    echo "Copied GoogleService-Info.plist from GOOGLESERVICE_INFO_PLIST_BASE64"
+elif [ -n "${GOOGLESERVICE_INFO_PLIST}" ] && [ -f "${GOOGLESERVICE_INFO_PLIST}" ]; then
+    cp "${GOOGLESERVICE_INFO_PLIST}" "${GOOGLE_PLIST_DEST}"
+    echo "Copied GoogleService-Info.plist from GOOGLESERVICE_INFO_PLIST path"
+elif [ -n "${GOOGLESERVICE_INFO_PLIST}" ]; then
+    printf '%s\n' "${GOOGLESERVICE_INFO_PLIST}" > "${GOOGLE_PLIST_DEST}"
+    echo "Wrote GoogleService-Info.plist from GOOGLESERVICE_INFO_PLIST"
+elif [ -f "${PROJECT_ROOT}/ci_scripts/GoogleService-Info.plist" ]; then
+    cp "${PROJECT_ROOT}/ci_scripts/GoogleService-Info.plist" "${GOOGLE_PLIST_DEST}"
+    echo "Copied GoogleService-Info.plist from ci_scripts/"
+else
+    echo "GoogleService-Info.plist not provided — Firebase stays inactive; Crashlytics upload will skip"
+fi
+
+echo ""
+
+# =============================================================================
 # RBENV RUBY VERSION MANAGEMENT
 # =============================================================================
 

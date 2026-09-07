@@ -106,7 +106,12 @@ enum AnalyticsParameterPolicy {
                 return nil
             }
 
-            if let stringValue = sanitized[key] as? String, containsBlockedContent(in: stringValue) {
+            // Allowlisted taxonomy IDs (screen_name, feature_id, widget_kind, source)
+            // can contain denylist substrings like "note"/"khan" by design. Skip the
+            // substring check for those values; keep it for free-text (breadcrumbs).
+            if shouldApplyValueDenylist(for: key),
+               let stringValue = sanitized[key] as? String,
+               containsBlockedContent(in: stringValue) {
                 return nil
             }
         }
@@ -117,6 +122,15 @@ enum AnalyticsParameterPolicy {
     static func containsBlockedContent(in text: String) -> Bool {
         let normalized = text.lowercased()
         return blockedContentSubstrings.contains { normalized.contains($0) }
+    }
+
+    private static func shouldApplyValueDenylist(for key: String) -> Bool {
+        switch key {
+        case "screen_name", "feature_id", "widget_kind", "source":
+            return false
+        default:
+            return true
+        }
     }
 
     private static func isAllowedWidgetKind(_ kind: String) -> Bool {
