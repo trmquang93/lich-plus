@@ -1,0 +1,37 @@
+{
+  "configurations" : [
+    {
+      "id" : "49DC9725-C925-4A67-9518-119F97443FBF",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "performanceAntipatternCheckerEnabled" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:lich-plus.xcodeproj",
+      "identifier" : "4DA45ED52ED108FE00C1F1F6",
+      "name" : "lich-plus"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:lich-plus.xcodeproj",
+        "identifier" : "4DA45EE42ED1090100C1F1F6",
+        "name" : "lich-plusTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:lich-plus.xcodeproj",
+        "identifier" : "4DA45EEE2ED1090100C1F1F6",
+        "name" : "lich-plusUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
