@@ -966,7 +966,7 @@ supabase functions logs generate-greeting --tail
 
 ### Related Documentation
 
-- `../../CLAUDE.md` - Project-wide development guidelines
+- `.cursor/rules/` - Project-wide development guidelines
 - `../../../SWIFTUI_BEST_PRACTICES.md` - SwiftUI patterns
 - `supabase/README.md` - Backend setup and deployment
 

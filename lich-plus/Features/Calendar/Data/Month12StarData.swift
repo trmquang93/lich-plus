@@ -331,7 +331,7 @@ struct Month12StarData {
         )
 
         // Page 170: Rows 41-60 (Extracted from book page 170)
-        // NOTE: Many good stars from page 170 don't have enum mappings yet. See comment in CLAUDE.md for list.
+        // NOTE: Many good stars from page 170 don't have enum mappings yet. Unmapped names are in the row comments below.
 
         // Row 41: Giáp Thìn - Good: Cát khánh, Tục thế, Lục hợp, Thiên xá, Nguyệt không
         data["Giáp Thìn"] = DayStarData(

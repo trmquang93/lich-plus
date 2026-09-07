@@ -1,7 +1,7 @@
 # File Structure
 
 ```
-lich-plus/                          # Container directory (CLAUDE.md lives here)
+lich-plus/                          # Repo root
 └── lich-plus/                      # Xcode project root (git repo)
     ├── lich-plus/                  # Source code
     │   ├── App/                    # Entry point + tab navigation
