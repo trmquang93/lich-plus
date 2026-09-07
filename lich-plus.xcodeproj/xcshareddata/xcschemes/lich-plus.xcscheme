@@ -21,6 +21,20 @@
                ReferencedContainer = "container:lich-plus.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "B1A2C3D72ED9000400C1F1F6"
+               BuildableName = "LichPlusWidgets.appex"
+               BlueprintName = "LichPlusWidgets"
+               ReferencedContainer = "container:lich-plus.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
