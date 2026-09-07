@@ -1,0 +1,27 @@
+---
+description: Use AppColors and AppTheme; never hardcode colors or spacing
+globs: "**/*.swift"
+alwaysApply: false
+---
+
+# Design System
+
+Always use `AppColors` and `AppTheme` from `lich-plus/Core/Theme.swift`. Never hardcode colors, spacing, corner radii, or font sizes. Change tokens in `Theme.swift` so they propagate.
+
+`Color` aliases: `.appPrimary`, `.appSecondary`, `.appAccent`, `.appBackground`, `.appTextPrimary`, `.appTextSecondary`.
+
+```swift
+// ❌ BAD
+Text("Today")
+    .foregroundStyle(Color.red)
+    .padding(16)
+    .background(Color(red: 251/255, green: 233/255, blue: 231/255))
+
+// ✅ GOOD
+Text("Today")
+    .foregroundStyle(AppColors.primary)
+    .padding(AppTheme.spacing16)
+    .background(AppColors.backgroundLight)
+```
+
+Spacing tokens: `spacing2` … `spacing24`. Radii: `cornerRadiusSmall` (4) through `cornerRadiusXL` (16). Fonts: `fontCaption` … `fontLargeTitle`.

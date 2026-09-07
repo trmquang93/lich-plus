@@ -1,0 +1,28 @@
+---
+description: Raw English strings only; never edit Localizable.xcstrings by hand
+globs:
+  - "**/*.swift"
+  - "**/*.xcstrings"
+alwaysApply: false
+---
+
+# Localization
+
+Never edit `Localizable.xcstrings` manually — Xcode auto-extracts on build. Languages: `en`, `vi`. Details: `docs/LOCALIZATION.md`.
+
+Use **raw English text**, not dot-notation keys. Prefer `LocalizedStringKey` for SwiftUI view params; use `String(localized:)` only when you need an eagerly-resolved `String`. Do not type a field `LocalizedStringKey` if it carries runtime/data text (e.g. an event title from SwiftData).
+
+```swift
+// ❌ BAD
+Text("settings.lunarSpecialDates.title")
+let title: LocalizedStringKey = event.title  // data text is not a catalog key
+
+// ✅ GOOD — SwiftUI literals (lazy LocalizedStringKey)
+Text("Lunar Special Dates")
+Label("Add Event", systemImage: "plus")
+.navigationTitle("Settings")
+
+// ✅ GOOD — need a String (interpolation, format, UIKit/alerts)
+let msg = String(format: String(localized: "Giỗ %@ %@"), relation, name)
+alert.title = String(localized: "Are you sure?")
+```

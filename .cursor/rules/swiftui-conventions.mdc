@@ -1,0 +1,40 @@
+---
+description: SwiftUI sheet, state, and @Query patterns for Lich+
+globs: "**/*.swift"
+alwaysApply: false
+---
+
+# SwiftUI Conventions
+
+Follow `SWIFTUI_BEST_PRACTICES.md`. Full details live there; these are the non-negotiables.
+
+**Sheets:** use `sheet(item:)` for optional-data sheets. `sheet(isPresented:)` only for simple toggles with no payload. Same idea for `navigationDestination(item:)` and `fullScreenCover(item:)`.
+
+```swift
+// ❌ BAD — two states + onChange sync
+@State private var editingEvent: SyncableEvent?
+@State private var showEditSheet = false
+.sheet(isPresented: $showEditSheet) {
+    if let event = editingEvent { CreateItemSheet(editingEvent: event) }
+}
+
+// ✅ GOOD — item is the source of truth
+@State private var editingEvent: SyncableEvent?
+.sheet(item: $editingEvent) { event in
+    CreateItemSheet(editingEvent: event)
+}
+```
+
+**State:** single source of truth. If `showSheet` is always `true` when `selectedItem != nil`, keep only `selectedItem`. Do not use `onChange` to keep two variables in sync.
+
+**Queries:** filter at the `@Query` level, not in the view body.
+
+```swift
+// ✅ GOOD
+@Query(filter: #Predicate<SyncableEvent> { !$0.isDeleted }, sort: \.startDate)
+private var events: [SyncableEvent]
+
+// ❌ BAD — refetch-all then filter on every render
+@Query private var allEvents: [SyncableEvent]
+var events: [SyncableEvent] { allEvents.filter { !$0.isDeleted } }
+```

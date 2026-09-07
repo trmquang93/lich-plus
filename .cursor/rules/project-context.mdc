@@ -1,0 +1,24 @@
+---
+description: Lich+ project overview, architecture, docs, and repo workflows
+alwaysApply: true
+---
+
+# Lich+ Project Context
+
+Vietnamese lunar/solar calendar iOS app with astrology (Hoàng Đạo, 12 Trực, stars), events/tasks, and multi-source calendar sync (Apple/Google/Microsoft/ICS).
+
+**Stack:** iOS 17+, Swift 5, SwiftUI, SwiftData, CocoaPods. Open `lich-plus.xcworkspace`, never `.xcodeproj`. Git root is this directory.
+
+**Layers** (`lich-plus/`): `App/` (entry + `MainTabView`), `Core/` (theme, components, services), `Features/` (self-contained: Calendar, Tasks, Timeline, VanKhan, Greetings, Settings, Shared).
+
+**Tabs:** Calendar, Timeline, Customs (`PhongTucFeedView`), Settings. Each tab owns its `NavigationStack` and navigation state.
+
+**Sync:** real-time `AutoSyncCoordinator` (Apple) + 15-min `BackgroundSyncManager` (all sources); last-write-wins. Details: `docs/SYNC_ARCHITECTURE.md`.
+
+**Astrology:** `HoangDaoCalculator`, `LucHacDaoCalculator`, `StarCalculator`. Debug via `docs/CALENDAR_ASTROLOGY.md` and `lich-van-nien.pdf`.
+
+**Add a feature:** `Features/<Name>/<Name>View.swift` (+ `Components/`, `Models/` as needed), use `AppColors`/`AppTheme`, add `#Preview`. New tab: edit `App/MainTabView.swift`.
+
+**Deps:** `pod install` / `pod update` from repo root. Worktrees need distinct simulators via gitignored `.env` (`DEVICE_ID=...`).
+
+Feature internals go in `docs/*.md`. Project conventions live in `.cursor/rules/`.

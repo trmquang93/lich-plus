@@ -57,10 +57,12 @@ Carthage/Build/
 # Misc
 *.log
 .env*.local
-!CLAUDE.md
 .claude/*
 !.claude
 !.claude/settings.json
+!.cursor/
+!.cursor/rules/
+!.cursor/rules/**
 book
 
 # Firebase (real credentials — use GoogleService-Info.plist.example as template)

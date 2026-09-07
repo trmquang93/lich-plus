@@ -1,0 +1,30 @@
+---
+description: SwiftData services and tests must be @MainActor to avoid malloc crashes
+globs:
+  - "**/*Service*.swift"
+  - "**/*Manager*.swift"
+  - "**/*Tests*/**/*.swift"
+alwaysApply: false
+---
+
+# SwiftData Thread Safety
+
+All types that touch SwiftData **must** be `@MainActor`. Missing this causes malloc crashes ("pointer being freed was not allocated"). Apply to the class, mocks, and test classes. Reference: commit `c8c7076`.
+
+```swift
+// ❌ BAD — SwiftData off the main actor
+final class PersonalProfileService {
+    private let modelContext: ModelContext
+}
+
+// ✅ GOOD — class, mocks, and tests
+@MainActor
+final class PersonalProfileService {
+    private let modelContext: ModelContext
+}
+
+@MainActor
+final class PersonalProfileServiceTests: XCTestCase { }
+```
+
+Existing `@MainActor` services include `CalendarSyncService`, `EventKitService`, `GoogleCalendarSyncService`, `MicrosoftCalendarSyncService`, `ICSCalendarSyncService`, `RecurrenceEngine`, `RecurrenceExceptionManager`, `PersonalProfileService`.
