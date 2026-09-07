@@ -43,6 +43,7 @@ struct LanguageSettingsView: View {
         } message: {
             Text(String(localized: "Please restart the app to apply the language change."))
         }
+        .trackAnalyticsScreen(.language_settings)
     }
 }
 

@@ -11,6 +11,8 @@
 		7429BDE32F1D6DAE009519CF /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 7429BDE22F1D6DAE009519CF /* Auth */; };
 		7429BDE52F1D6DAE009519CF /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 7429BDE42F1D6DAE009519CF /* Functions */; };
 		7429BDE72F1D6DAE009519CF /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 7429BDE62F1D6DAE009519CF /* Supabase */; };
+		FBA4BDE42F1D6DAE009519CF /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = FBA2BDE22F1D6DAE009519CF /* FirebaseAnalytics */; };
+		FBA5BDE52F1D6DAE009519CF /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = FBA3BDE32F1D6DAE009519CF /* FirebaseCrashlytics */; };
 		C63ECA53367BF224122B1CD5 /* libPods-lich-plus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB89303E18829DA587A5C91F /* libPods-lich-plus.a */; };
 		DE5B0E9D3EDCDB9C25DB164A /* libPods-lich-plusTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF797DDCB19A1578F299626B /* libPods-lich-plusTests.a */; };
 /* End PBXBuildFile section */
@@ -41,6 +43,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Config.xcconfig.example,
+				GoogleService-Info.plist.example,
 				Info.plist,
 			);
 			target = 4DA45ED52ED108FE00C1F1F6 /* lich-plus */;
@@ -73,6 +76,8 @@
 				4D01FCE02EDE8B99008DF610 /* ParallaxScrollView in Frameworks */,
 				7429BDE52F1D6DAE009519CF /* Functions in Frameworks */,
 				7429BDE32F1D6DAE009519CF /* Auth in Frameworks */,
+				FBA4BDE42F1D6DAE009519CF /* FirebaseAnalytics in Frameworks */,
+				FBA5BDE52F1D6DAE009519CF /* FirebaseCrashlytics in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -139,6 +144,7 @@
 				4DA45ED32ED108FE00C1F1F6 /* Frameworks */,
 				4DA45ED42ED108FE00C1F1F6 /* Resources */,
 				CA87253EA7F97BBDB9BBA9BA /* [CP] Copy Pods Resources */,
+				FBA6BDE62F1D6DAE009519CF /* Firebase Crashlytics */,
 			);
 			buildRules = (
 			);
@@ -206,6 +212,7 @@
 			packageReferences = (
 				4D01FCDE2EDE8B99008DF610 /* XCRemoteSwiftPackageReference "parallax-scrollview" */,
 				7429BDE12F1D6DAE009519CF /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				FBA1BDE12F1D6DAE009519CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4DA45ED72ED108FE00C1F1F6 /* Products */;
@@ -299,6 +306,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-lich-plus/Pods-lich-plus-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FBA6BDE62F1D6DAE009519CF /* Firebase Crashlytics */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+			);
+			name = "Firebase Crashlytics";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "PLIST=\"${SRCROOT}/lich-plus/GoogleService-Info.plist\"\nBUILT_PLIST=\"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleService-Info.plist\"\n\nif [ ! -f \"${PLIST}\" ] && [ ! -f \"${BUILT_PLIST}\" ]; then\n  echo \"note: GoogleService-Info.plist not found; skipping Crashlytics\"\n  exit 0\nfi\n\nif [ \"${CONFIGURATION}\" != \"Release\" ]; then\n  echo \"note: skipping Crashlytics upload for ${CONFIGURATION} (Release/archive only)\"\n  exit 0\nfi\n\n\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -631,6 +662,14 @@
 				minimumVersion = 2.5.1;
 			};
 		};
+		FBA1BDE12F1D6DAE009519CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -653,6 +692,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 7429BDE12F1D6DAE009519CF /* XCRemoteSwiftPackageReference "supabase-swift" */;
 			productName = Supabase;
+		};
+		FBA2BDE22F1D6DAE009519CF /* FirebaseAnalytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBA1BDE12F1D6DAE009519CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalytics;
+		};
+		FBA3BDE32F1D6DAE009519CF /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = FBA1BDE12F1D6DAE009519CF /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

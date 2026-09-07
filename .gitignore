@@ -63,6 +63,9 @@ Carthage/Build/
 !.claude/settings.json
 book
 
+# Firebase (real credentials — use GoogleService-Info.plist.example as template)
+lich-plus/GoogleService-Info.plist
+
 # Fastlane
 fastlane/report.xml
 fastlane/Preview.html

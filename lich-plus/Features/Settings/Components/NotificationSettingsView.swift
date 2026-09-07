@@ -221,6 +221,7 @@ struct NotificationSettingsView: View {
         } message: {
             Text(String(localized: "Please enable notifications in Settings to receive reminders."))
         }
+        .trackAnalyticsScreen(.notification_settings)
     }
     
     // MARK: - Bindings
@@ -273,12 +274,16 @@ struct NotificationSettingsView: View {
     private func requestPermissionAndEnable() {
         Task {
             let granted = await notificationService.requestAuthorization()
+            AnalyticsService.shared.logNotificationPermission(granted: granted)
             if granted {
+                AnalyticsService.shared.logNotificationOptIn(optedIn: true)
                 if let settingsValue = settings {
                     settingsValue.isEnabled = true
                     saveSettings()
                     await notificationService.rescheduleAllNotifications()
                 }
+            } else {
+                AnalyticsService.shared.logNotificationOptIn(optedIn: false)
             }
         }
     }

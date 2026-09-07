@@ -29,6 +29,7 @@ struct LunarSpecialDatesSettingsView: View {
             }
         }
         .navigationTitle(String(localized: "Lunar Special Dates"))
+        .trackAnalyticsScreen(.lunar_special_dates_settings)
     }
 
     private func descriptionForSpecialDate(_ specialDate: LunarSpecialDate) -> String {
