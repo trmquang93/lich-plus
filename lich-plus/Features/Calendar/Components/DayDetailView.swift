@@ -133,6 +133,7 @@ struct DayDetailView: View {
             .environmentObject(notificationService)
             .modelContext(modelContext)
         }
+        .trackAnalyticsScreen(.day_detail)
     }
 
     // MARK: - Header Section

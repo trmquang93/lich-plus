@@ -217,6 +217,7 @@ struct CalendarSyncSettingsView: View {
             .navigationTitle("Calendar Sync")
             .navigationBarTitleDisplayMode(.inline)
         }
+        .trackAnalyticsScreen(.calendar_sync_settings)
     }
 }
 

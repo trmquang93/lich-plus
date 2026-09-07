@@ -39,6 +39,7 @@ class GoogleAuthService: ObservableObject {
             self.userEmail = result.user.profile?.email
             self.isSignedIn = true
             self.authError = nil
+            AnalyticsService.shared.logFeatureUsed(.google_calendar_connect)
         } catch {
             self.authError = error
             throw error

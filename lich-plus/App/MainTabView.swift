@@ -81,6 +81,9 @@ struct MainTabView: View {
         // Handle app lifecycle for sync management
         .onChange(of: scenePhase) { oldPhase, newPhase in
             handleScenePhaseChange(from: oldPhase, to: newPhase)
+            if newPhase == .active && oldPhase == .background {
+                AnalyticsService.shared.logAppOpen(source: .foreground)
+            }
         }
         // Handle Google Sign-In URL callback
         .onOpenURL { url in
@@ -107,10 +110,29 @@ struct MainTabView: View {
         .task {
             // Configure tab bar appearance
             configureTabBarAppearance()
+            logSelectedTabScreen(selectedTab)
             // Restore previous Google sign-in session
             await googleAuthService.restorePreviousSignIn()
             // Restore previous Microsoft sign-in session
             await microsoftAuthService.restorePreviousSignIn()
+        }
+        .onChange(of: selectedTab) { _, newTab in
+            logSelectedTabScreen(newTab)
+        }
+    }
+
+    private func logSelectedTabScreen(_ tab: Int) {
+        switch tab {
+        case 0:
+            AnalyticsService.shared.logScreen(.calendar)
+        case 1:
+            AnalyticsService.shared.logScreen(.timeline)
+        case 2:
+            AnalyticsService.shared.logScreen(.customs)
+        case 3:
+            AnalyticsService.shared.logScreen(.settings)
+        default:
+            break
         }
     }
 

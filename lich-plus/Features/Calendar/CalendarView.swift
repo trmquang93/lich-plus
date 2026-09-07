@@ -278,6 +278,7 @@ struct CalendarView: View {
                 .modelContext(modelContext)
             }
         }
+        .trackAnalyticsScreen(.calendar)
     }
 
     // MARK: - Event Editing

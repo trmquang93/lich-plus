@@ -15,6 +15,9 @@ class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDele
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
+        AnalyticsService.shared.configureIfNeeded()
+        AnalyticsService.shared.logAppOpen(source: .coldStart)
+
         // Set notification delegate to handle notifications when app is in foreground
         UNUserNotificationCenter.current().delegate = self
         return true

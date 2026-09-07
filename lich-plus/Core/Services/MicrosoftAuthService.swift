@@ -61,6 +61,7 @@ class MicrosoftAuthService: ObservableObject {
             self.userEmail = result.account.username
             self.isSignedIn = true
             self.authError = nil
+            AnalyticsService.shared.logFeatureUsed(.microsoft_calendar_connect)
         } catch {
             self.authError = error
             throw error

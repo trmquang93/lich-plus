@@ -36,6 +36,7 @@ struct GoogleCalendarSettingsView: View {
                 Text(errorMessage)
             }
         }
+        .trackAnalyticsScreen(.google_calendar_settings)
     }
 
     // MARK: - Not Connected State

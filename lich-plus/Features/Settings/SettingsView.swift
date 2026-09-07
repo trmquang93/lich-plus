@@ -285,8 +285,12 @@ struct SettingsView: View {
                         }
                     }
                     .buttonStyle(.plain)
+                    .simultaneousGesture(TapGesture().onEnded {
+                        AnalyticsService.shared.logFeatureUsed(.share_app)
+                    })
 
                     Button {
+                        AnalyticsService.shared.logFeatureUsed(.rate_app)
                         requestReviewAction()
                     } label: {
                         HStack(spacing: AppTheme.spacing12) {
@@ -315,6 +319,7 @@ struct SettingsView: View {
             }
             .navigationTitle("Settings")
         }
+        .trackAnalyticsScreen(.settings)
     }
 }
 

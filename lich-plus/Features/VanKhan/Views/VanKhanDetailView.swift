@@ -164,6 +164,7 @@ struct VanKhanDetailView: View {
                 editingToken = nil
             }
         }
+        .trackAnalyticsScreen(.van_khan)
     }
 
     private struct PersistedOverrides: Codable {
@@ -582,6 +583,7 @@ struct VanKhanDetailView: View {
             slug: occasion.id
         )
         pdfURL = url
+        AnalyticsService.shared.logFeatureUsed(.van_khan_export_pdf)
     }
 }
 

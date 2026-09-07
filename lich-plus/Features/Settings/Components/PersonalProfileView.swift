@@ -29,6 +29,7 @@ struct PersonalProfileView: View {
         }
         .navigationTitle(String(localized: "Personal Profile"))
         .navigationBarTitleDisplayMode(.inline)
+        .trackAnalyticsScreen(.personal_profile)
         .sheet(isPresented: $showAddDeceasedSheet) {
             DeceasedRelativeEditor(profile: profile)
         }

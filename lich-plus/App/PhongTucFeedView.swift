@@ -46,6 +46,7 @@ struct PhongTucFeedView: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(.hidden, for: .navigationBar)
         }
+        .trackAnalyticsScreen(.customs)
     }
 
     private var screenHeader: some View {

@@ -87,6 +87,7 @@ struct GreetingGeneratorView: View {
                 copiedToast
             }
         }
+        .trackAnalyticsScreen(.greetings)
     }
     
     // MARK: - Recipient Section
@@ -441,12 +442,14 @@ struct GreetingGeneratorView: View {
                 await MainActor.run {
                     generatedGreeting = GeneratedGreeting(text: text, request: request)
                     isGenerating = false
+                    AnalyticsService.shared.logFeatureUsed(.greeting_generate)
                 }
             } catch {
                 await MainActor.run {
                     // Fallback to offline greeting
                     let offlineText = greetingService.generateOfflineGreeting(for: request)
                     generatedGreeting = GeneratedGreeting(text: offlineText, request: request)
+                    AnalyticsService.shared.logFeatureUsed(.greeting_generate)
                     isGenerating = false
                     
                     if !greetingService.isBackendConfigured {

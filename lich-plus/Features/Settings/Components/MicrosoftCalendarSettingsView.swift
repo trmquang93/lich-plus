@@ -36,6 +36,7 @@ struct MicrosoftCalendarSettingsView: View {
                 Text(errorMessage)
             }
         }
+        .trackAnalyticsScreen(.microsoft_calendar_settings)
     }
 
     // MARK: - Not Connected State

@@ -140,6 +140,7 @@ struct TasksView: View {
                 Button(String(localized: "OK"), role: .cancel) { }
             }
         }
+        .trackAnalyticsScreen(.timeline)
     }
 
     // MARK: - Methods

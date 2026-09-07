@@ -189,6 +189,7 @@ struct ICSCalendarSettingsView: View {
                 Text(message)
             }
         }
+        .trackAnalyticsScreen(.ics_calendar_settings)
     }
 
     // MARK: - Private Methods
