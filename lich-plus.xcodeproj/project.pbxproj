@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B1A2C3E22ED9000F00C1F1F6 /* LichPlusWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B1A2C3D82ED9000500C1F1F6 /* LichPlusWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4D01FCE02EDE8B99008DF610 /* ParallaxScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 4D01FCDF2EDE8B99008DF610 /* ParallaxScrollView */; };
 		7429BDE32F1D6DAE009519CF /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 7429BDE22F1D6DAE009519CF /* Auth */; };
 		7429BDE52F1D6DAE009519CF /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 7429BDE42F1D6DAE009519CF /* Functions */; };
@@ -18,6 +19,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		B1A2C3DF2ED9000C00C1F1F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DA45ECE2ED108FE00C1F1F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B1A2C3D72ED9000400C1F1F6;
+			remoteInfo = LichPlusWidgets;
+		};
 		4DA45EE62ED1090100C1F1F6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4DA45ECE2ED108FE00C1F1F6 /* Project object */;
@@ -32,6 +40,7 @@
 		20F724D6314ADC623454FBC8 /* Pods-lich-plusTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plusTests.release.xcconfig"; path = "Target Support Files/Pods-lich-plusTests/Pods-lich-plusTests.release.xcconfig"; sourceTree = "<group>"; };
 		4DA45ED62ED108FE00C1F1F6 /* lich-plus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "lich-plus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DA45EE52ED1090100C1F1F6 /* lich-plusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "lich-plusTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B1A2C3D82ED9000500C1F1F6 /* LichPlusWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LichPlusWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		53B38117964375E88CD6D9F0 /* Pods-lich-plus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plus.debug.xcconfig"; path = "Target Support Files/Pods-lich-plus/Pods-lich-plus.debug.xcconfig"; sourceTree = "<group>"; };
 		A9297472D9054D213B4F2E5A /* Pods-lich-plusTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plusTests.debug.xcconfig"; path = "Target Support Files/Pods-lich-plusTests/Pods-lich-plusTests.debug.xcconfig"; sourceTree = "<group>"; };
 		EB89303E18829DA587A5C91F /* libPods-lich-plus.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lich-plus.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -39,6 +48,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		B1A2C3D62ED9000300C1F1F6 /* Exceptions for "LichPlusWidgets" folder in "LichPlusWidgets" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = B1A2C3D72ED9000400C1F1F6 /* LichPlusWidgets */;
+		};
 		4DDBFDF22ED8F66900B892E0 /* Exceptions for "lich-plus" folder in "lich-plus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -51,6 +67,19 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		B1A2C3D42ED9000100C1F1F6 /* LichPlusShared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LichPlusShared;
+			sourceTree = "<group>";
+		};
+		B1A2C3D52ED9000200C1F1F6 /* LichPlusWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B1A2C3D62ED9000300C1F1F6 /* Exceptions for "LichPlusWidgets" folder in "LichPlusWidgets" target */,
+			);
+			path = LichPlusWidgets;
+			sourceTree = "<group>";
+		};
 		4DA45ED82ED108FE00C1F1F6 /* lich-plus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -89,6 +118,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B1A2C3DA2ED9000700C1F1F6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -96,6 +132,8 @@
 			isa = PBXGroup;
 			children = (
 				4DA45ED82ED108FE00C1F1F6 /* lich-plus */,
+				B1A2C3D52ED9000200C1F1F6 /* LichPlusWidgets */,
+				B1A2C3D42ED9000100C1F1F6 /* LichPlusShared */,
 				4DA45EE82ED1090100C1F1F6 /* lich-plusTests */,
 				4DA45ED72ED108FE00C1F1F6 /* Products */,
 				B61846DBCAB36AF202AC2C2A /* Pods */,
@@ -107,6 +145,7 @@
 			isa = PBXGroup;
 			children = (
 				4DA45ED62ED108FE00C1F1F6 /* lich-plus.app */,
+				B1A2C3D82ED9000500C1F1F6 /* LichPlusWidgets.appex */,
 				4DA45EE52ED1090100C1F1F6 /* lich-plusTests.xctest */,
 			);
 			name = Products;
@@ -143,15 +182,18 @@
 				4DA45ED22ED108FE00C1F1F6 /* Sources */,
 				4DA45ED32ED108FE00C1F1F6 /* Frameworks */,
 				4DA45ED42ED108FE00C1F1F6 /* Resources */,
+				B1A2C3E12ED9000E00C1F1F6 /* Embed Foundation Extensions */,
 				CA87253EA7F97BBDB9BBA9BA /* [CP] Copy Pods Resources */,
 				FBA6BDE62F1D6DAE009519CF /* Firebase Crashlytics */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				B1A2C3E02ED9000D00C1F1F6 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				4DA45ED82ED108FE00C1F1F6 /* lich-plus */,
+				B1A2C3D42ED9000100C1F1F6 /* LichPlusShared */,
 			);
 			name = "lich-plus";
 			productName = "lich-plus";
@@ -180,6 +222,27 @@
 			productReference = 4DA45EE52ED1090100C1F1F6 /* lich-plusTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		B1A2C3D72ED9000400C1F1F6 /* LichPlusWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B1A2C3DE2ED9000B00C1F1F6 /* Build configuration list for PBXNativeTarget "LichPlusWidgets" */;
+			buildPhases = (
+				B1A2C3D92ED9000600C1F1F6 /* Sources */,
+				B1A2C3DA2ED9000700C1F1F6 /* Frameworks */,
+				B1A2C3DB2ED9000800C1F1F6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				B1A2C3D52ED9000200C1F1F6 /* LichPlusWidgets */,
+				B1A2C3D42ED9000100C1F1F6 /* LichPlusShared */,
+			);
+			name = LichPlusWidgets;
+			productName = LichPlusWidgets;
+			productReference = B1A2C3D82ED9000500C1F1F6 /* LichPlusWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -196,6 +259,9 @@
 					4DA45EE42ED1090100C1F1F6 = {
 						CreatedOnToolsVersion = 26.0.1;
 						TestTargetID = 4DA45ED52ED108FE00C1F1F6;
+					};
+					B1A2C3D72ED9000400C1F1F6 = {
+						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
 			};
@@ -220,10 +286,25 @@
 			projectRoot = "";
 			targets = (
 				4DA45ED52ED108FE00C1F1F6 /* lich-plus */,
+				B1A2C3D72ED9000400C1F1F6 /* LichPlusWidgets */,
 				4DA45EE42ED1090100C1F1F6 /* lich-plusTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B1A2C3E12ED9000E00C1F1F6 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B1A2C3E22ED9000F00C1F1F6 /* LichPlusWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4DA45ED42ED108FE00C1F1F6 /* Resources */ = {
@@ -234,6 +315,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4DA45EE32ED1090100C1F1F6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B1A2C3DB2ED9000800C1F1F6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -349,9 +437,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B1A2C3D92ED9000600C1F1F6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		B1A2C3E02ED9000D00C1F1F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B1A2C3D72ED9000400C1F1F6 /* LichPlusWidgets */;
+			targetProxy = B1A2C3DF2ED9000C00C1F1F6 /* PBXContainerItemProxy */;
+		};
 		4DA45EE72ED1090100C1F1F6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4DA45ED52ED108FE00C1F1F6 /* lich-plus */;
@@ -613,6 +713,58 @@
 			};
 			name = Release;
 		};
+		B1A2C3DC2ED9000900C1F1F6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LichPlusWidgets/LichPlusWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WVYA86B7LC;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = LichPlusWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.qtran.lich-plus.widgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B1A2C3DD2ED9000A00C1F1F6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = LichPlusWidgets/LichPlusWidgets.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = WVYA86B7LC;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = LichPlusWidgets/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.qtran.lich-plus.widgets";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -639,6 +791,15 @@
 			buildConfigurations = (
 				4DA45EFD2ED1090100C1F1F6 /* Debug */,
 				4DA45EFE2ED1090100C1F1F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B1A2C3DE2ED9000B00C1F1F6 /* Build configuration list for PBXNativeTarget "LichPlusWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B1A2C3DC2ED9000900C1F1F6 /* Debug */,
+				B1A2C3DD2ED9000A00C1F1F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

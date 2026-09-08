@@ -39,7 +39,11 @@ struct lich_plusApp: App {
                     // Reschedule notifications on app launch
                     Task {
                         await notificationService.rescheduleAllNotifications()
+                        await WidgetInstallTracker.trackInstalledWidgetsIfNeeded()
                     }
+                    WidgetSnapshotCoordinator.shared.refresh(
+                        modelContext: PersistenceController.shared.container.mainContext
+                    )
                 }
         }
     }

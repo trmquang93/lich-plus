@@ -83,6 +83,7 @@ struct MainTabView: View {
             handleScenePhaseChange(from: oldPhase, to: newPhase)
             if newPhase == .active && oldPhase == .background {
                 AnalyticsService.shared.logAppOpen(source: .foreground)
+                WidgetSnapshotCoordinator.shared.refresh(modelContext: modelContext)
             }
         }
         // Handle Google Sign-In URL callback
@@ -106,6 +107,9 @@ struct MainTabView: View {
             initializeAutoSync()
             // Initialize background sync manager
             initializeBackgroundSync()
+            // Refresh privacy-safe widget snapshot
+            WidgetSnapshotCoordinator.shared.startObserving(modelContext: modelContext)
+            WidgetSnapshotCoordinator.shared.refresh(modelContext: modelContext)
         }
         .task {
             // Configure tab bar appearance

@@ -29,6 +29,7 @@ final class LanguageManager {
             markAsInitialized()
         } else {
             updateAppleLanguages()
+            WidgetAppGroup.sharedDefaults?.set(currentLanguage.rawValue, forKey: WidgetAppGroup.languageKey)
         }
     }
 
@@ -40,6 +41,7 @@ final class LanguageManager {
 
     private func saveLanguage() {
         UserDefaults.standard.set(currentLanguage.rawValue, forKey: languageKey)
+        WidgetAppGroup.sharedDefaults?.set(currentLanguage.rawValue, forKey: WidgetAppGroup.languageKey)
     }
 
     private func updateAppleLanguages() {
