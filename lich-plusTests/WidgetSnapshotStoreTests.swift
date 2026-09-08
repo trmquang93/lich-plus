@@ -29,7 +29,7 @@ final class WidgetSnapshotStoreTests: XCTestCase {
         )
 
         let snapshot = WidgetTimelineSnapshot(
-            generatedAt: Date(),
+            generatedAt: Date(timeIntervalSince1970: 1_700_000_001),
             localeCode: "vi",
             days: [day]
         )
