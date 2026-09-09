@@ -173,6 +173,45 @@ extension StarCalculator {
     }
 }
 
+// MARK: - Data Availability
+
+extension StarCalculator {
+    enum StarDataAvailability: Equatable, Sendable {
+        case complete
+        case monthPartial
+        case missingForDay
+    }
+
+    static func monthCompleteness(lunarMonth: Int) -> (completed: Int, total: Int) {
+        switch lunarMonth {
+        case 1: return Month1StarData.dataCompleteness
+        case 2: return Month2StarData.dataCompleteness
+        case 3: return Month3StarData.dataCompleteness
+        case 4: return Month4StarData.dataCompleteness
+        case 5: return Month5StarData.dataCompleteness
+        case 6: return Month6StarData.dataCompleteness
+        case 7: return Month7StarData.dataCompleteness
+        case 8: return Month8StarData.dataCompleteness
+        case 9: return Month9StarData.dataCompleteness
+        case 10: return Month10StarData.dataCompleteness
+        case 11: return Month11StarData.dataCompleteness
+        case 12: return Month12StarData.dataCompleteness
+        default: return (0, 60)
+        }
+    }
+
+    /// Whether star data is complete enough to give a confident purpose verdict.
+    static func dataAvailability(lunarMonth: Int, dayCanChi: String) -> StarDataAvailability {
+        let completeness = monthCompleteness(lunarMonth: lunarMonth)
+        let hasEntry = detectStars(lunarMonth: lunarMonth, dayCanChi: dayCanChi) != nil
+
+        if completeness.completed < completeness.total {
+            return hasEntry ? .monthPartial : .missingForDay
+        }
+        return hasEntry ? .complete : .missingForDay
+    }
+}
+
 // MARK: - Data Status
 
 extension StarCalculator {

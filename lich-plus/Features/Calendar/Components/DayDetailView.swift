@@ -85,6 +85,9 @@ struct DayDetailView: View {
                 // Day quality card
                 dayQualityCard
 
+                // Xem ngày cho việc
+                XemNgayCardView(date: day.date)
+
                 // Events card
                 eventsCard
 

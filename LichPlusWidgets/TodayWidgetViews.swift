@@ -54,6 +54,8 @@ private struct TodaySmallWidgetView: View {
 
                 if let chip = day.specialChips.first {
                     ChipView(title: chip)
+                } else if let lucky = day.luckyHourSummary {
+                    ChipView(title: WidgetLocalizedStrings.luckyHoursTitle(localeCode: entry.localeCode) + ": " + lucky)
                 } else if let holiday = nextHolidayLabel(for: day, localeCode: entry.localeCode) {
                     ChipView(title: holiday)
                 }
@@ -117,6 +119,20 @@ private struct TodayMediumWidgetView: View {
                         ChipView(title: chip)
                     }
 
+                    if let lucky = day.luckyHourSummary {
+                        HourChipView(
+                            title: WidgetLocalizedStrings.luckyHoursTitle(localeCode: entry.localeCode),
+                            detail: lucky
+                        )
+                    }
+
+                    if let avoid = day.avoidHourSummary {
+                        HourChipView(
+                            title: WidgetLocalizedStrings.avoidHoursTitle(localeCode: entry.localeCode),
+                            detail: avoid
+                        )
+                    }
+
                     if let holiday = nextHolidayLabel(for: day, localeCode: entry.localeCode) {
                         NextHolidayChipView(
                             title: holiday,
@@ -152,6 +168,10 @@ private struct TodayLockRectangularView: View {
                     Text(holiday)
                         .font(.caption2)
                         .lineLimit(1)
+                } else if let lucky = day.luckyHourSummary {
+                    Text(WidgetLocalizedStrings.luckyHoursTitle(localeCode: entry.localeCode) + ": " + lucky)
+                        .font(.caption2)
+                        .lineLimit(2)
                 } else {
                     Text(day.dayCanChi)
                         .font(.caption2)
@@ -196,6 +216,27 @@ private struct ChipView: View {
             .background(WidgetTheme.chipBackground)
             .clipShape(Capsule())
             .lineLimit(1)
+    }
+}
+
+private struct HourChipView: View {
+    let title: String
+    let detail: String
+
+    var body: some View {
+        VStack(alignment: .trailing, spacing: 2) {
+            Text(title)
+                .font(.caption2)
+                .foregroundStyle(WidgetTheme.textSecondary)
+            Text(detail)
+                .font(.caption2.weight(.semibold))
+                .foregroundStyle(WidgetTheme.chipText)
+                .multilineTextAlignment(.trailing)
+                .lineLimit(2)
+        }
+        .padding(8)
+        .background(WidgetTheme.chipBackground.opacity(0.7))
+        .clipShape(RoundedRectangle(cornerRadius: 10))
     }
 }
 

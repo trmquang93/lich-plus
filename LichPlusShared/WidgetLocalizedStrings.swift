@@ -41,4 +41,12 @@ enum WidgetLocalizedStrings {
         }
         return "\(daysUntil) days"
     }
+
+    static func luckyHoursTitle(localeCode: String) -> String {
+        localeCode == "vi" ? "Giờ tốt" : "Lucky hours"
+    }
+
+    static func avoidHoursTitle(localeCode: String) -> String {
+        localeCode == "vi" ? "Nên tránh" : "Avoid"
+    }
 }
