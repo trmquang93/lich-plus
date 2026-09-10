@@ -37,10 +37,11 @@ struct XemNgayCardView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(AppTheme.spacing16)
+        .elderModePadding(.all, AppTheme.spacing16)
         .background(AppColors.background)
         .cornerRadius(AppTheme.cornerRadiusLarge)
         .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
+        .accessibilityIdentifier("xemngay.card")
         .onChange(of: selectedPurpose) { _, _ in
             AnalyticsService.shared.logFeatureUsed(.xem_ngay)
         }
@@ -52,7 +53,7 @@ struct XemNgayCardView: View {
                 .font(.system(size: AppTheme.fontBody, weight: .semibold))
                 .foregroundStyle(AppColors.primary)
             Text(String(localized: "Check Day for Activity"))
-                .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                 .foregroundStyle(AppColors.textPrimary)
         }
     }
@@ -76,7 +77,7 @@ struct XemNgayCardView: View {
                 Image(systemName: purpose.iconName)
                     .font(.system(size: 12))
                 Text(purpose.displayName)
-                    .font(.system(size: AppTheme.fontCaption, weight: .medium))
+                    .elderModeFont(size: AppTheme.fontCaption, weight: .medium)
             }
             .padding(.horizontal, AppTheme.spacing12)
             .padding(.vertical, AppTheme.spacing8)
@@ -89,12 +90,13 @@ struct XemNgayCardView: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("xemngay.purpose.\(purpose.id)")
     }
 
     private var verdictSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing8) {
             Text(verdict.summary)
-                .font(.system(size: AppTheme.fontBody, weight: .semibold))
+                .elderModeFont(size: AppTheme.fontBody, weight: .semibold)
                 .foregroundStyle(statusColor)
 
             if verdict.isStarDataIncomplete || verdict.status == .incomplete {
@@ -103,7 +105,7 @@ struct XemNgayCardView: View {
 
             ForEach(Array(verdict.reasons.prefix(4).enumerated()), id: \.offset) { _, reason in
                 Text(reason)
-                    .font(.system(size: AppTheme.fontCaption))
+                    .elderModeFont(size: AppTheme.fontCaption)
                     .foregroundStyle(AppColors.textSecondary)
             }
         }
@@ -114,7 +116,7 @@ struct XemNgayCardView: View {
             Image(systemName: "exclamationmark.triangle.fill")
                 .foregroundStyle(AppColors.secondary)
             Text(String(localized: "Star data for this lunar month is incomplete. Verdict uses 12 Trực and Hoàng Đạo only."))
-                .font(.system(size: AppTheme.fontCaption))
+                .elderModeFont(size: AppTheme.fontCaption)
                 .foregroundStyle(AppColors.textSecondary)
         }
         .padding(AppTheme.spacing12)
@@ -129,14 +131,14 @@ struct XemNgayCardView: View {
                 .font(.system(size: 14))
                 .foregroundStyle(AppColors.accent)
             Text(hint)
-                .font(.system(size: AppTheme.fontCaption))
+                .elderModeFont(size: AppTheme.fontCaption)
                 .foregroundStyle(AppColors.textSecondary)
         }
     }
 
     private var xungBadge: some View {
         Text(String(localized: "Birth year clash day"))
-            .font(.system(size: AppTheme.fontCaption, weight: .semibold))
+            .elderModeFont(size: AppTheme.fontCaption, weight: .semibold)
             .foregroundStyle(AppColors.white)
             .padding(.horizontal, AppTheme.spacing12)
             .padding(.vertical, AppTheme.spacing4)

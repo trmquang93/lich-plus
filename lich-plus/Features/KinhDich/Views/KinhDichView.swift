@@ -37,7 +37,7 @@ struct KinhDichView: View {
     private var introSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing8) {
             Text(String(localized: "Gieo 3 đồng sáu lần để lấy một quẻ. Chỉ mang tính tham khảo — không thay lời khuyên chuyên môn."))
-                .font(.system(size: AppTheme.fontBody))
+                .elderModeFont(size: AppTheme.fontBody)
                 .foregroundStyle(AppColors.textSecondary)
         }
     }
@@ -45,7 +45,7 @@ struct KinhDichView: View {
     private var questionSection: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing8) {
             Text(String(localized: "Optional question (kept on device only)"))
-                .font(.system(size: AppTheme.fontCaption, weight: .semibold))
+                .elderModeFont(size: AppTheme.fontCaption, weight: .semibold)
                 .foregroundStyle(AppColors.textSecondary)
             TextField(String(localized: "What is on your mind?"), text: $question, axis: .vertical)
                 .lineLimit(2...4)
@@ -57,11 +57,12 @@ struct KinhDichView: View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
             HStack {
                 Text(String(format: String(localized: "Toss %lld of 6"), min(tossResults.count + 1, 6)))
-                    .font(.system(size: AppTheme.fontSubheading, weight: .semibold))
+                    .elderModeFont(size: AppTheme.fontSubheading, weight: .semibold)
                 Spacer()
                 if canReset {
                     Button(String(localized: "Reset")) { reset() }
-                        .font(.system(size: AppTheme.fontBody, weight: .medium))
+                        .elderModeFont(size: AppTheme.fontBody, weight: .medium)
+                        .accessibilityIdentifier("kinhdich.reset")
                 }
             }
 
@@ -83,6 +84,7 @@ struct KinhDichView: View {
             .buttonStyle(.borderedProminent)
             .tint(AppColors.primary)
             .disabled(!canToss)
+            .accessibilityIdentifier("kinhdich.toss")
         }
         .padding(AppTheme.spacing16)
         .background(AppColors.background)
@@ -109,20 +111,20 @@ struct KinhDichView: View {
     private func resultSection(_ reading: KinhDichReading) -> some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
             Text(reading.hexagram.name)
-                .font(.system(size: AppTheme.fontTitle2, weight: .bold, design: .serif))
+                .elderModeFont(size: AppTheme.fontTitle2, weight: .bold, design: .serif)
                 .foregroundStyle(AppColors.primaryDark)
 
             Text(String(localized: "Lời bàn"))
-                .font(.system(size: AppTheme.fontCaption, weight: .semibold))
+                .elderModeFont(size: AppTheme.fontCaption, weight: .semibold)
                 .foregroundStyle(AppColors.textSecondary)
 
             Text(reading.summary)
-                .font(.system(size: AppTheme.fontBody))
+                .elderModeFont(size: AppTheme.fontBody)
                 .foregroundStyle(AppColors.textPrimary)
 
             if let note = reading.changingNote {
                 Text(note)
-                    .font(.system(size: AppTheme.fontCaption))
+                    .elderModeFont(size: AppTheme.fontCaption)
                     .foregroundStyle(AppColors.textSecondary)
             }
         }
@@ -133,6 +135,7 @@ struct KinhDichView: View {
             RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge)
                 .strokeBorder(AppColors.vkGoldSoft, lineWidth: 1)
         )
+        .accessibilityIdentifier("kinhdich.result")
         .onAppear {
             AnalyticsService.shared.logFeatureUsed(.xem_que)
         }

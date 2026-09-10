@@ -183,32 +183,39 @@ extension StarCalculator {
     }
 
     static func monthCompleteness(lunarMonth: Int) -> (completed: Int, total: Int) {
-        switch lunarMonth {
-        case 1: return Month1StarData.dataCompleteness
-        case 2: return Month2StarData.dataCompleteness
-        case 3: return Month3StarData.dataCompleteness
-        case 4: return Month4StarData.dataCompleteness
-        case 5: return Month5StarData.dataCompleteness
-        case 6: return Month6StarData.dataCompleteness
-        case 7: return Month7StarData.dataCompleteness
-        case 8: return Month8StarData.dataCompleteness
-        case 9: return Month9StarData.dataCompleteness
-        case 10: return Month10StarData.dataCompleteness
-        case 11: return Month11StarData.dataCompleteness
-        case 12: return Month12StarData.dataCompleteness
-        default: return (0, 60)
-        }
+        let populated = monthData(lunarMonth)?.dayData.values.filter(\.hasAnyStars).count ?? 0
+        return (populated, 60)
     }
 
     /// Whether star data is complete enough to give a confident purpose verdict.
+    /// Empty placeholder entries (no good or bad stars) are not treated as complete.
     static func dataAvailability(lunarMonth: Int, dayCanChi: String) -> StarDataAvailability {
         let completeness = monthCompleteness(lunarMonth: lunarMonth)
-        let hasEntry = detectStars(lunarMonth: lunarMonth, dayCanChi: dayCanChi) != nil
+        let starData = detectStars(lunarMonth: lunarMonth, dayCanChi: dayCanChi)
+        let hasRealStars = starData?.hasAnyStars ?? false
 
         if completeness.completed < completeness.total {
-            return hasEntry ? .monthPartial : .missingForDay
+            return hasRealStars ? .monthPartial : .missingForDay
         }
-        return hasEntry ? .complete : .missingForDay
+        return starData != nil ? .complete : .missingForDay
+    }
+
+    private static func monthData(_ lunarMonth: Int) -> MonthStarData? {
+        switch lunarMonth {
+        case 1: return Month1StarData.data
+        case 2: return Month2StarData.data
+        case 3: return Month3StarData.data
+        case 4: return Month4StarData.data
+        case 5: return Month5StarData.data
+        case 6: return Month6StarData.data
+        case 7: return Month7StarData.data
+        case 8: return Month8StarData.data
+        case 9: return Month9StarData.data
+        case 10: return Month10StarData.data
+        case 11: return Month11StarData.data
+        case 12: return Month12StarData.data
+        default: return nil
+        }
     }
 }
 

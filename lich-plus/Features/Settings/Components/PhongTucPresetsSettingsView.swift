@@ -18,7 +18,7 @@ struct PhongTucPresetsSettingsView: View {
         List {
             Section {
                 Text(String(localized: "Automatic monthly reminders for traditional lunar days. No need to create recurring events by hand."))
-                    .font(.caption)
+                    .elderModeFont(size: AppTheme.fontCaption)
                     .foregroundStyle(AppColors.textSecondary)
             }
 
@@ -81,6 +81,7 @@ struct PhongTucPresetsSettingsView: View {
             }
         }
         .navigationTitle(String(localized: "Phong tục presets"))
+        .accessibilityIdentifier("phongtuc.presets.screen")
         .onAppear {
             settings = notificationService.getSettings()
             AnalyticsService.shared.logFeatureUsed(.gio_reminder_preset)
@@ -93,9 +94,10 @@ struct PhongTucPresetsSettingsView: View {
         Toggle(isOn: isOn) {
             VStack(alignment: .leading, spacing: AppTheme.spacing2) {
                 Text(title)
+                    .elderModeFont(size: AppTheme.fontBody)
                     .foregroundStyle(AppColors.textPrimary)
                 Text(subtitle)
-                    .font(.caption)
+                    .elderModeFont(size: AppTheme.fontCaption)
                     .foregroundStyle(AppColors.textSecondary)
             }
         }

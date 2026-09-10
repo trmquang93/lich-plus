@@ -134,6 +134,11 @@ struct DayStarData: Equatable {
         let badScore = badStars.reduce(0.0) { $0 + $1.score }
         return goodScore + badScore  // badScore is negative
     }
+
+    /// True when this entry lists at least one extracted star (not an empty placeholder).
+    var hasAnyStars: Bool {
+        !goodStars.isEmpty || !badStars.isEmpty
+    }
 }
 
 // MARK: - Month Star Data

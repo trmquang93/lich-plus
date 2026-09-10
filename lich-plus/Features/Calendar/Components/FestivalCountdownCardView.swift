@@ -20,7 +20,7 @@ struct FestivalCountdownCardView: View {
                 Image(systemName: "sparkles")
                     .foregroundStyle(AppColors.hoangDaoGold)
                 Text(String(localized: "Upcoming festivals"))
-                    .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                    .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                     .foregroundStyle(AppColors.textPrimary)
             }
 
@@ -28,15 +28,15 @@ struct FestivalCountdownCardView: View {
                 HStack(alignment: .firstTextBaseline) {
                     VStack(alignment: .leading, spacing: AppTheme.spacing2) {
                         Text(entry.title)
-                            .font(.system(size: AppTheme.fontBody, weight: .semibold))
+                            .elderModeFont(size: AppTheme.fontBody, weight: .semibold)
                             .foregroundStyle(AppColors.textPrimary)
                         Text(entry.solarDateLabel)
-                            .font(.system(size: AppTheme.fontCaption))
+                            .elderModeFont(size: AppTheme.fontCaption)
                             .foregroundStyle(AppColors.textSecondary)
                     }
                     Spacer(minLength: AppTheme.spacing8)
                     Text(entry.daysLabel)
-                        .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                        .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                         .foregroundStyle(entry.isTet ? AppColors.primary : AppColors.accent)
                 }
                 if entry.id != entries.last?.id {
@@ -45,9 +45,10 @@ struct FestivalCountdownCardView: View {
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(AppTheme.spacing16)
+        .elderModePadding(.all, AppTheme.spacing16)
         .background(AppColors.backgroundLight)
         .clipShape(RoundedRectangle(cornerRadius: AppTheme.cornerRadiusLarge))
+        .accessibilityIdentifier("festival.countdown")
         .onAppear {
             AnalyticsService.shared.logFeatureUsed(.tet_countdown)
         }

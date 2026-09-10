@@ -29,9 +29,10 @@ struct TodayHighlightsSection: View {
             .buttonStyle(.plain)
             .padding(.horizontal, 16)
             .padding(.top, 16)
+            .accessibilityIdentifier(match.occasion.id == "gio" ? "gio.hero" : "phongtuc.hero")
 
             if match.occasion.id == "gio" {
-                GioPreparationChecklistView()
+                GioPreparationChecklistView(relativeId: match.deceasedRelative?.id)
                     .padding(.horizontal, 16)
                     .padding(.top, 12)
             }
@@ -43,28 +44,28 @@ struct TodayHighlightsSection: View {
     private func hero(for match: VanKhanOccasionMatcher.Match) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(kickerText)
-                .font(.system(size: 11, weight: .semibold))
+                .elderModeFont(size: 11, weight: .semibold)
                 .tracking(1.2)
                 .textCase(.uppercase)
                 .foregroundStyle(AppColors.vkGoldSoft)
 
             Text(heroTitle(for: match))
-                .font(.system(size: 26, weight: .semibold, design: .serif))
+                .elderModeFont(size: 26, weight: .semibold, design: .serif)
                 .foregroundStyle(.white)
                 .lineLimit(2)
                 .multilineTextAlignment(.leading)
                 .padding(.top, 2)
 
             Text(heroSubtitle(for: match))
-                .font(.system(size: 14))
+                .elderModeFont(size: 14)
                 .foregroundStyle(Color.white.opacity(0.78))
                 .padding(.top, 2)
 
             HStack(spacing: 6) {
                 Text(String(localized: "Xem gợi ý hôm nay"))
-                    .font(.system(size: 14, weight: .semibold))
+                    .elderModeFont(size: 14, weight: .semibold)
                 Image(systemName: "arrow.right")
-                    .font(.system(size: 12, weight: .bold))
+                    .elderModeFont(size: 12, weight: .bold)
             }
             .foregroundStyle(AppColors.primaryDark)
             .padding(.horizontal, 16)

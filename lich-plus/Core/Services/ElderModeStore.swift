@@ -51,18 +51,24 @@ struct ElderModeFontModifier: ViewModifier {
     @Environment(\.elderModeEnabled) private var elderModeEnabled
     let baseSize: CGFloat
     let weight: Font.Weight
+    let design: Font.Design
 
     func body(content: Content) -> some View {
         content.font(.system(
             size: baseSize * (elderModeEnabled ? 1.22 : 1.0),
-            weight: weight
+            weight: weight,
+            design: design
         ))
     }
 }
 
 extension View {
-    func elderModeFont(size: CGFloat, weight: Font.Weight = .regular) -> some View {
-        modifier(ElderModeFontModifier(baseSize: size, weight: weight))
+    func elderModeFont(
+        size: CGFloat,
+        weight: Font.Weight = .regular,
+        design: Font.Design = .default
+    ) -> some View {
+        modifier(ElderModeFontModifier(baseSize: size, weight: weight, design: design))
     }
 
     func elderModePadding(_ edges: Edge.Set = .all, _ length: CGFloat) -> some View {

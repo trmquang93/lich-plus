@@ -127,13 +127,13 @@ struct CalendarDayCell: View {
 
             // Solar date (large)
             Text(day.displaySolar)
-                .font(.system(size: AppTheme.fontSubheading, weight: .bold))
+                .elderModeFont(size: AppTheme.fontSubheading, weight: .bold)
                 .foregroundStyle(
                     day.isWeekend && day.isCurrentMonth ? AppColors.primary : textColor)
 
             // Lunar date (small, faint)
             Text(day.displayLunar)
-                .font(.system(size: 9, weight: .regular))
+                .elderModeFont(size: 9, weight: .regular)
                 .foregroundStyle(AppColors.textSecondary.opacity(0.6))
                 .lineLimit(1)
 

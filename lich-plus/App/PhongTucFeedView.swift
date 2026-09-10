@@ -57,11 +57,11 @@ struct PhongTucFeedView: View {
     private var screenHeader: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(String(localized: "Phong tục"))
-                .font(.system(size: 34, weight: .semibold, design: .serif))
+                .elderModeFont(size: 34, weight: .semibold, design: .serif)
                 .foregroundStyle(AppColors.primaryDark)
                 .tracking(-0.4)
             Text(String(localized: "Lời chúc và văn khấn cổ truyền — gợi ý theo ngày âm lịch của bạn."))
-                .font(.system(size: 15))
+                .elderModeFont(size: 15)
                 .foregroundStyle(AppColors.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -73,13 +73,13 @@ struct PhongTucFeedView: View {
     private var searchBar: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
-                .font(.system(size: 14, weight: .regular))
+                .elderModeFont(size: 14, weight: .regular)
                 .foregroundStyle(AppColors.textDisabled)
             TextField(
                 String(localized: "Tìm lời chúc, bài khấn…"),
                 text: $searchText
             )
-            .font(.system(size: 15))
+            .elderModeFont(size: 15)
             .foregroundStyle(AppColors.textPrimary)
             .textInputAutocapitalization(.never)
             .autocorrectionDisabled(true)
@@ -114,14 +114,14 @@ struct PhongTucFeedView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .firstTextBaseline) {
                 Text(String(localized: "Lời chúc"))
-                    .font(.system(size: 13, weight: .semibold))
+                    .elderModeFont(size: 13, weight: .semibold)
                     .tracking(0.6)
                     .textCase(.uppercase)
                     .foregroundStyle(AppColors.textSecondary)
                 Spacer()
                 if !isSearching {
                     Text(String(localized: "Xem tất cả"))
-                        .font(.system(size: 13, weight: .medium))
+                        .elderModeFont(size: 13, weight: .medium)
                         .foregroundStyle(AppColors.primary)
                 }
             }
@@ -221,7 +221,7 @@ struct PhongTucFeedView: View {
     private var phongTucToolsSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(String(localized: "Tiện ích"))
-                .font(.system(size: 13, weight: .semibold))
+                .elderModeFont(size: 13, weight: .semibold)
                 .tracking(0.6)
                 .textCase(.uppercase)
                 .foregroundStyle(AppColors.textSecondary)
@@ -252,6 +252,7 @@ struct PhongTucFeedView: View {
                     )
                 }
                 .buttonStyle(.plain)
+                .accessibilityIdentifier("phongtuc.presets")
             }
             .background(
                 RoundedRectangle(cornerRadius: 16)
@@ -273,10 +274,10 @@ struct PhongTucFeedView: View {
             }
             VStack(alignment: .leading, spacing: 2) {
                 Text(title)
-                    .font(.system(size: 16, weight: .medium))
+                    .elderModeFont(size: 16, weight: .medium)
                     .foregroundStyle(AppColors.textPrimary)
                 Text(subtitle)
-                    .font(.system(size: 13))
+                    .elderModeFont(size: 13)
                     .foregroundStyle(AppColors.textSecondary)
             }
             Spacer()
@@ -294,10 +295,10 @@ struct PhongTucFeedView: View {
                 .font(.system(size: 28, weight: .light))
                 .foregroundStyle(AppColors.textDisabled)
             Text(String(localized: "Không có kết quả"))
-                .font(.system(size: 15, weight: .medium))
+                .elderModeFont(size: 15, weight: .medium)
                 .foregroundStyle(AppColors.textPrimary)
             Text(String(localized: "Thử từ khoá khác."))
-                .font(.system(size: 13))
+                .elderModeFont(size: 13)
                 .foregroundStyle(AppColors.textSecondary)
         }
         .frame(maxWidth: .infinity)
@@ -316,10 +317,10 @@ struct PhongTucFeedView: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.title)
-                    .font(.system(size: 17, weight: .medium))
+                    .elderModeFont(size: 17, weight: .medium)
                     .foregroundStyle(AppColors.textPrimary)
                 Text(item.subtitle)
-                    .font(.system(size: 13))
+                    .elderModeFont(size: 13)
                     .foregroundStyle(AppColors.textSecondary)
             }
             Spacer(minLength: 8)

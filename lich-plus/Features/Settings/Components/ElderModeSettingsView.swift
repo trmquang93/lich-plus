@@ -15,6 +15,7 @@ struct ElderModeSettingsView: View {
                     get: { elderMode.isEnabled },
                     set: { elderMode.setEnabled($0) }
                 ))
+                .accessibilityIdentifier("elder.mode.toggle")
             } footer: {
                 Text(String(localized: "Enlarges text and spacing across the app. Respects system Dynamic Type where possible."))
             }

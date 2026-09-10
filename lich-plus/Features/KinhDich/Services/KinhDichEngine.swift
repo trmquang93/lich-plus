@@ -33,7 +33,7 @@ struct KinhDichReading: Equatable {
 enum KinhDichEngine {
     /// Simulates one three-coin toss (2 = heads/yang, 3 = tails/yin per coin).
     static func tossCoins(rng: inout some RandomNumberGenerator) -> KinhDichLineValue {
-        let sum = (0..<3).map { _ in rng.next() ? 2 : 3 }.reduce(0, +)
+        let sum = (0..<3).map { _ in Bool.random(using: &rng) ? 2 : 3 }.reduce(0, +)
         return KinhDichLineValue(rawValue: sum) ?? .youngYin
     }
 
@@ -48,7 +48,12 @@ enum KinhDichEngine {
         return KinhDichReading(lines: lines, hexagram: hexagram, changingLineIndices: changing)
     }
 
-    static func randomReading(rng: inout some RandomNumberGenerator = SystemRandomNumberGenerator()) -> KinhDichReading {
+    static func randomReading() -> KinhDichReading {
+        var rng = SystemRandomNumberGenerator()
+        return randomReading(rng: &rng)
+    }
+
+    static func randomReading(rng: inout some RandomNumberGenerator) -> KinhDichReading {
         let lines = (0..<6).map { _ in tossCoins(rng: &rng) }
         return reading(from: lines)!
     }
