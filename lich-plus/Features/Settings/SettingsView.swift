@@ -87,6 +87,28 @@ struct SettingsView: View {
                             Spacer()
                         }
                     }
+                    NavigationLink {
+                        BirthYearSettingsView()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "calendar.badge.clock")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text(String(localized: "Birth Year"))
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(String(localized: "Tuổi hợp / xung for xem ngày"))
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
                 } header: {
                     Text("Preferences")
                 }

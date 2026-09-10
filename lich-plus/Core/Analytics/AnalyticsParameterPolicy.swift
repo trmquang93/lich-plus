@@ -46,6 +46,8 @@ enum AnalyticsParameterPolicy {
         "email",
         "password",
         "token",
+        "birth",
+        "birthyear",
     ]
 
     static func isAllowedEventName(_ name: String) -> Bool {

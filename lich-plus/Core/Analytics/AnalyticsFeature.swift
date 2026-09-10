@@ -18,4 +18,7 @@ enum AnalyticsFeature: String, CaseIterable, Sendable {
     case rate_app
     case greeting_generate
     case van_khan_export_pdf
+    case xem_ngay
+    case xuat_hanh
+    case birth_year_setting
 }

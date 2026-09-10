@@ -74,6 +74,7 @@ enum WidgetSnapshotWriter {
             lunarDay: lunar.day,
             lunarMonth: lunar.month
         )
+        let xuatHanh = XuatHanhSummary.forDate(date)
 
         let daysUntil = nextHoliday.map {
             PublicHolidayCatalog.daysUntil(from: referenceDate, to: $0.solarDate, calendar: vietnameseCalendar)
@@ -91,7 +92,9 @@ enum WidgetSnapshotWriter {
             specialChips: chips,
             nextHolidayTitle: nextHoliday?.title,
             nextHolidayDate: nextHoliday?.solarDate,
-            nextHolidayDaysUntil: daysUntil
+            nextHolidayDaysUntil: daysUntil,
+            luckyHourSummary: xuatHanh.luckySummary.isEmpty ? nil : xuatHanh.luckySummary,
+            avoidHourSummary: xuatHanh.avoidSummary.isEmpty ? nil : xuatHanh.avoidSummary
         )
     }
 
