@@ -41,6 +41,7 @@ struct XemNgayCardView: View {
         .background(AppColors.background)
         .cornerRadius(AppTheme.cornerRadiusLarge)
         .shadow(color: .black.opacity(0.05), radius: 2, x: 0, y: 1)
+        .accessibilityIdentifier("xem-ngay-card")
         .onChange(of: selectedPurpose) { _, _ in
             AnalyticsService.shared.logFeatureUsed(.xem_ngay)
         }
@@ -89,6 +90,7 @@ struct XemNgayCardView: View {
             )
         }
         .buttonStyle(.plain)
+        .accessibilityIdentifier("xem-ngay-purpose-\(purpose.rawValue)")
     }
 
     private var verdictSection: some View {
@@ -107,6 +109,7 @@ struct XemNgayCardView: View {
                     .foregroundStyle(AppColors.textSecondary)
             }
         }
+        .accessibilityIdentifier("xem-ngay-verdict")
     }
 
     private var incompleteBanner: some View {

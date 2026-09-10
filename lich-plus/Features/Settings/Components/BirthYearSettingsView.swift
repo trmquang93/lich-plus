@@ -21,6 +21,7 @@ struct BirthYearSettingsView: View {
         Form {
             Section {
                 Toggle(String(localized: "Use birth year"), isOn: $isEnabled)
+                    .accessibilityIdentifier("birth-year-toggle")
                     .onChange(of: isEnabled) { _, enabled in
                         if enabled {
                             birthYearStore.setBirthYear(draftYear)
@@ -51,9 +52,10 @@ struct BirthYearSettingsView: View {
             } header: {
                 Text(String(localized: "Birth Year"))
             } footer: {
-                Text(String(localized: "Stored on this device only. Used for ngày xung tuổi and Ngũ hành hints in xem ngày. Never uploaded or sent to analytics."))
+                Text(String(localized: "Stored on this device only. This is the lunar year used for Can-Chi. Used for ngày xung tuổi and Ngũ hành hints in xem ngày. Never uploaded or sent to analytics."))
             }
         }
+        .accessibilityIdentifier("settings-birth-year")
         .navigationTitle(String(localized: "Birth Year"))
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {

@@ -17,8 +17,11 @@ final class BirthYearStore: ObservableObject {
 
     @Published private(set) var birthYear: Int?
 
-    private init() {
-        let stored = UserDefaults.standard.object(forKey: Self.storageKey) as? Int
+    private let defaults: UserDefaults
+
+    init(defaults: UserDefaults = .standard) {
+        self.defaults = defaults
+        let stored = defaults.object(forKey: Self.storageKey) as? Int
         if let stored, (1920...2100).contains(stored) {
             birthYear = stored
         } else {
@@ -28,10 +31,10 @@ final class BirthYearStore: ObservableObject {
 
     func setBirthYear(_ year: Int?) {
         if let year, (1920...2100).contains(year) {
-            UserDefaults.standard.set(year, forKey: Self.storageKey)
+            defaults.set(year, forKey: Self.storageKey)
             birthYear = year
         } else {
-            UserDefaults.standard.removeObject(forKey: Self.storageKey)
+            defaults.removeObject(forKey: Self.storageKey)
             birthYear = nil
         }
     }

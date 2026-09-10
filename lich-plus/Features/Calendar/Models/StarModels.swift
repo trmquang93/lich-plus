@@ -128,6 +128,11 @@ struct DayStarData: Equatable {
     let goodStars: [GoodStar]
     let badStars: [ExtendedBadStar]
 
+    /// Empty placeholder rows (padded months) have no catalogued stars.
+    var hasStars: Bool {
+        !goodStars.isEmpty || !badStars.isEmpty
+    }
+
     /// Calculate the net score from stars
     var netScore: Double {
         let goodScore = goodStars.reduce(0.0) { $0 + $1.score }

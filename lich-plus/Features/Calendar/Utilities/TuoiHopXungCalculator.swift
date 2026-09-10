@@ -17,8 +17,8 @@ struct TuoiHopXungCalculator {
         var reason: String {
             String(
                 format: String(localized: "Day clashes with birth year (%@ xung %@)"),
-                dayChi.vietnameseName,
-                conflictingChi.vietnameseName
+                birthYearChi.vietnameseName,
+                dayChi.vietnameseName
             )
         }
     }

@@ -47,6 +47,7 @@ struct TodayXuatHanhCardView: View {
         .padding(AppTheme.spacing16)
         .background(AppColors.accentLight)
         .cornerRadius(AppTheme.cornerRadiusLarge)
+        .accessibilityIdentifier("today-xuat-hanh-card")
         .onAppear {
             AnalyticsService.shared.logFeatureUsed(.xuat_hanh)
         }

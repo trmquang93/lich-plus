@@ -25,6 +25,21 @@ final class TuoiHopXungCalculatorTests: XCTestCase {
         XCTAssertEqual(xung?.conflictingChi, .ngo)
     }
 
+    func testXungReasonNamesBirthYearChiAndDayChi() throws {
+        // WHY: user must see which natal branch clashes with the day (not "Ngọ xung Ngọ")
+        let xung = TuoiHopXungCalculator.isXungDay(birthYear: 1996, dayChi: .ngo)
+        let reason = try XCTUnwrap(xung?.reason)
+
+        XCTAssertEqual(xung?.birthYearChi, .ty)
+        XCTAssertEqual(xung?.dayChi, .ngo)
+        XCTAssertTrue(reason.contains("Tý"), "reason must name natal chi, got \(reason)")
+        XCTAssertTrue(reason.contains("Ngọ"), "reason must name day chi, got \(reason)")
+        XCTAssertFalse(
+            reason.contains("Ngọ xung Ngọ"),
+            "clash copy must not repeat the day chi as both sides, got \(reason)"
+        )
+    }
+
     func testNguHanhHintForXungDay() {
         let hint = TuoiHopXungCalculator.nguHanhHint(
             birthYear: 1990,

@@ -4364,6 +4364,550 @@
           }
         }
       }
+    },
+    "12 Trực and Hoàng Đạo hours are still shown below." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 Trực and Hoàng Đạo hours are still shown below."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 Trực và giờ Hoàng Đạo vẫn được hiển thị bên dưới."
+          }
+        }
+      }
+    },
+    "12 Trực: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 Trực: %@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 Trực: %@"
+          }
+        }
+      }
+    },
+    "Ancestor Worship" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ancestor Worship"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cúng giỗ"
+          }
+        }
+      }
+    },
+    "Avoid for this activity" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avoid for this activity"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nên tránh việc này"
+          }
+        }
+      }
+    },
+    "Based on today's Can-Chi and giờ hoàng đạo table." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Based on today's Can-Chi and giờ hoàng đạo table."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dựa trên Can-Chi hôm nay và bảng giờ hoàng đạo."
+          }
+        }
+      }
+    },
+    "Birth Year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birth Year"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Năm sinh"
+          }
+        }
+      }
+    },
+    "Birth year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birth year"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Năm sinh"
+          }
+        }
+      }
+    },
+    "Birth year clash" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birth year clash"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xung năm sinh"
+          }
+        }
+      }
+    },
+    "Birth year clash day" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birth year clash day"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày xung tuổi"
+          }
+        }
+      }
+    },
+    "Check Day for Activity" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check Day for Activity"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem ngày cho việc"
+          }
+        }
+      }
+    },
+    "Clashing day — favor %@ colors/elements (supports your %@ year)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clashing day — favor %1$@ colors/elements (supports your %2$@ year)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày xung — nên dùng màu/hành %1$@ (hỗ trợ năm %2$@ của bạn)"
+          }
+        }
+      }
+    },
+    "Day %@ may pressure your %@ birth element — proceed carefully" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day %1$@ may pressure your %2$@ birth element — proceed carefully"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hành %1$@ của ngày có thể khắc hành %2$@ năm sinh — nên thận trọng"
+          }
+        }
+      }
+    },
+    "Day %@ nourishes your %@ birth element" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day %1$@ nourishes your %2$@ birth element"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hành %1$@ của ngày sinh trợ cho hành %2$@ năm sinh"
+          }
+        }
+      }
+    },
+    "Day clashes with birth year (%@ xung %@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day clashes with birth year (%1$@ xung %2$@)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày xung với năm sinh (%1$@ xung %2$@)"
+          }
+        }
+      }
+    },
+    "Day element %@ with birth element %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day element %1$@ with birth element %2$@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hành ngày %1$@ với hành năm sinh %2$@"
+          }
+        }
+      }
+    },
+    "Good for this activity" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good for this activity"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tốt cho việc này"
+          }
+        }
+      }
+    },
+    "Grand Opening" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grand Opening"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khai trương"
+          }
+        }
+      }
+    },
+    "Groundbreaking" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Groundbreaking"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Động thổ"
+          }
+        }
+      }
+    },
+    "Hours to Avoid" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hours to Avoid"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giờ nên tránh"
+          }
+        }
+      }
+    },
+    "Partial star data" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partial star data"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dữ liệu sao chưa đủ"
+          }
+        }
+      }
+    },
+    "Same element (%@) — harmonious for your birth year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same element (%@) — harmonious for your birth year"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cùng ngũ hành (%@) — hòa hợp với năm sinh"
+          }
+        }
+      }
+    },
+    "Signing Contract" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signing Contract"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ký hợp đồng"
+          }
+        }
+      }
+    },
+    "Star data for lunar month %lld is incomplete — no entry for %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Star data for lunar month %1$lld is incomplete — no entry for %2$@."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dữ liệu sao tháng âm %1$lld chưa đủ — không có mục cho %2$@."
+          }
+        }
+      }
+    },
+    "Star data for this lunar month is incomplete. Verdict uses 12 Trực and Hoàng Đạo only." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Star data for this lunar month is incomplete. Verdict uses 12 Trực and Hoàng Đạo only."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dữ liệu sao tháng âm này chưa đủ. Kết luận chỉ dùng 12 Trực và Hoàng Đạo."
+          }
+        }
+      }
+    },
+    "Star data incomplete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Star data incomplete"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thiếu dữ liệu sao"
+          }
+        }
+      }
+    },
+    "Star table for lunar month %lld is partially complete." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Star table for lunar month %lld is partially complete."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bảng sao tháng âm %lld mới có một phần."
+          }
+        }
+      }
+    },
+    "Stored on this device only. This is the lunar year used for Can-Chi. Used for ngày xung tuổi and Ngũ hành hints in xem ngày. Never uploaded or sent to analytics." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stored on this device only. This is the lunar year used for Can-Chi. Used for ngày xung tuổi and Ngũ hành hints in xem ngày. Never uploaded or sent to analytics."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chỉ lưu trên thiết bị này. Đây là năm âm lịch dùng cho Can-Chi. Dùng cho ngày xung tuổi và gợi ý Ngũ hành trong xem ngày. Không tải lên hay gửi tới analytics."
+          }
+        }
+      }
+    },
+    "Travel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Travel"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xuất hành"
+          }
+        }
+      }
+    },
+    "Travel Hours Today" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Travel Hours Today"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giờ xuất hành hôm nay"
+          }
+        }
+      }
+    },
+    "Unfavorable star: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unfavorable star: %@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sao xấu: %@"
+          }
+        }
+      }
+    },
+    "Use birth year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use birth year"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dùng năm sinh"
+          }
+        }
+      }
+    },
+    "Use with caution" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use with caution"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nên thận trọng"
+          }
+        }
+      }
+    },
+    "Wedding" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wedding"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cưới hỏi"
+          }
+        }
+      }
+    },
+    "Your Can-Chi year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Can-Chi year"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can-Chi năm sinh"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"
