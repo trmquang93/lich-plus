@@ -144,11 +144,11 @@ struct DayDetailView: View {
     private var headerSection: some View {
         VStack(spacing: AppTheme.spacing4) {
             Text(formattedSolarDate)
-                .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                 .foregroundStyle(AppColors.textPrimary)
 
             Text(formattedLunarDate)
-                .font(.system(size: AppTheme.fontCaption))
+                .elderModeFont(size: AppTheme.fontCaption)
                 .foregroundStyle(AppColors.textSecondary)
         }
     }
@@ -158,10 +158,10 @@ struct DayDetailView: View {
     private func infoRow(title: String, value: String) -> some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing4) {
             Text(title)
-                .font(.system(size: AppTheme.fontBody, weight: .medium))
+                .elderModeFont(size: AppTheme.fontBody, weight: .medium)
                 .foregroundStyle(AppColors.textPrimary)
             Text(value)
-                .font(.system(size: AppTheme.fontCaption))
+                .elderModeFont(size: AppTheme.fontCaption)
                 .foregroundStyle(AppColors.textSecondary)
         }
     }
@@ -183,7 +183,7 @@ struct DayDetailView: View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
             // Quality Title
             Text(dayQuality.finalQuality.displayName)
-                .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                 .foregroundStyle(qualityTitleColor)
 
             // Lucky Hours
@@ -224,16 +224,16 @@ struct DayDetailView: View {
             HStack {
                 HStack(spacing: AppTheme.spacing8) {
                     Image(systemName: "calendar")
-                        .font(.system(size: AppTheme.fontBody, weight: .semibold))
+                        .elderModeFont(size: AppTheme.fontBody, weight: .semibold)
                         .foregroundStyle(AppColors.primary)
                     Text(String(localized: "Events"))
-                        .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                        .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                         .foregroundStyle(AppColors.textPrimary)
                 }
                 Spacer()
                 Button(action: { showAddEventSheet = true }) {
                     Image(systemName: "plus")
-                        .font(.system(size: AppTheme.fontBody, weight: .semibold))
+                        .elderModeFont(size: AppTheme.fontBody, weight: .semibold)
                         .foregroundStyle(AppColors.white)
                         .frame(width: 28, height: 28)
                         .background(AppColors.primary)
@@ -244,7 +244,7 @@ struct DayDetailView: View {
             // Events list or empty state
             if day.events.isEmpty {
                 Text(String(localized: "No events"))
-                    .font(.system(size: AppTheme.fontCaption))
+                    .elderModeFont(size: AppTheme.fontCaption)
                     .foregroundStyle(AppColors.textSecondary)
                     .frame(maxWidth: .infinity)
                     .padding(AppTheme.spacing16)
@@ -273,14 +273,14 @@ struct DayDetailView: View {
             // Event details
             VStack(alignment: .leading, spacing: AppTheme.spacing2) {
                 Text(event.title)
-                    .font(.system(size: AppTheme.fontBody, weight: .bold))
+                    .elderModeFont(size: AppTheme.fontBody, weight: .bold)
                     .foregroundStyle(AppColors.textPrimary)
                 Text(event.isAllDay ? String(localized: "All Day") : (event.time ?? ""))
-                    .font(.system(size: AppTheme.fontCaption))
+                    .elderModeFont(size: AppTheme.fontCaption)
                     .foregroundStyle(AppColors.textSecondary)
                 if let description = event.description {
                     Text(description)
-                        .font(.system(size: AppTheme.fontCaption))
+                        .elderModeFont(size: AppTheme.fontCaption)
                         .foregroundStyle(AppColors.textSecondary)
                 }
             }
@@ -301,18 +301,18 @@ struct DayDetailView: View {
     private var trucCard: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
             Text("12 Trực")
-                .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                 .foregroundStyle(AppColors.textPrimary)
 
             VStack(alignment: .leading, spacing: AppTheme.spacing8) {
                 // Truc name with quality
                 HStack(spacing: AppTheme.spacing8) {
                     Text(dayQuality.zodiacHour.vietnameseName)
-                        .font(.system(size: AppTheme.fontBody, weight: .semibold))
+                        .elderModeFont(size: AppTheme.fontBody, weight: .semibold)
                         .foregroundStyle(AppColors.textPrimary)
 
                     Text(qualityLabel)
-                        .font(.system(size: AppTheme.fontCaption, weight: .medium))
+                        .elderModeFont(size: AppTheme.fontCaption, weight: .medium)
                         .padding(.horizontal, AppTheme.spacing8)
                         .padding(.vertical, AppTheme.spacing4)
                         .background(qualityLabelColor)
@@ -322,7 +322,7 @@ struct DayDetailView: View {
 
                 // Description
                 Text(dayQuality.zodiacHour.fullDescription)
-                    .font(.system(size: AppTheme.fontCaption))
+                    .elderModeFont(size: AppTheme.fontCaption)
                     .foregroundStyle(AppColors.textSecondary)
             }
         }
@@ -338,11 +338,11 @@ struct DayDetailView: View {
     private func starsCard(title: String, stars: [String], isGood: Bool) -> some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
             Text(title)
-                .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                 .foregroundStyle(isGood ? AppColors.accent : AppColors.primary)
 
             Text(stars.joined(separator: ", "))
-                .font(.system(size: AppTheme.fontCaption))
+                .elderModeFont(size: AppTheme.fontCaption)
                 .foregroundStyle(AppColors.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -360,11 +360,11 @@ struct DayDetailView: View {
             if !dayQuality.suitableActivities.isEmpty {
                 VStack(alignment: .leading, spacing: AppTheme.spacing8) {
                     Text(String(localized: "Good Activities"))
-                        .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                        .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                         .foregroundStyle(AppColors.accent)
 
                     Text(dayQuality.suitableActivities.joined(separator: ", "))
-                        .font(.system(size: AppTheme.fontCaption))
+                        .elderModeFont(size: AppTheme.fontCaption)
                         .foregroundStyle(AppColors.textSecondary)
                 }
                 .padding(AppTheme.spacing16)
@@ -377,11 +377,11 @@ struct DayDetailView: View {
             if !dayQuality.tabooActivities.isEmpty {
                 VStack(alignment: .leading, spacing: AppTheme.spacing8) {
                     Text(String(localized: "Bad Activities"))
-                        .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                        .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                         .foregroundStyle(AppColors.primary)
 
                     Text(dayQuality.tabooActivities.joined(separator: ", "))
-                        .font(.system(size: AppTheme.fontCaption))
+                        .elderModeFont(size: AppTheme.fontCaption)
                         .foregroundStyle(AppColors.textSecondary)
                 }
                 .padding(AppTheme.spacing16)
@@ -397,7 +397,7 @@ struct DayDetailView: View {
     private var luckyInfoCard: some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing12) {
             Text(String(localized: "Lucky Information"))
-                .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                 .foregroundStyle(AppColors.textPrimary)
 
             VStack(alignment: .leading, spacing: AppTheme.spacing12) {
@@ -409,10 +409,10 @@ struct DayDetailView: View {
                             .foregroundStyle(AppColors.accent)
                         VStack(alignment: .leading, spacing: AppTheme.spacing2) {
                             Text(String(localized: "Lucky Direction"))
-                                .font(.system(size: AppTheme.fontCaption))
+                                .elderModeFont(size: AppTheme.fontCaption)
                                 .foregroundStyle(AppColors.textSecondary)
                             Text(direction)
-                                .font(.system(size: AppTheme.fontBody, weight: .medium))
+                                .elderModeFont(size: AppTheme.fontBody, weight: .medium)
                                 .foregroundStyle(AppColors.textPrimary)
                         }
                         Spacer()
@@ -427,10 +427,10 @@ struct DayDetailView: View {
                             .foregroundStyle(AppColors.accent)
                         VStack(alignment: .leading, spacing: AppTheme.spacing2) {
                             Text(String(localized: "Lucky Color"))
-                                .font(.system(size: AppTheme.fontCaption))
+                                .elderModeFont(size: AppTheme.fontCaption)
                                 .foregroundStyle(AppColors.textSecondary)
                             Text(color)
-                                .font(.system(size: AppTheme.fontBody, weight: .medium))
+                                .elderModeFont(size: AppTheme.fontBody, weight: .medium)
                                 .foregroundStyle(AppColors.textPrimary)
                         }
                         Spacer()

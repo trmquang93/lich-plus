@@ -94,7 +94,8 @@ enum WidgetSnapshotWriter {
             nextHolidayDate: nextHoliday?.solarDate,
             nextHolidayDaysUntil: daysUntil,
             luckyHourSummary: xuatHanh.luckySummary.isEmpty ? nil : xuatHanh.luckySummary,
-            avoidHourSummary: xuatHanh.avoidSummary.isEmpty ? nil : xuatHanh.avoidSummary
+            avoidHourSummary: xuatHanh.avoidSummary.isEmpty ? nil : xuatHanh.avoidSummary,
+            auspiciousDirection: xuatHanh.luckyDirection
         )
     }
 

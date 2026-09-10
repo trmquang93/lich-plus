@@ -181,7 +181,7 @@ struct NotificationSettingsView: View {
                             }
                         )
                     )
-                    
+
                     if settingsValue.fixedEventNotificationsEnabled {
                         Picker(
                             String(localized: "Reminder Days"),
@@ -205,6 +205,50 @@ struct NotificationSettingsView: View {
                             }
                         }
                     }
+                }
+
+                Section(String(localized: "Giỗ reminders")) {
+                    Toggle(
+                        String(localized: "Giỗ reminders"),
+                        isOn: Binding(
+                            get: { settingsValue.gioNotificationsEnabled },
+                            set: { newValue in
+                                settingsValue.gioNotificationsEnabled = newValue
+                                saveSettings()
+                                Task {
+                                    if newValue {
+                                        await notificationService.scheduleGioNotifications()
+                                    } else {
+                                        await notificationService.removeAllGioNotifications()
+                                    }
+                                }
+                            }
+                        )
+                    )
+
+                    Text(String(localized: "Reminds 7, 3, and 1 days before each giỗ from Personal Profile."))
+                        .font(.caption)
+                        .foregroundStyle(AppColors.textSecondary)
+                }
+
+                Section(String(localized: "Ngày chay")) {
+                    Toggle(
+                        String(localized: "Night-before ngày chay"),
+                        isOn: Binding(
+                            get: { settingsValue.ngayChayNotificationsEnabled },
+                            set: { newValue in
+                                settingsValue.ngayChayNotificationsEnabled = newValue
+                                saveSettings()
+                                Task {
+                                    if newValue {
+                                        await notificationService.scheduleNgayChayNotifications()
+                                    } else {
+                                        await notificationService.removeAllNgayChayNotifications()
+                                    }
+                                }
+                            }
+                        )
+                    )
                 }
             }
         }

@@ -133,6 +133,10 @@ private struct TodayMediumWidgetView: View {
                         )
                     }
 
+                    if let direction = day.auspiciousDirection {
+                        ChipView(title: WidgetLocalizedStrings.directionTitle(localeCode: entry.localeCode) + ": " + direction)
+                    }
+
                     if let holiday = nextHolidayLabel(for: day, localeCode: entry.localeCode) {
                         NextHolidayChipView(
                             title: holiday,

@@ -10,12 +10,15 @@ import Foundation
 struct XuatHanhSummary: Equatable, Sendable {
     let luckyHours: [HourlyZodiac]
     let avoidHours: [HourlyZodiac]
+    let luckyDirection: String?
 
     static func forDate(_ date: Date) -> XuatHanhSummary {
         let hourly = HoangDaoCalculator.getHourlyZodiacs(for: date)
+        let dayQuality = HoangDaoCalculator.determineDayQuality(for: date)
         return XuatHanhSummary(
             luckyHours: hourly.filter(\.isAuspicious),
-            avoidHours: hourly.filter { !$0.isAuspicious }
+            avoidHours: hourly.filter { !$0.isAuspicious },
+            luckyDirection: dayQuality.luckyDirection
         )
     }
 

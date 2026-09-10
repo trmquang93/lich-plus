@@ -12,6 +12,7 @@ import EventKit
 struct MainTabView: View {
     @Environment(\.modelContext) var modelContext
     @Environment(\.scenePhase) var scenePhase
+    @StateObject private var elderMode = ElderModeStore.shared
     @State private var selectedTab: Int = 0
 
     // Apple Calendar services
@@ -78,6 +79,7 @@ struct MainTabView: View {
         // ICS Calendar environment objects
         .environmentObject(icsSyncService ?? createICSSyncService())
         .tint(AppColors.primary)
+        .environment(\.elderModeEnabled, elderMode.isEnabled)
         // Handle app lifecycle for sync management
         .onChange(of: scenePhase) { oldPhase, newPhase in
             handleScenePhaseChange(from: oldPhase, to: newPhase)

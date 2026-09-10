@@ -23,7 +23,7 @@ struct TodayXuatHanhCardView: View {
                     .font(.system(size: AppTheme.fontBody, weight: .semibold))
                     .foregroundStyle(AppColors.accent)
                 Text(String(localized: "Travel Hours Today"))
-                    .font(.system(size: AppTheme.fontTitle3, weight: .bold))
+                    .elderModeFont(size: AppTheme.fontTitle3, weight: .bold)
                     .foregroundStyle(AppColors.textPrimary)
             }
 
@@ -39,27 +39,37 @@ struct TodayXuatHanhCardView: View {
                 tint: AppColors.primary
             )
 
+            if let direction = summary.luckyDirection, !direction.isEmpty {
+                hourRow(
+                    title: String(localized: "Auspicious direction"),
+                    value: direction,
+                    tint: AppColors.hoangDaoGold
+                )
+                .accessibilityIdentifier("xuathanh.direction")
+            }
+
             Text(String(localized: "Based on today's Can-Chi and giờ hoàng đạo table."))
-                .font(.system(size: AppTheme.fontCaption))
+                .elderModeFont(size: AppTheme.fontCaption)
                 .foregroundStyle(AppColors.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(AppTheme.spacing16)
+        .elderModePadding(.all, AppTheme.spacing16)
+        .accessibilityIdentifier("xuathanh.card")
         .background(AppColors.accentLight)
         .cornerRadius(AppTheme.cornerRadiusLarge)
-        .accessibilityIdentifier("today-xuat-hanh-card")
         .onAppear {
             AnalyticsService.shared.logFeatureUsed(.xuat_hanh)
+            AnalyticsService.shared.logFeatureUsed(.huong_xuat_hanh)
         }
     }
 
     private func hourRow(title: String, value: String, tint: Color) -> some View {
         VStack(alignment: .leading, spacing: AppTheme.spacing4) {
             Text(title)
-                .font(.system(size: AppTheme.fontCaption, weight: .semibold))
+                .elderModeFont(size: AppTheme.fontCaption, weight: .semibold)
                 .foregroundStyle(tint)
             Text(value.isEmpty ? String(localized: "None") : value)
-                .font(.system(size: AppTheme.fontBody))
+                .elderModeFont(size: AppTheme.fontBody)
                 .foregroundStyle(AppColors.textPrimary)
         }
     }

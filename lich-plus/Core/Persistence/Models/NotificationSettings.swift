@@ -58,6 +58,44 @@ final class NotificationSettings {
     
     /// How many days before the holiday to send notification
     var fixedEventReminderDays: Int = 1
+
+    // MARK: - Giỗ (Death Anniversary) Notifications
+
+    /// Enable/disable giỗ reminders from Personal Profile deceased relatives
+    var gioNotificationsEnabled: Bool = true
+
+    /// Hour for giỗ notifications (0-23)
+    var gioNotificationHour: Int = 8
+
+    /// Minute for giỗ notifications (0-59)
+    var gioNotificationMinute: Int = 0
+
+    /// Lead days before giỗ (stored as comma-separated ints, default 7,3,1)
+    var gioLeadReminderDaysRaw: String = "7,3,1"
+
+    var gioLeadReminderDays: [Int] {
+        get {
+            gioLeadReminderDaysRaw
+                .split(separator: ",")
+                .compactMap { Int($0.trimmingCharacters(in: .whitespaces)) }
+                .filter { $0 >= 0 && $0 <= 30 }
+                .sorted(by: >)
+        }
+        set {
+            gioLeadReminderDaysRaw = newValue.map(String.init).joined(separator: ",")
+        }
+    }
+
+    // MARK: - Ngày chay (Vegetarian Day) Night-Before Reminders
+
+    /// Remind the evening before Mùng 1 / Rằm to prepare vegetarian meals
+    var ngayChayNotificationsEnabled: Bool = false
+
+    /// Hour for ngày chay night-before reminder (0-23)
+    var ngayChayNotificationHour: Int = 20
+
+    /// Minute for ngày chay night-before reminder (0-59)
+    var ngayChayNotificationMinute: Int = 0
     
     // MARK: - Scheduling State
     

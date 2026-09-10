@@ -21,4 +21,9 @@ enum AnalyticsFeature: String, CaseIterable, Sendable {
     case xem_ngay
     case xuat_hanh
     case birth_year_setting
+    case gio_reminder_preset
+    case tet_countdown
+    case xem_que
+    case huong_xuat_hanh
+    case elder_mode
 }

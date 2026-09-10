@@ -15,6 +15,8 @@ final class DeceasedRelative {
     var name: String
     var lunarDay: Int          // 1…30
     var lunarMonth: Int        // 1…12
+    /// When true, giỗ occurs only in the leap (nhuận) occurrence of `lunarMonth`.
+    var isLeapMonthAnniversary: Bool = false
     var note: String?
 
     init(
@@ -23,6 +25,7 @@ final class DeceasedRelative {
         name: String,
         lunarDay: Int,
         lunarMonth: Int,
+        isLeapMonthAnniversary: Bool = false,
         note: String? = nil
     ) {
         self.id = id
@@ -30,6 +33,7 @@ final class DeceasedRelative {
         self.name = name
         self.lunarDay = lunarDay
         self.lunarMonth = lunarMonth
+        self.isLeapMonthAnniversary = isLeapMonthAnniversary
         self.note = note
     }
 }

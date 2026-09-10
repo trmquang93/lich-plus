@@ -26,6 +26,8 @@ struct WidgetDayEntry: Codable, Equatable, Sendable {
     let luckyHourSummary: String?
     /// Compact hours to avoid, e.g. "Tý (23-1), Ngọ (11-13)".
     let avoidHourSummary: String?
+    /// Public auspicious travel direction, e.g. "Đông Nam" — no private data.
+    let auspiciousDirection: String?
 
     init(
         date: Date,
@@ -41,7 +43,8 @@ struct WidgetDayEntry: Codable, Equatable, Sendable {
         nextHolidayDate: Date?,
         nextHolidayDaysUntil: Int?,
         luckyHourSummary: String? = nil,
-        avoidHourSummary: String? = nil
+        avoidHourSummary: String? = nil,
+        auspiciousDirection: String? = nil
     ) {
         self.date = date
         self.solarDay = solarDay
@@ -57,6 +60,7 @@ struct WidgetDayEntry: Codable, Equatable, Sendable {
         self.nextHolidayDaysUntil = nextHolidayDaysUntil
         self.luckyHourSummary = luckyHourSummary
         self.avoidHourSummary = avoidHourSummary
+        self.auspiciousDirection = auspiciousDirection
     }
 
     init(from decoder: Decoder) throws {
@@ -75,6 +79,7 @@ struct WidgetDayEntry: Codable, Equatable, Sendable {
         nextHolidayDaysUntil = try container.decodeIfPresent(Int.self, forKey: .nextHolidayDaysUntil)
         luckyHourSummary = try container.decodeIfPresent(String.self, forKey: .luckyHourSummary)
         avoidHourSummary = try container.decodeIfPresent(String.self, forKey: .avoidHourSummary)
+        auspiciousDirection = try container.decodeIfPresent(String.self, forKey: .auspiciousDirection)
     }
 }
 

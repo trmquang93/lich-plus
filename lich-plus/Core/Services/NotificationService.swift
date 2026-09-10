@@ -33,6 +33,8 @@ final class NotificationService: ObservableObject {
     private static let ramIdentifierPrefix = "ram-"
     private static let mung1IdentifierPrefix = "mung1-"
     private static let fixedEventIdentifierPrefix = "fixed-event-"
+    private static let gioIdentifierPrefix = "gio-"
+    private static let ngayChayIdentifierPrefix = "ngay-chay-"
     
     // MARK: - Initialization
     
@@ -433,6 +435,170 @@ final class NotificationService: ObservableObject {
             center.removePendingNotificationRequests(withIdentifiers: fixedEventIdentifiers)
         }
     }
+
+    // MARK: - Giỗ Notifications
+
+    /// Schedule giỗ reminders for all deceased relatives in Personal Profile.
+    func scheduleGioNotifications() async {
+        let settings = getSettings()
+        guard settings.isEnabled && settings.gioNotificationsEnabled else { return }
+
+        await removeAllGioNotifications()
+
+        let relatives = fetchDeceasedRelatives()
+        guard !relatives.isEmpty else { return }
+
+        let today = Date()
+        for relative in relatives {
+            let behavior = LunarAnniversaryCalendar.leapMonthBehavior(
+                isLeapMonthAnniversary: relative.isLeapMonthAnniversary
+            )
+            let dates = LunarAnniversaryCalendar.upcomingAnniversaryDates(
+                lunarDay: relative.lunarDay,
+                lunarMonth: relative.lunarMonth,
+                leapMonthBehavior: behavior,
+                from: today,
+                horizonMonths: settings.schedulingHorizonMonths
+            )
+
+            for anniversaryDate in dates {
+                scheduleGioReminders(
+                    for: relative,
+                    anniversaryDate: anniversaryDate,
+                    settings: settings
+                )
+            }
+        }
+    }
+
+    private func scheduleGioReminders(
+        for relative: DeceasedRelative,
+        anniversaryDate: Date,
+        settings: NotificationSettings
+    ) {
+        let calendar = Calendar.current
+        let leadDays = settings.gioLeadReminderDays + [0]
+
+        for daysBefore in leadDays {
+            guard let fireDate = calendar.date(byAdding: .day, value: -daysBefore, to: anniversaryDate) else {
+                continue
+            }
+            guard fireDate > Date() else { continue }
+
+            var components = calendar.dateComponents([.year, .month, .day], from: fireDate)
+            components.hour = settings.gioNotificationHour
+            components.minute = settings.gioNotificationMinute
+
+            let content = UNMutableNotificationContent()
+            if daysBefore == 0 {
+                content.title = String(localized: "Giỗ today")
+                content.body = String(
+                    format: String(localized: "Today is the lunar anniversary for %@ %@."),
+                    relative.relation,
+                    relative.name
+                )
+            } else {
+                content.title = String(localized: "Giỗ reminder")
+                content.body = String(
+                    format: String(localized: "Giỗ %@ %@ in %lld days (lunar %lld/%lld)."),
+                    relative.relation,
+                    relative.name,
+                    daysBefore,
+                    relative.lunarDay,
+                    relative.lunarMonth
+                )
+            }
+            content.sound = .default
+
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+            let identifier = "\(Self.gioIdentifierPrefix)\(relative.id.uuidString)-\(daysBefore)-\(components.year ?? 0)-\(components.month ?? 0)-\(components.day ?? 0)"
+            let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+
+            center.add(request) { error in
+                if let error = error {
+                    print("Error scheduling giỗ notification: \(error)")
+                }
+            }
+        }
+    }
+
+    func removeAllGioNotifications() async {
+        let requests = await center.pendingNotificationRequests()
+        let ids = requests
+            .filter { $0.identifier.hasPrefix(Self.gioIdentifierPrefix) }
+            .map { $0.identifier }
+        if !ids.isEmpty {
+            center.removePendingNotificationRequests(withIdentifiers: ids)
+        }
+    }
+
+    // MARK: - Ngày chay Night-Before Notifications
+
+    /// Remind the evening before Mùng 1 / Rằm to prepare vegetarian meals.
+    func scheduleNgayChayNotifications() async {
+        let settings = getSettings()
+        guard settings.isEnabled && settings.ngayChayNotificationsEnabled else { return }
+
+        await removeAllNgayChayNotifications()
+
+        let mung1Dates = getUpcomingMung1Dates(months: settings.schedulingHorizonMonths)
+        let ramDates = getUpcomingRamDates(months: settings.schedulingHorizonMonths)
+
+        for date in mung1Dates {
+            scheduleNgayChayNotification(forLunarEventDate: date, isRam: false, settings: settings)
+        }
+        for date in ramDates {
+            scheduleNgayChayNotification(forLunarEventDate: date, isRam: true, settings: settings)
+        }
+    }
+
+    private func scheduleNgayChayNotification(
+        forLunarEventDate eventDate: Date,
+        isRam: Bool,
+        settings: NotificationSettings
+    ) {
+        let calendar = Calendar.current
+        guard let nightBefore = calendar.date(byAdding: .day, value: -1, to: eventDate) else { return }
+        guard nightBefore > Date() else { return }
+
+        var components = calendar.dateComponents([.year, .month, .day], from: nightBefore)
+        components.hour = settings.ngayChayNotificationHour
+        components.minute = settings.ngayChayNotificationMinute
+
+        let content = UNMutableNotificationContent()
+        content.title = String(localized: "Ngày chay tomorrow")
+        content.body = isRam
+            ? String(localized: "Tomorrow is Rằm — prepare vegetarian food if you observe ngày chay.")
+            : String(localized: "Tomorrow is Mùng 1 — prepare vegetarian food if you observe ngày chay.")
+        content.sound = .default
+
+        let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: false)
+        let lunar = LunarCalendar.solarToLunar(eventDate)
+        let identifier = "\(Self.ngayChayIdentifierPrefix)\(isRam ? "ram" : "mung1")-\(lunar.year)-\(lunar.month)-\(lunar.day)"
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+
+        center.add(request) { error in
+            if let error = error {
+                print("Error scheduling ngày chay notification: \(error)")
+            }
+        }
+    }
+
+    func removeAllNgayChayNotifications() async {
+        let requests = await center.pendingNotificationRequests()
+        let ids = requests
+            .filter { $0.identifier.hasPrefix(Self.ngayChayIdentifierPrefix) }
+            .map { $0.identifier }
+        if !ids.isEmpty {
+            center.removePendingNotificationRequests(withIdentifiers: ids)
+        }
+    }
+
+    private func fetchDeceasedRelatives() -> [DeceasedRelative] {
+        let descriptor = FetchDescriptor<PersonalProfile>()
+        guard let profile = try? modelContext.fetch(descriptor).first else { return [] }
+        return profile.deceasedRelatives
+    }
     
     // MARK: - Reschedule All
     
@@ -442,6 +608,8 @@ final class NotificationService: ObservableObject {
         await scheduleRamNotifications()
         await scheduleMung1Notifications()
         await scheduleFixedEventNotifications()
+        await scheduleGioNotifications()
+        await scheduleNgayChayNotifications()
         
         // Update last scheduled date
         let settings = getSettings()

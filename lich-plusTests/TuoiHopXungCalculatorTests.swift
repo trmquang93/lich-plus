@@ -23,19 +23,23 @@ final class TuoiHopXungCalculatorTests: XCTestCase {
         let xung = TuoiHopXungCalculator.isXungDay(birthYear: birthYear, dayChi: .ngo)
         XCTAssertNotNil(xung)
         XCTAssertEqual(xung?.conflictingChi, .ngo)
+        XCTAssertEqual(xung?.birthYearChi, .ty)
+        XCTAssertEqual(xung?.dayChi, .ngo)
     }
 
     func testXungReasonNamesBirthYearChiAndDayChi() throws {
-        // WHY: user must see which natal branch clashes with the day (not "Ngọ xung Ngọ")
-        let xung = TuoiHopXungCalculator.isXungDay(birthYear: 1996, dayChi: .ngo)
-        let reason = try XCTUnwrap(xung?.reason)
+        // WHY: conflictingChi == dayChi on a clash, so naming both as dayChi prints "Ngọ xung Ngọ".
+        let xung = try XCTUnwrap(TuoiHopXungCalculator.isXungDay(birthYear: 1996, dayChi: .ngo))
+        let reason = xung.reason
+        let birthName = ChiEnum.ty.vietnameseName
+        let dayName = ChiEnum.ngo.vietnameseName
 
-        XCTAssertEqual(xung?.birthYearChi, .ty)
-        XCTAssertEqual(xung?.dayChi, .ngo)
-        XCTAssertTrue(reason.contains("Tý"), "reason must name natal chi, got \(reason)")
-        XCTAssertTrue(reason.contains("Ngọ"), "reason must name day chi, got \(reason)")
+        XCTAssertEqual(xung.birthYearChi, .ty)
+        XCTAssertEqual(xung.dayChi, .ngo)
+        XCTAssertTrue(reason.contains(birthName), "reason should name birth-year chi, got \(reason)")
+        XCTAssertTrue(reason.contains(dayName), "reason should name day chi, got \(reason)")
         XCTAssertFalse(
-            reason.contains("Ngọ xung Ngọ"),
+            reason.contains("\(dayName) xung \(dayName)"),
             "clash copy must not repeat the day chi as both sides, got \(reason)"
         )
     }

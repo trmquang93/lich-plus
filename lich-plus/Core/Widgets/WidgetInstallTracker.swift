@@ -21,13 +21,23 @@ enum WidgetInstallTracker {
             .filter { $0.kind == TodayWidgetConstants.kind }
             .map(\.family.description)
 
-        guard !installedTodayKinds.isEmpty else { return }
+        let installedCountdownKinds = configurations
+            .filter { $0.kind == CountdownWidgetConstants.kind }
+            .map(\.family.description)
+
+        guard !installedTodayKinds.isEmpty || !installedCountdownKinds.isEmpty else { return }
 
         var tracked = trackedWidgetKinds()
         for family in installedTodayKinds {
             let token = "today:\(family)"
             guard !tracked.contains(token) else { continue }
             AnalyticsService.shared.logWidgetInstall(kind: "today")
+            tracked.insert(token)
+        }
+        for family in installedCountdownKinds {
+            let token = "countdown:\(family)"
+            guard !tracked.contains(token) else { continue }
+            AnalyticsService.shared.logWidgetInstall(kind: "countdown")
             tracked.insert(token)
         }
         saveTrackedWidgetKinds(tracked)

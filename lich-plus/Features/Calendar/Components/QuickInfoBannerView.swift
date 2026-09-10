@@ -35,11 +35,11 @@ struct QuickInfoBannerView: View {
                         Text(day.dayType.displayName)
                             .foregroundStyle(dayTypeColor)
                     }
-                    .font(.system(size: AppTheme.fontBody, weight: .semibold))
+                    .elderModeFont(size: AppTheme.fontBody, weight: .semibold)
 
                     // Lucky hours line
                     Text(luckyHoursText)
-                        .font(.system(size: AppTheme.fontCaption))
+                        .elderModeFont(size: AppTheme.fontCaption)
                         .foregroundStyle(AppColors.textSecondary)
                 }
 

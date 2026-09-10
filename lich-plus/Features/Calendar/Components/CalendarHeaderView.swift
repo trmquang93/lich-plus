@@ -40,7 +40,7 @@ struct CalendarHeaderView: View {
 
                 HStack(spacing: AppTheme.spacing8) {
                     Text(currentMonthYear)
-                        .font(.system(size: AppTheme.fontTitle2, weight: .bold))
+                        .elderModeFont(size: AppTheme.fontTitle2, weight: .bold)
                         .foregroundStyle(AppColors.textPrimary)
 
                     Image(systemName: "chevron.down")
@@ -78,7 +78,7 @@ struct CalendarHeaderView: View {
             HStack(spacing: 0) {
                 ForEach(CalendarDisplayMode.weekdayHeaders, id: \.self) { day in
                     Text(day)
-                        .font(.system(size: AppTheme.fontCaption, weight: .semibold))
+                        .elderModeFont(size: AppTheme.fontCaption, weight: .semibold)
                         .foregroundStyle(AppColors.textSecondary)
                         .frame(maxWidth: .infinity)
                         .frame(height: 28)

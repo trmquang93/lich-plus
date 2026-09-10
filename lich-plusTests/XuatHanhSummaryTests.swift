@@ -14,5 +14,9 @@ final class XuatHanhSummaryTests: XCTestCase {
         XCTAssertEqual(summary.avoidHours.count, 6)
         XCTAssertFalse(summary.luckySummary.isEmpty)
         XCTAssertFalse(summary.avoidSummary.isEmpty)
+        // Direction comes from day quality when available
+        if let direction = summary.luckyDirection {
+            XCTAssertFalse(direction.isEmpty)
+        }
     }
 }

@@ -10,6 +10,19 @@ final class ActivityVerdictCalculatorTests: XCTestCase {
 
     private let timeZone = TimeZone(identifier: "Asia/Ho_Chi_Minh")!
 
+    func testEmptyStarPlaceholdersAreNotComplete() {
+        // WHY: Month 3 seeds 60 empty keys; an empty placeholder is missing data, not a confident empty day.
+        let availability = StarCalculator.dataAvailability(lunarMonth: 3, dayCanChi: "Giáp Tý")
+        XCTAssertEqual(
+            availability,
+            .missingForDay,
+            "empty star placeholders must not count as complete"
+        )
+
+        let completeness = StarCalculator.monthCompleteness(lunarMonth: 3)
+        XCTAssertLessThan(completeness.completed, completeness.total)
+    }
+
     func testVerdictReturnsIncompleteWhenStarDataMissingForCanChi() {
         // WHY: empty padded catalog rows must not produce a confident good/bad verdict
         guard let date = firstDate(

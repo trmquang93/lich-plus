@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftData
 
 struct PhongTucFeedView: View {
+    @EnvironmentObject private var notificationService: NotificationService
     @State private var searchText: String = ""
     @FocusState private var isSearchFocused: Bool
 
@@ -27,6 +28,10 @@ struct PhongTucFeedView: View {
                     searchBar
                     if !isSearching {
                         TodayHighlightsSection()
+                        FestivalCountdownCardView(referenceDate: Date())
+                            .padding(.horizontal, 16)
+                            .padding(.top, 12)
+                        phongTucToolsSection
                     }
                     let greetings = filteredGreetings
                     let vanKhanGroups = filteredVanKhanGroups
@@ -52,11 +57,11 @@ struct PhongTucFeedView: View {
     private var screenHeader: some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(String(localized: "Phong tục"))
-                .font(.system(size: 34, weight: .semibold, design: .serif))
+                .elderModeFont(size: 34, weight: .semibold, design: .serif)
                 .foregroundStyle(AppColors.primaryDark)
                 .tracking(-0.4)
             Text(String(localized: "Lời chúc và văn khấn cổ truyền — gợi ý theo ngày âm lịch của bạn."))
-                .font(.system(size: 15))
+                .elderModeFont(size: 15)
                 .foregroundStyle(AppColors.textSecondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -68,13 +73,13 @@ struct PhongTucFeedView: View {
     private var searchBar: some View {
         HStack(spacing: 10) {
             Image(systemName: "magnifyingglass")
-                .font(.system(size: 14, weight: .regular))
+                .elderModeFont(size: 14, weight: .regular)
                 .foregroundStyle(AppColors.textDisabled)
             TextField(
                 String(localized: "Tìm lời chúc, bài khấn…"),
                 text: $searchText
             )
-            .font(.system(size: 15))
+            .elderModeFont(size: 15)
             .foregroundStyle(AppColors.textPrimary)
             .textInputAutocapitalization(.never)
             .autocorrectionDisabled(true)
@@ -109,14 +114,14 @@ struct PhongTucFeedView: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack(alignment: .firstTextBaseline) {
                 Text(String(localized: "Lời chúc"))
-                    .font(.system(size: 13, weight: .semibold))
+                    .elderModeFont(size: 13, weight: .semibold)
                     .tracking(0.6)
                     .textCase(.uppercase)
                     .foregroundStyle(AppColors.textSecondary)
                 Spacer()
                 if !isSearching {
                     Text(String(localized: "Xem tất cả"))
-                        .font(.system(size: 13, weight: .medium))
+                        .elderModeFont(size: 13, weight: .medium)
                         .foregroundStyle(AppColors.primary)
                 }
             }
@@ -213,16 +218,87 @@ struct PhongTucFeedView: View {
         ) != nil
     }
 
+    private var phongTucToolsSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(String(localized: "Tiện ích"))
+                .elderModeFont(size: 13, weight: .semibold)
+                .tracking(0.6)
+                .textCase(.uppercase)
+                .foregroundStyle(AppColors.textSecondary)
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
+
+            VStack(spacing: 0) {
+                NavigationLink {
+                    KinhDichView()
+                } label: {
+                    toolRow(
+                        icon: "circle.hexagongrid.fill",
+                        title: String(localized: "Xem quẻ Kinh Dịch"),
+                        subtitle: String(localized: "Gieo 3 đồng — offline")
+                    )
+                }
+                .buttonStyle(.plain)
+
+                Divider().padding(.leading, 64)
+
+                NavigationLink {
+                    PhongTucPresetsSettingsView()
+                } label: {
+                    toolRow(
+                        icon: "bell.badge",
+                        title: String(localized: "Phong tục presets"),
+                        subtitle: String(localized: "Rằm, Mùng 1, ngày chay, giỗ")
+                    )
+                }
+                .buttonStyle(.plain)
+                .accessibilityIdentifier("phongtuc.presets")
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(AppColors.background)
+                    .shadow(color: Color.black.opacity(0.04), radius: 1, x: 0, y: 1)
+            )
+            .padding(.horizontal, 16)
+        }
+    }
+
+    private func toolRow(icon: String, title: String, subtitle: String) -> some View {
+        HStack(spacing: 12) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(AppColors.vkGoldTint)
+                    .frame(width: 44, height: 44)
+                Image(systemName: icon)
+                    .foregroundStyle(AppColors.primary)
+            }
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .elderModeFont(size: 16, weight: .medium)
+                    .foregroundStyle(AppColors.textPrimary)
+                Text(subtitle)
+                    .elderModeFont(size: 13)
+                    .foregroundStyle(AppColors.textSecondary)
+            }
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(AppColors.textDisabled)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
+    }
+
     private var emptyResults: some View {
         VStack(spacing: 8) {
             Image(systemName: "magnifyingglass")
                 .font(.system(size: 28, weight: .light))
                 .foregroundStyle(AppColors.textDisabled)
             Text(String(localized: "Không có kết quả"))
-                .font(.system(size: 15, weight: .medium))
+                .elderModeFont(size: 15, weight: .medium)
                 .foregroundStyle(AppColors.textPrimary)
             Text(String(localized: "Thử từ khoá khác."))
-                .font(.system(size: 13))
+                .elderModeFont(size: 13)
                 .foregroundStyle(AppColors.textSecondary)
         }
         .frame(maxWidth: .infinity)
@@ -241,10 +317,10 @@ struct PhongTucFeedView: View {
 
             VStack(alignment: .leading, spacing: 2) {
                 Text(item.title)
-                    .font(.system(size: 17, weight: .medium))
+                    .elderModeFont(size: 17, weight: .medium)
                     .foregroundStyle(AppColors.textPrimary)
                 Text(item.subtitle)
-                    .font(.system(size: 13))
+                    .elderModeFont(size: 13)
                     .foregroundStyle(AppColors.textSecondary)
             }
             Spacer(minLength: 8)
@@ -279,5 +355,6 @@ struct PhongTucFeedView: View {
     container.mainContext.insert(profile)
 
     return PhongTucFeedView()
+        .environmentObject(NotificationService(modelContext: container.mainContext))
         .modelContainer(container)
 }

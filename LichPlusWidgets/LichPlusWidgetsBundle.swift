@@ -10,5 +10,6 @@ import WidgetKit
 struct LichPlusWidgetsBundle: WidgetBundle {
     var body: some Widget {
         TodayWidget()
+        CountdownWidget()
     }
 }
