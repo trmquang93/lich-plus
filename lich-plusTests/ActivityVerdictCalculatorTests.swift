@@ -8,11 +8,7 @@ import XCTest
 
 final class ActivityVerdictCalculatorTests: XCTestCase {
 
-    private var vietnamCalendar: Calendar {
-        var calendar = Calendar(identifier: .gregorian)
-        calendar.timeZone = TimeZone(identifier: "Asia/Ho_Chi_Minh") ?? .current
-        return calendar
-    }
+    private let timeZone = TimeZone(identifier: "Asia/Ho_Chi_Minh")!
 
     func testEmptyStarPlaceholdersAreNotComplete() {
         // WHY: Month 3 seeds 60 empty keys; an empty placeholder is missing data, not a confident empty day.
@@ -27,72 +23,123 @@ final class ActivityVerdictCalculatorTests: XCTestCase {
         XCTAssertLessThan(completeness.completed, completeness.total)
     }
 
-    func testVerdictReturnsIncompleteWhenStarDataMissingForCanChi() throws {
-        // WHY: xem ngày must not treat missing star tables as a finished verdict.
-        let calendar = vietnamCalendar
-        guard var date = calendar.date(from: DateComponents(year: 2026, month: 3, day: 15)) else {
-            XCTFail("Could not build search start date")
+    func testVerdictReturnsIncompleteWhenStarDataMissingForCanChi() {
+        // WHY: empty padded catalog rows must not produce a confident good/bad verdict
+        guard let date = firstDate(
+            year: 2026,
+            month: 4,
+            matching: { date in
+                let lunar = LunarCalendar.solarToLunar(date)
+                guard lunar.month == 3 else { return false }
+                let canChi = CanChiCalculator.canChiToString(
+                    CanChiCalculator.calculateDayCanChi(for: date)
+                )
+                return StarCalculator.dataAvailability(lunarMonth: 3, dayCanChi: canChi) == .missingForDay
+            }
+        ) else {
+            XCTFail("Need a lunar month 3 date whose star row is an empty placeholder")
             return
         }
 
-        var missingDate: Date?
-        for _ in 0..<70 {
-            let lunar = LunarCalendar.solarToLunar(date)
-            if lunar.month == 3 {
-                let dayCanChi = CanChiCalculator.canChiToString(CanChiCalculator.calculateDayCanChi(for: date))
-                if StarCalculator.dataAvailability(lunarMonth: lunar.month, dayCanChi: dayCanChi) == .missingForDay {
-                    missingDate = date
-                    break
-                }
-            }
-            guard let next = calendar.date(byAdding: .day, value: 1, to: date) else { break }
-            date = next
-        }
+        let lunar = LunarCalendar.solarToLunar(date)
+        XCTAssertEqual(lunar.month, 3, "Test date should fall in lunar month 3")
 
-        let dateWithMissingStars = try XCTUnwrap(
-            missingDate,
-            "lunar month 3 should include days whose star entry is only an empty placeholder"
-        )
-
-        let verdict = ActivityVerdictCalculator.verdict(for: dateWithMissingStars, purpose: .travel, birthYear: nil)
+        let verdict = ActivityVerdictCalculator.verdict(for: date, purpose: .travel, birthYear: nil)
         XCTAssertEqual(verdict.status, .incomplete)
         XCTAssertTrue(verdict.isStarDataIncomplete)
     }
 
-    func testBirthYearXungLowersVerdictForTravel() throws {
-        // WHY: a real clash day must lower the travel verdict; skipping a non-clash date hid the bug.
-        let birthYear = 1990
-        let birthChi = TuoiHopXungCalculator.birthYearCanChi(for: birthYear).chi
-        let conflicting = try XCTUnwrap(TuoiHopXungCalculator.conflictingChi(for: birthChi))
-
-        let calendar = vietnamCalendar
-        guard var cursor = calendar.date(from: DateComponents(year: 2026, month: 1, day: 1)),
-              let end = calendar.date(from: DateComponents(year: 2026, month: 12, day: 31)) else {
-            XCTFail("Could not build 2026 search range")
+    func testBirthYearXungLowersVerdictForTravel() {
+        // WHY: natal Tam Xung must change the travel verdict; skipping hides the clash
+        guard let date = firstDate(
+            year: 2026,
+            month: 7,
+            matching: { date in
+                let lunar = LunarCalendar.solarToLunar(date)
+                guard lunar.month == 6 else { return false }
+                let canChi = CanChiCalculator.canChiToString(
+                    CanChiCalculator.calculateDayCanChi(for: date)
+                )
+                return StarCalculator.dataAvailability(lunarMonth: 6, dayCanChi: canChi) == .complete
+            }
+        ) else {
+            XCTFail("Need a lunar month 6 date with complete star data")
             return
         }
 
-        var clashDate: Date?
-        while cursor <= end {
-            if CanChiCalculator.calculateDayCanChi(for: cursor).chi == conflicting {
-                clashDate = cursor
-                break
-            }
-            guard let next = calendar.date(byAdding: .day, value: 1, to: cursor) else { break }
-            cursor = next
+        let dayChi = CanChiCalculator.calculateDayCanChi(for: date).chi
+        guard let natalChi = TuoiHopXungCalculator.conflictingChi(for: dayChi) else {
+            XCTFail("Every earthly branch has a Tam Xung pair")
+            return
         }
-
-        let date = try XCTUnwrap(
-            clashDate,
-            "expected a 2026 solar day whose chi xung with birth year \(birthYear)"
-        )
-        XCTAssertEqual(CanChiCalculator.calculateDayCanChi(for: date).chi, conflicting)
+        guard let birthYear = (1920...2100).first(where: {
+            TuoiHopXungCalculator.birthYearCanChi(for: $0).chi == natalChi
+        }) else {
+            XCTFail("Need a birth year whose chi clashes with \(dayChi.vietnameseName)")
+            return
+        }
 
         let without = ActivityVerdictCalculator.verdict(for: date, purpose: .travel, birthYear: nil)
         let withXung = ActivityVerdictCalculator.verdict(for: date, purpose: .travel, birthYear: birthYear)
 
+        XCTAssertNotEqual(without.status, .incomplete, "Clash test needs a complete star day")
         XCTAssertTrue(withXung.isBirthYearXung)
         XCTAssertNotNil(withXung.nguHanhHint)
-        XCTAssertNotEqual(without.status, withXung.status)
+        XCTAssertTrue(
+            withXung.reasons.contains { $0.contains(natalChi.vietnameseName) && $0.contains(dayChi.vietnameseName) },
+            "xung reason must name natal \(natalChi.vietnameseName) and day \(dayChi.vietnameseName); got \(withXung.reasons)"
+        )
+
+        if without.status == .bad {
+            XCTAssertEqual(withXung.status, .bad)
+        } else {
+            XCTAssertNotEqual(
+                without.status,
+                withXung.status,
+                "Tuổi xung should lower the travel verdict from \(without.status)"
+            )
+        }
+    }
+
+    func testEmptyPaddedStarRowsAreNotTreatedAsComplete() {
+        // WHY: empty padded days must not get confident .good/.bad as if the catalog was full
+        XCTAssertEqual(
+            StarCalculator.dataAvailability(lunarMonth: 3, dayCanChi: "Giáp Tý"),
+            .missingForDay
+        )
+        XCTAssertEqual(
+            StarCalculator.dataAvailability(lunarMonth: 7, dayCanChi: "Giáp Tý"),
+            .missingForDay
+        )
+
+        let month3 = StarCalculator.monthCompleteness(lunarMonth: 3)
+        XCTAssertLessThan(month3.completed, month3.total)
+
+        XCTAssertEqual(
+            StarCalculator.dataAvailability(lunarMonth: 3, dayCanChi: "Ất Dậu"),
+            .monthPartial
+        )
+        XCTAssertEqual(
+            StarCalculator.dataAvailability(lunarMonth: 6, dayCanChi: "Giáp Tý"),
+            .complete
+        )
+    }
+
+    private func firstDate(
+        year: Int,
+        month: Int,
+        matching: (Date) -> Bool
+    ) -> Date? {
+        var components = DateComponents()
+        components.year = year
+        components.month = month
+        components.timeZone = timeZone
+        let calendar = Calendar(identifier: .gregorian)
+        for day in 1...31 {
+            components.day = day
+            guard let date = calendar.date(from: components) else { continue }
+            if matching(date) { return date }
+        }
+        return nil
     }
 }

@@ -183,6 +183,7 @@ extension StarCalculator {
     }
 
     static func monthCompleteness(lunarMonth: Int) -> (completed: Int, total: Int) {
+        // Count rows with actual stars — padded empty placeholders are not complete.
         let populated = monthData(lunarMonth)?.dayData.values.filter(\.hasAnyStars).count ?? 0
         return (populated, 60)
     }

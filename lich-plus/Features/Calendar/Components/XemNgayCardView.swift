@@ -109,6 +109,7 @@ struct XemNgayCardView: View {
                     .foregroundStyle(AppColors.textSecondary)
             }
         }
+        .accessibilityIdentifier("xemngay.verdict")
     }
 
     private var incompleteBanner: some View {
