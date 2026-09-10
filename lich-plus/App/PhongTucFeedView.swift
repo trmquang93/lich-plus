@@ -354,5 +354,6 @@ struct PhongTucFeedView: View {
     container.mainContext.insert(profile)
 
     return PhongTucFeedView()
+        .environmentObject(NotificationService(modelContext: container.mainContext))
         .modelContainer(container)
 }
