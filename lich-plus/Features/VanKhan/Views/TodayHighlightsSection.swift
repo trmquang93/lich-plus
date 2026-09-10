@@ -29,6 +29,12 @@ struct TodayHighlightsSection: View {
             .buttonStyle(.plain)
             .padding(.horizontal, 16)
             .padding(.top, 16)
+
+            if match.occasion.id == "gio" {
+                GioPreparationChecklistView()
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+            }
         } else {
             EmptyView()
         }

@@ -223,6 +223,7 @@ private struct DeceasedRelativeEditor: View {
     @State private var name: String = ""
     @State private var lunarDay: Int = 1
     @State private var lunarMonth: Int = 1
+    @State private var isLeapMonthAnniversary: Bool = false
 
     var body: some View {
         NavigationStack {
@@ -235,6 +236,7 @@ private struct DeceasedRelativeEditor: View {
                 Stepper(value: $lunarMonth, in: 1...12) {
                     Text(String(format: String(localized: "Lunar month: %d"), lunarMonth))
                 }
+                Toggle(String(localized: "Leap month (tháng nhuận)"), isOn: $isLeapMonthAnniversary)
             }
             .navigationTitle(String(localized: "Add deceased"))
             .navigationBarTitleDisplayMode(.inline)
@@ -248,7 +250,8 @@ private struct DeceasedRelativeEditor: View {
                             relation: relation,
                             name: name,
                             lunarDay: lunarDay,
-                            lunarMonth: lunarMonth
+                            lunarMonth: lunarMonth,
+                            isLeapMonthAnniversary: isLeapMonthAnniversary
                         )
                         modelContext.insert(r)
                         profile.deceasedRelatives.append(r)

@@ -35,7 +35,12 @@ enum VanKhanOccasionMatcher {
         // Anniversary (giỗ) — highest priority
         if let p = profile {
             for relative in p.deceasedRelatives
-            where relative.lunarDay == lunar.day && relative.lunarMonth == lunar.month {
+            where LunarAnniversaryCalendar.matchesAnniversary(
+                date: date,
+                lunarDay: relative.lunarDay,
+                lunarMonth: relative.lunarMonth,
+                isLeapMonthAnniversary: relative.isLeapMonthAnniversary
+            ) {
                 if let occ = VanKhanLibrary.occasion(id: "gio") {
                     matches.append(Match(occasion: occ, deceasedRelative: relative))
                 }

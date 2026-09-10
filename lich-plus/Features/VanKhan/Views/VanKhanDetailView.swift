@@ -83,6 +83,9 @@ struct VanKhanDetailView: View {
                 titleBlock
                 if occasion.category == .anniversary {
                     deceasedPickerSection
+                    GioPreparationChecklistView()
+                        .padding(.horizontal, 16)
+                        .padding(.top, 12)
                 }
                 infoSection
                 paperSection

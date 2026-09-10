@@ -13,6 +13,7 @@ struct SettingsView: View {
     @EnvironmentObject var syncService: CalendarSyncService
     @EnvironmentObject var googleAuthService: GoogleAuthService
     @EnvironmentObject var microsoftAuthService: MicrosoftAuthService
+    @EnvironmentObject var notificationService: NotificationService
     @Environment(\.modelContext) private var modelContext
     @Environment(\.requestReview) private var requestReviewAction
 
@@ -80,6 +81,74 @@ struct SettingsView: View {
                                     .foregroundStyle(AppColors.textPrimary)
 
                                 Text(String(localized: "Used to prefill văn khấn"))
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
+                    NavigationLink {
+                        BirthYearSettingsView()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "calendar.badge.clock")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text(String(localized: "Birth Year"))
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(String(localized: "Tuổi hợp / xung for xem ngày"))
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
+
+                    NavigationLink {
+                        PhongTucPresetsSettingsView()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "moon.circle.fill")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text(String(localized: "Phong tục presets"))
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(String(localized: "Rằm, Mùng 1, ngày chay, giỗ"))
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
+
+                    NavigationLink {
+                        ElderModeSettingsView()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "textformat.size.larger")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text(String(localized: "Large text mode"))
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(String(localized: "Easier reading for parents"))
                                     .font(.caption)
                                     .foregroundStyle(AppColors.textSecondary)
                             }
@@ -333,5 +402,6 @@ struct SettingsView: View {
         .environmentObject(CalendarSyncService(eventKitService: EventKitService(), modelContext: modelContext))
         .environmentObject(GoogleAuthService())
         .environmentObject(MicrosoftAuthService())
+        .environmentObject(NotificationService(modelContext: modelContext))
         .modelContainer(container)
 }

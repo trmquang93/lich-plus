@@ -215,6 +215,16 @@ struct CalendarView: View {
 
                                             // No ScrollView needed - ParallaxScrollView handles scrolling
                                             return VStack(spacing: 0) {
+                                                if day.isToday {
+                                                    FestivalCountdownCardView(referenceDate: day.date)
+                                                        .padding(.horizontal, AppTheme.spacing16)
+                                                        .padding(.top, AppTheme.spacing12)
+
+                                                    TodayXuatHanhCardView(date: day.date)
+                                                        .padding(.horizontal, AppTheme.spacing16)
+                                                        .padding(.top, AppTheme.spacing12)
+                                                }
+
                                                 QuickInfoBannerView(
                                                     day: day,
                                                     luckyHours: hours,

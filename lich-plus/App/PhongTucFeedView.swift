@@ -10,6 +10,7 @@ import SwiftUI
 import SwiftData
 
 struct PhongTucFeedView: View {
+    @EnvironmentObject private var notificationService: NotificationService
     @State private var searchText: String = ""
     @FocusState private var isSearchFocused: Bool
 
@@ -27,6 +28,10 @@ struct PhongTucFeedView: View {
                     searchBar
                     if !isSearching {
                         TodayHighlightsSection()
+                        FestivalCountdownCardView(referenceDate: Date())
+                            .padding(.horizontal, 16)
+                            .padding(.top, 12)
+                        phongTucToolsSection
                     }
                     let greetings = filteredGreetings
                     let vanKhanGroups = filteredVanKhanGroups
@@ -211,6 +216,76 @@ struct PhongTucFeedView: View {
             of: needle,
             options: [.caseInsensitive, .diacriticInsensitive]
         ) != nil
+    }
+
+    private var phongTucToolsSection: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(String(localized: "Tiện ích"))
+                .font(.system(size: 13, weight: .semibold))
+                .tracking(0.6)
+                .textCase(.uppercase)
+                .foregroundStyle(AppColors.textSecondary)
+                .padding(.horizontal, 20)
+                .padding(.top, 20)
+
+            VStack(spacing: 0) {
+                NavigationLink {
+                    KinhDichView()
+                } label: {
+                    toolRow(
+                        icon: "circle.hexagongrid.fill",
+                        title: String(localized: "Xem quẻ Kinh Dịch"),
+                        subtitle: String(localized: "Gieo 3 đồng — offline")
+                    )
+                }
+                .buttonStyle(.plain)
+
+                Divider().padding(.leading, 64)
+
+                NavigationLink {
+                    PhongTucPresetsSettingsView()
+                } label: {
+                    toolRow(
+                        icon: "bell.badge",
+                        title: String(localized: "Phong tục presets"),
+                        subtitle: String(localized: "Rằm, Mùng 1, ngày chay, giỗ")
+                    )
+                }
+                .buttonStyle(.plain)
+            }
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(AppColors.background)
+                    .shadow(color: Color.black.opacity(0.04), radius: 1, x: 0, y: 1)
+            )
+            .padding(.horizontal, 16)
+        }
+    }
+
+    private func toolRow(icon: String, title: String, subtitle: String) -> some View {
+        HStack(spacing: 12) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(AppColors.vkGoldTint)
+                    .frame(width: 44, height: 44)
+                Image(systemName: icon)
+                    .foregroundStyle(AppColors.primary)
+            }
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(AppColors.textPrimary)
+                Text(subtitle)
+                    .font(.system(size: 13))
+                    .foregroundStyle(AppColors.textSecondary)
+            }
+            Spacer()
+            Image(systemName: "chevron.right")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(AppColors.textDisabled)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 14)
     }
 
     private var emptyResults: some View {

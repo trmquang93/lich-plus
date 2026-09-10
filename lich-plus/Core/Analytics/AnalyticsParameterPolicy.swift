@@ -46,6 +46,8 @@ enum AnalyticsParameterPolicy {
         "email",
         "password",
         "token",
+        "birth",
+        "birthyear",
     ]
 
     static func isAllowedEventName(_ name: String) -> Bool {
@@ -134,7 +136,7 @@ enum AnalyticsParameterPolicy {
     }
 
     private static func isAllowedWidgetKind(_ kind: String) -> Bool {
-        let allowedKinds: Set<String> = ["today", "month", "timeline"]
+        let allowedKinds: Set<String> = ["today", "countdown", "month", "timeline"]
         return allowedKinds.contains(kind)
     }
 

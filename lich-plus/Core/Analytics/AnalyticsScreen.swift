@@ -25,4 +25,7 @@ enum AnalyticsScreen: String, CaseIterable, Sendable {
     case van_khan
     case greetings
     case day_detail
+    case phong_tuc_presets
+    case kinh_dich
+    case elder_mode_settings
 }

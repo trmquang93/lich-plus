@@ -25,7 +25,9 @@ final class WidgetSnapshotStoreTests: XCTestCase {
             specialChips: ["Ngày Rằm"],
             nextHolidayTitle: "Tết",
             nextHolidayDate: Date(timeIntervalSince1970: 1_800_000_000),
-            nextHolidayDaysUntil: 12
+            nextHolidayDaysUntil: 12,
+            luckyHourSummary: "Mão (5-7), Tỵ (9-11)",
+            avoidHourSummary: "Tý (23-1), Ngọ (11-13)"
         )
 
         let snapshot = WidgetTimelineSnapshot(
