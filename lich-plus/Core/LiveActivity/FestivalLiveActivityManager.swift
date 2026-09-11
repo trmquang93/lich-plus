@@ -45,9 +45,10 @@ final class FestivalLiveActivityManager {
     /// Syncs the Live Activity with current festival data and user preferences.
     func refresh(
         referenceDate: Date = .now,
-        autoStartEnabled: Bool = FestivalLiveActivityStore.shared.autoStartEnabled,
         localeCode: String = LanguageManager.shared.currentLanguageCode
     ) {
+        let autoStartEnabled = FestivalLiveActivityStore.shared.autoStartEnabled
+
         guard let entry = eligibleFestival(from: referenceDate) else {
             if isActive {
                 endActivity(reason: .festivalOutOfWindow)
