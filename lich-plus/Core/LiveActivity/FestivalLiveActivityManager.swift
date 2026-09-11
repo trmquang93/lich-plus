@@ -53,12 +53,13 @@ final class FestivalLiveActivityManager {
             if isActive {
                 endActivity(reason: .festivalOutOfWindow)
             }
+            FestivalLiveActivityStore.shared.clearDismissedFestival()
             return
         }
 
         if isActive {
             updateActivity(with: entry, localeCode: localeCode)
-        } else if autoStartEnabled {
+        } else if autoStartEnabled, !FestivalLiveActivityStore.shared.isAutoStartBlocked(for: entry.id) {
             startActivity(with: entry, localeCode: localeCode)
         }
     }
@@ -66,6 +67,7 @@ final class FestivalLiveActivityManager {
     /// Manually starts the Live Activity for the next eligible public festival.
     func startManually(localeCode: String = LanguageManager.shared.currentLanguageCode) {
         guard let entry = eligibleFestival() else { return }
+        FestivalLiveActivityStore.shared.clearDismissedFestival()
         if isActive {
             updateActivity(with: entry, localeCode: localeCode)
         } else {
@@ -75,6 +77,11 @@ final class FestivalLiveActivityManager {
 
     /// Ends any running festival Live Activity.
     func stopManually() {
+        if let entry = eligibleFestival() {
+            FestivalLiveActivityStore.shared.dismissFestival(id: entry.id)
+        } else if let activeId = Activity<FestivalLiveActivityAttributes>.activities.first?.attributes.festivalId {
+            FestivalLiveActivityStore.shared.dismissFestival(id: activeId)
+        }
         endActivity(reason: .userDisabled)
     }
 

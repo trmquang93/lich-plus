@@ -15,6 +15,7 @@ enum WidgetAppGroup {
     static let snapshotKey = "widget_timeline_snapshot_v1"
     static let languageKey = "app_language"
     static let liveActivityAutoStartKey = FestivalLiveActivityConstants.autoStartEnabledKey
+    static let liveActivityDismissedFestivalIdKey = FestivalLiveActivityConstants.userDismissedFestivalIdKey
 
     static var sharedDefaults: UserDefaults? {
         UserDefaults(suiteName: identifier)

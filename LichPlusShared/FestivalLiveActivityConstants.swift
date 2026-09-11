@@ -16,4 +16,7 @@ enum FestivalLiveActivityConstants {
 
     /// UserDefaults / App Group key for the auto-start preference.
     static let autoStartEnabledKey = "festival_live_activity_auto_start_v1"
+
+    /// UserDefaults / App Group key for the festival the user manually stopped.
+    static let userDismissedFestivalIdKey = "festival_live_activity_dismissed_festival_id_v1"
 }

@@ -52,6 +52,46 @@ final class FestivalLiveActivityManagerTests: XCTestCase {
         store.setAutoStartEnabled(original)
     }
 
+    func testManualStopDismissesCurrentFestivalFromAutoStart() {
+        let store = FestivalLiveActivityStore.shared
+        let originalDismissed = store.userDismissedFestivalId
+
+        store.clearDismissedFestival()
+        store.dismissFestival(id: "1-1-2026")
+        XCTAssertEqual(store.userDismissedFestivalId, "1-1-2026")
+        XCTAssertTrue(store.isAutoStartBlocked(for: "1-1-2026"))
+        XCTAssertFalse(store.isAutoStartBlocked(for: "8-15-2026"))
+        XCTAssertEqual(
+            WidgetAppGroup.sharedDefaults?.string(forKey: WidgetAppGroup.liveActivityDismissedFestivalIdKey),
+            "1-1-2026"
+        )
+
+        store.clearDismissedFestival()
+        XCTAssertNil(store.userDismissedFestivalId)
+
+        if let originalDismissed {
+            store.dismissFestival(id: originalDismissed)
+        }
+    }
+
+    func testReEnablingAutoStartClearsDismissedFestival() {
+        let store = FestivalLiveActivityStore.shared
+        let originalAutoStart = store.autoStartEnabled
+        let originalDismissed = store.userDismissedFestivalId
+
+        store.dismissFestival(id: "1-1-2026")
+        store.setAutoStartEnabled(false)
+        store.setAutoStartEnabled(true)
+        XCTAssertNil(store.userDismissedFestivalId)
+
+        store.setAutoStartEnabled(originalAutoStart)
+        if let originalDismissed {
+            store.dismissFestival(id: originalDismissed)
+        } else {
+            store.clearDismissedFestival()
+        }
+    }
+
     func testFestivalCountdownEntryIsTet() {
         let tet = FestivalCountdownEntry(
             id: "1-1-2026",
