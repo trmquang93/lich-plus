@@ -38,9 +38,9 @@ All 12 lunar months implemented (720/720 Can-Chi). 42 stars (12 good + 30 bad).
 - Calculator: `StarCalculator.swift` — `detectStars()`, `calculateStarScore()`
 
 Data quality:
-- Months 9-12: detailed (33% coverage)
-- Months 7-8: partial (17%)
-- Months 1-6: structure ready (50%)
+- Month 3: complete (60/60 Can-Chi)
+- Month 7: 58/60 — residual gaps: Giáp Thân, Bính Thân (book lists only non-enum stars: Thổ phủ, Lục bất thành)
+- Other months: see `Month*StarData.swift` completeness helpers
 
 ## Validation Metrics (vs xemngay.com)
 

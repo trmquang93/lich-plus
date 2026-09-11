@@ -11,38 +11,27 @@ final class ActivityVerdictCalculatorTests: XCTestCase {
     private let timeZone = TimeZone(identifier: "Asia/Ho_Chi_Minh")!
 
     func testEmptyStarPlaceholdersAreNotComplete() {
-        // WHY: Month 3 seeds 60 empty keys; an empty placeholder is missing data, not a confident empty day.
-        let availability = StarCalculator.dataAvailability(lunarMonth: 3, dayCanChi: "Giáp Tý")
+        // WHY: empty padded catalog rows must not count as complete even when the month key exists
+        let availability = StarCalculator.dataAvailability(lunarMonth: 7, dayCanChi: "Giáp Thân")
         XCTAssertEqual(
             availability,
             .missingForDay,
             "empty star placeholders must not count as complete"
         )
 
-        let completeness = StarCalculator.monthCompleteness(lunarMonth: 3)
+        let completeness = StarCalculator.monthCompleteness(lunarMonth: 7)
         XCTAssertLessThan(completeness.completed, completeness.total)
     }
 
     func testVerdictReturnsIncompleteWhenStarDataMissingForCanChi() {
-        // WHY: empty padded catalog rows must not produce a confident good/bad verdict
-        guard let date = firstDate(
-            year: 2026,
-            month: 4,
-            matching: { date in
-                let lunar = LunarCalendar.solarToLunar(date)
-                guard lunar.month == 3 else { return false }
-                let canChi = CanChiCalculator.canChiToString(
-                    CanChiCalculator.calculateDayCanChi(for: date)
-                )
-                return StarCalculator.dataAvailability(lunarMonth: 3, dayCanChi: canChi) == .missingForDay
-            }
-        ) else {
-            XCTFail("Need a lunar month 3 date whose star row is an empty placeholder")
+        // WHY: documented gap rows must not produce a confident good/bad verdict
+        guard let date = firstLunarMonthDate(year: 2026, lunarMonth: 7, dayCanChi: "Giáp Thân") else {
+            XCTFail("Need a lunar month 7 date whose star row is an honest gap (Giáp Thân / Bính Thân)")
             return
         }
 
         let lunar = LunarCalendar.solarToLunar(date)
-        XCTAssertEqual(lunar.month, 3, "Test date should fall in lunar month 3")
+        XCTAssertEqual(lunar.month, 7, "Test date should fall in lunar month 7")
 
         let verdict = ActivityVerdictCalculator.verdict(for: date, purpose: .travel, birthYear: nil)
         XCTAssertEqual(verdict.status, .incomplete)
@@ -104,21 +93,21 @@ final class ActivityVerdictCalculatorTests: XCTestCase {
     func testEmptyPaddedStarRowsAreNotTreatedAsComplete() {
         // WHY: empty padded days must not get confident .good/.bad as if the catalog was full
         XCTAssertEqual(
-            StarCalculator.dataAvailability(lunarMonth: 3, dayCanChi: "Giáp Tý"),
+            StarCalculator.dataAvailability(lunarMonth: 7, dayCanChi: "Giáp Thân"),
             .missingForDay
+        )
+        XCTAssertEqual(
+            StarCalculator.dataAvailability(lunarMonth: 3, dayCanChi: "Giáp Tý"),
+            .complete
         )
         XCTAssertEqual(
             StarCalculator.dataAvailability(lunarMonth: 7, dayCanChi: "Giáp Tý"),
-            .missingForDay
+            .complete
         )
 
-        let month3 = StarCalculator.monthCompleteness(lunarMonth: 3)
-        XCTAssertLessThan(month3.completed, month3.total)
+        let month7 = StarCalculator.monthCompleteness(lunarMonth: 7)
+        XCTAssertLessThan(month7.completed, month7.total)
 
-        XCTAssertEqual(
-            StarCalculator.dataAvailability(lunarMonth: 3, dayCanChi: "Ất Dậu"),
-            .monthPartial
-        )
         XCTAssertEqual(
             StarCalculator.dataAvailability(lunarMonth: 6, dayCanChi: "Giáp Tý"),
             .complete
@@ -139,6 +128,27 @@ final class ActivityVerdictCalculatorTests: XCTestCase {
             components.day = day
             guard let date = calendar.date(from: components) else { continue }
             if matching(date) { return date }
+        }
+        return nil
+    }
+
+    private func firstLunarMonthDate(year: Int, lunarMonth: Int, dayCanChi: String) -> Date? {
+        var components = DateComponents()
+        components.year = year
+        components.timeZone = timeZone
+        let calendar = Calendar(identifier: .gregorian)
+        for month in 1...12 {
+            components.month = month
+            for day in 1...31 {
+                components.day = day
+                guard let date = calendar.date(from: components) else { continue }
+                let lunar = LunarCalendar.solarToLunar(date)
+                guard lunar.month == lunarMonth else { continue }
+                let canChi = CanChiCalculator.canChiToString(
+                    CanChiCalculator.calculateDayCanChi(for: date)
+                )
+                if canChi == dayCanChi { return date }
+            }
         }
         return nil
     }
