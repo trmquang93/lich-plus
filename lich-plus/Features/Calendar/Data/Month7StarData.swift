@@ -215,7 +215,7 @@ struct Month7StarData {
     static func printDataStatus() {
         let status = dataCompleteness
         let percentage = Double(status.completed) / Double(status.total) * 100.0
-        print("Month 7 Star Data: \(status.completed)/\(status.total) entries (\(String(format: \"%.1f\", percentage))%)")
+        print("Month 7 Star Data: \(status.completed)/\(status.total) entries (\(String(format: "%.1f", percentage))%)")
         print("⚠️ WARNING: 2 row(s) have no enum-mappable stars: Giáp Thân, Bính Thân")
     }
 }

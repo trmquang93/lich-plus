@@ -207,7 +207,7 @@ def generate_swift(month: int, page_range: str, data: dict[str, tuple[list[str],
         "    static func printDataStatus() {",
         "        let status = dataCompleteness",
         "        let percentage = Double(status.completed) / Double(status.total) * 100.0",
-        f'        print("Month {month} Star Data: \\(status.completed)/\\(status.total) entries (\\(String(format: \\"%.1f\\", percentage))%)")',
+        f'        print("Month {month} Star Data: \\(status.completed)/\\(status.total) entries (\\(String(format: "%.1f", percentage))%)")',
     ])
 
     if gaps:

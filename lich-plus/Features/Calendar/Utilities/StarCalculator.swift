@@ -189,16 +189,11 @@ extension StarCalculator {
     }
 
     /// Whether star data is complete enough to give a confident purpose verdict.
-    /// Empty placeholder entries (no good or bad stars) are not treated as complete.
+    /// Per-day: populated rows with catalog stars are complete; only honest gap days are missing.
     static func dataAvailability(lunarMonth: Int, dayCanChi: String) -> StarDataAvailability {
-        let completeness = monthCompleteness(lunarMonth: lunarMonth)
         let starData = detectStars(lunarMonth: lunarMonth, dayCanChi: dayCanChi)
         let hasRealStars = starData?.hasAnyStars ?? false
-
-        if completeness.completed < completeness.total {
-            return hasRealStars ? .monthPartial : .missingForDay
-        }
-        return starData != nil ? .complete : .missingForDay
+        return hasRealStars ? .complete : .missingForDay
     }
 
     private static func monthData(_ lunarMonth: Int) -> MonthStarData? {

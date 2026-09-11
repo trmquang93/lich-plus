@@ -213,6 +213,6 @@ struct Month3StarData {
     static func printDataStatus() {
         let status = dataCompleteness
         let percentage = Double(status.completed) / Double(status.total) * 100.0
-        print("Month 3 Star Data: \(status.completed)/\(status.total) entries (\(String(format: \"%.1f\", percentage))%)")
+        print("Month 3 Star Data: \(status.completed)/\(status.total) entries (\(String(format: "%.1f", percentage))%)")
     }
 }
