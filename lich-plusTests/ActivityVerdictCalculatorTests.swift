@@ -25,18 +25,7 @@ final class ActivityVerdictCalculatorTests: XCTestCase {
 
     func testVerdictReturnsIncompleteWhenStarDataMissingForCanChi() {
         // WHY: documented gap rows must not produce a confident good/bad verdict
-        guard let date = firstDate(
-            year: 2026,
-            month: 8,
-            matching: { date in
-                let lunar = LunarCalendar.solarToLunar(date)
-                guard lunar.month == 7 else { return false }
-                let canChi = CanChiCalculator.canChiToString(
-                    CanChiCalculator.calculateDayCanChi(for: date)
-                )
-                return StarCalculator.dataAvailability(lunarMonth: 7, dayCanChi: canChi) == .missingForDay
-            }
-        ) else {
+        guard let date = firstLunarMonthDate(year: 2026, lunarMonth: 7, dayCanChi: "Giáp Thân") else {
             XCTFail("Need a lunar month 7 date whose star row is an honest gap (Giáp Thân / Bính Thân)")
             return
         }
@@ -139,6 +128,27 @@ final class ActivityVerdictCalculatorTests: XCTestCase {
             components.day = day
             guard let date = calendar.date(from: components) else { continue }
             if matching(date) { return date }
+        }
+        return nil
+    }
+
+    private func firstLunarMonthDate(year: Int, lunarMonth: Int, dayCanChi: String) -> Date? {
+        var components = DateComponents()
+        components.year = year
+        components.timeZone = timeZone
+        let calendar = Calendar(identifier: .gregorian)
+        for month in 1...12 {
+            components.month = month
+            for day in 1...31 {
+                components.day = day
+                guard let date = calendar.date(from: components) else { continue }
+                let lunar = LunarCalendar.solarToLunar(date)
+                guard lunar.month == lunarMonth else { continue }
+                let canChi = CanChiCalculator.canChiToString(
+                    CanChiCalculator.calculateDayCanChi(for: date)
+                )
+                if canChi == dayCanChi { return date }
+            }
         }
         return nil
     }
