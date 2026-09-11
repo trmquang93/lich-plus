@@ -61,7 +61,10 @@ struct FestivalCountdownEntry: Identifiable, Equatable {
     let solarDate: Date
     let daysUntil: Int
 
-    var isTet: Bool { id == "1-1" }
+    var isTet: Bool {
+        let parts = id.split(separator: "-")
+        return parts.count >= 2 && parts[0] == "1" && parts[1] == "1"
+    }
 
     var daysLabel: String {
         if daysUntil == 0 { return String(localized: "Today") }

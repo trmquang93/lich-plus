@@ -16,6 +16,7 @@ final class WidgetSnapshotCoordinator {
     func refresh(modelContext: ModelContext) {
         WidgetSnapshotWriter.refresh(modelContext: modelContext)
         WidgetCenter.shared.reloadAllTimelines()
+        FestivalLiveActivityManager.shared.refresh()
     }
 
     func startObserving(modelContext: ModelContext) {

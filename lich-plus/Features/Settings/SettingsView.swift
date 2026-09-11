@@ -135,6 +135,29 @@ struct SettingsView: View {
                     }
 
                     NavigationLink {
+                        FestivalLiveActivitySettingsView()
+                    } label: {
+                        HStack(spacing: AppTheme.spacing12) {
+                            Image(systemName: "sparkles.rectangle.stack")
+                                .font(.title2)
+                                .foregroundStyle(AppColors.primary)
+                                .frame(width: 32)
+
+                            VStack(alignment: .leading, spacing: AppTheme.spacing2) {
+                                Text(String(localized: "Festival countdown"))
+                                    .font(.body)
+                                    .foregroundStyle(AppColors.textPrimary)
+
+                                Text(String(localized: "Tết Live Activity on Lock Screen"))
+                                    .font(.caption)
+                                    .foregroundStyle(AppColors.textSecondary)
+                            }
+
+                            Spacer()
+                        }
+                    }
+
+                    NavigationLink {
                         ElderModeSettingsView()
                     } label: {
                         HStack(spacing: AppTheme.spacing12) {
