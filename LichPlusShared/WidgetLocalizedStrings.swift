@@ -53,4 +53,12 @@ enum WidgetLocalizedStrings {
     static func directionTitle(localeCode: String) -> String {
         localeCode == "vi" ? "Hướng tốt" : "Direction"
     }
+
+    static func liveActivityCountdownTitle(localeCode: String) -> String {
+        localeCode == "vi" ? "Đếm ngược lễ" : "Festival countdown"
+    }
+
+    static func liveActivityTetCountdownTitle(localeCode: String) -> String {
+        localeCode == "vi" ? "Đếm ngược Tết" : "Tết countdown"
+    }
 }
