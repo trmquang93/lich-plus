@@ -6,6 +6,8 @@ ACCURATE LUNAR-SOLAR CALENDAR
 - 12 Truc system and Hoang Dao (auspicious days) information
 - Traditional feng shui day quality ratings
 - Perpetual calendar support from 1900-2100
+- Xem ngày cho việc — pick an activity and see if the day suits it
+- Xuất hành directions and tuổi hợp/xung from your birth year (stored on device only)
 
 SMART EVENT MANAGEMENT
 - Create events based on lunar or solar calendar
@@ -13,6 +15,7 @@ SMART EVENT MANAGEMENT
 - Sync with Apple Calendar, Google Calendar, Microsoft Calendar
 - Smart reminders for important events
 - Colour-coded event categories
+- Giỗ leap-month support; presets for Rằm, Mùng 1, fasting days, and giỗ
 
 EFFICIENT TASK MANAGEMENT
 - Visual task timeline
@@ -20,17 +23,26 @@ EFFICIENT TASK MANAGEMENT
 - Quick search for tasks and events
 - Easy completion tracking
 
+WIDGETS & LOCK SCREEN
+- Today widget — solar/lunar date and next public holiday (Home & Lock Screen)
+- Festival countdown widget
+- Tết Live Activity on Lock Screen (public holidays only — no private data)
+
+TRADITIONAL TOOLS
+- Văn khấn library with giỗ personalisation
+- Kinh Dịch coin reading — offline, three coins
+
 MODERN DESIGN
 - Clean, minimalist interface
 - Smooth user experience
 - Full Vietnamese language support
+- Elder mode — larger text across the app
 - Optimised for iOS 17+
 
 KEY FEATURES
 - Quick day info preview on monthly calendar
 - Infinite scrolling between months
 - Apple Calendar-style month picker
-- Home screen widgets (coming soon)
 
 Lich+ is designed specifically for Vietnamese users, helping you never miss important lunar dates like Tet (Lunar New Year), Mid-Autumn Festival, ancestral death anniversaries, and lunar birthdays of loved ones.
 
