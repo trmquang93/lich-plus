@@ -17,8 +17,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ %2$@"
+            "state" : "translated",
+            "value" : "%@ %@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ %@"
           }
         }
       }
@@ -27,8 +33,14 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$d tháng %2$d ÂL"
+            "state" : "translated",
+            "value" : "Lunar month %d, day %d"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d tháng %d ÂL"
           }
         }
       }
@@ -48,6 +60,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld lịch%@ đã chọn"
+          }
+        }
+      }
+    },
+    "%lld days" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld days"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld ngày"
+          }
+        }
+      }
+    },
+    "%lld." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld."
           }
         }
       }
@@ -81,7 +125,20 @@
       "shouldTranslate" : false
     },
     "1 / 1" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 / 1"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1 / 1"
+          }
+        }
+      }
     },
     "1 hour before" : {
       "localizations" : {
@@ -102,6 +159,54 @@
     "1.0.0" : {
       "shouldTranslate" : false
     },
+    "1st day of each lunar month" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1st day of each lunar month"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mùng 1 hàng tháng"
+          }
+        }
+      }
+    },
+    "7, 3, and 1 days before each giỗ" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7, 3, and 1 days before each giỗ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7, 3, and 1 days before each giỗ"
+          }
+        }
+      }
+    },
+    "7, 3, and 1 days before each giỗ in Personal Profile" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7, 3, and 1 days before each giỗ in Personal Profile"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "7, 3, and 1 days before each giỗ in Personal Profile"
+          }
+        }
+      }
+    },
     "12 Trực" : {
       "localizations" : {
         "en" : {
@@ -114,6 +219,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "12 Trực"
+          }
+        }
+      }
+    },
+    "12 Trực and Hoàng Đạo hours are still shown below." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 Trực and Hoàng Đạo hours are still shown below."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 Trực và giờ Hoàng Đạo vẫn được hiển thị bên dưới."
+          }
+        }
+      }
+    },
+    "12 Trực: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 Trực: %@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "12 Trực: %@"
           }
         }
       }
@@ -134,6 +271,22 @@
         }
       }
     },
+    "15th day of each lunar month" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "15th day of each lunar month"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rằm hàng tháng"
+          }
+        }
+      }
+    },
     "30 minutes before" : {
       "localizations" : {
         "en" : {
@@ -150,6 +303,22 @@
         }
       }
     },
+    "A simple checklist — resets each lunar year." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A simple checklist — resets each lunar year."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danh sách kiểm tra đơn giản — tự đặt lại mỗi năm âm lịch."
+          }
+        }
+      }
+    },
     "About" : {
       "localizations" : {
         "en" : {
@@ -162,6 +331,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Giới thiệu"
+          }
+        }
+      }
+    },
+    "Abundance with responsibility. Share generously; pride invites loss." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abundance with responsibility. Share generously; pride invites loss."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phú quý kèm trách nhiệm. Chia sẻ rộng rãi; kiêu ngạo dễ mất."
           }
         }
       }
@@ -198,8 +383,37 @@
         }
       }
     },
+    "Adapt to the moment. Following wise counsel beats stubborn solo plans." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Adapt to the moment. Following wise counsel beats stubborn solo plans."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thích ứng với thời điểm. Nghe lời khuyên khôn ngoan hơn bám cứng kế hoạch một mình."
+          }
+        }
+      }
+    },
     "Add" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm"
+          }
+        }
+      }
     },
     "Add an ICS calendar URL to get started" : {
       "localizations" : {
@@ -234,10 +448,36 @@
       }
     },
     "Add deceased" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add deceased"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm người đã khuất"
+          }
+        }
+      }
     },
     "Add deceased relative" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add deceased relative"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm người thân đã khuất"
+          }
+        }
+      }
     },
     "Add ICS Calendar" : {
       "localizations" : {
@@ -287,6 +527,22 @@
         }
       }
     },
+    "Add Mùng 1 / Rằm to calendar" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Mùng 1 / Rằm to calendar"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Mùng 1 / Rằm to calendar"
+          }
+        }
+      }
+    },
     "Add new item" : {
       "localizations" : {
         "en" : {
@@ -320,7 +576,36 @@
       }
     },
     "Address" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Address"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Địa chỉ"
+          }
+        }
+      }
+    },
+    "Advance like sunrise. Recognition comes from steady improvement." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Advance like sunrise. Recognition comes from steady improvement."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiến như mặt trời mọc. Sự công nhận đến từ sự tiến bộ bền bỉ."
+          }
+        }
+      }
     },
     "AI Assistant" : {
       "localizations" : {
@@ -386,8 +671,133 @@
         }
       }
     },
+    "Alliance and trust build strength. Choose companions carefully." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alliance and trust build strength. Choose companions carefully."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liên minh và tin cậy tạo sức mạnh. Chọn bạn đồng hành cẩn thận."
+          }
+        }
+      }
+    },
+    "Almost complete — guard the finish. Order now; vigilance prevents slip." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Almost complete — guard the finish. Order now; vigilance prevents slip."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sắp hoàn thành — giữ vững phần cuối. Sắp xếp ngay; cảnh giác tránh sai sót."
+          }
+        }
+      }
+    },
     "An cư lạc nghiệp" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An cư lạc nghiệp"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Housewarming"
+          }
+        }
+      }
+    },
+    "Ancestor Worship" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ancestor Worship"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cúng giỗ"
+          }
+        }
+      }
+    },
+    "Approach with sincerity. Influence grows when you serve, not dominate." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Approach with sincerity. Influence grows when you serve, not dominate."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiếp cận với chân thành. Ảnh hưởng tăng khi phục vụ, không phải thống trị."
+          }
+        }
+      }
+    },
+    "Auspicious direction" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auspicious direction"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hướng tốt"
+          }
+        }
+      }
+    },
+    "Auto-start before festivals" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auto-start before festivals"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tự bật trước lễ hội"
+          }
+        }
+      }
+    },
+    "Automatic monthly reminders for traditional lunar days. No need to create recurring events by hand." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatic monthly reminders for traditional lunar days. No need to create recurring events by hand."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhắc hàng tháng tự động cho các ngày âm lịch truyền thống. Không cần tạo sự kiện lặp lại thủ công."
+          }
+        }
+      }
     },
     "Automatically add lunar calendar events for Mùng 1 and Rằm each month" : {
       "localizations" : {
@@ -401,6 +811,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tự động thêm sự kiện âm lịch cho Mùng 1 và Rằm mỗi tháng"
+          }
+        }
+      }
+    },
+    "Automatically shows a countdown on the Lock Screen and Dynamic Island when a public festival is within %lld days." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Automatically shows a countdown on the Lock Screen and Dynamic Island when a public festival is within %lld days."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tự hiển thị đếm ngược trên Màn hình khóa và Dynamic Island khi lễ hội công cộng còn %lld ngày."
           }
         }
       }
@@ -437,6 +863,22 @@
         }
       }
     },
+    "Avoid for this activity" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Avoid for this activity"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nên tránh việc này"
+          }
+        }
+      }
+    },
     "Avoid major decisions" : {
       "localizations" : {
         "en" : {
@@ -449,6 +891,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tránh các quyết định quan trọng"
+          }
+        }
+      }
+    },
+    "Bác / Tan vỡ" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bác / Tan vỡ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bác / Dissolution"
           }
         }
       }
@@ -534,7 +992,148 @@
       }
     },
     "Bài khấn" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bài khấn"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer text"
+          }
+        }
+      }
+    },
+    "Based on today's Can-Chi and giờ hoàng đạo table." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Based on today's Can-Chi and giờ hoàng đạo table."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dựa trên Can-Chi hôm nay và bảng giờ hoàng đạo."
+          }
+        }
+      }
+    },
+    "Bĩ / Tắc" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bĩ / Tắc"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bĩ / Blockage"
+          }
+        }
+      }
+    },
+    "Bí / Trang điểm" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bí / Trang điểm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bí / Adornment"
+          }
+        }
+      }
+    },
+    "Birth year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birth year"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Năm sinh"
+          }
+        }
+      }
+    },
+    "Birth Year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birth Year"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Năm sinh"
+          }
+        }
+      }
+    },
+    "Birth year clash" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birth year clash"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xung năm sinh"
+          }
+        }
+      }
+    },
+    "Birth year clash day" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birth year clash day"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày xung tuổi"
+          }
+        }
+      }
+    },
+    "Birth year for tuổi hợp" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birth year for tuổi hợp"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birth year for age compatibility"
+          }
+        }
+      }
     },
     "Birthday" : {
       "localizations" : {
@@ -548,6 +1147,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sinh nhật"
+          }
+        }
+      }
+    },
+    "Blockage — withdraw from noise. Protect values; wait for better air." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blockage — withdraw from noise. Protect values; wait for better air."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tắc nghẽn — rút lui khỏi ồn ào. Bảo vệ giá trị; chờ thời thuận hơn."
           }
         }
       }
@@ -584,6 +1199,38 @@
         }
       }
     },
+    "Buy fruit and flowers" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Buy fruit and flowers"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mua hoa quả"
+          }
+        }
+      }
+    },
+    "Cách / Đổi" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cách / Đổi"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cách / Revolution"
+          }
+        }
+      }
+    },
     "Calendar" : {
       "localizations" : {
         "en" : {
@@ -612,6 +1259,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cần Quyền Truy Cập Lịch"
+          }
+        }
+      }
+    },
+    "Calendar events" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Calendar events"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sự kiện lịch"
           }
         }
       }
@@ -696,6 +1359,38 @@
         }
       }
     },
+    "Cấn / Dừng" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cấn / Dừng"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cấn / Stillness"
+          }
+        }
+      }
+    },
+    "Càn / Kiên" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Càn / Kiên"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Càn / Firmness"
+          }
+        }
+      }
+    },
     "Cancel" : {
       "localizations" : {
         "en" : {
@@ -760,6 +1455,54 @@
         }
       }
     },
+    "Cấu / Gặp" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cấu / Gặp"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cấu / Encounter"
+          }
+        }
+      }
+    },
+    "Chấn / Sấm" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chấn / Sấm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chấn / Thunder"
+          }
+        }
+      }
+    },
+    "Check Day for Activity" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Check Day for Activity"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem ngày cho việc"
+          }
+        }
+      }
+    },
     "Children" : {
       "localizations" : {
         "en" : {
@@ -775,9 +1518,6 @@
           }
         }
       }
-    },
-    "Chỉnh sửa" : {
-
     },
     "Choose which Google calendars to display in this app." : {
       "localizations" : {
@@ -812,13 +1552,116 @@
       }
     },
     "Chưa có địa chỉ" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chưa có địa chỉ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No address yet"
+          }
+        }
+      }
     },
     "Chưa có tên" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chưa có tên"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No name yet"
+          }
+        }
+      }
     },
     "Chúc Tết" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chúc Tết"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Year greetings"
+          }
+        }
+      }
+    },
+    "Clarity like fire. Attach to what is right; avoid empty spectacle." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clarity like fire. Attach to what is right; avoid empty spectacle."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sáng suốt như lửa. Bám điều đúng; tránh hình thức rỗng."
+          }
+        }
+      }
+    },
+    "Clashing day — favor %@ colors/elements (supports your %@ year)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clashing day — favor %1$@ colors/elements (supports your %2$@ year)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày xung — nên dùng màu/hành %1$@ (hỗ trợ năm %2$@ của bạn)"
+          }
+        }
+      }
+    },
+    "Clean altar area" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clean altar area"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dọn khu vực bàn thờ"
+          }
+        }
+      }
+    },
+    "Clear obstacles firmly but fairly. Justice restores flow." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear obstacles firmly but fairly. Justice restores flow."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gỡ trở ngại dứt khoát nhưng công bằng. Công lý khôi phục dòng chảy."
+          }
+        }
+      }
     },
     "Clear search" : {
       "localizations" : {
@@ -836,6 +1679,38 @@
         }
       }
     },
+    "Cổ / Sửa" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cổ / Sửa"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cổ / Restoration"
+          }
+        }
+      }
+    },
+    "Cold Food Festival" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cold Food Festival"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tết Hàn Thực"
+          }
+        }
+      }
+    },
     "Colleagues" : {
       "localizations" : {
         "en" : {
@@ -848,6 +1723,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Đồng nghiệp"
+          }
+        }
+      }
+    },
+    "Complete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Complete"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoàn thành"
           }
         }
       }
@@ -869,13 +1760,52 @@
       }
     },
     "con gái" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "con gái"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "daughter"
+          }
+        }
+      }
     },
     "Con là" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Con là"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Child is"
+          }
+        }
+      }
     },
     "con trai" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "con trai"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "con trai"
+          }
+        }
+      }
     },
     "Configure reminders and notifications" : {
       "localizations" : {
@@ -889,6 +1819,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cấu hình lời nhắc và thông báo"
+          }
+        }
+      }
+    },
+    "Conflict costs more than compromise. Seek fair middle ground early." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conflict costs more than compromise. Seek fair middle ground early."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xung đột tốn kém hơn thỏa hiệp. Tìm điểm giữa công bằng sớm."
           }
         }
       }
@@ -1054,16 +2000,132 @@
       }
     },
     "Cưới hỏi" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cưới hỏi"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wedding"
+          }
+        }
+      }
     },
     "Customs" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Customs"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phong tục"
+          }
+        }
+      }
     },
     "Đã điền sẵn thông tin" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã điền sẵn thông tin"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pre-filled information"
+          }
+        }
+      }
     },
     "Đã điền sẵn thông tin của bạn" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đã điền sẵn thông tin của bạn"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your information pre-filled"
+          }
+        }
+      }
+    },
+    "Đại Hữu" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại Hữu"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại Hữu"
+          }
+        }
+      }
+    },
+    "Đại Quá" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại Quá"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại Quá"
+          }
+        }
+      }
+    },
+    "Đại Súc" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại Súc"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại Súc"
+          }
+        }
+      }
+    },
+    "Đại Tráng" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại Tráng"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đại Tráng"
+          }
+        }
+      }
     },
     "Daily" : {
       "localizations" : {
@@ -1114,7 +2176,36 @@
       }
     },
     "Date of birth" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date of birth"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày sinh"
+          }
+        }
+      }
+    },
+    "Day %@ may pressure your %@ birth element — proceed carefully" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day %1$@ may pressure your %2$@ birth element — proceed carefully"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hành %1$@ của ngày có thể khắc hành %2$@ năm sinh — nên thận trọng"
+          }
+        }
+      }
     },
     "Day %@ Month %@ Year %@" : {
       "localizations" : {
@@ -1132,11 +2223,117 @@
         }
       }
     },
+    "Day %@ nourishes your %@ birth element" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day %1$@ nourishes your %2$@ birth element"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hành %1$@ của ngày sinh trợ cho hành %2$@ năm sinh"
+          }
+        }
+      }
+    },
+    "Day clashes with birth year (%@ xung %@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day clashes with birth year (%1$@ xung %2$@)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày xung với năm sinh (%1$@ xung %2$@)"
+          }
+        }
+      }
+    },
+    "Day element %@ with birth element %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Day element %1$@ with birth element %2$@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hành ngày %1$@ với hành năm sinh %2$@"
+          }
+        }
+      }
+    },
     "Death anniversary" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Death anniversary"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày giỗ"
+          }
+        }
+      }
     },
     "Deceased relatives" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deceased relatives"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Người thân đã khuất"
+          }
+        }
+      }
+    },
+    "Decisive break-through. Speak truth clearly; avoid cruelty." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Decisive break-through. Speak truth clearly; avoid cruelty."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đột phá dứt khoát. Nói sự thật rõ ràng; tránh tàn nhẫn."
+          }
+        }
+      }
+    },
+    "Deep well of renewal. Return to basics; share resources fairly." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deep well of renewal. Return to basics; share resources fairly."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giếng sâu tái sinh. Quay về căn bản; chia sẻ nguồn lực công bằng."
+          }
+        }
+      }
     },
     "Default Reminder" : {
       "localizations" : {
@@ -1218,8 +2415,69 @@
         }
       }
     },
+    "Di / Nuôi dưỡng" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Di / Nuôi dưỡng"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Di / Nourishment"
+          }
+        }
+      }
+    },
     "Địa chỉ" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Địa chỉ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Address"
+          }
+        }
+      }
+    },
+    "Đỉnh / Vững" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đỉnh / Vững"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đỉnh / Steadfastness"
+          }
+        }
+      }
+    },
+    "Discipline and clear roles matter. Lead with order, not fear." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Discipline and clear roles matter. Lead with order, not fear."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kỷ luật và vai trò rõ ràng quan trọng. Lãnh đạo bằng trật tự, không phải sợ hãi."
+          }
+        }
+      }
     },
     "Disconnect Google Account" : {
       "localizations" : {
@@ -1253,6 +2511,70 @@
         }
       }
     },
+    "Dissolve barriers. Open communication melts distrust." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dissolve barriers. Open communication melts distrust."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tan rào cản. Giao tiếp cởi mở xua tan nghi ngờ."
+          }
+        }
+      }
+    },
+    "Đoài / Vui" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đoài / Vui"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đoài / Joy"
+          }
+        }
+      }
+    },
+    "Doan Ngo Festival" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doan Ngo Festival"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tết Đoan Ngọ"
+          }
+        }
+      }
+    },
+    "Độn / Ẩn" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Độn / Ẩn"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Độn / Retreat"
+          }
+        }
+      }
+    },
     "Done" : {
       "localizations" : {
         "en" : {
@@ -1269,6 +2591,38 @@
         }
       }
     },
+    "Đồng Nhân" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đồng Nhân"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đồng Nhân"
+          }
+        }
+      }
+    },
+    "Dự / Hân hoan" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dự / Hân hoan"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dự / Delight"
+          }
+        }
+      }
+    },
     "Due Date" : {
       "localizations" : {
         "en" : {
@@ -1281,6 +2635,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ngày hết hạn"
+          }
+        }
+      }
+    },
+    "Dynamic Island: compact countdown and expanded festival details (iPhone 14 Pro and later)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dynamic Island: compact countdown and expanded festival details (iPhone 14 Pro and later)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dynamic Island: đếm ngược gọn và chi tiết lễ hội mở rộng (iPhone 14 Pro trở lên)"
           }
         }
       }
@@ -1313,6 +2683,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ví dụ: Mới được thăng chức, Nhà mới..."
+          }
+        }
+      }
+    },
+    "Early obstacles are normal. Seek help, move step by step, do not rush." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Early obstacles are normal. Seek help, move step by step, do not rush."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trở ngại ban đầu là bình thường. Tìm sự giúp đỡ, tiến từng bước, không vội."
+          }
+        }
+      }
+    },
+    "Easier reading for parents" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Easier reading for parents"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dễ đọc hơn cho bố mẹ"
           }
         }
       }
@@ -1445,6 +2847,38 @@
         }
       }
     },
+    "Endurance through change. Keep commitments flexible yet steady." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endurance through change. Keep commitments flexible yet steady."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bền bỉ qua thay đổi. Giữ cam kết linh hoạt nhưng vững vàng."
+          }
+        }
+      }
+    },
+    "Enlarges text and spacing across the app. Respects system Dynamic Type where possible." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enlarges text and spacing across the app. Respects system Dynamic Type where possible."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phóng to chữ và khoảng cách trong toàn app. Tôn trọng Dynamic Type hệ thống khi có thể."
+          }
+        }
+      }
+    },
     "Enter task title" : {
       "localizations" : {
         "en" : {
@@ -1573,20 +3007,149 @@
         }
       }
     },
+    "Excess weight on a beam. Support others; avoid heroic overload." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Excess weight on a beam. Support others; avoid heroic overload."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tải quá nặng trên dầm. Hỗ trợ người khác; tránh gánh quá sức."
+          }
+        }
+      }
+    },
+    "Exhaustion — simplify. Accept limits; inner worth remains." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exhaustion — simplify. Accept limits; inner worth remains."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kiệt sức — đơn giản hóa. Chấp nhận giới hạn; giá trị nội tâm vẫn còn."
+          }
+        }
+      }
+    },
     "Family" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Family"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gia đình"
+          }
+        }
+      }
     },
     "Family events" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Family events"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sự kiện gia đình"
+          }
+        }
+      }
     },
     "Family name (họ)" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Family name (họ)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Family name (họ)"
+          }
+        }
+      }
+    },
+    "Family order and warmth. Roles and kindness keep the home strong." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Family order and warmth. Roles and kindness keep the home strong."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trật tự và ấm áp gia đình. Vai trò và tử tế giữ nhà vững."
+          }
+        }
+      }
     },
     "Female" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Female"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nữ"
+          }
+        }
+      }
+    },
+    "Festival countdown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Festival countdown"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đếm ngược lễ hội"
+          }
+        }
+      }
     },
     "Festivals" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Festivals"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lễ hội"
+          }
+        }
+      }
     },
     "First day of lunar month - for ancestor worship" : {
       "localizations" : {
@@ -1616,6 +3179,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lời nhắc Cố định"
+          }
+        }
+      }
+    },
+    "Form follows substance. Beauty helps, but inner truth must lead." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Form follows substance. Beauty helps, but inner truth must lead."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hình theo thực chất. Vẻ đẹp hữu ích, nhưng chân lý nội tâm phải dẫn dắt."
           }
         }
       }
@@ -1685,20 +3264,193 @@
       }
     },
     "Full name" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Full name"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Họ tên"
+          }
+        }
+      }
+    },
+    "Gathering together. Shared ritual and purpose unite the group." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gathering together. Shared ritual and purpose unite the group."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tụ họp cùng nhau. Nghi lễ và mục đích chung gắn kết nhóm."
+          }
+        }
+      }
     },
     "Gender" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gender"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giới tính"
+          }
+        }
+      }
+    },
+    "Gentle penetration. Soft persistence shapes what force cannot." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gentle penetration. Soft persistence shapes what force cannot."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xâm nhập nhẹ nhàng. Kiên trì mềm mại tạo hình thức mà sức mạnh không thể."
+          }
+        }
+      }
+    },
+    "Gia Nhân" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gia Nhân"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gia Nhân"
+          }
+        }
+      }
+    },
+    "Giải / Giải thoát" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giải / Giải thoát"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giải / Deliverance"
+          }
+        }
+      }
+    },
+    "Gieo 3 đồng" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gieo 3 đồng"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toss 3 coins"
+          }
+        }
+      }
+    },
+    "Gieo 3 đồng — offline" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gieo 3 đồng — offline"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toss 3 coins — offline"
+          }
+        }
+      }
+    },
+    "Gieo 3 đồng sáu lần để lấy một quẻ. Chỉ mang tính tham khảo — không thay lời khuyên chuyên môn." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gieo 3 đồng sáu lần để lấy một quẻ. Chỉ mang tính tham khảo — không thay lời khuyên chuyên môn."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toss 3 coins six times to get one hexagram. For reference only — not professional advice."
+          }
+        }
+      }
     },
     "Giỗ & Gia tiên" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ & Gia tiên"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ & Ancestors"
+          }
+        }
+      }
     },
     "Giỗ %@ %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "Giỗ %1$@ %2$@"
+            "state" : "translated",
+            "value" : "Giỗ %@ %@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ %@ %@"
+          }
+        }
+      }
+    },
+    "Giỗ %@ %@ in %lld days (lunar %lld/%lld)." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ %@ %@ in %lld days (lunar %lld/%lld)."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ %@ %@ in %lld days (lunar %lld/%lld)."
           }
         }
       }
@@ -1707,8 +3459,126 @@
       "localizations" : {
         "en" : {
           "stringUnit" : {
-            "state" : "new",
-            "value" : "giỗ %1$d/%2$d ÂL"
+            "state" : "translated",
+            "value" : "giỗ %d/%d lunar"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "giỗ %d/%d ÂL"
+          }
+        }
+      }
+    },
+    "Giỗ from Personal Profile" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ from Personal Profile"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ from Personal Profile"
+          }
+        }
+      }
+    },
+    "Giỗ preparation" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ preparation"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ preparation"
+          }
+        }
+      }
+    },
+    "Giỗ reminder" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ reminder"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ reminder"
+          }
+        }
+      }
+    },
+    "Giỗ reminders" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ reminders"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ reminders"
+          }
+        }
+      }
+    },
+    "Giỗ today" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ today"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giỗ today"
+          }
+        }
+      }
+    },
+    "Giới tính" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giới tính"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gender"
+          }
+        }
+      }
+    },
+    "Giới tính con" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giới tính con"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Child's gender"
           }
         }
       }
@@ -1741,6 +3611,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ngày Tốt"
+          }
+        }
+      }
+    },
+    "Good for this activity" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Good for this activity"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tốt cho việc này"
           }
         }
       }
@@ -1796,6 +3682,38 @@
         }
       }
     },
+    "Gradual progress like marriage. Trust the slow path; haste harms." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gradual progress like marriage. Trust the slow path; haste harms."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiến bộ dần như hôn nhân. Tin con đường chậm; vội vàng gây hại."
+          }
+        }
+      }
+    },
+    "Grand Opening" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grand Opening"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khai trương"
+          }
+        }
+      }
+    },
     "Grandparents" : {
       "localizations" : {
         "en" : {
@@ -1824,6 +3742,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cấp Quyền Truy Cập"
+          }
+        }
+      }
+    },
+    "Great vigor — use power ethically. Bold moves need restraint." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Great vigor — use power ethically. Bold moves need restraint."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sức mạnh lớn — dùng quyền lực đạo đức. Bước táo bạo cần kiềm chế."
           }
         }
       }
@@ -1861,14 +3795,149 @@
         }
       }
     },
+    "Groundbreaking" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Groundbreaking"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Động thổ"
+          }
+        }
+      }
+    },
     "Gửi người thân, bạn bè" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gửi người thân, bạn bè"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Send to family and friends"
+          }
+        }
+      }
+    },
+    "Hàm / Cảm" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hàm / Cảm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hàm / Influence"
+          }
+        }
+      }
+    },
+    "Hằng / Bền" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hằng / Bền"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hằng / Endurance"
+          }
+        }
+      }
     },
     "Hằng tháng" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hằng tháng"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monthly"
+          }
+        }
+      }
     },
     "Hãy thêm Người đã khuất trong Cài đặt → Cá nhân để cá nhân hoá nội dung văn khấn giỗ." : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hãy thêm Người đã khuất trong Cài đặt → Cá nhân để cá nhân hoá nội dung văn khấn giỗ."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add deceased relatives in Settings → Personal to personalize giỗ prayer text."
+          }
+        }
+      }
+    },
+    "Healthy limits. Measure and rhythm protect long-term success." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Healthy limits. Measure and rhythm protect long-term success."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giới hạn lành mạnh. Đo lường và nhịp điệu bảo vệ thành công dài hạn."
+          }
+        }
+      }
+    },
+    "Heaven and earth harmonize. A favorable season for cooperation." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heaven and earth harmonize. A favorable season for cooperation."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trời đất hòa hợp. Mùa thuận lợi cho hợp tác."
+          }
+        }
+      }
+    },
+    "Hide light in hardship. Protect your inner truth until safer days." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hide light in hardship. Protect your inner truth until safer days."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giấu ánh sáng trong khó khăn. Bảo vệ chân lý nội tâm đến ngày an toàn hơn."
+          }
+        }
+      }
     },
     "High" : {
       "localizations" : {
@@ -1882,6 +3951,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cao"
+          }
+        }
+      }
+    },
+    "Họ" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Họ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Family name"
+          }
+        }
+      }
+    },
+    "Hoán / Tan" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoán / Tan"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoán / Dispersion"
           }
         }
       }
@@ -1903,13 +4004,100 @@
       }
     },
     "Hôm nay · %@" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôm nay · %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today · %@"
+          }
+        }
+      }
     },
     "Hôm nay là ngày Mùng 1" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôm nay là ngày Mùng 1"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today is Mùng 1"
+          }
+        }
+      }
     },
     "Hôm nay là ngày Rằm" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôm nay là ngày Rằm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today is Rằm"
+          }
+        }
+      }
+    },
+    "Hours to Avoid" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hours to Avoid"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giờ nên tránh"
+          }
+        }
+      }
+    },
+    "Huỷ" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Huỷ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancel"
+          }
+        }
+      }
+    },
+    "Ích / Tăng" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ích / Tăng"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ích / Increase"
+          }
+        }
+      }
     },
     "ICS Calendar" : {
       "localizations" : {
@@ -1959,6 +4147,38 @@
         }
       }
     },
+    "Improper position — adapt humbly. Avoid forcing status you lack." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Improper position — adapt humbly. Avoid forcing status you lack."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vị trí không phù hợp — thích ứng khiêm tốn. Tránh ép buộc địa vị chưa có."
+          }
+        }
+      }
+    },
+    "Increase for the worthy. Invest in learning and generous action." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Increase for the worthy. Invest in learning and generous action."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tăng cho người đáng. Đầu tư học hành và hành động rộng lượng."
+          }
+        }
+      }
+    },
     "Information" : {
       "localizations" : {
         "en" : {
@@ -1971,6 +4191,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Thông tin"
+          }
+        }
+      }
+    },
+    "Inner truth resonates. Sincerity reaches others even across distance." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inner truth resonates. Sincerity reaches others even across distance."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chân lý nội tâm cộng hưởng. Chân thành chạm đến người khác dù xa cách."
+          }
+        }
+      }
+    },
+    "Innocent intent matters. Act without hidden motive; accidents teach humility." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Innocent intent matters. Act without hidden motive; accidents teach humility."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ý thơ ngay thẳng quan trọng. Hành động không động cơ ẩn; tai nạn dạy khiêm tốn."
           }
         }
       }
@@ -2003,6 +4255,182 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Phản hồi không hợp lệ"
+          }
+        }
+      }
+    },
+    "Joy in movement — rally others kindly. Enthusiasm needs direction." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Joy in movement — rally others kindly. Enthusiasm needs direction."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vui trong hành động — kêu gọi người khác nhẹ nhàng. Nhiệt huyết cần hướng dẫn."
+          }
+        }
+      }
+    },
+    "Joyful exchange. Speak honestly; shared laughter heals." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Joyful exchange. Speak honestly; shared laughter heals."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trao đổi vui vẻ. Nói thật; tiếng cười chung chữa lành."
+          }
+        }
+      }
+    },
+    "Khảm / Hiểm" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khảm / Hiểm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khảm / Danger"
+          }
+        }
+      }
+    },
+    "Khiêm / Nhún nhường" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khiêm / Nhún nhường"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khiêm / Modesty"
+          }
+        }
+      }
+    },
+    "Khốn / Kiệt" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khốn / Kiệt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khốn / Exhaustion"
+          }
+        }
+      }
+    },
+    "Khôn / Thuần" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khôn / Thuần"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khôn / Receptivity"
+          }
+        }
+      }
+    },
+    "Không có kết quả" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Không có kết quả"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No results"
+          }
+        }
+      }
+    },
+    "Khuê / Lìa" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khuê / Lìa"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khuê / Separation"
+          }
+        }
+      }
+    },
+    "Kiển / Cản" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kiển / Cản"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kiển / Obstruction"
+          }
+        }
+      }
+    },
+    "Ký Tế" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ký Tế"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ký Tế"
+          }
+        }
+      }
+    },
+    "Lâm" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lâm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lâm"
           }
         }
       }
@@ -2051,6 +4479,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cài đặt ngôn ngữ"
+          }
+        }
+      }
+    },
+    "Lantern Festival" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lantern Festival"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tết Nguyên Tiêu"
+          }
+        }
+      }
+    },
+    "Large text mode" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Large text mode"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chế độ chữ lớn"
           }
         }
       }
@@ -2104,13 +4564,100 @@
       }
     },
     "Lễ Tết lớn" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lễ Tết lớn"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Major holidays"
+          }
+        }
+      }
+    },
+    "Leap month (tháng nhuận)" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leap month (tháng nhuận)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leap month (tháng nhuận)"
+          }
+        }
+      }
     },
     "Leave a review on the App Store" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leave a review on the App Store"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đánh giá trên App Store"
+          }
+        }
+      }
+    },
+    "Less can be more. Trim excess; sincerity beats lavish display." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Less can be more. Trim excess; sincerity beats lavish display."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ít có thể là nhiều. Cắt bớt thừa; chân thành hơn phô trương."
+          }
+        }
+      }
     },
     "Lich+ — Vietnamese lunar calendar app. Try it: " : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lich+ — Vietnamese lunar calendar app. Try it: "
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lich+ — ứng dụng lịch âm Việt Nam. Dùng thử: "
+          }
+        }
+      }
+    },
+    "Live Activities are disabled in system Settings." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Live Activities are disabled in system Settings."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Live Activities đã tắt trong Cài đặt hệ thống."
+          }
+        }
+      }
     },
     "Loading..." : {
       "localizations" : {
@@ -2144,17 +4691,117 @@
         }
       }
     },
+    "Lock Screen: festival name, solar date, and days remaining" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lock Screen: festival name, solar date, and days remaining"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Màn hình khóa: tên lễ hội, ngày dương và số ngày còn lại"
+          }
+        }
+      }
+    },
+    "Lời bàn" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lời bàn"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commentary"
+          }
+        }
+      }
+    },
     "Lời chúc" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lời chúc"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Greetings"
+          }
+        }
+      }
     },
     "Lời chúc năm mới" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lời chúc năm mới"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "New Year greetings"
+          }
+        }
+      }
     },
     "Lời chúc trăm năm hạnh phúc" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lời chúc trăm năm hạnh phúc"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wedding congratulations"
+          }
+        }
+      }
     },
     "Lời chúc và văn khấn cổ truyền — gợi ý theo ngày âm lịch của bạn." : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lời chúc và văn khấn cổ truyền — gợi ý theo ngày âm lịch của bạn."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Traditional greetings and prayer texts — suggested for your lunar dates."
+          }
+        }
+      }
+    },
+    "Long-press the Home Screen or Lock Screen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Long-press the Home Screen or Lock Screen"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhấn giữ Màn hình chính hoặc Màn hình khóa"
+          }
+        }
+      }
     },
     "Low" : {
       "localizations" : {
@@ -2168,6 +4815,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Thấp"
+          }
+        }
+      }
+    },
+    "Lữ / Lữ hành" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lữ / Lữ hành"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lữ / Travel"
           }
         }
       }
@@ -2252,6 +4915,22 @@
         }
       }
     },
+    "Lunar 15/8/2026 · Giáp Thìn" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunar 15/8/2026 · Giáp Thìn"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunar 15/8/2026 · Giáp Thìn"
+          }
+        }
+      }
+    },
     "Lunar Calendar" : {
       "localizations" : {
         "en" : {
@@ -2264,6 +4943,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Âm lịch"
+          }
+        }
+      }
+    },
+    "Lunar Can-Chi year for compatibility checks" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunar Can-Chi year for compatibility checks"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Năm Can-Chi âm lịch để kiểm tra tuổi hợp"
           }
         }
       }
@@ -2285,10 +4980,36 @@
       }
     },
     "Lunar day: %d" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunar day: %d"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày âm: %d"
+          }
+        }
+      }
     },
     "Lunar month: %d" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunar month: %d"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tháng âm: %d"
+          }
+        }
+      }
     },
     "Lunar Monthly" : {
       "localizations" : {
@@ -2338,11 +5059,101 @@
         }
       }
     },
+    "Lưu" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lưu"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save"
+          }
+        }
+      }
+    },
     "Lưu ngày giỗ âm lịch để nhắc" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lưu ngày giỗ âm lịch để nhắc"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save lunar giỗ date for reminders"
+          }
+        }
+      }
+    },
+    "Lý / Đi" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lý / Đi"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lý / Fire"
+          }
+        }
+      }
+    },
+    "Ly / Sáng" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ly / Sáng"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ly / Clarity"
+          }
+        }
+      }
     },
     "Male" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Male"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nam"
+          }
+        }
+      }
+    },
+    "Manage deceased relatives" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage deceased relatives"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quản lý người thân đã khuất"
+          }
+        }
+      }
     },
     "Mark Complete" : {
       "localizations" : {
@@ -2408,6 +5219,38 @@
         }
       }
     },
+    "Mid-Autumn Festival" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mid-Autumn Festival"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tết Trung Thu"
+          }
+        }
+      }
+    },
+    "Minh Di" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minh Di"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Minh Di"
+          }
+        }
+      }
+    },
     "minutes before" : {
       "localizations" : {
         "en" : {
@@ -2424,6 +5267,22 @@
         }
       }
     },
+    "Modesty draws respect. Lower the ego; success follows naturally." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modesty draws respect. Lower the ego; success follows naturally."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khiêm tốn được tôn trọng. Hạ cái tôi; thành công đến tự nhiên."
+          }
+        }
+      }
+    },
     "Mon" : {
       "localizations" : {
         "en" : {
@@ -2436,6 +5295,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "T2"
+          }
+        }
+      }
+    },
+    "Mông / Non nớt" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mông / Non nớt"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mông / Youthful folly"
           }
         }
       }
@@ -2488,6 +5363,22 @@
         }
       }
     },
+    "Monthly lunar days" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Monthly lunar days"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày âm hàng tháng"
+          }
+        }
+      }
+    },
     "Mùng 1" : {
       "localizations" : {
         "en" : {
@@ -2520,6 +5411,22 @@
         }
       }
     },
+    "Mùng 1 reminders" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mùng 1 reminders"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mùng 1 reminders"
+          }
+        }
+      }
+    },
     "Mùng 1 Reminders" : {
       "localizations" : {
         "en" : {
@@ -2537,7 +5444,36 @@
       }
     },
     "Mừng tân gia" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mừng tân gia"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Housewarming greetings"
+          }
+        }
+      }
+    },
+    "Mutual attraction. Gentle influence works; pressure repels." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mutual attraction. Gentle influence works; pressure repels."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hấp dẫn lẫn nhau. Ảnh hưởng nhẹ nhàng hiệu quả; áp lực đẩy xa."
+          }
+        }
+      }
     },
     "My Calendars" : {
       "localizations" : {
@@ -2556,7 +5492,20 @@
       }
     },
     "Name" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Name"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tên"
+          }
+        }
+      }
     },
     "Network error: %@" : {
       "localizations" : {
@@ -2606,8 +5555,133 @@
         }
       }
     },
+    "Next" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiếp"
+          }
+        }
+      }
+    },
+    "Next festival" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Next festival"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lễ hội tiếp theo"
+          }
+        }
+      }
+    },
+    "Ngày âm" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày âm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lunar date"
+          }
+        }
+      }
+    },
+    "Ngày chay" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày chay"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vegetarian day"
+          }
+        }
+      }
+    },
+    "Ngày chay night-before" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày chay night-before"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vegetarian day night-before"
+          }
+        }
+      }
+    },
+    "Ngày chay tomorrow" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày chay tomorrow"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vegetarian day tomorrow"
+          }
+        }
+      }
+    },
+    "Ngày dương" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày dương"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Solar date"
+          }
+        }
+      }
+    },
     "Ngày khấn" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ngày khấn"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer day"
+          }
+        }
+      }
     },
     "Ngày Rằm" : {
       "localizations" : {
@@ -2626,10 +5700,68 @@
       }
     },
     "Người được giỗ" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Người được giỗ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Person being commemorated"
+          }
+        }
+      }
     },
     "Nhập tên bé" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhập tên bé"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enter baby's name"
+          }
+        }
+      }
+    },
+    "Nhu / Chờ" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhu / Chờ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhu / Waiting"
+          }
+        }
+      }
+    },
+    "Night-before ngày chay" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Night-before ngày chay"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Night before vegetarian day"
+          }
+        }
+      }
     },
     "No all-day events" : {
       "localizations" : {
@@ -2759,6 +5891,22 @@
         }
       }
     },
+    "No public festival is within the next %lld days. The Live Activity will appear closer to Tết or the next major holiday." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No public festival is within the next %lld days. The Live Activity will appear closer to Tết or the next major holiday."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No public festival is within the next %lld days. The Live Activity will appear closer to Tết or the next major holiday."
+          }
+        }
+      }
+    },
     "None" : {
       "localizations" : {
         "en" : {
@@ -2807,6 +5955,22 @@
         }
       }
     },
+    "Not yet finished. Stay attentive through the last steps; chaos before calm." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not yet finished. Stay attentive through the last steps; chaos before calm."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chưa hoàn tất. Chú ý đến bước cuối; hỗn loạn trước yên bình."
+          }
+        }
+      }
+    },
     "Notification Settings" : {
       "localizations" : {
         "en" : {
@@ -2819,6 +5983,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cài đặt Thông báo"
+          }
+        }
+      }
+    },
+    "Notify family members" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Notify family members"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thông báo người thân"
+          }
+        }
+      }
+    },
+    "Nourish body and speech. What you feed grows — choose wisely." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nourish body and speech. What you feed grows — choose wisely."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nuôi dưỡng thân và lời nói. Cái bạn cho ăn sẽ lớn — chọn khôn ngoan."
           }
         }
       }
@@ -2839,8 +6035,37 @@
         }
       }
     },
+    "Obstruction ahead. Pause, seek advice, take the longer safe path." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obstruction ahead. Pause, seek advice, take the longer safe path."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trở ngại phía trước. Dừng lại, tìm lời khuyên, chọn con đường an toàn dài hơn."
+          }
+        }
+      }
+    },
     "Off: skip the “gia tiên” (ancestor invocation) paragraph in văn khấn templates." : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off: skip the “gia tiên” (ancestor invocation) paragraph in văn khấn templates."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Off: skip the “gia tiên” (ancestor invocation) paragraph in văn khấn templates."
+          }
+        }
+      }
     },
     "OK" : {
       "shouldTranslate" : false
@@ -2861,6 +6086,22 @@
         }
       }
     },
+    "Open hearts unite people. Shared purpose beats solo ambition." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open hearts unite people. Shared purpose beats solo ambition."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trái tim cởi mở gắn kết người. Mục đích chung hơn tham vọng một mình."
+          }
+        }
+      }
+    },
     "Open Settings" : {
       "localizations" : {
         "en" : {
@@ -2873,6 +6114,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mở Cài đặt"
+          }
+        }
+      }
+    },
+    "Opposites meet awkwardly. Respect differences; small agreements help." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opposites meet awkwardly. Respect differences; small agreements help."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đối lập gặp nhau khó xử. Tôn trọng khác biệt; thỏa thuận nhỏ giúp ích."
+          }
+        }
+      }
+    },
+    "Optional question (kept on device only)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional question (kept on device only)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Câu hỏi tùy chọn (chỉ lưu trên thiết bị)"
+          }
+        }
+      }
+    },
+    "Optional. Used on-device for ngày xung tuổi and Ngũ hành hints in xem ngày. Never uploaded or sent to analytics." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional. Used on-device for ngày xung tuổi and Ngũ hành hints in xem ngày. Never uploaded or sent to analytics."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optional. Used on-device for conflicting-age days and Five Elements hints in date selection. Never uploaded or sent to analytics."
           }
         }
       }
@@ -2944,6 +6233,22 @@
         }
       }
     },
+    "Partial star data" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partial star data"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dữ liệu sao chưa đủ"
+          }
+        }
+      }
+    },
     "Partner" : {
       "localizations" : {
         "en" : {
@@ -2956,6 +6261,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vợ chồng"
+          }
+        }
+      }
+    },
+    "Peak abundance — share the light. Fullness fades; stay generous." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Peak abundance — share the light. Fullness fades; stay generous."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đỉnh cao phú quý — chia ánh sáng. Đầy đủ sẽ tàn; giữ lòng rộng lượng."
           }
         }
       }
@@ -2977,10 +6298,100 @@
       }
     },
     "Personal Profile" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personal Profile"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hồ sơ cá nhân"
+          }
+        }
+      }
+    },
+    "Phệ Hạp" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phệ Hạp"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phệ Hạp"
+          }
+        }
+      }
+    },
+    "Phong / Phong đăng" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phong / Phong đăng"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phong / Advancement"
+          }
+        }
+      }
     },
     "Phong tục" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phong tục"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Customs"
+          }
+        }
+      }
+    },
+    "Phong tục presets" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phong tục presets"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Customs presets"
+          }
+        }
+      }
+    },
+    "Phục / Quay lại" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phục / Quay lại"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Phục / Return"
+          }
+        }
+      }
     },
     "Playful" : {
       "localizations" : {
@@ -3046,6 +6457,38 @@
         }
       }
     },
+    "Prepare offering tray" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prepare offering tray"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chuẩn bị mâm cúng"
+          }
+        }
+      }
+    },
+    "Preview" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Preview"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem trước"
+          }
+        }
+      }
+    },
     "Priority" : {
       "localizations" : {
         "en" : {
@@ -3058,6 +6501,70 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mức độ ưu tiên"
+          }
+        }
+      }
+    },
+    "Quải / Quyết" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quải / Quyết"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quải / Breakthrough"
+          }
+        }
+      }
+    },
+    "Quan / Quan sát" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quan / Quan sát"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quan / Contemplation"
+          }
+        }
+      }
+    },
+    "Quan hệ" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quan hệ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relation"
+          }
+        }
+      }
+    },
+    "Quy Muội" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quy Muội"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quy Muội"
           }
         }
       }
@@ -3078,6 +6585,38 @@
         }
       }
     },
+    "Rằm & giỗ reminders" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rằm & giỗ reminders"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rằm & giỗ reminders"
+          }
+        }
+      }
+    },
+    "Rằm reminders" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rằm reminders"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rằm reminders"
+          }
+        }
+      }
+    },
     "Rằm Reminders" : {
       "localizations" : {
         "en" : {
@@ -3094,8 +6633,53 @@
         }
       }
     },
+    "Rằm, Mùng 1, ngày chay, giỗ" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rằm, Mùng 1, ngày chay, giỗ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rằm, Mùng 1, vegetarian days, giỗ"
+          }
+        }
+      }
+    },
     "Rate Lich+" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rate Lich+"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đánh giá Lich+"
+          }
+        }
+      }
+    },
+    "Receive and support others. Patience and humility bring progress now." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receive and support others. Patience and humility bring progress now."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiếp nhận và hỗ trợ người khác. Kiên nhẫn và khiêm tốn mang tiến bộ."
+          }
+        }
+      }
     },
     "Recipient name (optional)" : {
       "localizations" : {
@@ -3162,7 +6746,52 @@
       }
     },
     "Relation (ông, bà, bố, mẹ, …)" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relation (ông, bà, bố, mẹ, …)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relation (grandfather, grandmother, father, mother, …)"
+          }
+        }
+      }
+    },
+    "Relief after tension. Forgive and move; do not reopen old wounds." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Relief after tension. Forgive and move; do not reopen old wounds."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nhẹ nhõm sau căng thẳng. Tha thứ và tiến lên; không mở vết cũ."
+          }
+        }
+      }
+    },
+    "Remind the evening before Mùng 1 or Rằm" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remind the evening before Mùng 1 or Rằm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remind the evening before Mùng 1 or Rằm"
+          }
+        }
+      }
     },
     "Reminder Days" : {
       "localizations" : {
@@ -3176,6 +6805,134 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ngày Nhắc nhở"
+          }
+        }
+      }
+    },
+    "Reminds 7, 3, and 1 days before each giỗ from Personal Profile." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminds 7, 3, and 1 days before each giỗ from Personal Profile."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reminds 7, 3, and 1 days before each giỗ from Personal Profile."
+          }
+        }
+      }
+    },
+    "Repair what decayed. Face old mistakes; renewal needs honest work." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repair what decayed. Face old mistakes; renewal needs honest work."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sửa chữa phần hư hoại. Đối diện sai lầm cũ; tái sinh cần công việc chân thành."
+          }
+        }
+      }
+    },
+    "Repeated danger — stay centered. Honesty and calm carry you through." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Repeated danger — stay centered. Honesty and calm carry you through."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nguy hiểm lặp lại — giữ tâm vững. Chân thành và bình tĩnh đưa bạn qua."
+          }
+        }
+      }
+    },
+    "Reset" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reset"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đặt lại"
+          }
+        }
+      }
+    },
+    "Restrain great power. Store energy; study before the next push." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restrain great power. Store energy; study before the next push."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kiềm chế sức mạnh lớn. Tích trữ năng lượng; học hỏi trước bước tiếp."
+          }
+        }
+      }
+    },
+    "Return to roots. A cycle turns back — forgive and begin again." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Return to roots. A cycle turns back — forgive and begin again."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quay về gốc rễ. Chu kỳ quay lại — tha thứ và bắt đầu lại."
+          }
+        }
+      }
+    },
+    "Review văn khấn text" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review văn khấn text"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Review văn khấn text"
+          }
+        }
+      }
+    },
+    "Revolution when the old no longer serves. Change with clear timing." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revolution when the old no longer serves. Change with clear timing."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cách mạng khi cũ không còn phù hợp. Thay đổi với thời điểm rõ ràng."
           }
         }
       }
@@ -3208,6 +6965,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hoàng Đạo"
+          }
+        }
+      }
+    },
+    "Same element (%@) — harmonious for your birth year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Same element (%@) — harmonious for your birth year"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cùng ngũ hành (%@) — hòa hợp với năm sinh"
           }
         }
       }
@@ -3256,6 +7029,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tìm kiếm"
+          }
+        }
+      }
+    },
+    "Search for Lich+ and choose Today or Countdown" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search for Lich+ and choose Today or Countdown"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tìm Lich+ và chọn Hôm nay hoặc Đếm ngược"
+          }
+        }
+      }
+    },
+    "See today’s lunar date, giờ hoàng đạo, and festival countdown without opening the app." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See today’s lunar date, giờ hoàng đạo, and festival countdown without opening the app."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See today's lunar date, auspicious hours, and festival countdown without opening the app."
           }
         }
       }
@@ -3324,6 +7129,22 @@
         }
       }
     },
+    "Set my birth year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Set my birth year"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đặt năm sinh của tôi"
+          }
+        }
+      }
+    },
     "Settings" : {
       "localizations" : {
         "en" : {
@@ -3357,10 +7178,52 @@
       }
     },
     "Share Lich+" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share Lich+"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chia sẻ Lich+"
+          }
+        }
+      }
+    },
+    "Shock wakes you up. After surprise, regain composure and act cleanly." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Shock wakes you up. After surprise, regain composure and act cleanly."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sốc đánh thức bạn. Sau bất ngờ, lấy lại bình tĩnh và hành động sạch sẽ."
+          }
+        }
+      }
     },
     "Show ancestors section" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show ancestors section"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiện phần gia tiên"
+          }
+        }
+      }
     },
     "Sign in with Microsoft" : {
       "localizations" : {
@@ -3394,6 +7257,22 @@
         }
       }
     },
+    "Signing Contract" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Signing Contract"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ký hợp đồng"
+          }
+        }
+      }
+    },
     "Signing in..." : {
       "localizations" : {
         "en" : {
@@ -3411,7 +7290,68 @@
       }
     },
     "Sinh nhật" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sinh nhật"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Birthday"
+          }
+        }
+      }
+    },
+    "Skip" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Skip"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bỏ qua"
+          }
+        }
+      }
+    },
+    "Small excess — stay modest. Do not overreach; detail matters now." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Small excess — stay modest. Do not overreach; detail matters now."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thừa nhỏ — giữ khiêm tốn. Không vươn quá; chi tiết quan trọng lúc này."
+          }
+        }
+      }
+    },
+    "Small gains accumulate. Restrain spending and temper; progress is gradual." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Small gains accumulate. Restrain spending and temper; progress is gradual."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lợi nhỏ tích lũy. Kiềm chi tiêu và tính khí; tiến bộ dần dần."
+          }
+        }
+      }
     },
     "Solar Calendar" : {
       "localizations" : {
@@ -3425,6 +7365,38 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dương lịch"
+          }
+        }
+      }
+    },
+    "Some lines are changing — treat this as a hint to stay flexible, not a fixed fate." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Some lines are changing — treat this as a hint to stay flexible, not a fixed fate."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vài hào đang biến — coi như gợi ý linh hoạt, không phải định mệnh cố định."
+          }
+        }
+      }
+    },
+    "Something is falling away. Let go of what cannot stand; protect essentials." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Something is falling away. Let go of what cannot stand; protect essentials."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Có thứ đang tan rã. Buông phần không đứng vững; bảo vệ phần cốt lõi."
           }
         }
       }
@@ -3446,7 +7418,84 @@
       }
     },
     "Spouse name" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spouse name"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tên bạn đời"
+          }
+        }
+      }
+    },
+    "Star data for lunar month %lld is incomplete — no entry for %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Star data for lunar month %1$lld is incomplete — no entry for %2$@."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dữ liệu sao tháng âm %1$lld chưa đủ — không có mục cho %2$@."
+          }
+        }
+      }
+    },
+    "Star data for this lunar month is incomplete. Verdict uses 12 Trực and Hoàng Đạo only." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Star data for this lunar month is incomplete. Verdict uses 12 Trực and Hoàng Đạo only."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dữ liệu sao tháng âm này chưa đủ. Kết luận chỉ dùng 12 Trực và Hoàng Đạo."
+          }
+        }
+      }
+    },
+    "Star data incomplete" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Star data incomplete"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thiếu dữ liệu sao"
+          }
+        }
+      }
+    },
+    "Star table for lunar month %lld is partially complete." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Star table for lunar month %lld is partially complete."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bảng sao tháng âm %lld mới có một phần."
+          }
+        }
+      }
     },
     "Start Date" : {
       "localizations" : {
@@ -3460,6 +7509,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ngày bắt đầu"
+          }
+        }
+      }
+    },
+    "Start Live Activity" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start Live Activity"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bật Live Activity"
           }
         }
       }
@@ -3496,6 +7561,134 @@
         }
       }
     },
+    "Steady ascent. Small sincere steps rise like a growing tree." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steady ascent. Small sincere steps rise like a growing tree."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leo lên bền bỉ. Bước chân nhỏ chân thành mọc như cây đang lớn."
+          }
+        }
+      }
+    },
+    "Steady vessel — culture and nourishment. Transform with care." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Steady vessel — culture and nourishment. Transform with care."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bình vững — văn hóa và nuôi dưỡng. Biến đổi với sự chăm chút."
+          }
+        }
+      }
+    },
+    "Step back and observe patterns. Insight comes from watching, not rushing." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Step back and observe patterns. Insight comes from watching, not rushing."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lùi lại và quan sát quy luật. Ngộ ra từ quan sát, không phải vội vã."
+          }
+        }
+      }
+    },
+    "Still the mind. Stop at the right moment; calm reveals the next step." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Still the mind. Stop at the right moment; calm reveals the next step."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tĩnh tâm. Dừng đúng lúc; bình tĩnh cho thấy bước tiếp."
+          }
+        }
+      }
+    },
+    "Stop Live Activity" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stop Live Activity"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tắt Live Activity"
+          }
+        }
+      }
+    },
+    "Stored on this device only. This is the lunar year used for Can-Chi. Used for ngày xung tuổi and Ngũ hành hints in xem ngày. Never uploaded or sent to analytics." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stored on this device only. This is the lunar year used for Can-Chi. Used for ngày xung tuổi and Ngũ hành hints in xem ngày. Never uploaded or sent to analytics."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chỉ lưu trên thiết bị này. Đây là năm âm lịch dùng cho Can-Chi. Dùng cho ngày xung tuổi và gợi ý Ngũ hành trong xem ngày. Không tải lên hay gửi tới analytics."
+          }
+        }
+      }
+    },
+    "Strategic retreat. Step back to preserve strength for later." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strategic retreat. Step back to preserve strength for later."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rút lui chiến lược. Lùi lại để giữ sức cho sau."
+          }
+        }
+      }
+    },
+    "Strong beginnings and steady effort. Act with integrity; avoid forcing outcomes." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strong beginnings and steady effort. Act with integrity; avoid forcing outcomes."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khởi đầu mạnh và nỗ lực bền. Hành động chính trực; tránh ép kết quả."
+          }
+        }
+      }
+    },
     "Style" : {
       "localizations" : {
         "en" : {
@@ -3512,8 +7705,37 @@
         }
       }
     },
+    "Sư / Quân" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sư / Quân"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sư / Leadership"
+          }
+        }
+      }
+    },
     "Sự kiện gia đình" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sự kiện gia đình"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Family events"
+          }
+        }
+      }
     },
     "Subscribe to calendars" : {
       "localizations" : {
@@ -3527,6 +7749,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Đăng ký lịch"
+          }
+        }
+      }
+    },
+    "Sudden encounter. Stay alert to influence — not every offer is benign." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sudden encounter. Stay alert to influence — not every offer is benign."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gặp gỡ bất ngờ. Cảnh giác với ảnh hưởng — không phải mọi đề nghị đều tốt."
           }
         }
       }
@@ -3559,6 +7797,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "CN"
+          }
+        }
+      }
+    },
+    "Sun / Giảm" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sun / Giảm"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sun / Decrease"
           }
         }
       }
@@ -3707,6 +7961,38 @@
         }
       }
     },
+    "Tấn / Tiến" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tấn / Tiến"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tấn / Progress"
+          }
+        }
+      }
+    },
+    "Tap the + button in the top corner" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tap the + button in the top corner"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chạm nút + ở góc trên"
+          }
+        }
+      }
+    },
     "Tap the refresh button to fetch your Google calendars." : {
       "localizations" : {
         "en" : {
@@ -3788,22 +8074,116 @@
       }
     },
     "Tell friends about the app" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tell friends about the app"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giới thiệu app cho bạn bè"
+          }
+        }
+      }
     },
     "Tên bạn đời" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tên bạn đời"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spouse's name"
+          }
+        }
+      }
     },
     "Tên bé" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tên bé"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baby's name"
+          }
+        }
+      }
     },
     "Tên con" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tên con"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Child's name"
+          }
+        }
+      }
     },
     "Tên con trai/gái của tín chủ" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tên con trai/gái của tín chủ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worshipper's son/daughter name"
+          }
+        }
+      }
+    },
+    "Tên người đã khuất" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tên người đã khuất"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deceased person's name"
+          }
+        }
+      }
     },
     "Tên vợ/chồng của con" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tên vợ/chồng của con"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Child's spouse name"
+          }
+        }
+      }
     },
     "Tet Greetings" : {
       "localizations" : {
@@ -3821,11 +8201,101 @@
         }
       }
     },
+    "Tet Holiday" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tet Holiday"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tết Nguyên Đán"
+          }
+        }
+      }
+    },
+    "Tết Live Activity on Lock Screen" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tết Live Activity on Lock Screen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tết Live Activity on Lock Screen"
+          }
+        }
+      }
+    },
+    "Thái / Thông" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thái / Thông"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thái / Flow"
+          }
+        }
+      }
+    },
+    "Thăng / Lên" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thăng / Lên"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thăng / Ascent"
+          }
+        }
+      }
+    },
     "Thêm người đã khuất" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thêm người đã khuất"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add deceased relative"
+          }
+        }
+      }
     },
     "Theo Văn khấn cổ truyền Việt Nam" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Theo Văn khấn cổ truyền Việt Nam"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Based on traditional Vietnamese prayer texts"
+          }
+        }
+      }
     },
     "This is a recurring item. Choose what to delete." : {
       "localizations" : {
@@ -3908,7 +8378,20 @@
       }
     },
     "Thông tin cá nhân" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thông tin cá nhân"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Personal information"
+          }
+        }
+      }
     },
     "Thu" : {
       "localizations" : {
@@ -3926,8 +8409,133 @@
         }
       }
     },
+    "Thử từ khoá khác." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thử từ khoá khác."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Try a different keyword."
+          }
+        }
+      }
+    },
+    "Thuong Tan Festival" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thuong Tan Festival"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tết Thượng Tán"
+          }
+        }
+      }
+    },
+    "Tiệm / Dần" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiệm / Dần"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiệm / Gradual approach"
+          }
+        }
+      }
+    },
+    "Tiện ích" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiện ích"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilities"
+          }
+        }
+      }
+    },
+    "Tiết / Giới" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiết / Giới"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiết / Limitation"
+          }
+        }
+      }
+    },
+    "Tiểu Quá" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiểu Quá"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiểu Quá"
+          }
+        }
+      }
+    },
+    "Tiểu Súc" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiểu Súc"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tiểu Súc"
+          }
+        }
+      }
+    },
     "Tìm lời chúc, bài khấn…" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tìm lời chúc, bài khấn…"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Search greetings, prayers…"
+          }
+        }
+      }
     },
     "Time" : {
       "localizations" : {
@@ -3962,10 +8570,52 @@
       }
     },
     "Tín chủ" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tín chủ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worshipper"
+          }
+        }
+      }
     },
     "Tín chủ (You)" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tín chủ (You)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Worshipper (You)"
+          }
+        }
+      }
+    },
+    "Tỉnh / Giếng" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tỉnh / Giếng"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tỉnh / The Well"
+          }
+        }
+      }
     },
     "Title" : {
       "localizations" : {
@@ -4031,6 +8681,22 @@
         }
       }
     },
+    "Today is the lunar anniversary for %@ %@." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today is the lunar anniversary for %@ %@."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hôm nay là ngày giỗ âm lịch của %@ %@."
+          }
+        }
+      }
+    },
     "Today's Events" : {
       "localizations" : {
         "en" : {
@@ -4063,6 +8729,54 @@
         }
       }
     },
+    "Tomorrow is Mùng 1 — prepare vegetarian food if you observe ngày chay." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tomorrow is Mùng 1 — prepare vegetarian food if you observe ngày chay."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tomorrow is Mùng 1 — prepare vegetarian food if you observe ngày chay."
+          }
+        }
+      }
+    },
+    "Tomorrow is Rằm — prepare vegetarian food if you observe ngày chay." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tomorrow is Rằm — prepare vegetarian food if you observe ngày chay."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tomorrow is Rằm — prepare vegetarian food if you observe ngày chay."
+          }
+        }
+      }
+    },
+    "Tốn / Nhẹ" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tốn / Nhẹ"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tốn / Gentleness"
+          }
+        }
+      }
+    },
     "Too many requests, please try again later" : {
       "localizations" : {
         "en" : {
@@ -4075,6 +8789,86 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quá nhiều yêu cầu, vui lòng thử lại sau"
+          }
+        }
+      }
+    },
+    "Toss %lld of 6" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toss %lld of 6"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gieo %lld / 6"
+          }
+        }
+      }
+    },
+    "Travel" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Travel"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xuất hành"
+          }
+        }
+      }
+    },
+    "Travel Hours Today" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Travel Hours Today"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giờ xuất hành hôm nay"
+          }
+        }
+      }
+    },
+    "Travel lightly. Respect local ways; home is where the heart rests." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Travel lightly. Respect local ways; home is where the heart rests."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đi nhẹ nhàng. Tôn trọng phong tục địa phương; nhà là nơi tim nghỉ ngơi."
+          }
+        }
+      }
+    },
+    "Truân / Khó khăn" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Truân / Khó khăn"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Truân / Difficulty"
           }
         }
       }
@@ -4095,6 +8889,22 @@
         }
       }
     },
+    "Trung Fu" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trung Fu"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trung Phụ"
+          }
+        }
+      }
+    },
     "Tue" : {
       "localizations" : {
         "en" : {
@@ -4107,6 +8917,102 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "T3"
+          }
+        }
+      }
+    },
+    "Tụng / Tranh chấp" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tụng / Tranh chấp"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tụng / Conflict"
+          }
+        }
+      }
+    },
+    "Tuổi hợp / xung for xem ngày" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tuổi hợp / xung for xem ngày"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Compatible / conflicting ages for date selection"
+          }
+        }
+      }
+    },
+    "Turn on presets for Rằm and giỗ anniversaries. You can add Mùng 1 and fine-tune everything later in Settings → Phong tục presets." : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on presets for Rằm and giỗ anniversaries. You can add Mùng 1 and fine-tune everything later in Settings → Phong tục presets."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Turn on presets for Rằm and giỗ anniversaries. You can add Mùng 1 and fine-tune everything later in Settings → Customs presets."
+          }
+        }
+      }
+    },
+    "Tụy / Họp" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tụy / Họp"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tụy / Gathering"
+          }
+        }
+      }
+    },
+    "Tùy / Theo" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tùy / Theo"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tùy / Following"
+          }
+        }
+      }
+    },
+    "Tỷ / Gần gũi" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tỷ / Gần gũi"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tỷ / Closeness"
           }
         }
       }
@@ -4127,6 +9033,22 @@
         }
       }
     },
+    "Unfavorable star: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unfavorable star: %@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sao xấu: %@"
+          }
+        }
+      }
+    },
     "Unlucky Hours" : {
       "localizations" : {
         "en" : {
@@ -4139,6 +9061,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Giờ Hắc Đạo"
+          }
+        }
+      }
+    },
+    "Upcoming festivals" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Upcoming festivals"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lễ hội sắp tới"
           }
         }
       }
@@ -4159,11 +9097,69 @@
         }
       }
     },
+    "Use birth year" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use birth year"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dùng năm sinh"
+          }
+        }
+      }
+    },
+    "Use with caution" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use with caution"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nên thận trọng"
+          }
+        }
+      }
+    },
     "Used to prefill văn khấn" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used to prefill văn khấn"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used to prefill văn khấn"
+          }
+        }
+      }
     },
     "Used to surface giỗ (death anniversary) văn khấn on the matching lunar date." : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used to surface giỗ (death anniversary) văn khấn on the matching lunar date."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Used to surface giỗ (death anniversary) văn khấn on the matching lunar date."
+          }
+        }
+      }
     },
     "Using sample greetings (offline mode)." : {
       "localizations" : {
@@ -4182,16 +9178,68 @@
       }
     },
     "Văn khấn" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Văn khấn"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer text"
+          }
+        }
+      }
     },
     "Văn khấn gợi ý hôm nay" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Văn khấn gợi ý hôm nay"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suggested prayer for today"
+          }
+        }
+      }
     },
     "Văn khấn hôm nay" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Văn khấn hôm nay"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today's prayer text"
+          }
+        }
+      }
     },
     "Văn khấn options" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Văn khấn options"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prayer text options"
+          }
+        }
+      }
     },
     "Version" : {
       "localizations" : {
@@ -4225,6 +9273,86 @@
         }
       }
     },
+    "Vị Tế" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vị Tế"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vị Tế"
+          }
+        }
+      }
+    },
+    "Vô Vong" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vô Vong"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vô Vong"
+          }
+        }
+      }
+    },
+    "Vu Lan Festival" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vu Lan Festival"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lễ Vu Lan"
+          }
+        }
+      }
+    },
+    "Wait with purpose. Prepare while timing ripens; forcing action backfires." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wait with purpose. Prepare while timing ripens; forcing action backfires."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chờ có mục đích. Chuẩn bị khi thời điểm chín; ép hành động phản tác dụng."
+          }
+        }
+      }
+    },
+    "Walk carefully on thin ice. Courtesy and caution keep you safe." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Walk carefully on thin ice. Courtesy and caution keep you safe."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đi cẩn thận trên băng mỏng. Lễ phép và thận trọng giữ an toàn."
+          }
+        }
+      }
+    },
     "Wed" : {
       "localizations" : {
         "en" : {
@@ -4241,6 +9369,22 @@
         }
       }
     },
+    "Wedding" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wedding"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cưới hỏi"
+          }
+        }
+      }
+    },
     "Weekly" : {
       "localizations" : {
         "en" : {
@@ -4253,6 +9397,54 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hàng tuần"
+          }
+        }
+      }
+    },
+    "What appears" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What appears"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nội dung hiển thị"
+          }
+        }
+      }
+    },
+    "What is on your mind?" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "What is on your mind?"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn đang băn khoăn điều gì?"
+          }
+        }
+      }
+    },
+    "Widgets on Home & Lock Screen" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widgets on Home & Lock Screen"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widget trên Màn hình chính & khóa"
           }
         }
       }
@@ -4274,16 +9466,52 @@
       }
     },
     "Xem gợi ý hôm nay" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem gợi ý hôm nay"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See today's suggestions"
+          }
+        }
+      }
+    },
+    "Xem quẻ Kinh Dịch" : {
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem quẻ Kinh Dịch"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View I Ching hexagram"
+          }
+        }
+      }
     },
     "Xem tất cả" : {
-
-    },
-    "Xong" : {
-
-    },
-    "Xuất PDF để in" : {
-
+      "localizations" : {
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Xem tất cả"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "See all"
+          }
+        }
+      }
     },
     "Year of" : {
       "localizations" : {
@@ -4349,6 +9577,22 @@
         }
       }
     },
+    "You may lack clarity — ask a trusted teacher. Learn before deciding." : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "You may lack clarity — ask a trusted teacher. Learn before deciding."
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bạn có thể chưa rõ — hỏi người dạy đáng tin. Học trước khi quyết."
+          }
+        }
+      }
+    },
     "You previously denied calendar access. Please enable it in Settings." : {
       "localizations" : {
         "en" : {
@@ -4365,534 +9609,6 @@
         }
       }
     },
-    "12 Trực and Hoàng Đạo hours are still shown below." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "12 Trực and Hoàng Đạo hours are still shown below."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "12 Trực và giờ Hoàng Đạo vẫn được hiển thị bên dưới."
-          }
-        }
-      }
-    },
-    "12 Trực: %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "12 Trực: %@"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "12 Trực: %@"
-          }
-        }
-      }
-    },
-    "Ancestor Worship" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ancestor Worship"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cúng giỗ"
-          }
-        }
-      }
-    },
-    "Avoid for this activity" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Avoid for this activity"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nên tránh việc này"
-          }
-        }
-      }
-    },
-    "Based on today's Can-Chi and giờ hoàng đạo table." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Based on today's Can-Chi and giờ hoàng đạo table."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dựa trên Can-Chi hôm nay và bảng giờ hoàng đạo."
-          }
-        }
-      }
-    },
-    "Birth Year" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Birth Year"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Năm sinh"
-          }
-        }
-      }
-    },
-    "Birth year" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Birth year"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Năm sinh"
-          }
-        }
-      }
-    },
-    "Birth year clash" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Birth year clash"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xung năm sinh"
-          }
-        }
-      }
-    },
-    "Birth year clash day" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Birth year clash day"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ngày xung tuổi"
-          }
-        }
-      }
-    },
-    "Check Day for Activity" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Check Day for Activity"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xem ngày cho việc"
-          }
-        }
-      }
-    },
-    "Clashing day — favor %@ colors/elements (supports your %@ year)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clashing day — favor %1$@ colors/elements (supports your %2$@ year)"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ngày xung — nên dùng màu/hành %1$@ (hỗ trợ năm %2$@ của bạn)"
-          }
-        }
-      }
-    },
-    "Day %@ may pressure your %@ birth element — proceed carefully" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Day %1$@ may pressure your %2$@ birth element — proceed carefully"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hành %1$@ của ngày có thể khắc hành %2$@ năm sinh — nên thận trọng"
-          }
-        }
-      }
-    },
-    "Day %@ nourishes your %@ birth element" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Day %1$@ nourishes your %2$@ birth element"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hành %1$@ của ngày sinh trợ cho hành %2$@ năm sinh"
-          }
-        }
-      }
-    },
-    "Day clashes with birth year (%@ xung %@)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Day clashes with birth year (%1$@ xung %2$@)"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ngày xung với năm sinh (%1$@ xung %2$@)"
-          }
-        }
-      }
-    },
-    "Day element %@ with birth element %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Day element %1$@ with birth element %2$@"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hành ngày %1$@ với hành năm sinh %2$@"
-          }
-        }
-      }
-    },
-    "Good for this activity" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Good for this activity"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tốt cho việc này"
-          }
-        }
-      }
-    },
-    "Grand Opening" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Grand Opening"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Khai trương"
-          }
-        }
-      }
-    },
-    "Groundbreaking" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Groundbreaking"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Động thổ"
-          }
-        }
-      }
-    },
-    "Hours to Avoid" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hours to Avoid"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Giờ nên tránh"
-          }
-        }
-      }
-    },
-    "Partial star data" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Partial star data"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dữ liệu sao chưa đủ"
-          }
-        }
-      }
-    },
-    "Same element (%@) — harmonious for your birth year" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Same element (%@) — harmonious for your birth year"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cùng ngũ hành (%@) — hòa hợp với năm sinh"
-          }
-        }
-      }
-    },
-    "Signing Contract" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Signing Contract"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ký hợp đồng"
-          }
-        }
-      }
-    },
-    "Star data for lunar month %lld is incomplete — no entry for %@." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Star data for lunar month %1$lld is incomplete — no entry for %2$@."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dữ liệu sao tháng âm %1$lld chưa đủ — không có mục cho %2$@."
-          }
-        }
-      }
-    },
-    "Star data for this lunar month is incomplete. Verdict uses 12 Trực and Hoàng Đạo only." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Star data for this lunar month is incomplete. Verdict uses 12 Trực and Hoàng Đạo only."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dữ liệu sao tháng âm này chưa đủ. Kết luận chỉ dùng 12 Trực và Hoàng Đạo."
-          }
-        }
-      }
-    },
-    "Star data incomplete" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Star data incomplete"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Thiếu dữ liệu sao"
-          }
-        }
-      }
-    },
-    "Star table for lunar month %lld is partially complete." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Star table for lunar month %lld is partially complete."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Bảng sao tháng âm %lld mới có một phần."
-          }
-        }
-      }
-    },
-    "Stored on this device only. This is the lunar year used for Can-Chi. Used for ngày xung tuổi and Ngũ hành hints in xem ngày. Never uploaded or sent to analytics." : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Stored on this device only. This is the lunar year used for Can-Chi. Used for ngày xung tuổi and Ngũ hành hints in xem ngày. Never uploaded or sent to analytics."
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chỉ lưu trên thiết bị này. Đây là năm âm lịch dùng cho Can-Chi. Dùng cho ngày xung tuổi và gợi ý Ngũ hành trong xem ngày. Không tải lên hay gửi tới analytics."
-          }
-        }
-      }
-    },
-    "Travel" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Travel"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Xuất hành"
-          }
-        }
-      }
-    },
-    "Travel Hours Today" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Travel Hours Today"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Giờ xuất hành hôm nay"
-          }
-        }
-      }
-    },
-    "Unfavorable star: %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unfavorable star: %@"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sao xấu: %@"
-          }
-        }
-      }
-    },
-    "Use birth year" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use birth year"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dùng năm sinh"
-          }
-        }
-      }
-    },
-    "Use with caution" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Use with caution"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nên thận trọng"
-          }
-        }
-      }
-    },
-    "Wedding" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Wedding"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Cưới hỏi"
-          }
-        }
-      }
-    },
     "Your Can-Chi year" : {
       "localizations" : {
         "en" : {
@@ -4905,6 +9621,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Can-Chi năm sinh"
+          }
+        }
+      }
+    },
+    "Your Can-Chi year: %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Your Can-Chi year: %@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Năm Can-Chi của bạn: %@"
           }
         }
       }
