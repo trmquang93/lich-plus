@@ -20,6 +20,12 @@ if [ "${CI_WORKFLOW}" != "Release" ]; then
     exit 0
 fi
 
+# Do not attempt upload when the archive step failed
+if [ -n "${CI_XCODEBUILD_EXIT_CODE}" ] && [ "${CI_XCODEBUILD_EXIT_CODE}" != "0" ]; then
+    echo "Skipping: xcodebuild failed with exit code ${CI_XCODEBUILD_EXIT_CODE}"
+    exit "${CI_XCODEBUILD_EXIT_CODE}"
+fi
+
 # Environment variables set by Xcode Cloud
 PROJECT_ROOT="${CI_PRIMARY_REPOSITORY_PATH}"
 BUILD_NUMBER="${CI_BUILD_NUMBER}"
@@ -80,26 +86,39 @@ else
     echo "No release tag or release/v* branch, version will be read from Info.plist"
 fi
 
-# Discover the actual .ipa file in the export directory
+# Discover the .ipa file produced by Xcode Cloud
 echo ""
 echo "==========================================="
 echo "Discovering .ipa File"
 echo "==========================================="
 
-IPA_FILES=$(find "${APP_STORE_EXPORT_PATH}" -maxdepth 1 -name "*.ipa" 2>/dev/null || true)
-IPA_COUNT=$(echo "${IPA_FILES}" | grep -c ".ipa" || echo "0")
+IPA_PATH=""
 
-if [ "${IPA_COUNT}" -eq 0 ]; then
-    echo "Error: No .ipa file found in export directory"
-    echo ""
-    echo "Contents of export directory:"
-    ls -la "${APP_STORE_EXPORT_PATH}" || echo "(directory not accessible)"
-    exit 1
-elif [ "${IPA_COUNT}" -gt 1 ]; then
-    echo "Warning: Multiple .ipa files found, using first one"
+# Standard Xcode Cloud layout: $CI_APP_STORE_SIGNED_APP_PATH/$CI_PRODUCT.ipa
+if [ -n "${PRODUCT_NAME}" ] && [ -f "${APP_STORE_EXPORT_PATH}/${PRODUCT_NAME}.ipa" ]; then
+    IPA_PATH="${APP_STORE_EXPORT_PATH}/${PRODUCT_NAME}.ipa"
+elif [ -f "${APP_STORE_EXPORT_PATH}" ]; then
+    # CI_APP_STORE_SIGNED_APP_PATH may point directly at the .ipa file
+    IPA_PATH="${APP_STORE_EXPORT_PATH}"
+else
+    # Fall back to searching the export directory tree
+    IPA_PATH=$(find "${APP_STORE_EXPORT_PATH}" -name "*.ipa" -print -quit 2>/dev/null || true)
 fi
 
-IPA_PATH=$(echo "${IPA_FILES}" | head -n 1)
+if [ -z "${IPA_PATH}" ] || [ ! -f "${IPA_PATH}" ]; then
+    echo "Error: No .ipa file found"
+    echo ""
+    echo "Checked paths:"
+    if [ -n "${PRODUCT_NAME}" ]; then
+        echo "  - ${APP_STORE_EXPORT_PATH}/${PRODUCT_NAME}.ipa"
+    fi
+    echo "  - ${APP_STORE_EXPORT_PATH}"
+    echo ""
+    echo "Contents of export directory:"
+    ls -la "${APP_STORE_EXPORT_PATH}" 2>/dev/null || echo "(directory not accessible)"
+    exit 1
+fi
+
 IPA_FILENAME=$(basename "${IPA_PATH}")
 IPA_SIZE=$(ls -lh "${IPA_PATH}" | awk '{print $5}')
 
