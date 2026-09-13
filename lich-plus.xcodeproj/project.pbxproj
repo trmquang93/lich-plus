@@ -7,25 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B1A2C3E22ED9000F00C1F1F6 /* LichPlusWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B1A2C3D82ED9000500C1F1F6 /* LichPlusWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		4D01FCE02EDE8B99008DF610 /* ParallaxScrollView in Frameworks */ = {isa = PBXBuildFile; productRef = 4D01FCDF2EDE8B99008DF610 /* ParallaxScrollView */; };
 		7429BDE32F1D6DAE009519CF /* Auth in Frameworks */ = {isa = PBXBuildFile; productRef = 7429BDE22F1D6DAE009519CF /* Auth */; };
 		7429BDE52F1D6DAE009519CF /* Functions in Frameworks */ = {isa = PBXBuildFile; productRef = 7429BDE42F1D6DAE009519CF /* Functions */; };
 		7429BDE72F1D6DAE009519CF /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = 7429BDE62F1D6DAE009519CF /* Supabase */; };
-		FBA4BDE42F1D6DAE009519CF /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = FBA2BDE22F1D6DAE009519CF /* FirebaseAnalytics */; };
-		FBA5BDE52F1D6DAE009519CF /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = FBA3BDE32F1D6DAE009519CF /* FirebaseCrashlytics */; };
+		B1A2C3E22ED9000F00C1F1F6 /* LichPlusWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = B1A2C3D82ED9000500C1F1F6 /* LichPlusWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		C63ECA53367BF224122B1CD5 /* libPods-lich-plus.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB89303E18829DA587A5C91F /* libPods-lich-plus.a */; };
 		DE5B0E9D3EDCDB9C25DB164A /* libPods-lich-plusTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FF797DDCB19A1578F299626B /* libPods-lich-plusTests.a */; };
+		FBA4BDE42F1D6DAE009519CF /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = FBA2BDE22F1D6DAE009519CF /* FirebaseAnalytics */; };
+		FBA5BDE52F1D6DAE009519CF /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = FBA3BDE32F1D6DAE009519CF /* FirebaseCrashlytics */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		B1A2C3DF2ED9000C00C1F1F6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4DA45ECE2ED108FE00C1F1F6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B1A2C3D72ED9000400C1F1F6;
-			remoteInfo = LichPlusWidgets;
-		};
 		4DA45EE62ED1090100C1F1F6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4DA45ECE2ED108FE00C1F1F6 /* Project object */;
@@ -33,21 +26,50 @@
 			remoteGlobalIDString = 4DA45ED52ED108FE00C1F1F6;
 			remoteInfo = "lich-plus";
 		};
+		B1A2C3DF2ED9000C00C1F1F6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 4DA45ECE2ED108FE00C1F1F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B1A2C3D72ED9000400C1F1F6;
+			remoteInfo = LichPlusWidgets;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B1A2C3E12ED9000E00C1F1F6 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				B1A2C3E22ED9000F00C1F1F6 /* LichPlusWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		02D11C390F88348BF8025516 /* Pods-lich-plus.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plus.release.xcconfig"; path = "Target Support Files/Pods-lich-plus/Pods-lich-plus.release.xcconfig"; sourceTree = "<group>"; };
 		20F724D6314ADC623454FBC8 /* Pods-lich-plusTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plusTests.release.xcconfig"; path = "Target Support Files/Pods-lich-plusTests/Pods-lich-plusTests.release.xcconfig"; sourceTree = "<group>"; };
 		4DA45ED62ED108FE00C1F1F6 /* lich-plus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "lich-plus.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DA45EE52ED1090100C1F1F6 /* lich-plusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "lich-plusTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B1A2C3D82ED9000500C1F1F6 /* LichPlusWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LichPlusWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		53B38117964375E88CD6D9F0 /* Pods-lich-plus.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plus.debug.xcconfig"; path = "Target Support Files/Pods-lich-plus/Pods-lich-plus.debug.xcconfig"; sourceTree = "<group>"; };
 		A9297472D9054D213B4F2E5A /* Pods-lich-plusTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-lich-plusTests.debug.xcconfig"; path = "Target Support Files/Pods-lich-plusTests/Pods-lich-plusTests.debug.xcconfig"; sourceTree = "<group>"; };
+		B1A2C3D82ED9000500C1F1F6 /* LichPlusWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = LichPlusWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		EB89303E18829DA587A5C91F /* libPods-lich-plus.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lich-plus.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF797DDCB19A1578F299626B /* libPods-lich-plusTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-lich-plusTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		4DDBFDF22ED8F66900B892E0 /* Exceptions for "lich-plus" folder in "lich-plus" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Config.xcconfig.example,
+				Info.plist,
+			);
+			target = 4DA45ED52ED108FE00C1F1F6 /* lich-plus */;
+		};
 		B1A2C3D62ED9000300C1F1F6 /* Exceptions for "LichPlusWidgets" folder in "LichPlusWidgets" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -55,31 +77,9 @@
 			);
 			target = B1A2C3D72ED9000400C1F1F6 /* LichPlusWidgets */;
 		};
-		4DDBFDF22ED8F66900B892E0 /* Exceptions for "lich-plus" folder in "lich-plus" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Config.xcconfig.example,
-				GoogleService-Info.plist.example,
-				Info.plist,
-			);
-			target = 4DA45ED52ED108FE00C1F1F6 /* lich-plus */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		B1A2C3D42ED9000100C1F1F6 /* LichPlusShared */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LichPlusShared;
-			sourceTree = "<group>";
-		};
-		B1A2C3D52ED9000200C1F1F6 /* LichPlusWidgets */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				B1A2C3D62ED9000300C1F1F6 /* Exceptions for "LichPlusWidgets" folder in "LichPlusWidgets" target */,
-			);
-			path = LichPlusWidgets;
-			sourceTree = "<group>";
-		};
 		4DA45ED82ED108FE00C1F1F6 /* lich-plus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -91,6 +91,19 @@
 		4DA45EE82ED1090100C1F1F6 /* lich-plusTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = "lich-plusTests";
+			sourceTree = "<group>";
+		};
+		B1A2C3D42ED9000100C1F1F6 /* LichPlusShared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = LichPlusShared;
+			sourceTree = "<group>";
+		};
+		B1A2C3D52ED9000200C1F1F6 /* LichPlusWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				B1A2C3D62ED9000300C1F1F6 /* Exceptions for "LichPlusWidgets" folder in "LichPlusWidgets" target */,
+			);
+			path = LichPlusWidgets;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -235,8 +248,8 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				B1A2C3D52ED9000200C1F1F6 /* LichPlusWidgets */,
 				B1A2C3D42ED9000100C1F1F6 /* LichPlusShared */,
+				B1A2C3D52ED9000200C1F1F6 /* LichPlusWidgets */,
 			);
 			name = LichPlusWidgets;
 			productName = LichPlusWidgets;
@@ -291,20 +304,6 @@
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		B1A2C3E12ED9000E00C1F1F6 /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				B1A2C3E22ED9000F00C1F1F6 /* LichPlusWidgets.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXResourcesBuildPhase section */
 		4DA45ED42ED108FE00C1F1F6 /* Resources */ = {
@@ -447,15 +446,15 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		B1A2C3E02ED9000D00C1F1F6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B1A2C3D72ED9000400C1F1F6 /* LichPlusWidgets */;
-			targetProxy = B1A2C3DF2ED9000C00C1F1F6 /* PBXContainerItemProxy */;
-		};
 		4DA45EE72ED1090100C1F1F6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4DA45ED52ED108FE00C1F1F6 /* lich-plus */;
 			targetProxy = 4DA45EE62ED1090100C1F1F6 /* PBXContainerItemProxy */;
+		};
+		B1A2C3E02ED9000D00C1F1F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B1A2C3D72ED9000400C1F1F6 /* LichPlusWidgets */;
+			targetProxy = B1A2C3DF2ED9000C00C1F1F6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
