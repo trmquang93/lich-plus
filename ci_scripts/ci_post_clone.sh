@@ -50,17 +50,19 @@ fi
 cd "${PROJECT_ROOT}"
 
 # =============================================================================
-# VERSION MANAGEMENT FROM GIT TAG
+# VERSION MANAGEMENT FROM RELEASE TAG OR BRANCH
 # =============================================================================
 
-if [ -n "${CI_TAG}" ]; then
-    echo "Detected CI_TAG: ${CI_TAG}"
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+. "${SCRIPT_DIR}/ci_resolve_version.sh"
 
-    # Extract version from tag (v1.2.3 -> 1.2.3)
-    VERSION=${CI_TAG#v}
+VERSION=$(resolve_release_version || true)
+RELEASE_SOURCE=$(resolve_release_source || true)
 
-    # Validate version format (X.Y.Z or X.Y)
-    if echo "${VERSION}" | grep -qE '^[0-9]+\.[0-9]+(\.[0-9]+)?$'; then
+if [ -n "${VERSION}" ]; then
+    echo "Detected release ${RELEASE_SOURCE}"
+
+    if is_valid_release_version "${VERSION}"; then
         echo "Updating marketing version to: ${VERSION}"
 
         # Find the Xcode project file
@@ -98,11 +100,11 @@ if [ -n "${CI_TAG}" ]; then
             exit 1
         fi
     else
-        echo "Warning: CI_TAG '${CI_TAG}' does not match version format (v1.2.3)"
+        echo "Warning: release version '${VERSION}' does not match format (1.2.3)"
         echo "Skipping version update"
     fi
 else
-    echo "No CI_TAG found, skipping version update"
+    echo "No release tag or release/v* branch found, skipping version update"
 fi
 
 echo ""

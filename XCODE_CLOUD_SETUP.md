@@ -19,9 +19,9 @@ This project uses Xcode Cloud for CI/CD with automatic App Store submission via 
 3. Configure the workflow:
    - **Name**: `Release` (IMPORTANT: must be exactly "Release" for auto-submission)
    - **Repository**: Select your repository
-   - **Start Condition**: Choose one:
-     - **Tag**: `v*` (recommended for releases)
-     - **Branch**: `main` (for continuous deployment)
+   - **Start Condition**: **Branch Changes**
+     - **Custom Branches**: `release/v` (matches `release/v1.0.1`, `release/v2.0.0`, etc.)
+     - Remove any **Tag Changes** condition if you previously used tag-based releases
    - **Environment**: macOS (latest)
    - **Actions**: Archive (App Store)
 
@@ -44,11 +44,11 @@ base64 -i AuthKey_6257224LBZ.p8 | tr -d '\n'
 
 ### 3. Test the Setup
 
-**Option A: Tag-based deployment (recommended)**
+**Option A: Branch-based deployment (recommended)**
 ```bash
-# Create and push a version tag
-git tag v1.0.1
-git push origin v1.0.1
+# Create and push a release branch
+git checkout -b release/v1.0.1
+git push -u origin release/v1.0.1
 ```
 
 **Option B: Manual trigger**
@@ -68,7 +68,8 @@ lich-plus/
 ├── ci_scripts/
 │   ├── ci_post_clone.sh         # Installs dependencies after clone
 │   ├── ci_pre_xcodebuild.sh     # Pre-build setup
-│   └── ci_post_xcodebuild.sh    # Uploads to App Store Connect
+│   ├── ci_post_xcodebuild.sh    # Uploads to App Store Connect
+│   └── ci_resolve_version.sh    # Extracts version from tag or release/v* branch
 ├── .ruby-version                 # Ruby version for rbenv
 ├── fastlane/
 │   ├── Fastfile                  # Includes xcode_cloud_submit lane
@@ -95,19 +96,21 @@ lich-plus/
 
 ## Updating Release Notes
 
-Edit the release notes before creating a release tag:
+Edit the release notes before pushing a release branch:
 
 ```bash
 # Edit release notes
 vim fastlane/metadata/en-US/release_notes.txt
 vim fastlane/metadata/vi/release_notes.txt
 
-# Commit and tag
+# Commit and push release branch
 git add fastlane/metadata/
 git commit -m "Update release notes for v1.0.1"
-git tag v1.0.1
-git push origin main --tags
+git checkout -b release/v1.0.1
+git push -u origin release/v1.0.1
 ```
+
+Version is extracted automatically from the branch name (`release/v1.0.1` → `1.0.1`). Tag-based releases (`v1.0.1`) still work if you keep a Tag Changes start condition.
 
 ## Troubleshooting
 
