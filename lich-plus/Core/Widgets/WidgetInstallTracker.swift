@@ -13,7 +13,7 @@ enum WidgetInstallTracker {
     private static let trackedKindsKey = "analytics_tracked_widget_kinds"
 
     static func trackInstalledWidgetsIfNeeded() async {
-        guard let configurations = try? await WidgetCenter.shared.currentConfigurations() else {
+        guard let configurations = await currentWidgetConfigurations() else {
             return
         }
 
@@ -41,6 +41,23 @@ enum WidgetInstallTracker {
             tracked.insert(token)
         }
         saveTrackedWidgetKinds(tracked)
+    }
+
+    /// `currentConfigurations()` is iOS 18+; WidgetKit on 17 still uses the completion-handler API.
+    private static func currentWidgetConfigurations() async -> [WidgetInfo]? {
+        if #available(iOS 18.0, *) {
+            return try? await WidgetCenter.shared.currentConfigurations()
+        }
+        return await withCheckedContinuation { continuation in
+            WidgetCenter.shared.getCurrentConfigurations { result in
+                switch result {
+                case .success(let configurations):
+                    continuation.resume(returning: configurations)
+                case .failure:
+                    continuation.resume(returning: nil)
+                }
+            }
+        }
     }
 
     private static func trackedWidgetKinds() -> Set<String> {

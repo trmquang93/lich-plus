@@ -15,6 +15,8 @@ struct lich_plusApp: App {
     
     // Create notification service
     @StateObject private var notificationService: NotificationService
+    @StateObject private var elderMode = ElderModeStore.shared
+    @AppStorage(OnboardingStore.completionKey) private var hasCompletedOnboarding = false
     
     init() {
         // Initialize language manager BEFORE other services
@@ -27,24 +29,56 @@ struct lich_plusApp: App {
         _notificationService = StateObject(
             wrappedValue: NotificationService(modelContext: persistenceController.container.mainContext)
         )
+
+        let onboarding = OnboardingStore.shared
+        if !onboarding.hasCompletedOnboarding {
+            let snapshot = OnboardingPolicy.existingUserSnapshot(
+                modelContext: persistenceController.container.mainContext,
+                hasCompletedOnboarding: false,
+                hasBirthYear: BirthYearStore.shared.hasBirthYear
+            )
+            if snapshot.shouldSkipFirstRun {
+                onboarding.markCompleted()
+            }
+        }
     }
 
     var body: some Scene {
         WindowGroup {
-            MainTabView()
-                .preferredColorScheme(.light)
-                .modelContainer(PersistenceController.shared.container)
-                .environmentObject(notificationService)
-                .onAppear {
-                    // Reschedule notifications on app launch
-                    Task {
-                        await notificationService.rescheduleAllNotifications()
-                        await WidgetInstallTracker.trackInstalledWidgetsIfNeeded()
+            Group {
+                if hasCompletedOnboarding {
+                    MainTabView()
+                } else {
+                    OnboardingView {
+                        hasCompletedOnboarding = true
                     }
-                    WidgetSnapshotCoordinator.shared.refresh(
-                        modelContext: PersistenceController.shared.container.mainContext
-                    )
                 }
+            }
+            .preferredColorScheme(.light)
+            .modelContainer(PersistenceController.shared.container)
+            .environmentObject(notificationService)
+            .environment(\.elderModeEnabled, elderMode.isEnabled)
+            .onAppear {
+                guard hasCompletedOnboarding else { return }
+                // Reschedule notifications on app launch
+                Task {
+                    await notificationService.rescheduleAllNotifications()
+                    await WidgetInstallTracker.trackInstalledWidgetsIfNeeded()
+                }
+                WidgetSnapshotCoordinator.shared.refresh(
+                    modelContext: PersistenceController.shared.container.mainContext
+                )
+            }
+            .onChange(of: hasCompletedOnboarding) { _, completed in
+                guard completed else { return }
+                Task {
+                    await notificationService.rescheduleAllNotifications()
+                    await WidgetInstallTracker.trackInstalledWidgetsIfNeeded()
+                }
+                WidgetSnapshotCoordinator.shared.refresh(
+                    modelContext: PersistenceController.shared.container.mainContext
+                )
+            }
         }
     }
 }

@@ -28,4 +28,6 @@ enum AnalyticsFeature: String, CaseIterable, Sendable {
     case xem_que
     case huong_xuat_hanh
     case elder_mode
+    case onboarding_complete
+    case onboarding_skip
 }
