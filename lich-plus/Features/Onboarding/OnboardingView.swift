@@ -21,6 +21,8 @@ struct OnboardingView: View {
     @State private var notificationSettings: NotificationSettings?
     @State private var ramRemindersEnabled = false
     @State private var gioRemindersEnabled = false
+    @State private var ramOptedIn = false
+    @State private var gioOptedIn = false
     @State private var birthYearEnabled = false
     @State private var draftBirthYear = Calendar.current.component(.year, from: Date()) - 30
 
@@ -49,6 +51,12 @@ struct OnboardingView: View {
         .background(AppColors.background.ignoresSafeArea())
         .onAppear {
             notificationSettings = notificationService.getSettings()
+            let draft = OnboardingPolicy.birthYearDraft(
+                storedYear: birthYearStore.birthYear,
+                currentYear: Calendar.current.component(.year, from: Date())
+            )
+            birthYearEnabled = draft.isEnabled
+            draftBirthYear = draft.year
             AnalyticsService.shared.logScreen(.onboarding)
         }
     }
@@ -74,7 +82,7 @@ struct OnboardingView: View {
                 onboardingHeader(
                     systemImage: "bell.badge.fill",
                     title: String(localized: "Rằm & giỗ reminders"),
-                    body: String(localized: "Turn on presets for Mùng 1, Rằm, and giỗ anniversaries. You can fine-tune everything later in Settings → Phong tục presets.")
+                    body: String(localized: "Turn on presets for Rằm and giỗ anniversaries. You can add Mùng 1 and fine-tune everything later in Settings → Phong tục presets.")
                 )
 
                 VStack(spacing: AppTheme.spacing12) {
@@ -124,10 +132,14 @@ struct OnboardingView: View {
                     }
                     .tint(AppColors.primary)
                     .onChange(of: birthYearEnabled) { _, enabled in
-                        if enabled {
-                            birthYearStore.setBirthYear(draftBirthYear)
-                        } else {
-                            birthYearStore.setBirthYear(nil)
+                        let year = OnboardingPolicy.yearAfterBirthYearToggle(
+                            enabled: enabled,
+                            draftYear: draftBirthYear,
+                            storedYear: birthYearStore.birthYear
+                        )
+                        birthYearStore.setBirthYear(year)
+                        if let year {
+                            draftBirthYear = year
                         }
                     }
 
@@ -266,57 +278,80 @@ struct OnboardingView: View {
     // MARK: - Actions
 
     private func finish(skipped: Bool) {
+        if ramOptedIn || gioOptedIn {
+            persistReminderSelection()
+        }
         OnboardingStore.shared.markCompleted()
         AnalyticsService.shared.logFeatureUsed(skipped ? .onboarding_skip : .onboarding_complete)
         onComplete()
     }
 
-    private func updateRamReminders(_ enabled: Bool) {
+    private var reminderSelection: OnboardingPolicy.ReminderSelection {
+        OnboardingPolicy.ReminderSelection(ramEnabled: ramOptedIn, gioEnabled: gioOptedIn)
+    }
+
+    private func persistReminderSelection() {
         guard let settings = notificationSettings else { return }
+        OnboardingPolicy.applyReminderOptIn(to: settings, selection: reminderSelection)
+        notificationService.updateSettings(settings)
+    }
+
+    private func updateRamReminders(_ enabled: Bool) {
+        ramRemindersEnabled = OnboardingPolicy.resolvedReminderToggleState(
+            desired: enabled,
+            authorizationGranted: enabled ? nil : false
+        )
         if enabled {
             Task {
                 let granted = await notificationService.requestAuthorization()
                 AnalyticsService.shared.logNotificationPermission(granted: granted)
-                if granted {
-                    settings.isEnabled = true
-                    settings.ramNotificationsEnabled = true
-                    notificationService.updateSettings(settings)
-                    await notificationService.scheduleRamNotifications()
-                    AnalyticsService.shared.logNotificationOptIn(optedIn: true)
-                    ramRemindersEnabled = true
-                } else {
+                ramRemindersEnabled = OnboardingPolicy.resolvedReminderToggleState(
+                    desired: ramRemindersEnabled,
+                    authorizationGranted: granted
+                )
+                guard ramRemindersEnabled, granted else {
+                    ramOptedIn = false
                     AnalyticsService.shared.logNotificationOptIn(optedIn: false)
-                    ramRemindersEnabled = false
+                    return
                 }
+                ramOptedIn = true
+                persistReminderSelection()
+                await notificationService.scheduleRamNotifications()
+                AnalyticsService.shared.logNotificationOptIn(optedIn: true)
             }
         } else {
-            settings.ramNotificationsEnabled = false
-            notificationService.updateSettings(settings)
+            ramOptedIn = false
+            persistReminderSelection()
             Task { await notificationService.removeAllRamNotifications() }
         }
     }
 
     private func updateGioReminders(_ enabled: Bool) {
-        guard let settings = notificationSettings else { return }
+        gioRemindersEnabled = OnboardingPolicy.resolvedReminderToggleState(
+            desired: enabled,
+            authorizationGranted: enabled ? nil : false
+        )
         if enabled {
             Task {
                 let granted = await notificationService.requestAuthorization()
                 AnalyticsService.shared.logNotificationPermission(granted: granted)
-                if granted {
-                    settings.isEnabled = true
-                    settings.gioNotificationsEnabled = true
-                    notificationService.updateSettings(settings)
-                    await notificationService.scheduleGioNotifications()
-                    AnalyticsService.shared.logNotificationOptIn(optedIn: true)
-                    gioRemindersEnabled = true
-                } else {
+                gioRemindersEnabled = OnboardingPolicy.resolvedReminderToggleState(
+                    desired: gioRemindersEnabled,
+                    authorizationGranted: granted
+                )
+                guard gioRemindersEnabled, granted else {
+                    gioOptedIn = false
                     AnalyticsService.shared.logNotificationOptIn(optedIn: false)
-                    gioRemindersEnabled = false
+                    return
                 }
+                gioOptedIn = true
+                persistReminderSelection()
+                await notificationService.scheduleGioNotifications()
+                AnalyticsService.shared.logNotificationOptIn(optedIn: true)
             }
         } else {
-            settings.gioNotificationsEnabled = false
-            notificationService.updateSettings(settings)
+            gioOptedIn = false
+            persistReminderSelection()
             Task { await notificationService.removeAllGioNotifications() }
         }
     }

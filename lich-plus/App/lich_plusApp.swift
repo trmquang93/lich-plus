@@ -29,6 +29,18 @@ struct lich_plusApp: App {
         _notificationService = StateObject(
             wrappedValue: NotificationService(modelContext: persistenceController.container.mainContext)
         )
+
+        let onboarding = OnboardingStore.shared
+        if !onboarding.hasCompletedOnboarding {
+            let snapshot = OnboardingPolicy.existingUserSnapshot(
+                modelContext: persistenceController.container.mainContext,
+                hasCompletedOnboarding: false,
+                hasBirthYear: BirthYearStore.shared.hasBirthYear
+            )
+            if snapshot.shouldSkipFirstRun {
+                onboarding.markCompleted()
+            }
+        }
     }
 
     var body: some Scene {
