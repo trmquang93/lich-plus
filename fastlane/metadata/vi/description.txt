@@ -6,6 +6,8 @@ LỊCH ÂM DƯƠNG CHÍNH XÁC
 - Thông tin 12 Trực và ngày Hoàng Đạo
 - Xem ngày tốt xấu theo phong thủy truyền thống
 - Hỗ trợ lịch vạn niên từ 1900-2100
+- Xem ngày cho việc — chọn việc cần làm và xem ngày có hợp không
+- Xuất hành và tuổi hợp/xung theo năm sinh (lưu trên máy, không gửi đi)
 
 QUẢN LÝ SỰ KIỆN THÔNG MINH
 - Tạo sự kiện theo lịch âm hoặc dương
@@ -13,6 +15,7 @@ QUẢN LÝ SỰ KIỆN THÔNG MINH
 - Đồng bộ với Lịch Apple, Google Calendar, Microsoft Calendar
 - Nhắc nhở thông minh cho các sự kiện quan trọng
 - Phân loại sự kiện theo màu sắc
+- Giỗ tháng nhuận; preset Rằm, Mùng 1, ngày chay, giỗ
 
 QUẢN LÝ CÔNG VIỆC HIỆU QUẢ
 - Danh sách công việc với timeline trực quan
@@ -20,17 +23,26 @@ QUẢN LÝ CÔNG VIỆC HIỆU QUẢ
 - Tìm kiếm nhanh công việc và sự kiện
 - Đánh dấu hoàn thành dễ dàng
 
+WIDGET & MÀN HÌNH KHÓA
+- Widget Hôm nay — ngày âm dương và lễ sắp tới (màn hình chính & khóa)
+- Widget đếm ngược lễ
+- Live Activity Tết trên màn hình khóa (chỉ lễ công cộng — không dữ liệu riêng tư)
+
+PHONG TỤC & TIỆN ÍCH
+- Thư viện văn khấn, cá nhân hoá giỗ
+- Xem quẻ Kinh Dịch — offline, gieo 3 đồng
+
 THIẾT KẾ HIỆN ĐẠI
 - Giao diện đơn giản, sạch sẽ
 - Trải nghiệm người dùng mượt mà
 - Hỗ trợ tiếng Việt hoàn toàn
+- Chế độ chữ lớn cho người lớn tuổi
 - Tối ưu cho iOS 17+
 
 TÍNH NĂNG NỔI BẬT
 - Xem nhanh thông tin ngày trên lịch tháng
 - Cuộn vô hạn giữa các tháng
 - Chọn tháng nhanh kiểu Apple Calendar
-- Widget cho màn hình chính (sắp ra mắt)
 
 Lich+ được thiết kế dành riêng cho người Việt, giúp bạn không bỏ lỡ những ngày quan trọng theo âm lịch như Tết Nguyên Đán, Rằm tháng Giêng, Tết Trung Thu, ngày giỗ ông bà và sinh nhật âm lịch của người thân.
 

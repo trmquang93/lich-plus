@@ -1,11 +1,10 @@
-Welcome to Lich+ - The next generation Vietnamese calendar app!
+What's new in 1.0.7:
 
-First release includes:
-- Monthly calendar with lunar-solar display
-- Day quality info, 12 Truc system, Hoang Dao
-- Event management with lunar recurrence support
-- Task management with visual timeline
-- Apple Calendar sync
-- Beautiful, easy-to-use interface
+• Home & Lock Screen widgets — solar/lunar date and next public holiday
+• Festival countdown widget and Tết Live Activity on Lock Screen
+• Xem ngày, xuất hành, and tuổi hợp/xung in day detail
+• Giỗ leap-month support; Rằm, Mùng 1, and fasting presets
+• Kinh Dịch coin reading (offline)
+• Elder mode — larger text across the app
 
-Wishing you a prosperous Year of the Horse 2026!
+Thanks for using Lich+. Chúc bạn an khang!
