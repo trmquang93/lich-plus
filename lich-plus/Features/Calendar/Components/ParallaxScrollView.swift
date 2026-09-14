@@ -133,6 +133,10 @@ class ParallaxContainerViewController<Header: View, Content: View>: UIViewContro
         fatalError("init(coder:) has not been implemented")
     }
 
+    // Avoid implicit MainActor-isolated deinit (SWIFT_DEFAULT_ACTOR_ISOLATION=MainActor),
+    // which triggers a swift-frontend SIGSEGV in Release EarlyPerfInliner on Xcode Cloud.
+    nonisolated deinit {}
+
     private func setupUI(content: () -> Content) {
         view.backgroundColor = .white
 
