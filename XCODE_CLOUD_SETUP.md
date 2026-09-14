@@ -20,7 +20,7 @@ This project uses Xcode Cloud for CI/CD with automatic App Store submission via 
    - **Name**: `Release` (IMPORTANT: must be exactly "Release" for auto-submission)
    - **Repository**: Select your repository
    - **Start Condition**: **Branch Changes**
-     - **Custom Branches**: `release/v` (matches `release/v1.0.1`, `release/v2.0.0`, etc.)
+     - **Custom Branches**: `release/v*` (matches `release/v1.0.7`, `release/v2.0.0`, etc.)
      - Remove any **Tag Changes** condition if you previously used tag-based releases
    - **Environment**: macOS (latest)
    - **Actions**: Archive (App Store)
@@ -36,6 +36,8 @@ In Xcode Cloud workflow settings, add these **Secret** environment variables:
 | `ASC_KEY_ID` | `6257224LBZ` | App Store Connect API Key ID |
 | `ASC_ISSUER_ID` | `c419fd84-aa0b-4d05-9688-19d736cc2575` | App Store Connect Issuer ID |
 | `ASC_KEY_CONTENT` | (base64 content) | Base64-encoded .p8 key content |
+| `SUPABASE_PROJECT_ID` | (your project ID) | Supabase project ID for `Config.xcconfig` |
+| `SUPABASE_ANON_KEY` | (your anon key) | Supabase anon key for `Config.xcconfig` |
 
 **To get ASC_KEY_CONTENT:**
 ```bash
@@ -47,8 +49,8 @@ base64 -i AuthKey_6257224LBZ.p8 | tr -d '\n'
 **Option A: Branch-based deployment (recommended)**
 ```bash
 # Create and push a release branch
-git checkout -b release/v1.0.1
-git push -u origin release/v1.0.1
+git checkout -b release/v1.0.7
+git push -u origin release/v1.0.7
 ```
 
 **Option B: Manual trigger**
@@ -68,8 +70,7 @@ lich-plus/
 ├── ci_scripts/
 │   ├── ci_post_clone.sh         # Installs dependencies after clone
 │   ├── ci_pre_xcodebuild.sh     # Pre-build setup
-│   ├── ci_post_xcodebuild.sh    # Uploads to App Store Connect
-│   └── ci_resolve_version.sh    # Extracts version from tag or release/v* branch
+│   └── ci_post_xcodebuild.sh    # Uploads to App Store Connect
 ├── .ruby-version                 # Ruby version for rbenv
 ├── fastlane/
 │   ├── Fastfile                  # Includes xcode_cloud_submit lane
@@ -105,12 +106,9 @@ vim fastlane/metadata/vi/release_notes.txt
 
 # Commit and push release branch
 git add fastlane/metadata/
-git commit -m "Update release notes for v1.0.1"
-git checkout -b release/v1.0.1
-git push -u origin release/v1.0.1
+git commit -m "Update release notes for v1.0.7"
+git push origin release/v1.0.7
 ```
-
-Version is extracted automatically from the branch name (`release/v1.0.1` → `1.0.1`). Tag-based releases (`v1.0.1`) still work if you keep a Tag Changes start condition.
 
 ## Troubleshooting
 

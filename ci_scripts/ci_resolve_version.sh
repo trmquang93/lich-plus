@@ -2,6 +2,13 @@
 # Resolves release version from Xcode Cloud environment variables.
 # Supports CI_TAG (v1.2.3) and CI_BRANCH (release/v1.2.3).
 
+normalize_ci_branch() {
+    branch="${1:-}"
+    branch="${branch#refs/heads/}"
+    branch="${branch#origin/}"
+    printf '%s' "${branch}"
+}
+
 resolve_release_version() {
     if [ -n "${CI_TAG}" ]; then
         echo "${CI_TAG#v}"
@@ -9,9 +16,10 @@ resolve_release_version() {
     fi
 
     if [ -n "${CI_BRANCH}" ]; then
-        case "${CI_BRANCH}" in
+        BRANCH="$(normalize_ci_branch "${CI_BRANCH}")"
+        case "${BRANCH}" in
             release/v*)
-                echo "${CI_BRANCH#release/v}"
+                echo "${BRANCH#release/v}"
                 return 0
                 ;;
         esac
@@ -27,9 +35,10 @@ resolve_release_source() {
     fi
 
     if [ -n "${CI_BRANCH}" ]; then
-        case "${CI_BRANCH}" in
+        BRANCH="$(normalize_ci_branch "${CI_BRANCH}")"
+        case "${BRANCH}" in
             release/v*)
-                echo "branch ${CI_BRANCH}"
+                echo "branch ${BRANCH}"
                 return 0
                 ;;
         esac

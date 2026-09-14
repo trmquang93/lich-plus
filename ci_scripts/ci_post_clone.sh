@@ -8,25 +8,33 @@ set -e
 
 echo "Building: Starting Post Clone Script..."
 
+export HOMEBREW_NO_INSTALL_CLEANUP=1
+export HOMEBREW_NO_ENV_HINTS=1
+
+# =============================================================================
+# FORCE IPv4 FOR ALL NETWORK OPERATIONS (MANDATORY)
+# =============================================================================
+echo "Configuring global IPv4-only networking..."
+cat > "${HOME}/.curlrc" <<'CURLRC'
+--ipv4
+--retry 5
+--retry-delay 5
+--retry-max-time 120
+--connect-timeout 30
+CURLRC
+echo "Created ~/.curlrc (IPv4-only, 5 retries, 30s connect timeout)"
+
 # =============================================================================
 # XCODE CONFIGURATION
 # =============================================================================
-
 echo "Configuring Xcode settings..."
-
-# Skip Swift Package Manager plugin fingerprint validation
-# Required for build tool plugins to work in Xcode Cloud
-echo "Disabling Swift Package Manager plugin fingerprint validation..."
 defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
 echo "Plugin fingerprint validation disabled"
-
 echo ""
 
 # =============================================================================
 # PROJECT SETUP
 # =============================================================================
-
-# Detect project root with multiple fallbacks for different CI environments
 if [ -n "${CI_PRIMARY_REPOSITORY_PATH}" ]; then
     PROJECT_ROOT="${CI_PRIMARY_REPOSITORY_PATH}"
     echo "Detected project root from CI_PRIMARY_REPOSITORY_PATH"
@@ -41,7 +49,6 @@ fi
 
 echo "Project root: ${PROJECT_ROOT}"
 
-# Validate project root exists
 if [ ! -d "${PROJECT_ROOT}" ]; then
     echo "Error: Project root directory does not exist: ${PROJECT_ROOT}"
     exit 1
@@ -52,9 +59,15 @@ cd "${PROJECT_ROOT}"
 # =============================================================================
 # VERSION MANAGEMENT FROM RELEASE TAG OR BRANCH
 # =============================================================================
-
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 . "${SCRIPT_DIR}/ci_resolve_version.sh"
+
+echo ""
+echo "=========================================="
+echo "Version Management"
+echo "=========================================="
+echo "CI_BRANCH=${CI_BRANCH:-}"
+echo "CI_TAG=${CI_TAG:-}"
 
 VERSION=$(resolve_release_version || true)
 RELEASE_SOURCE=$(resolve_release_source || true)
@@ -63,9 +76,6 @@ if [ -n "${VERSION}" ]; then
     echo "Detected release ${RELEASE_SOURCE}"
 
     if is_valid_release_version "${VERSION}"; then
-        echo "Updating marketing version to: ${VERSION}"
-
-        # Find the Xcode project file
         PBXPROJ_PATH="${PROJECT_ROOT}/lich-plus.xcodeproj/project.pbxproj"
 
         if [ ! -f "${PBXPROJ_PATH}" ]; then
@@ -73,30 +83,14 @@ if [ -n "${VERSION}" ]; then
             exit 1
         fi
 
-        # Show current version before update
-        echo "Current MARKETING_VERSION values:"
-        grep "MARKETING_VERSION" "${PBXPROJ_PATH}" | head -5
+        echo "Updating MARKETING_VERSION to ${VERSION}"
+        sed -i '' "s/MARKETING_VERSION = [^;]*;/MARKETING_VERSION = ${VERSION};/g" "${PBXPROJ_PATH}"
 
-        # Update MARKETING_VERSION directly in project.pbxproj using sed
-        # This is more reliable than agvtool in Xcode Cloud environment
-        sed -i '' "s/MARKETING_VERSION = [0-9]*\.[0-9]*\(\.[0-9]*\)*/MARKETING_VERSION = ${VERSION}/g" "${PBXPROJ_PATH}"
+        UPDATED_VERSION=$(grep -m1 "MARKETING_VERSION" "${PBXPROJ_PATH}" | sed 's/.*= //;s/;.*//;s/^[[:space:]]*//')
+        echo "Verified MARKETING_VERSION: ${UPDATED_VERSION}"
 
-        if [ $? -eq 0 ]; then
-            echo "Marketing version updated to ${VERSION}"
-            # Verify the change
-            echo "Updated MARKETING_VERSION values:"
-            grep "MARKETING_VERSION" "${PBXPROJ_PATH}" | head -5
-
-            # Double-check the version was actually updated
-            UPDATED_COUNT=$(grep -c "MARKETING_VERSION = ${VERSION}" "${PBXPROJ_PATH}")
-            if [ "${UPDATED_COUNT}" -gt 0 ]; then
-                echo "Verified: Found ${UPDATED_COUNT} occurrences of MARKETING_VERSION = ${VERSION}"
-            else
-                echo "Error: Version update verification failed"
-                exit 1
-            fi
-        else
-            echo "Error: sed command failed to update version"
+        if [ "${UPDATED_VERSION}" != "${VERSION}" ]; then
+            echo "Error: Version update verification failed (expected ${VERSION}, got ${UPDATED_VERSION})"
             exit 1
         fi
     else
@@ -112,11 +106,6 @@ echo ""
 # =============================================================================
 # FIREBASE GoogleService-Info.plist (optional)
 # =============================================================================
-# Real plist is gitignored. Xcode Cloud: add a secret env var
-# GOOGLESERVICE_INFO_PLIST_BASE64 (base64 of the plist) or
-# GOOGLESERVICE_INFO_PLIST (file path or raw XML). Without it, the Crashlytics
-# run script skips and Analytics stays inactive — the build still succeeds.
-
 GOOGLE_PLIST_DEST="${PROJECT_ROOT}/lich-plus/GoogleService-Info.plist"
 
 if [ -f "${GOOGLE_PLIST_DEST}" ]; then
@@ -140,81 +129,86 @@ fi
 echo ""
 
 # =============================================================================
-# RBENV RUBY VERSION MANAGEMENT
+# RUBY SETUP VIA HOMEBREW
 # =============================================================================
+echo "=========================================="
+echo "Setting up Ruby via Homebrew"
+echo "=========================================="
+echo "System Ruby: $(ruby --version)"
 
-echo "Setting up rbenv for Ruby version management..."
+brew install ruby@3.3
 
-# Install rbenv and ruby-build via Homebrew
-if ! command -v rbenv &> /dev/null; then
-    echo "Installing rbenv and ruby-build..."
-    brew install rbenv ruby-build
-else
-    echo "rbenv already installed"
+RUBY_PATH="$(brew --prefix ruby@3.3)/bin"
+export PATH="${RUBY_PATH}:${PATH}"
+export GEM_HOME="${HOME}/.gem"
+export PATH="${GEM_HOME}/bin:${PATH}"
+
+echo "Ruby: $(ruby --version)"
+
+RUBY_CPU="$(ruby -e 'print RbConfig::CONFIG["host_cpu"]')"
+echo "Ruby host_cpu=${RUBY_CPU} uname -m=$(uname -m)"
+if [ "$(uname -m)" != "${RUBY_CPU}" ]; then
+    echo "Host arch != Ruby arch: installing clang shim to force -arch ${RUBY_CPU}"
+    CC_SHIM="${HOME}/cc-shim"
+    mkdir -p "${CC_SHIM}"
+    for tool in cc clang gcc c++ clang++ g++; do
+        real="$(command -v "${tool}" 2>/dev/null || echo "/usr/bin/${tool}")"
+        cat > "${CC_SHIM}/${tool}" <<EOF
+#!/bin/sh
+exec "${real}" -arch ${RUBY_CPU} "\$@"
+EOF
+        chmod +x "${CC_SHIM}/${tool}"
+    done
+    export PATH="${CC_SHIM}:${PATH}"
 fi
-
-# Initialize rbenv for this shell session
-eval "$(rbenv init - bash)"
-
-# Read Ruby version from .ruby-version file
-if [ -f ".ruby-version" ]; then
-    RUBY_VERSION=$(cat .ruby-version | tr -d '[:space:]')
-    echo "Required Ruby version from .ruby-version: ${RUBY_VERSION}"
-else
-    RUBY_VERSION="3.2.2"
-    echo "No .ruby-version found, using default: ${RUBY_VERSION}"
-fi
-
-# Install the required Ruby version if not already installed
-if ! rbenv versions | grep -q "${RUBY_VERSION}"; then
-    echo "Installing Ruby ${RUBY_VERSION} via rbenv..."
-    rbenv install "${RUBY_VERSION}"
-else
-    echo "Ruby ${RUBY_VERSION} already installed"
-fi
-
-# Set the Ruby version for this project
-rbenv local "${RUBY_VERSION}"
-rbenv rehash
-
-# Verify Ruby version
-ACTUAL_RUBY=$(ruby --version)
-echo "Active Ruby: ${ACTUAL_RUBY}"
-
-# Install bundler for this Ruby version (fastlane requires bundler < 3.0.0)
-echo "Installing bundler 2.7.2..."
-gem install bundler:2.7.2 --no-document
-rbenv rehash
-
-echo "rbenv setup complete with Ruby ${RUBY_VERSION}"
-echo ""
 
 # =============================================================================
 # BUNDLER DEPENDENCIES
 # =============================================================================
+echo ""
+echo "=========================================="
+echo "Installing Ruby Dependencies"
+echo "=========================================="
 
-echo "Installing Ruby dependencies via Bundler..."
+echo "Installing bundler 2.7.2..."
+gem install bundler:2.7.2 --no-document
+echo "Bundler: $(bundle --version)"
 
 if [ -f "Gemfile" ]; then
-    echo "Current Ruby: $(ruby --version)"
-    echo "Current bundler: $(bundle --version)"
-
-    if [ -f "Gemfile.lock" ]; then
-        echo "Using Gemfile.lock for consistent gem versions"
-    else
-        echo "Warning: No Gemfile.lock found - bundler will resolve dependencies"
-    fi
-
-    # Configure bundler and install (use specific version for fastlane compatibility)
+    export BUNDLER_FORCE_IPV4=true
     bundle config set --local path 'vendor/bundle'
-    bundle _2.7.2_ install
 
-    if [ $? -eq 0 ]; then
-        echo "Bundle installation completed successfully"
-    else
-        echo "Error: Bundle installation failed"
+    MAX_RETRIES=5
+    RETRY_COUNT=0
+    BUNDLE_SUCCESS=false
+
+    while [ ${RETRY_COUNT} -lt ${MAX_RETRIES} ]; do
+        RETRY_COUNT=$((RETRY_COUNT + 1))
+        echo "bundle install attempt ${RETRY_COUNT}/${MAX_RETRIES}..."
+
+        set +e
+        bundle _2.7.2_ install --jobs 3 --retry 3
+        BUNDLE_EXIT=$?
+        set -e
+
+        if [ ${BUNDLE_EXIT} -eq 0 ]; then
+            BUNDLE_SUCCESS=true
+            break
+        fi
+
+        if [ ${RETRY_COUNT} -lt ${MAX_RETRIES} ]; then
+            WAIT_TIME=$((RETRY_COUNT * 15))
+            echo "bundle install failed (exit ${BUNDLE_EXIT}), retrying in ${WAIT_TIME}s..."
+            sleep ${WAIT_TIME}
+        fi
+    done
+
+    if [ "${BUNDLE_SUCCESS}" != true ]; then
+        echo "Error: bundle install failed after ${MAX_RETRIES} attempts"
         exit 1
     fi
+
+    echo "Bundle installation completed"
 else
     echo "Warning: No Gemfile found, skipping bundle install"
 fi
@@ -224,22 +218,54 @@ echo ""
 # =============================================================================
 # COCOAPODS DEPENDENCIES
 # =============================================================================
-
-echo "Installing CocoaPods dependencies..."
+echo "=========================================="
+echo "Installing CocoaPods"
+echo "=========================================="
 
 if [ -f "Podfile" ]; then
-    echo "Running: bundle exec pod install --repo-update"
-
-    bundle exec pod install --repo-update
-
-    POD_EXIT_CODE=$?
-
-    if [ ${POD_EXIT_CODE} -eq 0 ]; then
-        echo "CocoaPods installation completed successfully"
-    else
-        echo "Error: CocoaPods installation failed with exit code ${POD_EXIT_CODE}"
-        exit ${POD_EXIT_CODE}
+    if [ -d "${HOME}/.cocoapods/repos/trunk" ]; then
+        echo "Removing existing trunk repo to avoid conflicts..."
+        rm -rf "${HOME}/.cocoapods/repos/trunk"
     fi
+
+    export COCOAPODS_DISABLE_STATS=true
+
+    MAX_RETRIES=5
+    RETRY_COUNT=0
+    POD_SUCCESS=false
+
+    while [ ${RETRY_COUNT} -lt ${MAX_RETRIES} ]; do
+        RETRY_COUNT=$((RETRY_COUNT + 1))
+        echo "pod install attempt ${RETRY_COUNT}/${MAX_RETRIES}..."
+
+        set +e
+        bundle exec pod install --repo-update
+        POD_EXIT=$?
+        set -e
+
+        if [ ${POD_EXIT} -eq 0 ]; then
+            POD_SUCCESS=true
+            break
+        fi
+
+        if [ ${RETRY_COUNT} -lt ${MAX_RETRIES} ]; then
+            WAIT_TIME=$((RETRY_COUNT * 15))
+            echo "pod install failed (exit ${POD_EXIT}), retrying in ${WAIT_TIME}s..."
+            sleep ${WAIT_TIME}
+        fi
+    done
+
+    if [ "${POD_SUCCESS}" != true ]; then
+        echo "Error: CocoaPods installation failed after ${MAX_RETRIES} attempts"
+        exit 1
+    fi
+
+    PODS_RELEASE_XCCONFIG="$(find "${PROJECT_ROOT}/Pods/Target Support Files" -name "Pods-*.release.xcconfig" 2>/dev/null | head -n 1)"
+    if [ -z "${PODS_RELEASE_XCCONFIG}" ]; then
+        echo "Error: no Pods release xcconfig found after pod install"
+        exit 1
+    fi
+    echo "Verified CocoaPods xcconfig: ${PODS_RELEASE_XCCONFIG}"
 else
     echo "Error: No Podfile found in ${PROJECT_ROOT}"
     exit 1
