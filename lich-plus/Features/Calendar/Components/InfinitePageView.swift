@@ -115,6 +115,10 @@ struct InfinitePageView<Index: PageIndex, Content: View>: UIViewControllerRepres
             self.lastRefreshTrigger = initialRefreshTrigger
         }
 
+        // Avoid implicit MainActor-isolated deinit (SWIFT_DEFAULT_ACTOR_ISOLATION=MainActor),
+        // which triggers a swift-frontend SIGSEGV in Release EarlyPerfInliner on Xcode Cloud.
+        nonisolated deinit {}
+
         func makeHostingController(for index: Index) -> IndexedHostingController<Index, Content> {
             return IndexedHostingController(pageIndex: index, rootView: parent.content(index))
         }
@@ -155,6 +159,8 @@ class IndexedHostingController<Index: PageIndex, Content: View>: UIHostingContro
         self.pageIndex = pageIndex
         super.init(rootView: rootView)
     }
+
+    nonisolated deinit {}
 
     @MainActor required dynamic init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
