@@ -2,13 +2,14 @@
 
 # Xcode Cloud Pre-Xcodebuild Script
 # Runs immediately before xcodebuild archive/build command
-# Used for last-minute setup before the build starts
 
 set -e
 
 echo "Pre-Xcodebuild: Starting..."
 
-# Detect project root
+export HOMEBREW_NO_INSTALL_CLEANUP=1
+export HOMEBREW_NO_ENV_HINTS=1
+
 if [ -n "${CI_PRIMARY_REPOSITORY_PATH}" ]; then
     PROJECT_ROOT="${CI_PRIMARY_REPOSITORY_PATH}"
 elif [ -n "${CI_WORKSPACE}" ]; then
@@ -23,14 +24,10 @@ echo "Project root: ${PROJECT_ROOT}"
 # =============================================================================
 # GENERATE Config.xcconfig FROM XCODE CLOUD ENVIRONMENT VARIABLES
 # =============================================================================
-# Xcode Cloud env vars are NOT automatically injected into xcconfig files.
-# We must write them manually before xcodebuild reads build settings.
-
 XCCONFIG_PATH="${PROJECT_ROOT}/lich-plus/Config.xcconfig"
 
 echo "Generating Config.xcconfig at: ${XCCONFIG_PATH}"
 
-# Validate required variables
 if [ -z "${SUPABASE_PROJECT_ID}" ]; then
     echo "Error: SUPABASE_PROJECT_ID environment variable is not set"
     echo "Add it in Xcode Cloud > Workflows > Environment Variables"
@@ -56,11 +53,36 @@ echo "Config.xcconfig generated successfully"
 # =============================================================================
 # BUILD DIRECTORIES
 # =============================================================================
-
-# Create directories that build plugins might need
-# This prevents "permission denied" errors when plugins try to create files
 echo "Creating build directories..."
 mkdir -p "${PROJECT_ROOT}/lich-plus/Resources"
 echo "Resources directory ready"
+
+# =============================================================================
+# COCOAPODS FALLBACK
+# =============================================================================
+PODS_RELEASE_XCCONFIG="$(find "${PROJECT_ROOT}/Pods/Target Support Files" -name "Pods-*.release.xcconfig" 2>/dev/null | head -n 1)"
+
+if [ -n "${PODS_RELEASE_XCCONFIG}" ] && [ -f "${PODS_RELEASE_XCCONFIG}" ]; then
+    echo "CocoaPods artifacts present: ${PODS_RELEASE_XCCONFIG}"
+else
+    if [ -f "${PROJECT_ROOT}/Podfile" ]; then
+        echo "Warning: CocoaPods artifacts missing — running fallback pod install"
+
+        RUBY_PATH="$(brew --prefix ruby@3.3)/bin"
+        export PATH="${RUBY_PATH}:${PATH}"
+        export GEM_HOME="${HOME}/.gem"
+        export PATH="${GEM_HOME}/bin:${PATH}"
+
+        cd "${PROJECT_ROOT}"
+        bundle exec pod install --repo-update
+
+        PODS_RELEASE_XCCONFIG="$(find "${PROJECT_ROOT}/Pods/Target Support Files" -name "Pods-*.release.xcconfig" 2>/dev/null | head -n 1)"
+        if [ -z "${PODS_RELEASE_XCCONFIG}" ]; then
+            echo "Error: CocoaPods xcconfig still missing after fallback pod install"
+            exit 1
+        fi
+        echo "Fallback pod install succeeded"
+    fi
+fi
 
 echo "Pre-Xcodebuild: Completed"

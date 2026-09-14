@@ -19,9 +19,9 @@ This project uses Xcode Cloud for CI/CD with automatic App Store submission via 
 3. Configure the workflow:
    - **Name**: `Release` (IMPORTANT: must be exactly "Release" for auto-submission)
    - **Repository**: Select your repository
-   - **Start Condition**: Choose one:
-     - **Tag**: `v*` (recommended for releases)
-     - **Branch**: `main` (for continuous deployment)
+   - **Start Condition**: **Branch Changes**
+     - **Custom Branches**: `release/v*` (matches `release/v1.0.7`, `release/v2.0.0`, etc.)
+     - Remove any **Tag Changes** condition if you previously used tag-based releases
    - **Environment**: macOS (latest)
    - **Actions**: Archive (App Store)
 
@@ -36,6 +36,8 @@ In Xcode Cloud workflow settings, add these **Secret** environment variables:
 | `ASC_KEY_ID` | `6257224LBZ` | App Store Connect API Key ID |
 | `ASC_ISSUER_ID` | `c419fd84-aa0b-4d05-9688-19d736cc2575` | App Store Connect Issuer ID |
 | `ASC_KEY_CONTENT` | (base64 content) | Base64-encoded .p8 key content |
+| `SUPABASE_PROJECT_ID` | (your project ID) | Supabase project ID for `Config.xcconfig` |
+| `SUPABASE_ANON_KEY` | (your anon key) | Supabase anon key for `Config.xcconfig` |
 
 **To get ASC_KEY_CONTENT:**
 ```bash
@@ -44,11 +46,11 @@ base64 -i AuthKey_6257224LBZ.p8 | tr -d '\n'
 
 ### 3. Test the Setup
 
-**Option A: Tag-based deployment (recommended)**
+**Option A: Branch-based deployment (recommended)**
 ```bash
-# Create and push a version tag
-git tag v1.0.1
-git push origin v1.0.1
+# Create and push a release branch
+git checkout -b release/v1.0.7
+git push -u origin release/v1.0.7
 ```
 
 **Option B: Manual trigger**
@@ -95,18 +97,17 @@ lich-plus/
 
 ## Updating Release Notes
 
-Edit the release notes before creating a release tag:
+Edit the release notes before pushing a release branch:
 
 ```bash
 # Edit release notes
 vim fastlane/metadata/en-US/release_notes.txt
 vim fastlane/metadata/vi/release_notes.txt
 
-# Commit and tag
+# Commit and push release branch
 git add fastlane/metadata/
-git commit -m "Update release notes for v1.0.1"
-git tag v1.0.1
-git push origin main --tags
+git commit -m "Update release notes for v1.0.7"
+git push origin release/v1.0.7
 ```
 
 ## Troubleshooting
